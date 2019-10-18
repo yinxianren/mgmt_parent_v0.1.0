@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rxh.mapper.sys.SysUserMapper">
+    <resultMap id="BaseResultMap" type="com.rxh.pojo.sys.SysUser">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+        <result column="order_no" jdbcType="INTEGER" property="orderNo"/>
+        <result column="dept_id" jdbcType="VARCHAR" property="deptId"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="telphone" jdbcType="VARCHAR" property="telphone"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="admin_state" jdbcType="SMALLINT" property="adminState"/>
+        <result column="last_logon_ip" jdbcType="VARCHAR" property="lastLogonIp"/>
+        <result column="role_id" jdbcType="VARCHAR" property="roleId"/>
+        <result column="belongto" jdbcType="VARCHAR" property="belongto"/>
+        <result column="session_id" jdbcType="VARCHAR" property="sessionId"/>
+        <result column="available" jdbcType="BIT" property="available"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, user_name, password, real_name, order_no, dept_id, email, telphone, mobile, admin_state,
+        last_logon_ip, role_id, belongto, session_id, available, remark, creator, create_time,
+        modifier, modify_time
+    </sql>
+    <sql id="Default_User_Info">
+        id, user_name, real_name, telphone, mobile, email, available, role_id
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from sys_user
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.rxh.pojo.sys.SysUser">
+        insert into sys_user (id, user_name, password,
+                              real_name, order_no, dept_id,
+                              email, telphone, mobile,
+                              admin_state, last_logon_ip, role_id,
+                              belongto, session_id, available,
+                              remark, creator, create_time,
+                              modifier, modify_time)
+        values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+                                        #{realName,jdbcType=VARCHAR}, #{orderNo,jdbcType=INTEGER},
+                                        #{deptId,jdbcType=VARCHAR},
+                                        #{email,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR},
+                                        #{mobile,jdbcType=VARCHAR},
+                                        #{adminState,jdbcType=SMALLINT}, #{lastLogonIp,jdbcType=VARCHAR},
+                #{roleId,jdbcType=VARCHAR},
+                #{belongto,jdbcType=VARCHAR}, #{sessionId,jdbcType=VARCHAR}, #{available,jdbcType=BIT},
+                #{remark,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+                #{modifier,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.rxh.pojo.sys.SysUser">
+        insert into sys_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="realName != null">
+                real_name,
+            </if>
+            <if test="orderNo != null">
+                order_no,
+            </if>
+            <if test="deptId != null">
+                dept_id,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="telphone != null">
+                telphone,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="adminState != null">
+                admin_state,
+            </if>
+            <if test="lastLogonIp != null">
+                last_logon_ip,
+            </if>
+            <if test="roleId != null">
+                role_id,
+            </if>
+            <if test="belongto != null">
+                belongto,
+            </if>
+            <if test="sessionId != null">
+                session_id,
+            </if>
+            <if test="available != null">
+                available,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="modifier != null">
+                modifier,
+            </if>
+            <if test="modifyTime != null">
+                modify_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null">
+                #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNo != null">
+                #{orderNo,jdbcType=INTEGER},
+            </if>
+            <if test="deptId != null">
+                #{deptId,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="telphone != null">
+                #{telphone,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="adminState != null">
+                #{adminState,jdbcType=SMALLINT},
+            </if>
+            <if test="lastLogonIp != null">
+                #{lastLogonIp,jdbcType=VARCHAR},
+            </if>
+            <if test="roleId != null">
+                #{roleId,jdbcType=VARCHAR},
+            </if>
+            <if test="belongto != null">
+                #{belongto,jdbcType=VARCHAR},
+            </if>
+            <if test="sessionId != null">
+                #{sessionId,jdbcType=VARCHAR},
+            </if>
+            <if test="available != null">
+                #{available,jdbcType=BIT},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifyTime != null">
+                #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.rxh.pojo.sys.SysUser">
+        update sys_user
+        <set>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null">
+                real_name = #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNo != null">
+                order_no = #{orderNo,jdbcType=INTEGER},
+            </if>
+            <if test="deptId != null">
+                dept_id = #{deptId,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="telphone != null">
+                telphone = #{telphone,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="adminState != null">
+                admin_state = #{adminState,jdbcType=SMALLINT},
+            </if>
+            <if test="lastLogonIp != null">
+                last_logon_ip = #{lastLogonIp,jdbcType=VARCHAR},
+            </if>
+            <if test="roleId != null">
+                role_id = #{roleId,jdbcType=VARCHAR},
+            </if>
+            <if test="belongto != null">
+                belongto = #{belongto,jdbcType=VARCHAR},
+            </if>
+            <if test="sessionId != null">
+                session_id = #{sessionId,jdbcType=VARCHAR},
+            </if>
+            <if test="available != null">
+                available = #{available,jdbcType=BIT},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.rxh.pojo.sys.SysUser">
+        update sys_user
+        set user_name     = #{userName,jdbcType=VARCHAR},
+            password      = #{password,jdbcType=VARCHAR},
+            real_name     = #{realName,jdbcType=VARCHAR},
+            order_no      = #{orderNo,jdbcType=INTEGER},
+            dept_id       = #{deptId,jdbcType=VARCHAR},
+            email         = #{email,jdbcType=VARCHAR},
+            telphone      = #{telphone,jdbcType=VARCHAR},
+            mobile        = #{mobile,jdbcType=VARCHAR},
+            admin_state   = #{adminState,jdbcType=SMALLINT},
+            last_logon_ip = #{lastLogonIp,jdbcType=VARCHAR},
+            role_id       = #{roleId,jdbcType=VARCHAR},
+            belongto      = #{belongto,jdbcType=VARCHAR},
+            session_id    = #{sessionId,jdbcType=VARCHAR},
+            available     = #{available,jdbcType=BIT},
+            remark        = #{remark,jdbcType=VARCHAR},
+            creator       = #{creator,jdbcType=VARCHAR},
+            create_time   = #{createTime,jdbcType=TIMESTAMP},
+            modifier      = #{modifier,jdbcType=VARCHAR},
+            modify_time   = #{modifyTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByUserNameSelective" parameterType="com.rxh.pojo.sys.SysUser">
+        update sys_user
+        <set>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null">
+                real_name = #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNo != null">
+                order_no = #{orderNo,jdbcType=INTEGER},
+            </if>
+            <if test="deptId != null">
+                dept_id = #{deptId,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="telphone != null">
+                telphone = #{telphone,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="adminState != null">
+                admin_state = #{adminState,jdbcType=SMALLINT},
+            </if>
+            <if test="lastLogonIp != null">
+                last_logon_ip = #{lastLogonIp,jdbcType=VARCHAR},
+            </if>
+            <if test="roleId != null">
+                role_id = #{roleId,jdbcType=VARCHAR},
+            </if>
+            <if test="belongto != null">
+                belongto = #{belongto,jdbcType=VARCHAR},
+            </if>
+            <if test="sessionId != null">
+                session_id = #{sessionId,jdbcType=VARCHAR},
+            </if>
+            <if test="available != null">
+                available = #{available,jdbcType=BIT},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where user_name = #{userName,jdbcType=INTEGER}
+    </update>
+    <select id="selectByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_user
+        WHERE user_name = #{username}
+    </select>
+    <select id="selectAll" resultType="com.rxh.pojo.sys.SysUser">
+        SELECT
+            <include refid="Default_User_Info"/>
+        FROM sys_user
+        ORDER BY id DESC
+    </select>
+    <delete id="deleteByIdList">
+        DELETE FROM sys_user
+        WHERE id IN
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+    <select id="selectByRoleId" resultType="com.rxh.pojo.sys.SysUser">
+        SELECT
+            <include refid="Default_User_Info"/>
+        FROM sys_user
+        WHERE role_id = #{roleId}
+    </select>
+</mapper>

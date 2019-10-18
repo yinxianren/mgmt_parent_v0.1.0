@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!-- URL拦截 -->
+    <http pattern="/user/login" security="none"/>
+    <http pattern="/css/**" security="none"/>
+    <http pattern="/js/**" security="none"/>
+    <http use-expressions="true" auto-config="false" create-session="ifRequired">
+        <csrf disabled="true"/>
+        <intercept-url pattern="/" access="isFullyAuthenticated()"/>
+        <intercept-url pattern="/views/*" access="isFullyAuthenticated()"/>
+        <intercept-url pattern="/user/*" access="isFullyAuthenticated()"/>
+
+        <!-- forbidden -->
+        <!--<access-denied-handler error-page="/"/>-->
+        <form-login login-page="/user/login"
+                    authentication-failure-handler-ref="failureHandler"
+                    authentication-success-handler-ref="successHandler"
+                    username-parameter="username"
+                    password-parameter="password"/>
+        <session-management invalid-session-url="/user/login?error=3" session-fixation-protection="migrateSession">
+            <concurrency-control max-sessions="1" expired-url="/user/login?error=2"
+                                 session-registry-ref="sessionRegistry"/>
+        </session-management>
+        <custom-filter ref="sessionFilter" after="SECURITY_CONTEXT_FILTER"/>
+        <logout delete-cookies="JSESSIONID"/>
+    </http>
+
+    <!-- 登录验证 -->
+    <authentication-manager>
+        <authentication-provider user-service-ref="userDetailsService">
+            <password-encoder ref="bCryptPasswordEncoder"/>
+        </authentication-provider>
+    </authentication-manager>
+
+    <!-- 重写获取用户信息方法 -->
+    <beans:bean id="userDetailsService" class="com.rxh.spring.security.details.service.MyUserDetailsService">
+        <beans:property name="agmentUserService" ref="agmentUserService"/>
+    </beans:bean>
+    <beans:bean id="bCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+    <!-- 重写登录成功后执行方法 -->
+    <beans:bean id="successHandler" class="com.rxh.spring.security.config.MySuccessHandler">
+        <beans:property name="userService" ref="userService"/>
+        <beans:property name="agentSystemService" ref="agentSystemService"/>
+        <beans:property name="agentMerchantInfoService" ref="agentMerchantInfoService"/>
+    </beans:bean>
+    <!-- 重写登录失败后执行方法 -->
+    <beans:bean id="failureHandler" class="com.rxh.spring.security.config.MyFailureHandler">
+        <beans:property name="defaultFailureUrl" value="/user/login?error=1"/>
+        <beans:property name="agentSystemService" ref="agentSystemService"/>
+    </beans:bean>
+
+    <!-- 角色层次 -->
+    <beans:bean id="roleHierarchyVoter" class="org.springframework.security.access.vote.RoleHierarchyVoter">
+        <beans:constructor-arg ref="roleHierarchy"/>
+    </beans:bean>
+    <beans:bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+        <beans:property name="hierarchy">
+            <beans:value type="java.lang.String">
+                ROLE_MERCHANT_ADMIN > ROLE_MERCHANT_USER
+            </beans:value>
+        </beans:property>
+    </beans:bean>
+
+    <!-- 自定义Filter -->
+    <beans:bean id="sessionFilter" class="com.rxh.spring.security.filter.ExpiredSessionFilter"/>
+
+    <!-- Spring Security 对 Spring Session Data Redis 支持 -->
+    <beans:bean id="sessionRegistry" class="org.springframework.session.security.SpringSessionBackedSessionRegistry">
+        <beans:constructor-arg ref="sessionRepository"/>
+    </beans:bean>
+
+</beans:beans>

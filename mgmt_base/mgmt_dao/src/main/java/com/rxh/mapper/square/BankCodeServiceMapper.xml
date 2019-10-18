@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rxh.mapper.square.BankCodeServiceMapper">
+    <resultMap id="BaseResultMap" type="com.rxh.square.pojo.BankCode">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="bank_code" property="bankCode" jdbcType="VARCHAR"/>
+        <result column="bank_name" property="bankName" jdbcType="VARCHAR"/>
+        <result column="bank_short_name" property="bankShortName" jdbcType="VARCHAR"/>
+        <result column="bank_three_code" property="bankThreeCode" jdbcType="VARCHAR"/>
+        <result column="extend_parameter1" property="extendParameter1" jdbcType="VARCHAR"/>
+        <result column="extend_parameter2" property="extendParameter2" jdbcType="VARCHAR"/>
+        <result column="extend_parameter3" property="extendParameter3" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+    id, bank_code, bank_name, bank_short_name, bank_three_code, extend_parameter1,
+    extend_parameter2, extend_parameter3, create_time, remark
+  </sql>
+    <select id="getBankName"  resultType="java.lang.String" parameterType="java.lang.String">
+      SELECT
+      bank_name
+      FROM
+      bank_code
+      WHERE
+      bank_code = #{bankCode,jdbcType=VARCHAR}
+      OR
+      bank_three_code = #{bankCode,jdbcType=VARCHAR}
+      </select>
+
+    <select id="getShortBankName"  resultType="java.lang.String" parameterType="java.lang.String">
+      SELECT
+      bank_short_name
+      FROM
+      bank_code
+      WHERE
+      bank_code = #{bankCode,jdbcType=VARCHAR}
+      OR
+      bank_three_code = #{bankCode,jdbcType=VARCHAR}
+      </select>
+    <select id="getBankInfo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        bank_code
+        WHERE
+        bank_code = #{bankCode,jdbcType=VARCHAR}
+        OR
+        bank_three_code = #{bankCode,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

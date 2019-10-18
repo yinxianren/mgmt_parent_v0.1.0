@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rxh.mapper.sys.SysConstantMapper">
+
+    <resultMap id="BaseResultMap" type="com.rxh.pojo.sys.SysConstant">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="first_value" jdbcType="VARCHAR" property="firstValue" />
+        <result column="second_value" jdbcType="VARCHAR" property="secondValue" />
+        <result column="group_code" jdbcType="VARCHAR" property="groupCode" />
+        <result column="sort_value" jdbcType="INTEGER" property="sortValue" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, first_value, second_value, group_code, sort_value
+    </sql>
+    <sql id="No_Id_Column_List">
+        name, first_value, second_value, group_code, sort_value
+    </sql>
+
+    <!--动态条件 -->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null and id !=''">
+                and id=#{id}
+            </if>
+            <if test="name !=null and name !=''">
+                and name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="firstValue !=null and firstValue !=''">
+                and first_value like CONCAT('%',#{firstValue},'%')
+            </if>
+            <if test="secondValue !=null and secondValue !=''">
+                and second_value like CONCAT('%',#{secondValue},'%')
+            </if>
+            <if test="groupCode !=null and groupCode !=''">
+                and group_code = #{groupCode}
+            </if>
+            <if test="sortValue !=null and sortValue !=''">
+                and sort_value like CONCAT('%',#{sortValue},'%')
+            </if>
+        </where>
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from sys_constant
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from sys_constant
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.rxh.pojo.sys.SysConstant">
+        insert into sys_constant (id, name, first_value,
+                                  second_value, group_code, sort_value
+        )
+        values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{firstValue,jdbcType=VARCHAR},
+                #{secondValue,jdbcType=VARCHAR}, #{groupCode,jdbcType=VARCHAR}, #{sortValue,jdbcType=INTEGER}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.rxh.pojo.sys.SysConstant">
+        insert into sys_constant
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="firstValue != null">
+                first_value,
+            </if>
+            <if test="secondValue != null">
+                second_value,
+            </if>
+            <if test="groupCode != null">
+                group_code,
+            </if>
+            <if test="sortValue != null">
+                sort_value,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="firstValue != null">
+                #{firstValue,jdbcType=VARCHAR},
+            </if>
+            <if test="secondValue != null">
+                #{secondValue,jdbcType=VARCHAR},
+            </if>
+            <if test="groupCode != null">
+                #{groupCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sortValue != null">
+                #{sortValue,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.rxh.pojo.sys.SysConstant">
+        update sys_constant
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="firstValue != null">
+                first_value = #{firstValue,jdbcType=VARCHAR},
+            </if>
+            <if test="secondValue != null">
+                second_value = #{secondValue,jdbcType=VARCHAR},
+            </if>
+            <if test="groupCode != null">
+                group_code = #{groupCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sortValue != null">
+                sort_value = #{sortValue,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.rxh.pojo.sys.SysConstant">
+        update sys_constant
+        set name = #{name,jdbcType=VARCHAR},
+            first_value = #{firstValue,jdbcType=VARCHAR},
+            second_value = #{secondValue,jdbcType=VARCHAR},
+            group_code = #{groupCode,jdbcType=VARCHAR},
+            sort_value = #{sortValue,jdbcType=INTEGER}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectByGroupName" resultType="com.rxh.pojo.sys.SysConstant">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_constant
+        WHERE group_code = #{groupName}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_constant
+    </select>
+    <select id="getProduct" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_constant
+        t
+        where t.group_code='ProductInfo'
+    </select>
+
+    <!--根据条件查询列表 -->
+    <select id="queryList" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_constant
+        <include refid="where_filters"/>
+        <if test="sortFieldName!=null and sortFieldName!=''">
+            ORDER BY
+            ${sortFieldName}
+            <if test="sortType!=null and sortType!=''">
+                ${sortType}
+            </if>
+        </if>
+        <if test="pageFirst!=null">
+            limit #{pageFirst},#{pageSize}
+        </if>
+    </select>
+
+    <!--根据条件查询列表 -->
+    <select id="getConstantAllResultCount" parameterType="map" resultType="int">
+        select
+        count(id)
+        from sys_constant
+        <include refid="where_filters"/>
+    </select>
+
+    <!--根据条件查询唯一记录 -->
+    <!--<select id="selectByCondition" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_constant
+        <include refid="where_filters"/>
+    </select>-->
+
+    <!--根据groupCode查询对象数据 -->
+    <select id="selectByConstant" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_constant
+        where 1=1
+        and group_code = #{groupCode}
+        and first_value = #{firstValue}
+    </select>
+
+    <select id="selectByGroupNameForMapKeyFirstValue" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_constant
+        WHERE group_code = #{groupName}
+    </select>
+    <select id="selectByGroupNameAndSortValueIsNotNULL" resultType="com.rxh.pojo.sys.SysConstant">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_constant
+        WHERE group_code = #{groupName}
+        AND sort_value !=0
+    </select>
+    <select id="getStateByProvince" resultType="com.rxh.pojo.sys.SysConstant">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_constant
+        WHERE group_code ='Province'
+        AND first_value = #{province}
+    </select>
+    <select id="getConstantByCurrency" resultType="com.rxh.pojo.sys.SysConstant">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_constant
+        WHERE group_code ='Currency'
+        AND first_value = #{currency}
+    </select>
+
+    <select id="getOneByFirstValueAndCode" resultType="com.rxh.pojo.sys.SysConstant">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_constant
+        WHERE group_code =#{groupCode}
+        AND first_value = #{firstValue}
+    </select>
+
+</mapper>

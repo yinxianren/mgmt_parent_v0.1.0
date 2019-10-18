@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--<contextName>${HOSTNAME}</contextName>-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d [%thread] %-5level %logger{36} [%method %line] - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!--<timestamp key="byDay" datePattern="yyyyMMdd"/>-->
+    <!--<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>../log/ServiceMySqlLog-${byDay}.log</file>
+        <encoder>
+            <pattern>%contextName %date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>-->
+    <!--<logger class="com.alibaba.dubbo" level="INFO"/>-->
+    <!--<logger class="org.apache.zookeeper" level="INFO"/>-->
+    <!--<logger class="org.springframework" level="INFO"/>-->
+    <root level="${logger.level}">
+        <appender-ref ref="STDOUT" />
+    </root>
+    <logger name="com.rxh.mapper" level="DEBUG">
+        <appender-ref ref="FILE" />
+    </logger>
+</configuration>

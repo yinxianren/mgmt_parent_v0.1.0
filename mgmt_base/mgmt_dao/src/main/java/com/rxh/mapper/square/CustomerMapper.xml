@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rxh.mapper.square.CustomerMapper">
+    <resultMap id="BaseResultMap_Mer" type="com.rxh.square.pojo.Customer">
+        <result column="mer_id" property="customerId" jdbcType="VARCHAR"/>
+        <result column="merchant_name" property="customerName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="BaseResultMap_Agent" type="com.rxh.square.pojo.Customer">
+        <result column="agent_merchant_id" property="customerId" jdbcType="VARCHAR"/>
+        <result column="agent_merchant_name" property="customerName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getMerChants" resultMap="BaseResultMap_Mer">
+      select
+      mer_id,
+      merchant_name
+      from merchant_info
+      </select>
+    <select id="getAgents" resultMap="BaseResultMap_Agent">
+      select
+      agent_merchant_id,
+      agent_merchant_name
+      from agent_merchant_info
+      </select>
+
+</mapper>

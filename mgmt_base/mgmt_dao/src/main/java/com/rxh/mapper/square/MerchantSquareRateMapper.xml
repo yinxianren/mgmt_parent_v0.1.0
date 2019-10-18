@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rxh.mapper.square.MerchantSquareRateMapper" >
+  <resultMap id="BaseResultMap" type="com.rxh.square.pojo.MerchantRate" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="mer_id" property="merId" jdbcType="VARCHAR" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="single_fee" property="singleFee" jdbcType="DECIMAL" />
+    <result column="rate_fee" property="rateFee" jdbcType="DECIMAL" />
+    <result column="bond_rate" property="bondRate" jdbcType="DECIMAL" />
+    <result column="settlecycle" property="settlecycle" jdbcType="VARCHAR" />
+    <result column="bond_cycle" property="bondCycle" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, mer_id, pay_type, single_fee, rate_fee, bond_rate, settlecycle,bond_cycle, status
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.rxh.square.pojo.MerchantRateExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from merchant_rate
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="search" resultMap="BaseResultMap" parameterType="com.rxh.square.pojo.MerchantRateExample" >
+    select
+    <include refid="Base_Column_List" />
+    from merchant_rate
+   where mer_id=#{merId,jdbcType=VARCHAR}
+  </select>
+  <select id="merSearch" resultMap="BaseResultMap" parameterType="com.rxh.square.pojo.MerchantRateExample" >
+    select
+    <include refid="Base_Column_List" />
+    from merchant_rate
+    where mer_id=#{merId,jdbcType=VARCHAR} and status = 0
+  </select>
+  <select id="getAll" resultMap="BaseResultMap" parameterType="com.rxh.square.pojo.MerchantRateExample" >
+    select
+    <include refid="Base_Column_List" />
+    from merchant_rate
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from merchant_rate
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="getMerchantRate" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from merchant_rate
+    where mer_id = #{merId,jdbcType=VARCHAR}
+  </select>
+  <select id="getMerchantRateByIdAndPayType" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from merchant_rate
+    where mer_id = #{merId,jdbcType=VARCHAR}
+    and pay_type=#{payType,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from merchant_rate
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByMerId" parameterType="java.lang.String" >
+    delete from merchant_rate
+    where mer_id = #{merId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.rxh.square.pojo.MerchantRateExample" >
+    delete from merchant_rate
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.rxh.square.pojo.MerchantRate" >
+    insert into merchant_rate (id, mer_id, pay_type,
+      single_fee, rate_fee, bond_rate,
+      settlecycle,bond_cycle, status)
+    values (#{id,jdbcType=VARCHAR}, #{merId,jdbcType=VARCHAR}, #{payType,jdbcType=VARCHAR},
+      #{singleFee,jdbcType=DECIMAL}, #{rateFee,jdbcType=DECIMAL}, #{bondRate,jdbcType=DECIMAL},
+      #{settlecycle,jdbcType=VARCHAR}, #{bondCycle,jdbcType=INTEGER}, #{status,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rxh.square.pojo.MerchantRate" >
+    insert into merchant_rate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="merId != null" >
+        mer_id,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="singleFee != null" >
+        single_fee,
+      </if>
+      <if test="rateFee != null" >
+        rate_fee,
+      </if>
+      <if test="bondRate != null" >
+        bond_rate,
+      </if>
+      <if test="settlecycle != null" >
+        settlecycle,
+      </if>
+      <if test="bondCycle != null" >
+        bond_cycle,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="merId != null" >
+        #{merId,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="singleFee != null" >
+        #{singleFee,jdbcType=DECIMAL},
+      </if>
+      <if test="rateFee != null" >
+        #{rateFee,jdbcType=DECIMAL},
+      </if>
+      <if test="bondRate != null" >
+        #{bondRate,jdbcType=DECIMAL},
+      </if>
+      <if test="settlecycle != null" >
+        #{settlecycle,jdbcType=VARCHAR},
+      </if>
+      <if test="bondCycle != null" >
+        #{bondCycle,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.rxh.square.pojo.MerchantRateExample" resultType="java.lang.Integer" >
+    select count(*) from merchant_rate
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update merchant_rate
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merId != null" >
+        mer_id = #{record.merId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.payType != null" >
+        pay_type = #{record.payType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.singleFee != null" >
+        single_fee = #{record.singleFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.rateFee != null" >
+        rate_fee = #{record.rateFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bondRate != null" >
+        bond_rate = #{record.bondRate,jdbcType=DECIMAL},
+      </if>
+      <if test="record.settlecycle != null" >
+        settlecycle = #{record.settlecycle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bondCycle != null" >
+        bond_cycle = #{record.bondCycle,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update merchant_rate
+    set id = #{record.id,jdbcType=VARCHAR},
+      mer_id = #{record.merId,jdbcType=VARCHAR},
+      pay_type = #{record.payType,jdbcType=VARCHAR},
+      single_fee = #{record.singleFee,jdbcType=DECIMAL},
+      rate_fee = #{record.rateFee,jdbcType=DECIMAL},
+      bond_rate = #{record.bondRate,jdbcType=DECIMAL},
+      settlecycle = #{record.settlecycle,jdbcType=VARCHAR},
+    bond_cycle = #{record.bondCycle,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rxh.square.pojo.MerchantRate" >
+    update merchant_rate
+    <set >
+      <if test="merId != null" >
+        mer_id = #{merId,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="singleFee != null" >
+        single_fee = #{singleFee,jdbcType=DECIMAL},
+      </if>
+      <if test="rateFee != null" >
+        rate_fee = #{rateFee,jdbcType=DECIMAL},
+      </if>
+      <if test="bondRate != null" >
+        bond_rate = #{bondRate,jdbcType=DECIMAL},
+      </if>
+      <if test="settlecycle != null" >
+        settlecycle = #{settlecycle,jdbcType=VARCHAR},
+      </if>
+      <if test="bondCycle != null" >
+        bond_cycle = #{bondCycle,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rxh.square.pojo.MerchantRate" >
+    update merchant_rate
+    set mer_id = #{merId,jdbcType=VARCHAR},
+      pay_type = #{payType,jdbcType=VARCHAR},
+      single_fee = #{singleFee,jdbcType=DECIMAL},
+      rate_fee = #{rateFee,jdbcType=DECIMAL},
+      bond_rate = #{bondRate,jdbcType=DECIMAL},
+      settlecycle = #{settlecycle,jdbcType=VARCHAR},
+      bond_cycle = #{bondCycle,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

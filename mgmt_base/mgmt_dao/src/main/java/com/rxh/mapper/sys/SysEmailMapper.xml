@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rxh.mapper.sys.SysEmailMapper">
+  <resultMap id="BaseResultMap" type="com.rxh.pojo.sys.SysEmail">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="writer" jdbcType="VARCHAR" property="writer" />
+    <result column="to_address" jdbcType="VARCHAR" property="toAddress" />
+    <result column="subject" jdbcType="VARCHAR" property="subject" />
+    <result column="scheme" jdbcType="SMALLINT" property="scheme" />
+    <result column="type" jdbcType="SMALLINT" property="type" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="attachment" jdbcType="VARCHAR" property="attachment" />
+    <result column="send_type" jdbcType="SMALLINT" property="sendType" />
+    <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
+    <result column="status" jdbcType="SMALLINT" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, writer, to_address, subject, scheme, type, content, attachment, send_type, send_time, 
+    status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_email
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from sys_email
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.rxh.pojo.sys.SysEmail">
+    insert into sys_email (id, writer, to_address, 
+      subject, scheme, type, 
+      content, attachment, send_type, 
+      send_time, status)
+    values (#{id,jdbcType=VARCHAR}, #{writer,jdbcType=VARCHAR}, #{toAddress,jdbcType=VARCHAR}, 
+      #{subject,jdbcType=VARCHAR}, #{scheme,jdbcType=SMALLINT}, #{type,jdbcType=SMALLINT}, 
+      #{content,jdbcType=VARCHAR}, #{attachment,jdbcType=VARCHAR}, #{sendType,jdbcType=SMALLINT}, 
+      #{sendTime,jdbcType=TIMESTAMP}, #{status,jdbcType=SMALLINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rxh.pojo.sys.SysEmail">
+    insert into sys_email
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="writer != null">
+        writer,
+      </if>
+      <if test="toAddress != null">
+        to_address,
+      </if>
+      <if test="subject != null">
+        subject,
+      </if>
+      <if test="scheme != null">
+        scheme,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="attachment != null">
+        attachment,
+      </if>
+      <if test="sendType != null">
+        send_type,
+      </if>
+      <if test="sendTime != null">
+        send_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="writer != null">
+        #{writer,jdbcType=VARCHAR},
+      </if>
+      <if test="toAddress != null">
+        #{toAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null">
+        #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="scheme != null">
+        #{scheme,jdbcType=SMALLINT},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="attachment != null">
+        #{attachment,jdbcType=VARCHAR},
+      </if>
+      <if test="sendType != null">
+        #{sendType,jdbcType=SMALLINT},
+      </if>
+      <if test="sendTime != null">
+        #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=SMALLINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rxh.pojo.sys.SysEmail">
+    update sys_email
+    <set>
+      <if test="writer != null">
+        writer = #{writer,jdbcType=VARCHAR},
+      </if>
+      <if test="toAddress != null">
+        to_address = #{toAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null">
+        subject = #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="scheme != null">
+        scheme = #{scheme,jdbcType=SMALLINT},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="attachment != null">
+        attachment = #{attachment,jdbcType=VARCHAR},
+      </if>
+      <if test="sendType != null">
+        send_type = #{sendType,jdbcType=SMALLINT},
+      </if>
+      <if test="sendTime != null">
+        send_time = #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rxh.pojo.sys.SysEmail">
+    update sys_email
+    set writer = #{writer,jdbcType=VARCHAR},
+      to_address = #{toAddress,jdbcType=VARCHAR},
+      subject = #{subject,jdbcType=VARCHAR},
+      scheme = #{scheme,jdbcType=SMALLINT},
+      type = #{type,jdbcType=SMALLINT},
+      content = #{content,jdbcType=VARCHAR},
+      attachment = #{attachment,jdbcType=VARCHAR},
+      send_type = #{sendType,jdbcType=SMALLINT},
+      send_time = #{sendTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

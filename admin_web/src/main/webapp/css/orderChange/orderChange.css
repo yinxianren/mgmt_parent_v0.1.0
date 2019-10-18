@@ -1,0 +1,67 @@
+
+	.pagination {
+	
+	    display: inline-block;
+	    padding-right: 0px;
+	    margin: 0;
+	    margin-top: 5px;
+	    border-radius: 4px;
+	    
+	}
+	
+	.operate {
+	
+	    cursor: pointer;
+        color: #005596;
+	
+	
+	}
+	
+	.operate:hover {
+	
+	   text-decoration: underline;
+	
+	
+	}
+	
+	.addPadding {
+	
+	    padding-left: 15px;
+	    
+	}
+
+	
+	table tbody {
+	
+	 word-break: break-word;
+	
+	}
+	
+    thead .ng-table-sort-header th:nth-child(1) {
+	
+	    width: 222px;
+		
+	}
+	
+	thead .ng-table-sort-header th {
+	
+	    width: 100px;
+		
+	}
+	
+    thead .ng-table-sort-header th {
+	
+	    padding-left: 10px;
+	    padding-right: 10px;
+	    padding-top: 10px;
+		
+	}
+	
+	
+	.orderChangetable > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+	    border-top: 1px solid #e7eaec;
+	    line-height: 1.42857;
+	    padding: 4px;
+	    vertical-align: middle;
+}
+	

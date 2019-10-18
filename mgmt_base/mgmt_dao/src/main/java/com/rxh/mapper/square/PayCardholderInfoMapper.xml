@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rxh.mapper.square.PayCardholderInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.rxh.square.pojo.PayCardholderInfo" >
+    <id column="pay_id" property="payId" jdbcType="VARCHAR" />
+    <result column="cardholder_name" property="cardholderName" jdbcType="VARCHAR" />
+    <result column="cardholder_phone" property="cardholderPhone" jdbcType="VARCHAR" />
+    <result column="identity_type" property="identityType" jdbcType="INTEGER" />
+    <result column="identity_num" property="identityNum" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="bank_branch_name" property="bankBranchName" jdbcType="VARCHAR" />
+    <result column="bank_branch_num" property="bankBranchNum" jdbcType="CHAR" />
+    <result column="bankcard_num" property="bankcardNum" jdbcType="VARCHAR" />
+    <result column="bankcard_type" property="bankcardType" jdbcType="INTEGER" />
+    <result column="expiry_year" property="expiryYear" jdbcType="VARCHAR" />
+    <result column="expiry_month" property="expiryMonth" jdbcType="VARCHAR" />
+    <result column="CVV" property="cvv" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    pay_id, cardholder_name, cardholder_phone, identity_type, identity_num, bank_name, 
+    bank_branch_name, bank_branch_num, bankcard_num, bankcard_type, expiry_year, expiry_month, 
+    CVV
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.rxh.square.pojo.PayCardholderInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from pay_cardholder_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from pay_cardholder_info
+    where pay_id = #{payId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from pay_cardholder_info
+    where pay_id = #{payId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.rxh.square.pojo.PayCardholderInfoExample" >
+    delete from pay_cardholder_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.rxh.square.pojo.PayCardholderInfo" >
+    insert into pay_cardholder_info (pay_id, cardholder_name, cardholder_phone, 
+      identity_type, identity_num, bank_name, 
+      bank_branch_name, bank_branch_num, bankcard_num, 
+      bankcard_type, expiry_year, expiry_month, 
+      CVV)
+    values (#{payId,jdbcType=VARCHAR}, #{cardholderName,jdbcType=VARCHAR}, #{cardholderPhone,jdbcType=VARCHAR}, 
+      #{identityType,jdbcType=INTEGER}, #{identityNum,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR}, 
+      #{bankBranchName,jdbcType=VARCHAR}, #{bankBranchNum,jdbcType=CHAR}, #{bankcardNum,jdbcType=VARCHAR}, 
+      #{bankcardType,jdbcType=INTEGER}, #{expiryYear,jdbcType=VARCHAR}, #{expiryMonth,jdbcType=VARCHAR}, 
+      #{cvv,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rxh.square.pojo.PayCardholderInfo" >
+    insert into pay_cardholder_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="payId != null" >
+        pay_id,
+      </if>
+      <if test="cardholderName != null" >
+        cardholder_name,
+      </if>
+      <if test="cardholderPhone != null" >
+        cardholder_phone,
+      </if>
+      <if test="identityType != null" >
+        identity_type,
+      </if>
+      <if test="identityNum != null" >
+        identity_num,
+      </if>
+      <if test="bankName != null" >
+        bank_name,
+      </if>
+      <if test="bankBranchName != null" >
+        bank_branch_name,
+      </if>
+      <if test="bankBranchNum != null" >
+        bank_branch_num,
+      </if>
+      <if test="bankcardNum != null" >
+        bankcard_num,
+      </if>
+      <if test="bankcardType != null" >
+        bankcard_type,
+      </if>
+      <if test="expiryYear != null" >
+        expiry_year,
+      </if>
+      <if test="expiryMonth != null" >
+        expiry_month,
+      </if>
+      <if test="cvv != null" >
+        CVV,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="payId != null" >
+        #{payId,jdbcType=VARCHAR},
+      </if>
+      <if test="cardholderName != null" >
+        #{cardholderName,jdbcType=VARCHAR},
+      </if>
+      <if test="cardholderPhone != null" >
+        #{cardholderPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="identityType != null" >
+        #{identityType,jdbcType=INTEGER},
+      </if>
+      <if test="identityNum != null" >
+        #{identityNum,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankBranchName != null" >
+        #{bankBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankBranchNum != null" >
+        #{bankBranchNum,jdbcType=CHAR},
+      </if>
+      <if test="bankcardNum != null" >
+        #{bankcardNum,jdbcType=VARCHAR},
+      </if>
+      <if test="bankcardType != null" >
+        #{bankcardType,jdbcType=INTEGER},
+      </if>
+      <if test="expiryYear != null" >
+        #{expiryYear,jdbcType=VARCHAR},
+      </if>
+      <if test="expiryMonth != null" >
+        #{expiryMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="cvv != null" >
+        #{cvv,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.rxh.square.pojo.PayCardholderInfoExample" resultType="java.lang.Integer" >
+    select count(*) from pay_cardholder_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update pay_cardholder_info
+    <set >
+      <if test="record.payId != null" >
+        pay_id = #{record.payId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cardholderName != null" >
+        cardholder_name = #{record.cardholderName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cardholderPhone != null" >
+        cardholder_phone = #{record.cardholderPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.identityType != null" >
+        identity_type = #{record.identityType,jdbcType=INTEGER},
+      </if>
+      <if test="record.identityNum != null" >
+        identity_num = #{record.identityNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankName != null" >
+        bank_name = #{record.bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankBranchName != null" >
+        bank_branch_name = #{record.bankBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankBranchNum != null" >
+        bank_branch_num = #{record.bankBranchNum,jdbcType=CHAR},
+      </if>
+      <if test="record.bankcardNum != null" >
+        bankcard_num = #{record.bankcardNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankcardType != null" >
+        bankcard_type = #{record.bankcardType,jdbcType=INTEGER},
+      </if>
+      <if test="record.expiryYear != null" >
+        expiry_year = #{record.expiryYear,jdbcType=VARCHAR},
+      </if>
+      <if test="record.expiryMonth != null" >
+        expiry_month = #{record.expiryMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cvv != null" >
+        CVV = #{record.cvv,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update pay_cardholder_info
+    set pay_id = #{record.payId,jdbcType=VARCHAR},
+      cardholder_name = #{record.cardholderName,jdbcType=VARCHAR},
+      cardholder_phone = #{record.cardholderPhone,jdbcType=VARCHAR},
+      identity_type = #{record.identityType,jdbcType=INTEGER},
+      identity_num = #{record.identityNum,jdbcType=VARCHAR},
+      bank_name = #{record.bankName,jdbcType=VARCHAR},
+      bank_branch_name = #{record.bankBranchName,jdbcType=VARCHAR},
+      bank_branch_num = #{record.bankBranchNum,jdbcType=CHAR},
+      bankcard_num = #{record.bankcardNum,jdbcType=VARCHAR},
+      bankcard_type = #{record.bankcardType,jdbcType=INTEGER},
+      expiry_year = #{record.expiryYear,jdbcType=VARCHAR},
+      expiry_month = #{record.expiryMonth,jdbcType=VARCHAR},
+      CVV = #{record.cvv,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rxh.square.pojo.PayCardholderInfo" >
+    update pay_cardholder_info
+    <set >
+      <if test="cardholderName != null" >
+        cardholder_name = #{cardholderName,jdbcType=VARCHAR},
+      </if>
+      <if test="cardholderPhone != null" >
+        cardholder_phone = #{cardholderPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="identityType != null" >
+        identity_type = #{identityType,jdbcType=INTEGER},
+      </if>
+      <if test="identityNum != null" >
+        identity_num = #{identityNum,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankBranchName != null" >
+        bank_branch_name = #{bankBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankBranchNum != null" >
+        bank_branch_num = #{bankBranchNum,jdbcType=CHAR},
+      </if>
+      <if test="bankcardNum != null" >
+        bankcard_num = #{bankcardNum,jdbcType=VARCHAR},
+      </if>
+      <if test="bankcardType != null" >
+        bankcard_type = #{bankcardType,jdbcType=INTEGER},
+      </if>
+      <if test="expiryYear != null" >
+        expiry_year = #{expiryYear,jdbcType=VARCHAR},
+      </if>
+      <if test="expiryMonth != null" >
+        expiry_month = #{expiryMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="cvv != null" >
+        CVV = #{cvv,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pay_id = #{payId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rxh.square.pojo.PayCardholderInfo" >
+    update pay_cardholder_info
+    set cardholder_name = #{cardholderName,jdbcType=VARCHAR},
+      cardholder_phone = #{cardholderPhone,jdbcType=VARCHAR},
+      identity_type = #{identityType,jdbcType=INTEGER},
+      identity_num = #{identityNum,jdbcType=VARCHAR},
+      bank_name = #{bankName,jdbcType=VARCHAR},
+      bank_branch_name = #{bankBranchName,jdbcType=VARCHAR},
+      bank_branch_num = #{bankBranchNum,jdbcType=CHAR},
+      bankcard_num = #{bankcardNum,jdbcType=VARCHAR},
+      bankcard_type = #{bankcardType,jdbcType=INTEGER},
+      expiry_year = #{expiryYear,jdbcType=VARCHAR},
+      expiry_month = #{expiryMonth,jdbcType=VARCHAR},
+      CVV = #{cvv,jdbcType=VARCHAR}
+    where pay_id = #{payId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--Edit the namespace!-->
+<mapper namespace="com.rxh.mapper.base.IdMapper">
+    <select id="selectLastIdByDate" resultType="string">
+        SELECT MAX(id)
+        FROM ${tableName}
+        WHERE
+
+        DATE_FORMAT(`application_time`,'%Y-%m-%d')= DATE_FORMAT(NOW(),'%Y-%m-%d')
+    </select>
+
+    <select id="selectLastId" resultType="string">
+        SELECT MAX(id)
+        FROM ${tableName}
+    </select>
+</mapper>

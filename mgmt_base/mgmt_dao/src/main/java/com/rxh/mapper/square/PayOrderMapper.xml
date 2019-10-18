@@ -1,0 +1,907 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rxh.mapper.square.PayOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.rxh.square.pojo.PayOrder" >
+    <id column="pay_id" property="payId" jdbcType="VARCHAR" />
+    <result column="mer_id" property="merId" jdbcType="VARCHAR" />
+    <result column="mer_order_id" property="merOrderId" jdbcType="VARCHAR" />
+    <result column="organization_id" property="organizationId" jdbcType="VARCHAR" />
+    <result column="channel_id" property="channelId" jdbcType="VARCHAR" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="channel_trans_code" property="channelTransCode" jdbcType="VARCHAR" />
+    <result column="currency" property="currency" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="real_amount" property="realAmount" jdbcType="DECIMAL" />
+    <result column="terminal_fee" property="terminalFee" jdbcType="DECIMAL" />
+    <result column="fee" property="fee" jdbcType="DECIMAL" />
+    <result column="channel_fee" property="channelFee" jdbcType="DECIMAL" />
+    <result column="agent_fee" property="agentFee" jdbcType="DECIMAL" />
+    <result column="income" property="income" jdbcType="DECIMAL" />
+    <result column="settle_cycle" property="settleCycle" jdbcType="VARCHAR" />
+    <result column="order_status" property="orderStatus" jdbcType="INTEGER" />
+    <result column="settle_status" property="settleStatus" jdbcType="INTEGER" />
+    <result column="trade_time" property="tradeTime" jdbcType="TIMESTAMP" />
+    <result column="bank_time" property="bankTime" jdbcType="TIMESTAMP" />
+    <result column="org_order_id" property="orgOrderId" jdbcType="VARCHAR" />
+    <result column="trade_result" property="tradeResult" jdbcType="VARCHAR" />
+    <result column="terminal_mer_id" property="terminalMerId" jdbcType="VARCHAR" />
+    <result column="terminal_mer_name" property="terminalMerName" jdbcType="VARCHAR" />
+    <result column="agment_id" property="agmentId" jdbcType="VARCHAR" />
+    <result column="bank_card_num" property="bankCardNum" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    pay_id, mer_id, mer_order_id, organization_id, channel_id, pay_type, channel_trans_code,
+    currency, amount, real_amount, terminal_fee, fee, channel_fee, agent_fee, income,
+    settle_cycle, order_status, settle_status, trade_time, bank_time, org_order_id, trade_result,
+    terminal_mer_id, terminal_mer_name, agment_id,bank_card_num
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.rxh.square.pojo.PayOrderExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from pay_order
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from pay_order
+    where pay_id = #{payId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from pay_order
+    where pay_id = #{payId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.rxh.square.pojo.PayOrderExample" >
+    delete from pay_order
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.rxh.square.pojo.PayOrder" >
+    insert into pay_order (pay_id, mer_id, mer_order_id,
+      organization_id, channel_id, pay_type,
+      channel_trans_code, currency, amount,
+      real_amount, terminal_fee, fee,
+      channel_fee, agent_fee, income,
+      settle_cycle, order_status, settle_status,
+      trade_time, bank_time, org_order_id,
+      trade_result, terminal_mer_id, terminal_mer_name,
+      agment_id,bank_card_num)
+    values (#{payId,jdbcType=VARCHAR}, #{merId,jdbcType=VARCHAR}, #{merOrderId,jdbcType=VARCHAR},
+      #{organizationId,jdbcType=VARCHAR}, #{channelId,jdbcType=VARCHAR}, #{payType,jdbcType=VARCHAR},
+      #{channelTransCode,jdbcType=VARCHAR}, #{currency,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL},
+      #{realAmount,jdbcType=DECIMAL}, #{terminalFee,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL},
+      #{channelFee,jdbcType=DECIMAL}, #{agentFee,jdbcType=DECIMAL}, #{income,jdbcType=DECIMAL},
+      #{settleCycle,jdbcType=VARCHAR}, #{orderStatus,jdbcType=INTEGER}, #{settleStatus,jdbcType=INTEGER},
+      #{tradeTime,jdbcType=TIMESTAMP}, #{bankTime,jdbcType=TIMESTAMP}, #{orgOrderId,jdbcType=VARCHAR},
+      #{tradeResult,jdbcType=VARCHAR}, #{terminalMerId,jdbcType=VARCHAR}, #{terminalMerName,jdbcType=VARCHAR},
+      #{agmentId,jdbcType=VARCHAR},#{bankCardNum,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rxh.square.pojo.PayOrder" >
+    insert into pay_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="payId != null" >
+        pay_id,
+      </if>
+      <if test="merId != null" >
+        mer_id,
+      </if>
+      <if test="merOrderId != null" >
+        mer_order_id,
+      </if>
+      <if test="organizationId != null" >
+        organization_id,
+      </if>
+      <if test="channelId != null" >
+        channel_id,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="channelTransCode != null" >
+        channel_trans_code,
+      </if>
+      <if test="currency != null" >
+        currency,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="realAmount != null" >
+        real_amount,
+      </if>
+      <if test="terminalFee != null" >
+        terminal_fee,
+      </if>
+      <if test="fee != null" >
+        fee,
+      </if>
+      <if test="channelFee != null" >
+        channel_fee,
+      </if>
+      <if test="agentFee != null" >
+        agent_fee,
+      </if>
+      <if test="income != null" >
+        income,
+      </if>
+      <if test="settleCycle != null" >
+        settle_cycle,
+      </if>
+      <if test="orderStatus != null" >
+        order_status,
+      </if>
+      <if test="settleStatus != null" >
+        settle_status,
+      </if>
+      <if test="tradeTime != null" >
+        trade_time,
+      </if>
+      <if test="bankTime != null" >
+        bank_time,
+      </if>
+      <if test="orgOrderId != null" >
+        org_order_id,
+      </if>
+      <if test="tradeResult != null" >
+        trade_result,
+      </if>
+      <if test="terminalMerId != null" >
+        terminal_mer_id,
+      </if>
+      <if test="terminalMerName != null" >
+        terminal_mer_name,
+      </if>
+      <if test="agmentId != null" >
+        agment_id,
+      </if>
+      <if test="bankCardNum != null" >
+        bank_card_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="payId != null" >
+        #{payId,jdbcType=VARCHAR},
+      </if>
+      <if test="merId != null" >
+        #{merId,jdbcType=VARCHAR},
+      </if>
+      <if test="merOrderId != null" >
+        #{merOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationId != null" >
+        #{organizationId,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null" >
+        #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="channelTransCode != null" >
+        #{channelTransCode,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="realAmount != null" >
+        #{realAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="terminalFee != null" >
+        #{terminalFee,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="channelFee != null" >
+        #{channelFee,jdbcType=DECIMAL},
+      </if>
+      <if test="agentFee != null" >
+        #{agentFee,jdbcType=DECIMAL},
+      </if>
+      <if test="income != null" >
+        #{income,jdbcType=DECIMAL},
+      </if>
+      <if test="settleCycle != null" >
+        #{settleCycle,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="settleStatus != null" >
+        #{settleStatus,jdbcType=INTEGER},
+      </if>
+      <if test="tradeTime != null" >
+        #{tradeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bankTime != null" >
+        #{bankTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orgOrderId != null" >
+        #{orgOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeResult != null" >
+        #{tradeResult,jdbcType=VARCHAR},
+      </if>
+      <if test="terminalMerId != null" >
+        #{terminalMerId,jdbcType=VARCHAR},
+      </if>
+      <if test="terminalMerName != null" >
+        #{terminalMerName,jdbcType=VARCHAR},
+      </if>
+      <if test="agmentId != null" >
+        #{agmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCardNum != null" >
+        #{bankCardNum,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.rxh.square.pojo.PayOrderExample" resultType="java.lang.Integer" >
+    select count(*) from pay_order
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update pay_order
+    <set >
+      <if test="record.payId != null" >
+        pay_id = #{record.payId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merId != null" >
+        mer_id = #{record.merId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merOrderId != null" >
+        mer_order_id = #{record.merOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.organizationId != null" >
+        organization_id = #{record.organizationId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channelId != null" >
+        channel_id = #{record.channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.payType != null" >
+        pay_type = #{record.payType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channelTransCode != null" >
+        channel_trans_code = #{record.channelTransCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.currency != null" >
+        currency = #{record.currency,jdbcType=VARCHAR},
+      </if>
+      <if test="record.amount != null" >
+        amount = #{record.amount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.realAmount != null" >
+        real_amount = #{record.realAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.terminalFee != null" >
+        terminal_fee = #{record.terminalFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.fee != null" >
+        fee = #{record.fee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.channelFee != null" >
+        channel_fee = #{record.channelFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.agentFee != null" >
+        agent_fee = #{record.agentFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.income != null" >
+        income = #{record.income,jdbcType=DECIMAL},
+      </if>
+      <if test="record.settleCycle != null" >
+        settle_cycle = #{record.settleCycle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderStatus != null" >
+        order_status = #{record.orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.settleStatus != null" >
+        settle_status = #{record.settleStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.tradeTime != null" >
+        trade_time = #{record.tradeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.bankTime != null" >
+        bank_time = #{record.bankTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.orgOrderId != null" >
+        org_order_id = #{record.orgOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tradeResult != null" >
+        trade_result = #{record.tradeResult,jdbcType=VARCHAR},
+      </if>
+      <if test="record.terminalMerId != null" >
+        terminal_mer_id = #{record.terminalMerId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.terminalMerName != null" >
+        terminal_mer_name = #{record.terminalMerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.agmentId != null" >
+        agment_id = #{record.agmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankCardNum != null" >
+        bank_card_num = #{record.bankCardNum,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update pay_order
+    set pay_id = #{record.payId,jdbcType=VARCHAR},
+    mer_id = #{record.merId,jdbcType=VARCHAR},
+    mer_order_id = #{record.merOrderId,jdbcType=VARCHAR},
+    organization_id = #{record.organizationId,jdbcType=VARCHAR},
+    channel_id = #{record.channelId,jdbcType=VARCHAR},
+    pay_type = #{record.payType,jdbcType=VARCHAR},
+    channel_trans_code = #{record.channelTransCode,jdbcType=VARCHAR},
+    currency = #{record.currency,jdbcType=VARCHAR},
+    amount = #{record.amount,jdbcType=DECIMAL},
+    real_amount = #{record.realAmount,jdbcType=DECIMAL},
+    terminal_fee = #{record.terminalFee,jdbcType=DECIMAL},
+    fee = #{record.fee,jdbcType=DECIMAL},
+    channel_fee = #{record.channelFee,jdbcType=DECIMAL},
+    agent_fee = #{record.agentFee,jdbcType=DECIMAL},
+    income = #{record.income,jdbcType=DECIMAL},
+    settle_cycle = #{record.settleCycle,jdbcType=VARCHAR},
+    order_status = #{record.orderStatus,jdbcType=INTEGER},
+    settle_status = #{record.settleStatus,jdbcType=INTEGER},
+    trade_time = #{record.tradeTime,jdbcType=TIMESTAMP},
+    bank_time = #{record.bankTime,jdbcType=TIMESTAMP},
+    org_order_id = #{record.orgOrderId,jdbcType=VARCHAR},
+    trade_result = #{record.tradeResult,jdbcType=VARCHAR},
+    terminal_mer_id = #{record.terminalMerId,jdbcType=VARCHAR},
+    terminal_mer_name = #{record.terminalMerName,jdbcType=VARCHAR},
+    agment_id = #{record.agmentId,jdbcType=VARCHAR},
+    bank_card_num = #{record.bankCardNum,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rxh.square.pojo.PayOrder" >
+    update pay_order
+    <set >
+      <if test="merId != null" >
+        mer_id = #{merId,jdbcType=VARCHAR},
+      </if>
+      <if test="merOrderId != null" >
+        mer_order_id = #{merOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationId != null" >
+        organization_id = #{organizationId,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null" >
+        channel_id = #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="channelTransCode != null" >
+        channel_trans_code = #{channelTransCode,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        currency = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="realAmount != null" >
+        real_amount = #{realAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="terminalFee != null" >
+        terminal_fee = #{terminalFee,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        fee = #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="channelFee != null" >
+        channel_fee = #{channelFee,jdbcType=DECIMAL},
+      </if>
+      <if test="agentFee != null" >
+        agent_fee = #{agentFee,jdbcType=DECIMAL},
+      </if>
+      <if test="income != null" >
+        income = #{income,jdbcType=DECIMAL},
+      </if>
+      <if test="settleCycle != null" >
+        settle_cycle = #{settleCycle,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null" >
+        order_status = #{orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="settleStatus != null" >
+        settle_status = #{settleStatus,jdbcType=INTEGER},
+      </if>
+      <if test="tradeTime != null" >
+        trade_time = #{tradeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bankTime != null" >
+        bank_time = #{bankTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orgOrderId != null" >
+        org_order_id = #{orgOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeResult != null" >
+        trade_result = #{tradeResult,jdbcType=VARCHAR},
+      </if>
+      <if test="terminalMerId != null" >
+        terminal_mer_id = #{terminalMerId,jdbcType=VARCHAR},
+      </if>
+      <if test="terminalMerName != null" >
+        terminal_mer_name = #{terminalMerName,jdbcType=VARCHAR},
+      </if>
+      <if test="agmentId != null" >
+        agment_id = #{agmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCardNum != null" >
+        bank_card_num = #{bankCardNum,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pay_id = #{payId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rxh.square.pojo.PayOrder" >
+    update pay_order
+    set mer_id = #{merId,jdbcType=VARCHAR},
+      mer_order_id = #{merOrderId,jdbcType=VARCHAR},
+      organization_id = #{organizationId,jdbcType=VARCHAR},
+      channel_id = #{channelId,jdbcType=VARCHAR},
+      pay_type = #{payType,jdbcType=VARCHAR},
+      channel_trans_code = #{channelTransCode,jdbcType=VARCHAR},
+      currency = #{currency,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=DECIMAL},
+      real_amount = #{realAmount,jdbcType=DECIMAL},
+      terminal_fee = #{terminalFee,jdbcType=DECIMAL},
+      fee = #{fee,jdbcType=DECIMAL},
+      channel_fee = #{channelFee,jdbcType=DECIMAL},
+      agent_fee = #{agentFee,jdbcType=DECIMAL},
+      income = #{income,jdbcType=DECIMAL},
+      settle_cycle = #{settleCycle,jdbcType=VARCHAR},
+      order_status = #{orderStatus,jdbcType=INTEGER},
+      settle_status = #{settleStatus,jdbcType=INTEGER},
+      trade_time = #{tradeTime,jdbcType=TIMESTAMP},
+      bank_time = #{bankTime,jdbcType=TIMESTAMP},
+      org_order_id = #{orgOrderId,jdbcType=VARCHAR},
+      trade_result = #{tradeResult,jdbcType=VARCHAR},
+      terminal_mer_id = #{terminalMerId,jdbcType=VARCHAR},
+      terminal_mer_name = #{terminalMerName,jdbcType=VARCHAR},
+      agment_id = #{agmentId,jdbcType=VARCHAR},
+      bank_card_num = #{bankCardNum,jdbcType=VARCHAR}
+    where pay_id = #{payId,jdbcType=VARCHAR}
+  </update>
+
+
+
+  <select id="selectAllOrder" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT
+    p.*
+    FROM
+    pay_order p
+    left join
+    merchant_info mi on mi.mer_id=p.mer_id
+
+    <trim prefix="WHERE" suffixOverrides="AND">
+      <if test="paramMap.payId != null ">
+        p.pay_id = #{paramMap.payId}  AND
+      </if>
+      <if test="paramMap.parentId != null ">
+        mi.parent_id = #{paramMap.parentId}  AND
+      </if>
+      <if test="paramMap.merId != null ">
+        p.mer_id = #{paramMap.merId} AND
+      </if>
+      <if test="paramMap.payType != null ">
+        p.pay_type = #{paramMap.payType}  AND
+      </if>
+      <if test="paramMap.merOrderId != null ">
+        p.mer_order_id = #{paramMap.merOrderId} AND
+      </if>
+      <if test="paramMap.organizationId != null ">
+        p.organization_id = #{paramMap.organizationId} AND
+      </if>
+      <if test="paramMap.channelId != null ">
+        p.channel_id = #{paramMap.channelId} AND
+      </if>
+      <if test="paramMap.orderStatus != null ">
+        p.order_status = #{paramMap.orderStatus} AND
+      </if>
+      <if test="paramMap.settleStatus != null ">
+        p.settle_status = #{paramMap.settleStatus} AND
+      </if>
+      <if test="paramMap.startDate != null and paramMap.endDate == null">
+        DATE_FORMAT( p.trade_time ,'%Y-%m-%d')
+        BETWEEN
+        DATE_FORMAT(  #{paramMap.startDate} ,'%Y-%m-%d')
+        AND
+        DATE_FORMAT(    NOW(),'%Y-%m-%d')
+      </if>
+      <if test="paramMap.startDate != null and paramMap.endDate != null ">
+        DATE_FORMAT( p.trade_time ,'%Y-%m-%d')  BETWEEN
+        DATE_FORMAT(  #{paramMap.startDate} ,'%Y-%m-%d')
+        AND
+        DATE_FORMAT(  #{paramMap.endDate},'%Y-%m-%d')
+      </if>
+    </trim>
+    order by p.trade_time desc
+    LIMIT #{paramMap.startPage},#{paramMap.pageSize}
+  </select>
+  <select id="selectSuccessOrderCountByParam" resultType="java.lang.Integer"  parameterType="java.util.Map">
+    select count(1) from pay_order p
+    left join
+    merchant_info mi on mi.mer_id=p.mer_id
+    <trim prefix="WHERE" suffixOverrides="AND">
+      <if test="paramMap.parentId != null ">
+        mi.parent_id = #{paramMap.parentId}  AND
+      </if>
+      <if test="paramMap.payId != null ">
+        p.pay_id = #{paramMap.payId}  AND
+      </if>
+      <if test="paramMap.payType != null ">
+        p.pay_type = #{paramMap.payType}  AND
+      </if>
+      <if test="paramMap.merId != null ">
+        p.mer_id = #{paramMap.merId} AND
+      </if>
+      <if test="paramMap.merOrderId != null ">
+        p.mer_order_id = #{paramMap.merOrderId} AND
+      </if>
+      <if test="paramMap.organizationId != null ">
+        p.organization_id = #{paramMap.organizationId} AND
+      </if>
+      <if test="paramMap.channelId != null ">
+        p.channel_id = #{paramMap.channelId} AND
+      </if>
+      <if test="paramMap.orderStatus != null ">
+        p.order_status = #{paramMap.orderStatus} AND
+      </if>
+      <if test="paramMap.settleStatus != null ">
+        p.settle_status = #{paramMap.settleStatus} AND
+      </if>
+      <if test="paramMap.tradeTime != null ">
+        p.trade_time = #{paramMap.tradeTime} AND
+      </if>
+    </trim>
+  </select>
+  <select id="selectSuccessOrderByParam" resultType="com.rxh.square.pojo.PayOrder" parameterType="java.util.Map">
+    select p.amount amount,p.channel_fee,p.fee from pay_order p
+    left join
+    merchant_info mi on mi.mer_id=p.mer_id
+    <trim prefix="WHERE" suffixOverrides="AND">
+      <if test="paramMap.parentId != null ">
+        mi.parent_id = #{paramMap.parentId}  AND
+      </if>
+      <if test="paramMap.payId != null ">
+        p.pay_id = #{paramMap.payId}  AND
+      </if>
+      <if test="paramMap.payType != null ">
+        p.pay_type = #{paramMap.payType}  AND
+      </if>
+      <if test="paramMap.merId != null ">
+        p.mer_id = #{paramMap.merId} AND
+      </if>
+      <if test="paramMap.merOrderId != null ">
+        p.mer_order_id = #{paramMap.merOrderId} AND
+      </if>
+      <if test="paramMap.organizationId != null ">
+        p.organization_id = #{paramMap.organizationId} AND
+      </if>
+      <if test="paramMap.channelId != null ">
+        p.channel_id = #{paramMap.channelId} AND
+      </if>
+      <if test="paramMap.orderStatus != null ">
+        p.order_status = #{paramMap.orderStatus} AND
+      </if>
+      <if test="paramMap.settleStatus != null ">
+        p.settle_status = #{paramMap.settleStatus} AND
+      </if>
+      <if test="paramMap.tradeTime != null ">
+        p.trade_time = #{paramMap.tradeTime} AND
+      </if>
+      <if test="paramMap.startDate != null and paramMap.endDate == null">
+        DATE_FORMAT( p.trade_time ,'%Y-%m-%d')
+        BETWEEN
+        DATE_FORMAT(  #{paramMap.startDate} ,'%Y-%m-%d')
+        AND
+        DATE_FORMAT(    NOW(),'%Y-%m-%d')
+      </if>
+      <if test="paramMap.startDate != null and paramMap.endDate != null ">
+        DATE_FORMAT( p.trade_time ,'%Y-%m-%d')  BETWEEN
+        DATE_FORMAT(  #{paramMap.startDate} ,'%Y-%m-%d')
+        AND
+        DATE_FORMAT(  #{paramMap.endDate},'%Y-%m-%d')
+      </if>
+    </trim>
+  </select>
+  <select id="getPayOrderBySerach" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT
+    p.pay_id,
+    p.mer_id,
+    p.mer_order_id,
+    p.currency,
+    p.amount,
+    p.real_amount,
+    p.fee,
+    p.channel_fee,
+    p.agent_fee,
+    p.settle_cycle,
+    p.order_status,
+    p.settle_status,
+    p.trade_time,
+    c.channel_name,
+    c.type,
+    c.channel_trans_code,
+    o.organization_name
+    FROM
+    (pay_order p
+    LEFT JOIN
+    channel_info c
+    ON
+    p.channel_id = c.channel_id)
+    LEFT JOIN
+    organization_info o
+    ON
+    p.organization_id = o.organization_id
+    <where>
+      <if test="paramMap.payId != null ">
+        p.pay_id = #{paramMap.payId}
+      </if>
+      <if test="paramMap.merId != null ">
+        p.mer_id = #{paramMap.merId}
+      </if>
+      <if test="paramMap.merOrderId != null ">
+        p.mer_order_id = #{paramMap.merOrderId}
+      </if>
+      <if test="paramMap.organizationId != null ">
+        p.organization_id = #{paramMap.organizationId}
+      </if>
+      <if test="paramMap.channelId != null ">
+        p.channel_id = #{paramMap.channelId}
+      </if>
+      <if test="paramMap.orderStatus != null ">
+        p.order_status = #{paramMap.orderStatus}
+      </if>
+      <if test="paramMap.settleStatus != null ">
+        p.settle_status = #{paramMap.settleStatus}
+      </if>
+      <if test="paramMap.tradeTime != null ">
+        p.trade_time = #{paramMap.tradeTime}
+      </if>
+    </where>
+    LIMIT
+    #{paramMap.startPage},#{paramMap.pageSize}
+  </select>
+  <select id="getPayOrderByMerOrderId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from pay_order
+    where  mer_order_id = #{merOrderId,jdbcType=VARCHAR} and mer_id = #{merId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getPayOrderByWhereCondition" resultMap="BaseResultMap" parameterType="com.rxh.square.pojo.PayOrder" >
+    select
+    <include refid="Base_Column_List" />
+    from pay_order
+    <where>
+      <if test="payId != null ">
+        AND pay_id = #{payId,jdbcType=VARCHAR}
+      </if>
+      <if test="merId != null ">
+        AND  mer_id = #{ merId,jdbcType= VARCHAR}
+      </if>
+      <if test=" merOrderId != null ">
+        AND mer_order_id= #{merOrderId ,jdbcType= VARCHAR}
+      </if>
+      <if test=" organizationId != null ">
+        AND  organization_id = #{organizationId ,jdbcType= VARCHAR}
+      </if>
+      <if test="channelId != null ">
+        AND  channel_id  = #{channelId ,jdbcType= VARCHAR}
+      </if>
+      <if test=" payType!= null ">
+        AND  pay_type  = #{payType ,jdbcType= VARCHAR}
+      </if>
+      <if test="channelTransCode != null ">
+        AND  channel_trans_code = #{channelTransCode ,jdbcType=VARCHAR }
+      </if>
+      <if test="currency != null ">
+        AND  currency = #{currency ,jdbcType= VARCHAR}
+      </if>
+      <if test="amount != null ">
+        AND amount  = #{amount ,jdbcType=DECIMAL }
+      </if>
+      <if test="realAmount != null ">
+        AND  real_amount = #{ realAmount,jdbcType= DECIMAL}
+      </if>
+      <if test="terminalFee != null ">
+        AND terminal_fee  = #{terminalFee ,jdbcType=DECIMAL }
+      </if>
+      <if test="fee != null ">
+        AND  fee = #{fee ,jdbcType= DECIMAL}
+      </if>
+      <if test="channelFee != null ">
+        AND channel_fee = #{channelFee ,jdbcType= DECIMAL}
+      </if>
+      <if test=" agentFee!= null ">
+        AND agent_fee = #{agentFee ,jdbcType= DECIMAL}
+      </if>
+      <if test="income != null ">
+        AND income = #{ income,jdbcType= DECIMAL}
+      </if>
+      <if test=" settleCycle!= null ">
+        AND  settle_cycle = #{ settleCycle,jdbcType= VARCHAR}
+      </if>
+      <if test=" orderStatus!= null ">
+        AND  order_status  = #{ orderStatus,jdbcType=INTEGER }
+      </if>
+      <if test=" settleStatus!= null ">
+        AND  settle_status= #{ settleStatus,jdbcType= INTEGER}
+      </if>
+      <if test=" tradeTime!= null ">
+        AND trade_time = #{ tradeTime,jdbcType= TIMESTAMP}
+      </if>
+      <if test=" bankTime!= null ">
+        AND bank_time  = #{ bankTime,jdbcType=TIMESTAMP }
+      </if>
+      <if test="orgOrderId != null ">
+        AND  org_order_id  = #{orgOrderId ,jdbcType= VARCHAR}
+      </if>
+      <if test="tradeResult != null ">
+        AND trade_result = #{tradeResult ,jdbcType= VARCHAR}
+      </if>
+      <if test=" terminalMerId!= null ">
+        AND  terminal_mer_id  = #{terminalMerId ,jdbcType=VARCHAR }
+      </if>
+      <if test=" terminalMerName != null ">
+        AND  terminal_mer_name = #{terminalMerName ,jdbcType=VARCHAR }
+      </if>
+      <if test="agmentId != null ">
+        AND  agment_id  = #{agmentId ,jdbcType= VARCHAR}
+      </if>
+      <if test="orderStatusList != null" >
+        AND  order_status  in
+        <foreach collection="orderStatusList" item="item" separator="," open="(" close=")">
+          #{item,jdbcType=INTEGER}
+        </foreach>
+      </if>
+      <if test="beginTime != null" >
+        AND  trade_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+      </if>
+      <if test="endTime != null" >
+        AND trade_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+      </if>
+
+    </where>
+  </select>
+
+  <select id="getProcessingPayOrderByMerOrderId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from pay_order
+    where order_status=3 and mer_order_id = #{merOrderId,jdbcType=VARCHAR} and mer_id = #{merId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getPayOrderByMerOrderIdAndMerIdAndTerMerId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from pay_order
+    where order_status=0 and
+    mer_order_id = #{merOrderId,jdbcType=VARCHAR}
+    and mer_id = #{merId,jdbcType=VARCHAR}
+    and terminal_mer_id = #{terminalMerId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectPayOrderByMerOrderIdAndMerIdAndTerMerId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from pay_order
+    where
+    mer_order_id = #{merOrderId,jdbcType=VARCHAR}
+    and mer_id = #{merId,jdbcType=VARCHAR}
+    and terminal_mer_id = #{terminalMerId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="countByChannelId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from pay_order
+    where  channel_id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="countByMerId" resultType="integer" parameterType="java.lang.String" >
+        select
+        count(1)
+        from pay_order
+        where  mer_id= #{merId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByOrders" resultType="com.rxh.square.pojo.PayOrder">
+      select
+      <include refid="Base_Column_List" />
+      from pay_order
+      where
+      mer_order_id in
+       <foreach collection="merOrderIds" item="id" index="index" open="(" close=")" separator=",">
+          #{id}
+      </foreach>
+      and mer_id = #{merId,jdbcType=VARCHAR}
+      and terminal_mer_id = #{terminalMerId,jdbcType=VARCHAR}
+      and order_status = #{status,jdbcType=VARCHAR}
+    </select>
+  <select id="selectByOrderStatusAndSettleStatus" resultType="com.rxh.square.pojo.PayOrder">
+    select
+    <include refid="Base_Column_List" />
+    from pay_order
+    where
+    order_status = #{orderStatus,jdbcType=VARCHAR}
+    and settle_status = #{settleStatus,jdbcType=VARCHAR}
+  </select>
+</mapper>

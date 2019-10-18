@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rxh.mapper.merchant.MerchantLogMapper">
+  <resultMap id="BaseResultMap" type="com.rxh.pojo.merchant.MerchantLog">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="mer_id" jdbcType="INTEGER" property="merId" />
+    <result column="type" jdbcType="SMALLINT" property="type" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="spend_time" jdbcType="BIGINT" property="spendTime" />
+    <result column="request_ip" jdbcType="VARCHAR" property="requestIp" />
+    <result column="request_uri" jdbcType="VARCHAR" property="requestUri" />
+    <result column="method_name" jdbcType="VARCHAR" property="methodName" />
+    <result column="method_description" jdbcType="VARCHAR" property="methodDescription" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.rxh.pojo.merchant.MerchantLogWithBLOBs">
+    <result column="message" jdbcType="LONGVARCHAR" property="message" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, mer_id, type, operator, start_time, spend_time, request_ip, request_uri, method_name, 
+    method_description
+  </sql>
+  <sql id="Blob_Column_List">
+    message
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from merchant_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from merchant_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.rxh.pojo.merchant.MerchantLog">
+    insert into merchant_log (id, mer_id, type, 
+      operator, start_time, spend_time, 
+      request_ip, request_uri, method_name, 
+      method_description, message)
+    values (#{id,jdbcType=BIGINT}, #{merId,jdbcType=INTEGER}, #{type,jdbcType=SMALLINT}, 
+      #{operator,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{spendTime,jdbcType=BIGINT}, 
+      #{requestIp,jdbcType=VARCHAR}, #{requestUri,jdbcType=VARCHAR}, #{methodName,jdbcType=VARCHAR}, 
+      #{methodDescription,jdbcType=VARCHAR}, #{message,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rxh.pojo.merchant.MerchantLog">
+    insert into merchant_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="merId != null">
+        mer_id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="operator != null">
+        operator,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="spendTime != null">
+        spend_time,
+      </if>
+      <if test="requestIp != null">
+        request_ip,
+      </if>
+      <if test="requestUri != null">
+        request_uri,
+      </if>
+      <if test="methodName != null">
+        method_name,
+      </if>
+      <if test="methodDescription != null">
+        method_description,
+      </if>
+      <if test="message != null">
+        message,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="merId != null">
+        #{merId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="operator != null">
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="spendTime != null">
+        #{spendTime,jdbcType=BIGINT},
+      </if>
+      <if test="requestIp != null">
+        #{requestIp,jdbcType=VARCHAR},
+      </if>
+      <if test="requestUri != null">
+        #{requestUri,jdbcType=VARCHAR},
+      </if>
+      <if test="methodName != null">
+        #{methodName,jdbcType=VARCHAR},
+      </if>
+      <if test="methodDescription != null">
+        #{methodDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="message != null">
+        #{message,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rxh.pojo.merchant.MerchantLog">
+    update merchant_log
+    <set>
+      <if test="merId != null">
+        mer_id = #{merId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="operator != null">
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="spendTime != null">
+        spend_time = #{spendTime,jdbcType=BIGINT},
+      </if>
+      <if test="requestIp != null">
+        request_ip = #{requestIp,jdbcType=VARCHAR},
+      </if>
+      <if test="requestUri != null">
+        request_uri = #{requestUri,jdbcType=VARCHAR},
+      </if>
+      <if test="methodName != null">
+        method_name = #{methodName,jdbcType=VARCHAR},
+      </if>
+      <if test="methodDescription != null">
+        method_description = #{methodDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="message != null">
+        message = #{message,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.rxh.pojo.merchant.MerchantLog">
+    update merchant_log
+    set mer_id = #{merId,jdbcType=INTEGER},
+      type = #{type,jdbcType=SMALLINT},
+      operator = #{operator,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      spend_time = #{spendTime,jdbcType=BIGINT},
+      request_ip = #{requestIp,jdbcType=VARCHAR},
+      request_uri = #{requestUri,jdbcType=VARCHAR},
+      method_name = #{methodName,jdbcType=VARCHAR},
+      method_description = #{methodDescription,jdbcType=VARCHAR},
+      message = #{message,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rxh.pojo.merchant.MerchantLog">
+    update merchant_log
+    set mer_id = #{merId,jdbcType=INTEGER},
+      type = #{type,jdbcType=SMALLINT},
+      operator = #{operator,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      spend_time = #{spendTime,jdbcType=BIGINT},
+      request_ip = #{requestIp,jdbcType=VARCHAR},
+      request_uri = #{requestUri,jdbcType=VARCHAR},
+      method_name = #{methodName,jdbcType=VARCHAR},
+      method_description = #{methodDescription,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

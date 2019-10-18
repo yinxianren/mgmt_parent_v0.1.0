@@ -1,0 +1,647 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rxh.mapper.square.MerchantCardMapper" >
+  <resultMap id="BaseResultMap" type="com.rxh.square.pojo.MerchantCard" >
+    <result column="id" property="id" jdbcType="VARCHAR" />
+    <result column="mer_id" property="merId" jdbcType="VARCHAR" />
+    <result column="mer_order_id" property="merOrderId" jdbcType="VARCHAR" />
+    <result column="terminal_mer_id" property="terminalMerId" jdbcType="VARCHAR" />
+    <result column="terminal_mer_name" property="terminalMerName" jdbcType="VARCHAR" />
+    <result column="trade_fee" property="tradeFee" jdbcType="DECIMAL" />
+    <result column="back_fee" property="backFee" jdbcType="DECIMAL" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="identity_num" property="identityNum" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="card_type" property="cardType" jdbcType="VARCHAR" />
+    <result column="card_num" property="cardNum" jdbcType="VARCHAR" />
+    <result column="bank_code" property="bankCode" jdbcType="VARCHAR" />
+    <result column="cvv" property="cvv" jdbcType="VARCHAR" />
+    <result column="expire_date" property="expireDate" jdbcType="VARCHAR" />
+    <result column="extra_channel_id" property="extraChannelId" jdbcType="VARCHAR" />
+    <result column="pay_type" property="payType" jdbcType="INTEGER" />
+    <result column="back_acount_num" property="backAcountNum" jdbcType="VARCHAR" />
+    <result column="back_acount_phone" property="backAcountPhone" jdbcType="VARCHAR" />
+    <result column="back_bank_code" property="backBankCode" jdbcType="VARCHAR" />
+    <result column="back_data" property="backData" jdbcType="VARCHAR" />
+    <result column="result" property="result" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, mer_id, mer_order_id, terminal_mer_id, terminal_mer_name, trade_fee, back_fee, 
+    name, identity_num, phone, card_type, card_num, bank_code, cvv, expire_date, extra_channel_id, 
+    pay_type, back_acount_num,back_bank_code, back_acount_phone, status, time,back_data,result
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.rxh.square.pojo.MerchantCardExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from merchant_card
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="getAllMerchantCard" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from merchant_card
+    where mer_id=#{merId,jdbcType=VARCHAR} and terminal_mer_id=#{terminalMerId,jdbcType=VARCHAR} and status=#{status,jdbcType=INTEGER}
+  </select>
+  <select id="search" resultMap="BaseResultMap" parameterType="com.rxh.square.pojo.MerchantCard" >
+    select
+    <include refid="Base_Column_List" />
+    from merchant_card
+    <trim prefix="WHERE" suffixOverrides="AND">
+      <if test="id != null" >
+        id=#{id,jdbcType=VARCHAR} AND
+      </if>
+      <if test="merId != null" >
+        mer_id=#{merId,jdbcType=VARCHAR} AND
+      </if>
+      <if test="merOrderId != null" >
+        mer_order_id= #{merOrderId,jdbcType=VARCHAR} AND
+      </if>
+      <if test="terminalMerId != null" >
+        terminal_mer_id=#{terminalMerId,jdbcType=VARCHAR} AND
+      </if>
+      <if test="terminalMerName != null" >
+        terminal_mer_name=#{terminalMerName,jdbcType=VARCHAR} AND
+      </if>
+      <if test="tradeFee != null" >
+        trade_fee= #{tradeFee,jdbcType=DECIMAL} AND
+      </if>
+      <if test="backFee != null" >
+        back_fee=#{backFee,jdbcType=DECIMAL} AND
+      </if>
+      <if test="name != null" >
+        name=#{name,jdbcType=VARCHAR} AND
+      </if>
+      <if test="identityNum != null" >
+        identity_num= #{identityNum,jdbcType=VARCHAR} AND
+      </if>
+      <if test="phone != null" >
+        phone=#{phone,jdbcType=VARCHAR} AND
+      </if>
+      <if test="cardType != null" >
+        card_type=#{cardType,jdbcType=VARCHAR} AND
+      </if>
+      <if test="cardNum != null" >
+        card_num= #{cardNum,jdbcType=VARCHAR} AND
+      </if>
+      <if test="bankCode != null" >
+        bank_code=  #{bankCode,jdbcType=VARCHAR} AND
+      </if>
+      <if test="cvv != null" >
+        cvv= #{cvv,jdbcType=VARCHAR} AND
+      </if>
+      <if test="expireDate != null" >
+        expire_date= #{expireDate,jdbcType=VARCHAR} AND
+      </if>
+      <if test="extraChannelId != null" >
+        extra_channel_id= #{extraChannelId,jdbcType=VARCHAR} AND
+      </if>
+      <if test="payType != null" >
+        pay_type= #{payType,jdbcType=INTEGER} AND
+      </if>
+      <if test="backAcountNum != null" >
+        back_acount_num= #{backAcountNum,jdbcType=VARCHAR} AND
+      </if>
+      <if test="backAcountPhone != null" >
+        back_acount_phone= #{backAcountPhone,jdbcType=VARCHAR} AND
+      </if>
+      <if test="status != null" >
+        status=#{status,jdbcType=INTEGER} AND
+      </if>
+      <if test="time != null" >
+        time=#{time,jdbcType=TIMESTAMP} AND
+      </if>
+      <if test="backBankCode != null" >
+        back_bank_code=#{backBankCode,jdbcType=VARCHAR} AND
+      </if>
+    </trim>
+  </select>
+
+
+
+  <select id="searchMerchantCard" resultMap="BaseResultMap" parameterType="string" >
+    select
+    <include refid="Base_Column_List" />
+    from merchant_card
+    <trim prefix="WHERE" suffixOverrides="AND">
+      status=0 AND
+      <if test="merId != null" >
+        mer_id=#{merId,jdbcType=VARCHAR} AND
+      </if>
+      <if test="extraChannelId != null" >
+        extra_channel_id= #{extraChannelId,jdbcType=VARCHAR} AND
+      </if>
+      <if test="terminalMerId != null" >
+        terminal_mer_id= #{terminalMerId,jdbcType=VARCHAR} AND
+      </if>
+    </trim>
+  </select>
+
+  <select id="select" resultMap="BaseResultMap" parameterType="com.rxh.square.pojo.MerchantCard" >
+    select
+    <include refid="Base_Column_List" />
+    from merchant_card
+    <trim prefix="WHERE" suffixOverrides="AND">
+      <if test="id != null" >
+        id=#{id,jdbcType=VARCHAR} AND
+      </if>
+      <if test="merId != null" >
+        mer_id=#{merId,jdbcType=VARCHAR} AND
+      </if>
+      <if test="merOrderId != null" >
+        mer_order_id= #{merOrderId,jdbcType=VARCHAR} AND
+      </if>
+      <if test="terminalMerId != null" >
+        terminal_mer_id=#{terminalMerId,jdbcType=VARCHAR} AND
+      </if>
+      <if test="terminalMerName != null" >
+        terminal_mer_name=#{terminalMerName,jdbcType=VARCHAR} AND
+      </if>
+      <if test="tradeFee != null" >
+        trade_fee= #{tradeFee,jdbcType=DECIMAL} AND
+      </if>
+      <if test="backFee != null" >
+        back_fee=#{backFee,jdbcType=DECIMAL} AND
+      </if>
+      <if test="name != null" >
+        name=#{name,jdbcType=VARCHAR} AND
+      </if>
+      <if test="identityNum != null" >
+        identity_num= #{identityNum,jdbcType=VARCHAR} AND
+      </if>
+      <if test="phone != null" >
+        phone=#{phone,jdbcType=VARCHAR} AND
+      </if>
+      <if test="cardType != null" >
+        card_type=#{cardType,jdbcType=VARCHAR} AND
+      </if>
+      <if test="cardNum != null" >
+        card_num= #{cardNum,jdbcType=VARCHAR} AND
+      </if>
+      <if test="bankCode != null" >
+        bank_code=  #{bankCode,jdbcType=VARCHAR} AND
+      </if>
+      <if test="cvv != null" >
+        cvv= #{cvv,jdbcType=VARCHAR} AND
+      </if>
+      <if test="expireDate != null" >
+        expire_date= #{expireDate,jdbcType=VARCHAR} AND
+      </if>
+      <if test="extraChannelId != null" >
+        extra_channel_id= #{extraChannelId,jdbcType=VARCHAR} AND
+      </if>
+      <if test="payType != null" >
+        pay_type= #{payType,jdbcType=INTEGER} AND
+      </if>
+      <if test="backAcountNum != null" >
+        back_acount_num= #{backAcountNum,jdbcType=VARCHAR} AND
+      </if>
+      <if test="backAcountPhone != null" >
+        back_acount_phone= #{backAcountPhone,jdbcType=VARCHAR} AND
+      </if>
+      <if test="status != null" >
+        status=#{status,jdbcType=INTEGER} AND
+      </if>
+      <if test="time != null" >
+        time=#{time,jdbcType=TIMESTAMP} AND
+      </if>
+      <if test="backBankCode != null" >
+        back_bank_code=#{backBankCode,jdbcType=VARCHAR} AND
+      </if>
+    </trim>
+    order by time desc
+  </select>
+
+
+  <delete id="deleteByExample" parameterType="com.rxh.square.pojo.MerchantCardExample" >
+    delete from merchant_card
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.rxh.square.pojo.MerchantCard" >
+    insert into merchant_card (id, mer_id, mer_order_id, 
+      terminal_mer_id, terminal_mer_name, trade_fee, 
+      back_fee, name, identity_num, 
+      phone, card_type, card_num, 
+      bank_code, cvv, expire_date, 
+      extra_channel_id, pay_type, back_acount_num, 
+      back_acount_phone, status, time,back_bank_code,back_data,result
+      )
+    values (#{id,jdbcType=VARCHAR}, #{merId,jdbcType=VARCHAR}, #{merOrderId,jdbcType=VARCHAR}, 
+      #{terminalMerId,jdbcType=VARCHAR}, #{terminalMerName,jdbcType=VARCHAR}, #{tradeFee,jdbcType=DECIMAL},
+      #{backFee,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{identityNum,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{cardType,jdbcType=VARCHAR}, #{cardNum,jdbcType=VARCHAR}, 
+      #{bankCode,jdbcType=VARCHAR}, #{cvv,jdbcType=VARCHAR}, #{expireDate,jdbcType=VARCHAR}, 
+      #{extraChannelId,jdbcType=VARCHAR}, #{payType,jdbcType=INTEGER}, #{backAcountNum,jdbcType=VARCHAR}, 
+      #{backAcountPhone,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{time,jdbcType=TIMESTAMP}, #{backBankCode,jdbcType=VARCHAR} ,#{backData,jdbcType=VARCHAR},#{result,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.rxh.square.pojo.MerchantCard" >
+    insert into merchant_card
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="merId != null" >
+        mer_id,
+      </if>
+      <if test="merOrderId != null" >
+        mer_order_id,
+      </if>
+      <if test="terminalMerId != null" >
+        terminal_mer_id,
+      </if>
+      <if test="terminalMerName != null" >
+        terminal_mer_name,
+      </if>
+      <if test="tradeFee != null" >
+        trade_fee,
+      </if>
+      <if test="backFee != null" >
+        back_fee,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="identityNum != null" >
+        identity_num,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="cardType != null" >
+        card_type,
+      </if>
+      <if test="cardNum != null" >
+        card_num,
+      </if>
+      <if test="bankCode != null" >
+        bank_code,
+      </if>
+      <if test="cvv != null" >
+        cvv,
+      </if>
+      <if test="expireDate != null" >
+        expire_date,
+      </if>
+      <if test="extraChannelId != null" >
+        extra_channel_id,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="backAcountNum != null" >
+        back_acount_num,
+      </if>
+      <if test="backAcountPhone != null" >
+        back_acount_phone,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="backBankCode != null" >
+       back_bank_code,
+      </if>
+      <if test="backData != null" >
+        back_data,
+      </if>
+      <if test="result != null" >
+      result,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="merId != null" >
+        #{merId,jdbcType=VARCHAR},
+      </if>
+      <if test="merOrderId != null" >
+        #{merOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="terminalMerId != null" >
+        #{terminalMerId,jdbcType=VARCHAR},
+      </if>
+      <if test="terminalMerName != null" >
+        #{terminalMerName,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeFee != null" >
+        #{tradeFee,jdbcType=DECIMAL},
+      </if>
+      <if test="backFee != null" >
+        #{backFee,jdbcType=DECIMAL},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="identityNum != null" >
+        #{identityNum,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="cardType != null" >
+        #{cardType,jdbcType=VARCHAR},
+      </if>
+      <if test="cardNum != null" >
+        #{cardNum,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null" >
+        #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cvv != null" >
+        #{cvv,jdbcType=VARCHAR},
+      </if>
+      <if test="expireDate != null" >
+        #{expireDate,jdbcType=VARCHAR},
+      </if>
+      <if test="extraChannelId != null" >
+        #{extraChannelId,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=INTEGER},
+      </if>
+      <if test="backAcountNum != null" >
+        #{backAcountNum,jdbcType=VARCHAR},
+      </if>
+      <if test="backAcountPhone != null" >
+        #{backAcountPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="backBankCode != null" >
+        #{backBankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="backData != null" >
+        #{backData,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        #{result,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.rxh.square.pojo.MerchantCardExample" resultType="java.lang.Integer" >
+    select count(*) from merchant_card
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+    <select id="selectById" resultType="com.rxh.square.pojo.MerchantCard">
+      select
+      <include refid="Base_Column_List" />
+      from merchant_card
+      where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <update id="updateByExampleSelective" parameterType="map" >
+    update merchant_card
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merId != null" >
+        mer_id = #{record.merId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merOrderId != null" >
+        mer_order_id = #{record.merOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.terminalMerId != null" >
+        terminal_mer_id = #{record.terminalMerId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.terminalMerName != null" >
+        terminal_mer_name = #{record.terminalMerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tradeFee != null" >
+        trade_fee = #{record.tradeFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.backFee != null" >
+        back_fee = #{record.backFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.identityNum != null" >
+        identity_num = #{record.identityNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phone != null" >
+        phone = #{record.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cardType != null" >
+        card_type = #{record.cardType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cardNum != null" >
+        card_num = #{record.cardNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankCode != null" >
+        bank_code = #{record.bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cvv != null" >
+        cvv = #{record.cvv,jdbcType=VARCHAR},
+      </if>
+      <if test="record.expireDate != null" >
+        expire_date = #{record.expireDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.extraChannelId != null" >
+        extra_channel_id = #{record.extraChannelId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.payType != null" >
+        pay_type = #{record.payType,jdbcType=INTEGER},
+      </if>
+      <if test="record.backAcountNum != null" >
+        back_acount_num = #{record.backAcountNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.backAcountPhone != null" >
+        back_acount_phone = #{record.backAcountPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.time != null" >
+        time = #{record.time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update merchant_card
+    set id = #{record.id,jdbcType=VARCHAR},
+      mer_id = #{record.merId,jdbcType=VARCHAR},
+      mer_order_id = #{record.merOrderId,jdbcType=VARCHAR},
+      terminal_mer_id = #{record.terminalMerId,jdbcType=VARCHAR},
+      terminal_mer_name = #{record.terminalMerName,jdbcType=VARCHAR},
+      trade_fee = #{record.tradeFee,jdbcType=DECIMAL},
+      back_fee = #{record.backFee,jdbcType=DECIMAL},
+      name = #{record.name,jdbcType=VARCHAR},
+      identity_num = #{record.identityNum,jdbcType=VARCHAR},
+      phone = #{record.phone,jdbcType=VARCHAR},
+      card_type = #{record.cardType,jdbcType=VARCHAR},
+      card_num = #{record.cardNum,jdbcType=VARCHAR},
+      bank_code = #{record.bankCode,jdbcType=VARCHAR},
+      cvv = #{record.cvv,jdbcType=VARCHAR},
+      expire_date = #{record.expireDate,jdbcType=VARCHAR},
+      extra_channel_id = #{record.extraChannelId,jdbcType=VARCHAR},
+      pay_type = #{record.payType,jdbcType=INTEGER},
+      back_acount_num = #{record.backAcountNum,jdbcType=VARCHAR},
+      back_acount_phone = #{record.backAcountPhone,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      time = #{record.time,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="update" parameterType="map" >
+    update merchant_card
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merId != null" >
+        mer_id = #{record.merId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merOrderId != null" >
+        mer_order_id = #{record.merOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.terminalMerId != null" >
+        terminal_mer_id = #{record.terminalMerId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.terminalMerName != null" >
+        terminal_mer_name = #{record.terminalMerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tradeFee != null" >
+        trade_fee = #{record.tradeFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.backFee != null" >
+        back_fee = #{record.backFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.identityNum != null" >
+        identity_num = #{record.identityNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phone != null" >
+        phone = #{record.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cardType != null" >
+        card_type = #{record.cardType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cardNum != null" >
+        card_num = #{record.cardNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankCode != null" >
+        bank_code = #{record.bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cvv != null" >
+        cvv = #{record.cvv,jdbcType=VARCHAR},
+      </if>
+      <if test="record.expireDate != null" >
+        expire_date = #{record.expireDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.extraChannelId != null" >
+        extra_channel_id = #{record.extraChannelId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.payType != null" >
+        pay_type = #{record.payType,jdbcType=INTEGER},
+      </if>
+      <if test="record.backAcountNum != null" >
+        back_acount_num = #{record.backAcountNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.backAcountPhone != null" >
+        back_acount_phone = #{record.backAcountPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.backBankCode != null" >
+        back_bank_code = #{record.backBankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.time != null" >
+        time = #{record.time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.result != null" >
+        result = #{record.result,jdbcType=VARCHAR},
+      </if>
+      <if test="record.backData != null" >
+        back_data = #{record.backData,jdbcType=VARCHAR},
+      </if>
+
+    </set>
+  where id=#{record.id,jdbcType=VARCHAR}
+  </update>
+</mapper>

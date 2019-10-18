@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--<bean class="com.rxh.dubbo.DubboShutdown" destroy-method="contextDestroyed"/>-->
+    <!-- 引用Dubbo服务 -->
+    <dubbo:application name="rxh-manager-merchant-web" logger="slf4j"/>
+    <dubbo:consumer check="false"/>
+    <!-- 注册中心地址 -->
+    <dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}"/>
+    <dubbo:reference interface="com.rxh.service.AgmentUserService" id="agmentUserService"/>
+    <dubbo:reference interface="com.rxh.service.square.AgentWalletService" id="agentWalletService"/>
+    <dubbo:reference interface="com.rxh.service.square.OrganizationService" id="grganizationService"/>
+    <dubbo:reference interface="com.rxh.service.square.ChannelWalletService" id="channelWalletService"/>
+    <dubbo:reference interface="com.rxh.service.square.AgentMerchantInfoService" id="agentMerchantInfoService"/>
+    <dubbo:reference interface="com.rxh.service.square.MerchantInfoService" id="merchantInfoService"/>
+    <dubbo:reference interface="com.rxh.service.square.MerchantWalletService" id="merchantWalletService"/>
+    <dubbo:reference interface="com.rxh.service.trading.PayOrderService" id="payOrderService"/>
+    <dubbo:reference interface="com.rxh.service.trading.PayCardholderInfoService" id="payCardholderInfoService"/>
+    <dubbo:reference interface="com.rxh.service.trading.PayProductDetailService" id="payProductDetailService"/>
+
+    <dubbo:reference interface="com.rxh.service.trading.TransOrderService" id="transOrderService"/>
+    <dubbo:reference interface="com.rxh.service.trading.TransBankInfoService" id="transBankInfoService"/>
+    <dubbo:reference interface="com.rxh.service.trading.TransProductDetailService" id="transProductDetailService"/>
+    <dubbo:reference interface="com.rxh.service.square.FinanceDrawingService" id="financeDrawingService"/>
+    <!-- 引用 -->
+    <dubbo:reference interface="com.rxh.service.UserService" id="userService"/>
+    <dubbo:reference interface="com.rxh.service.ConstantService" id="constantService"/>
+    <dubbo:reference interface="com.rxh.service.MerchantService" id="merchantService"/>
+    <dubbo:reference interface="com.rxh.service.MerchantUserService" id="merchantUserService"/>
+    <dubbo:reference interface="com.rxh.service.GroupService" id="groupService"/>
+    <dubbo:reference interface="com.rxh.service.SystemService" id="systemService"/>
+    <dubbo:reference interface="com.rxh.service.merchant.MerchantLogService" id="merchantLogService"/>
+    <dubbo:reference interface="com.rxh.service.AgentSystemService" id="agentSystemService"/>
+    <dubbo:reference interface="com.rxh.service.square.AgentMerchantSettingService" id="agentMerchantSettingService"/>
+
+</beans>

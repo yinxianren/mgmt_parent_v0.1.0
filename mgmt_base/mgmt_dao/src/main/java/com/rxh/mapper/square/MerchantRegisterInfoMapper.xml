@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rxh.mapper.square.MerchantRegisterInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.rxh.pojo.merchant.MerchantRegisterInfo" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="mer_id" property="merId" jdbcType="VARCHAR" />
+    <!--    <result column="mer_order_id" property="merOrderId" jdbcType="VARCHAR" />-->
+    <result column="terminal_mer_id" property="terminalMerId" jdbcType="VARCHAR" />
+    <result column="terminal_mer_name" property="terminalMerName" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_short_name" property="userShortName" jdbcType="VARCHAR" />
+    <result column="identity_type" property="identityType" jdbcType="INTEGER" />
+    <result column="identity_num" property="identityNum" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="merchant_type" property="merchantType" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="merchant_address" property="merchantAddress" jdbcType="VARCHAR" />
+    <result column="TIME" property="time" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, mer_id,  terminal_mer_id, terminal_mer_name, user_name, user_short_name,
+    identity_type, identity_num, phone, merchant_type, province, city, merchant_address, 
+    TIME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.rxh.pojo.merchant.MerchantRegisterInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from merchant_register_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select  mri.* from merchant_register_info mri
+  </select>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from merchant_register_info
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from merchant_register_info
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByMerIdAndTerminalMerId" parameterType="java.lang.String" >
+    delete from merchant_register_info
+    where mer_id = #{merId,jdbcType=VARCHAR} and terminal_mer_id = #{terminalMerId,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="deleteByExample" parameterType="com.rxh.pojo.merchant.MerchantRegisterInfoExample" >
+    delete from merchant_register_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.rxh.pojo.merchant.MerchantRegisterInfo" >
+    insert into merchant_register_info (id, mer_id,
+      terminal_mer_id, terminal_mer_name, user_name, 
+      user_short_name, identity_type, identity_num, 
+      phone, merchant_type, province, 
+      city, merchant_address, TIME
+      )
+    values (#{id,jdbcType=VARCHAR}, #{merId,jdbcType=VARCHAR},
+      #{terminalMerId,jdbcType=VARCHAR}, #{terminalMerName,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{userShortName,jdbcType=VARCHAR}, #{identityType,jdbcType=INTEGER}, #{identityNum,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{merchantType,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{merchantAddress,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.rxh.pojo.merchant.MerchantRegisterInfo" >
+    insert into merchant_register_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="merId != null" >
+        mer_id,
+      </if>
+      <if test="merOrderId != null" >
+        mer_order_id,
+      </if>
+      <if test="terminalMerId != null" >
+        terminal_mer_id,
+      </if>
+      <if test="terminalMerName != null" >
+        terminal_mer_name,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="userShortName != null" >
+        user_short_name,
+      </if>
+      <if test="identityType != null" >
+        identity_type,
+      </if>
+      <if test="identityNum != null" >
+        identity_num,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="merchantType != null" >
+        merchant_type,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="merchantAddress != null" >
+        merchant_address,
+      </if>
+      <if test="time != null" >
+        TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="merId != null" >
+        #{merId,jdbcType=VARCHAR},
+      </if>
+      <if test="merOrderId != null" >
+        #{merOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="terminalMerId != null" >
+        #{terminalMerId,jdbcType=VARCHAR},
+      </if>
+      <if test="terminalMerName != null" >
+        #{terminalMerName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userShortName != null" >
+        #{userShortName,jdbcType=VARCHAR},
+      </if>
+      <if test="identityType != null" >
+        #{identityType,jdbcType=INTEGER},
+      </if>
+      <if test="identityNum != null" >
+        #{identityNum,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantType != null" >
+        #{merchantType,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantAddress != null" >
+        #{merchantAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.rxh.pojo.merchant.MerchantRegisterInfoExample" resultType="java.lang.Integer" >
+    select count(*) from merchant_register_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update merchant_register_info
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merId != null" >
+        mer_id = #{record.merId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merOrderId != null" >
+        mer_order_id = #{record.merOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.terminalMerId != null" >
+        terminal_mer_id = #{record.terminalMerId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.terminalMerName != null" >
+        terminal_mer_name = #{record.terminalMerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userShortName != null" >
+        user_short_name = #{record.userShortName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.identityType != null" >
+        identity_type = #{record.identityType,jdbcType=INTEGER},
+      </if>
+      <if test="record.identityNum != null" >
+        identity_num = #{record.identityNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phone != null" >
+        phone = #{record.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merchantType != null" >
+        merchant_type = #{record.merchantType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.province != null" >
+        province = #{record.province,jdbcType=VARCHAR},
+      </if>
+      <if test="record.city != null" >
+        city = #{record.city,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merchantAddress != null" >
+        merchant_address = #{record.merchantAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.time != null" >
+        TIME = #{record.time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update merchant_register_info
+    set id = #{record.id,jdbcType=VARCHAR},
+    mer_id = #{record.merId,jdbcType=VARCHAR},
+    mer_order_id = #{record.merOrderId,jdbcType=VARCHAR},
+    terminal_mer_id = #{record.terminalMerId,jdbcType=VARCHAR},
+    terminal_mer_name = #{record.terminalMerName,jdbcType=VARCHAR},
+    user_name = #{record.userName,jdbcType=VARCHAR},
+    user_short_name = #{record.userShortName,jdbcType=VARCHAR},
+    identity_type = #{record.identityType,jdbcType=INTEGER},
+    identity_num = #{record.identityNum,jdbcType=VARCHAR},
+    phone = #{record.phone,jdbcType=VARCHAR},
+    merchant_type = #{record.merchantType,jdbcType=VARCHAR},
+    province = #{record.province,jdbcType=VARCHAR},
+    city = #{record.city,jdbcType=VARCHAR},
+    merchant_address = #{record.merchantAddress,jdbcType=VARCHAR},
+    TIME = #{record.time,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rxh.pojo.merchant.MerchantRegisterInfo" >
+    update merchant_register_info
+    <set >
+      <if test="merId != null" >
+        mer_id = #{merId,jdbcType=VARCHAR},
+      </if>
+      <if test="merOrderId != null" >
+        mer_order_id = #{merOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="terminalMerId != null" >
+        terminal_mer_id = #{terminalMerId,jdbcType=VARCHAR},
+      </if>
+      <if test="terminalMerName != null" >
+        terminal_mer_name = #{terminalMerName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userShortName != null" >
+        user_short_name = #{userShortName,jdbcType=VARCHAR},
+      </if>
+      <if test="identityType != null" >
+        identity_type = #{identityType,jdbcType=INTEGER},
+      </if>
+      <if test="identityNum != null" >
+        identity_num = #{identityNum,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantType != null" >
+        merchant_type = #{merchantType,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantAddress != null" >
+        merchant_address = #{merchantAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        TIME = #{time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByMerId" parameterType="com.rxh.pojo.merchant.MerchantRegisterInfo" >
+    update merchant_register_info
+    <set >
+      <if test="terminalMerName != null" >
+        terminal_mer_name = #{terminalMerName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userShortName != null" >
+        user_short_name = #{userShortName,jdbcType=VARCHAR},
+      </if>
+      <if test="identityType != null" >
+        identity_type = #{identityType,jdbcType=INTEGER},
+      </if>
+      <if test="identityNum != null" >
+        identity_num = #{identityNum,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantType != null" >
+        merchant_type = #{merchantType,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantAddress != null" >
+        merchant_address = #{merchantAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        TIME = #{time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where mer_id = #{merId,jdbcType=VARCHAR} and terminal_mer_id = #{terminalMerId,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.rxh.pojo.merchant.MerchantRegisterInfo" >
+    update merchant_register_info
+    set mer_id = #{merId,jdbcType=VARCHAR},
+      mer_order_id = #{merOrderId,jdbcType=VARCHAR},
+      terminal_mer_id = #{terminalMerId,jdbcType=VARCHAR},
+      terminal_mer_name = #{terminalMerName,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_short_name = #{userShortName,jdbcType=VARCHAR},
+      identity_type = #{identityType,jdbcType=INTEGER},
+      identity_num = #{identityNum,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      merchant_type = #{merchantType,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      merchant_address = #{merchantAddress,jdbcType=VARCHAR},
+      TIME = #{time,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="getMerchantRegisterInfoByMerIdAndTerminalMerId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    mri.*
+    from merchant_register_info mri
+    where mer_id = #{merId,jdbcType=VARCHAR} and terminal_mer_id= #{terminalMerId,jdbcType=VARCHAR}
+  </select>
+</mapper>

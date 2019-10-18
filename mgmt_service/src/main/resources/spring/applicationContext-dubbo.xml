@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--配置扫描器，扫描所有带有@Service注解的类-->
+    <context:component-scan base-package="com.rxh.service.impl"/>
+
+    <!-- 发布Dubbo服务 -->
+    <dubbo:application name="mgmt_service" logger="slf4j"/>
+    <!-- 注册中心地址 -->
+    <dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" check="false"/>
+    <dubbo:protocol name="dubbo" port="${dubbo.protocol.port}" payload="1073741824"/>
+    <!--<dubbo:protocol name="dubbo" host="${dubbo.protocol.host}" port="${dubbo.protocol.port}" payload="1073741824"/>-->
+    <!--四方支付服务接口-->
+    <dubbo:service interface="com.rxh.service.square.OrganizationService" ref="organizationServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.square.AgentMerchantInfoService" ref="agentMerchantInfoServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.square.ChannelInfoService" ref="channelInfoServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.square.MerchantWalletService" ref="merchantWalletServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.square.ChannelWalletService" ref="channelWalletServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.square.TerminalMerchantsWalletService" ref="terminalMerchantsWalletServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.square.AgentWalletService" ref="agentWalletServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.square.MerchantInfoService" ref="merchantInfoServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.square.MerchantAcountService" ref="merchantAcountServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.square.MerchantSquareRateService" ref="merchantSquareRateServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.square.AgentMerchantSettingService" ref="agentMerchantSettingServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.square.MerchantSquareSettingService" ref="merchantSquareSettingServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.square.MerchantQuotaRiskService" ref="merchantQuotaRiskServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.square.RiskQuotaDataService" ref="riskQuotaDataServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.square.MerchantCardService" ref="merchantCardServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.square.ExtraChannelInfoService" ref="extraChannelInfoServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.square.CustomerService" ref="customerServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.AgmentUserService" ref="agmentUserServiceImp" timeout="30000"/>
+    <!--四方支付服务接口(代付Payment工程)-->
+    <dubbo:service interface="com.rxh.service.square.PaymentRecordSquareService" ref="paymentRecordSquareServiceImpl" timeout="30000"/>
+    <!-- 声明需要暴露的服务接口 -->
+    <dubbo:service interface="com.rxh.service.UserService" ref="userServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.ConstantService" ref="constantServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.GroupService" ref="groupServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.sys.SysPrivilegesService" ref="sysPrivilegesServiceImpl" timeout="50000"/>
+
+    <dubbo:service interface="com.rxh.service.merchant.MerchantAddCusService" ref="merchantAddCusServiceImpl" timeout="50000"/>
+
+    <dubbo:service interface="com.rxh.service.MerchantUserService" ref="merchantUserServiceImplOld" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.SystemService" ref="systemServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.MerchantSystemService" ref="merchantSystemServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.AgentSystemService" ref="agentSystemServiceImpl" timeout="30000"/>
+    <!-- 含有BaseMapper操作的Service -->
+    <dubbo:service interface="com.rxh.service.merchant.MerchantLogService" ref="merchantLogServiceImpl" timeout="30000"/>
+
+    <dubbo:service interface="com.rxh.service.trading.PayOrderService" ref="payOrderServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.trading.TransBankInfoService" ref="transBankInfoServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.trading.TransProductDetailService" ref="transProductDetailServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.trading.TransOrderService" ref="transOrderServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.trading.TransAuditService" ref="transAuditServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.trading.PayCardholderInfoService" ref="payCardholderInfoServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.trading.PayProductDetailService" ref="payProductDetailServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.square.PayOrderChangeService" ref="payOrderChangeServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.square.FinanceDrawingService" ref="financeDrawingServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.square.MerchantCardService" ref="merchantCardServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.square.SystemOrderTrackService" ref="systemOrderTrackServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.square.MerchantChannelHistoryService" ref="merchantChannelHistoryServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.square.MerchantsDetailsService" ref="merchantsDetailsServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.square.TerminalMerchantsDetailsService" ref="terminalMerchantsDetailsServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.merchant.MerchantRegisterCollectService" ref="merchantRegisterCollectServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.merchant.MerchantRegisterInfoService" ref="merchantRegisterInfoServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.square.NotifyOrderService" ref="notifyOrderServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.wallet.AllinPayWalletService" ref="allinPayWalletServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.wallet.HaiYiPayWalletService" ref="haiYiPayWalletServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.wallet.KuaiJiePayService" ref="kuaiJiePayServiceImpl" timeout="30000"/>
+    <dubbo:service interface= "com.rxh.service.sys.SysConstantService" ref="sysConstantServiceImpl" timeout="30000"/>
+    <dubbo:service interface= "com.rxh.service.merchant.MerchantSettingService" ref="merchantSettingServiceImpl" timeout="30000"/>
+    <dubbo:service interface= "com.rxh.service.square.BankCodeService" ref="bankCodeServiceImpl" timeout="30000"/>
+
+</beans>

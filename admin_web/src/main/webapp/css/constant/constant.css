@@ -1,0 +1,99 @@
+.modifyALign {
+	
+	text-align: center;
+    margin-left: -5px;
+	
+	
+}
+
+
+.promptError {
+	
+	color:#a94442;
+	display: inline-block;
+    padding-top: 11px;
+	
+}
+
+.modal-body {
+	
+    padding-left: 40px;
+    padding-right: 40px;
+    
+}
+
+.has-error {
+	
+    border-color: #ed5565;
+    
+}
+
+.has-success {
+	
+	
+	border-color: #1ab394;
+	
+}
+
+.formLeft {
+	
+	margin-left: -28px;
+	
+}
+
+.promptErrorDiv{
+	
+    margin-top: 24px;
+    display: inline-block;	
+
+}
+
+.promptError {
+	
+	color:#a94442;
+	display: inline-block;
+    padding-top: 11px;
+	
+}
+
+.select-style {
+	
+    position: absolute;
+    z-index: 1;
+    width: 92.5%;
+	
+}
+
+.addPaddingTop6{
+	
+	padding-top: 6px;
+	
+}
+
+.promptError2 {
+	
+    color: #a94442;
+    display:inline-block;
+    padding: 6px 0px 9px 0px;
+    
+}
+
+.ng-table-pager .ng-table-counts .ng-scope{
+	
+    margin-top: -2px;
+
+}
+
+.ng-table-pagination {
+    margin-top: 0;
+    margin-right: 20px;
+}
+
+
+.totalNum {
+	
+	width:100%;
+	float:right
+	
+}
+

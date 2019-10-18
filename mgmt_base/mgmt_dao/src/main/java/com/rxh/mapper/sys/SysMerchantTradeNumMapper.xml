@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rxh.mapper.sys.SysMerchantTradeNumMapper">
+  <resultMap id="BaseResultMap" type="com.rxh.pojo.sys.SysMerchantTradeNum">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="mer_id" jdbcType="INTEGER" property="merId" />
+    <result column="success_num" jdbcType="DECIMAL" property="successNum" />
+    <result column="trade_time" jdbcType="TIMESTAMP" property="tradeTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, mer_id, success_num, trade_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_merchant_trade_num
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_merchant_trade_num
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.rxh.pojo.sys.SysMerchantTradeNum">
+    insert into sys_merchant_trade_num (id, mer_id, success_num, 
+      trade_time)
+    values (#{id,jdbcType=BIGINT}, #{merId,jdbcType=INTEGER}, #{successNum,jdbcType=DECIMAL}, 
+      #{tradeTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rxh.pojo.sys.SysMerchantTradeNum">
+    insert into sys_merchant_trade_num
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="merId != null">
+        mer_id,
+      </if>
+      <if test="successNum != null">
+        success_num,
+      </if>
+      <if test="tradeTime != null">
+        trade_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="merId != null">
+        #{merId,jdbcType=INTEGER},
+      </if>
+      <if test="successNum != null">
+        #{successNum,jdbcType=DECIMAL},
+      </if>
+      <if test="tradeTime != null">
+        #{tradeTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rxh.pojo.sys.SysMerchantTradeNum">
+    update sys_merchant_trade_num
+    <set>
+      <if test="merId != null">
+        mer_id = #{merId,jdbcType=INTEGER},
+      </if>
+      <if test="successNum != null">
+        success_num = #{successNum,jdbcType=DECIMAL},
+      </if>
+      <if test="tradeTime != null">
+        trade_time = #{tradeTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rxh.pojo.sys.SysMerchantTradeNum">
+    update sys_merchant_trade_num
+    set mer_id = #{merId,jdbcType=INTEGER},
+      success_num = #{successNum,jdbcType=DECIMAL},
+      trade_time = #{tradeTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

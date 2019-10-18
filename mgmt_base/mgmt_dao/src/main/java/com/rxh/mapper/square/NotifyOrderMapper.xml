@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rxh.mapper.square.NotifyOrderMapper" >
+    <resultMap id="BaseResultMap" type="com.rxh.square.pojo.NotifyOrder" >
+        <id column="notify_id" property="notifyId" jdbcType="VARCHAR" />
+        <result column="mer_id" property="merId" jdbcType="VARCHAR" />
+        <result column="mer_order_id" property="merOrderId" jdbcType="VARCHAR" />
+        <result column="notify_result" property="notifyResult" jdbcType="VARCHAR" />
+        <result column="notify_num" property="notifyNum" jdbcType="INTEGER"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="notify_status" property="notifyStatus" jdbcType="VARCHAR" />
+        <result column="notify_time" property="notifyTime" jdbcType="TIMESTAMP" />
+        <result column="original_order_id" property="originalOrderId" jdbcType="VARCHAR" />
+        <result column="ip" property="ip" jdbcType="VARCHAR" />
+        <result column="notify_url" property="notifyUrl" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause" >
+        <where >
+            <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List" >
+    notify_id, mer_id, mer_order_id, notify_result, notify_num,notify_status,notify_time,notify_url,original_order_id,remark,ip
+  </sql>
+    <insert id="insert" parameterType="com.rxh.square.pojo.NotifyOrder">
+        insert into notify_order
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="notifyId != null" >
+                notify_id,
+            </if>
+            <if test="merId != null" >
+                mer_id,
+            </if>
+            <if test="merOrderId != null" >
+                mer_order_id,
+            </if>
+            <if test="notifyResult != null" >
+                notify_result,
+            </if>
+            <if test="notifyNum != null" >
+                notify_num,
+            </if>
+            <if test="notifyStatus != null" >
+                notify_status,
+            </if>
+            <if test="notifyUrl != null" >
+                notify_url,
+            </if>
+            <if test="notifyTime != null" >
+                notify_time,
+            </if>
+            <if test="originalOrderId != null" >
+                original_order_id,
+            </if>
+            <if test="remark != null" >
+                remark,
+            </if>
+            <if test="ip != null" >
+                ip,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="notifyId != null" >
+                #{notifyId,jdbcType=VARCHAR},
+            </if>
+            <if test="merId != null" >
+                #{merId,jdbcType=VARCHAR},
+            </if>
+            <if test="merOrderId != null" >
+                #{merOrderId,jdbcType=VARCHAR},
+            </if>
+            <if test="notifyResult != null" >
+                #{notifyResult,jdbcType=VARCHAR},
+            </if>
+            <if test="notifyNum != null" >
+                #{notifyNum,jdbcType=INTEGER},
+            </if>
+            <if test="notifyStatus != null" >
+                #{notifyStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="notifyUrl != null" >
+                #{notifyUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="notifyTime != null" >
+                #{notifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="originalOrderId != null" >
+                #{originalOrderId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="ip != null" >
+                #{ip,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </insert>
+    <update id="update">
+        update notify_order
+        <set >
+                <if test="merId != null" >
+                    mer_id = #{merId,jdbcType=VARCHAR},
+                </if>
+                <if test="merOrderId != null" >
+                    mer_order_id = #{merOrderId,jdbcType=VARCHAR},
+                </if>
+                <if test="notifyResult != null" >
+                    notify_result = #{notifyResult,jdbcType=VARCHAR},
+                </if>
+                <if test="notifyNum != null" >
+                    notify_num = #{notifyNum,jdbcType=INTEGER},
+                </if>
+                <if test="notifyStatus != null" >
+                    notify_status = #{notifyStatus,jdbcType=VARCHAR},
+                </if>
+                <if test="notifyUrl != null" >
+                    notify_url = #{notifyUrl,jdbcType=VARCHAR},
+                </if>
+                <if test="notifyTime != null" >
+                    notify_time = #{notifyTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="originalOrderId != null" >
+                    original_order_id = #{originalOrderId,jdbcType=VARCHAR},
+                </if>
+                <if test="remark != null" >
+                    remark = #{remark,jdbcType=VARCHAR},
+                </if>
+                <if test="ip != null" >
+                    ip = #{ip,jdbcType=VARCHAR},
+                </if>
+        </set>
+        where notify_id = #{notifyId,jdbcType=VARCHAR}
+    </update>
+    <select id="getNotifyOrdersByNotifyStatus" parameterType="com.rxh.square.pojo.NotifyOrder" resultType="com.rxh.square.pojo.NotifyOrder">
+        select
+        <include refid="Base_Column_List" />
+        from notify_order
+        where notify_status = #{notifyStatus,jdbcType=VARCHAR}
+        and notify_num = #{notifyNum,jdbcType=INTEGER}
+        and notify_time > #{beginDate,jdbcType=TIMESTAMP}
+        and notify_time &lt; #{endDate,jdbcType=TIMESTAMP}
+    </select>
+    <select id="findOneByMerOrderId" resultType="com.rxh.square.pojo.NotifyOrder">
+        select
+        <include refid="Base_Column_List" />
+        from notify_order
+        where original_order_id = #{originalOrderId,jdbcType=VARCHAR}
+    </select>
+</mapper>

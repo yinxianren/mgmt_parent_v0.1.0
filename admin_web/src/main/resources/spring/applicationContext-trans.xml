@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- 使用Aspectj代替SpringAOP proxy-target-class="true"：使用cglib而不是jdk的来生成代理方法 -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <bean id="logAspect" class="com.rxh.spring.aop.SystemLogAspect">
+        <!-- 设置读与写方法名开头字符串数组，用于判断日志类型 -->
+        <property name="addMethodList">
+            <list>
+                <value>save*</value>
+                <value>insert*</value>
+                <value>add*</value>
+                <value>create*</value>
+            </list>
+        </property>
+        <property name="delMethodList">
+            <list>
+                <value>delete*</value>
+            </list>
+        </property>
+        <property name="updateMethodList">
+            <list>
+                <value>update*</value>
+            </list>
+        </property>
+        <property name="readMethodList">
+            <list>
+                <value>find*</value>
+                <value>select*</value>
+                <value>get*</value>
+                <value>download*</value>
+            </list>
+        </property>
+    </bean>
+
+    <aop:config>
+
+    </aop:config>
+
+    <bean id="globalConfiguration" class="com.rxh.utils.GlobalConfiguration">
+        <property name="fileUploadPath" value="${file.upload.path}"/>
+        <property name="production" value="${production.flag}"/>
+        <property name="paymentUrl" value="${payment.url}"/>
+    </bean>
+
+</beans>

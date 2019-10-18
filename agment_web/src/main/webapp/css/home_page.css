@@ -1,0 +1,98 @@
+.row-title {
+    height: 48px;
+    line-height: 48px;
+    overflow: hidden; /*垂直居中，消除自动换行*/
+    background-color: #ffffff;
+    border-color: #e7eaec;
+    border-image: none;
+    border-style: solid solid none;
+    border-width: 2px 0 0;
+    color: inherit;
+    margin-bottom: 0;
+    padding-left: 7px;
+    font-weight: 600;
+}
+.row-footer {
+    height: 150px;
+    background-color: #ffffff;
+    color: inherit;
+    padding: 15px 20px 20px 20px;
+    border-color: #e7eaec;
+    border-image: none;
+    border-style: solid solid none;
+    border-width: 1px 0;
+}
+.row-footer-ye .ye-contain {
+    height:45px;
+    position:relative
+}
+.row-footer-ye .ye-contain  p{
+    position:absolute;
+    bottom:0;
+    padding:0;
+    margin:0;
+}
+.row-footer-ye .ye-contain  p span{
+    font-size: 40px;
+    color: #0097FB;
+}
+.row-footer-button {
+    position: relative;
+    height: 69px;
+}
+.row-footer-button-son {
+    position: absolute;
+    bottom: 15px;
+    min-width: 150px;
+    width: 100%;
+}
+.row-footer-button-son .row-button-sou {
+    height: 30px; /* 高度 */
+    border-width: 0; /* 边框宽度 */
+    border-radius: 3px; /* 边框半径 */
+    cursor: pointer; /* 鼠标移入按钮范围时出现手势 */
+    outline: none; /* 不显示轮廓线 */
+    font-family: Microsoft YaHei; /* 设置字体 */
+    color: white; /* 字体颜色 */
+    font-size: 17px; /* 字体大小 */
+    float: right;
+}
+.row-button-sou:hover {
+    background: #5599FF;
+}
+.row-footer-middle {
+    height: 150px;
+    background-color: #ffffff;
+    color: inherit;
+    padding: 15px 20px 20px 20px;
+    border-color: #e7eaec;
+    border-image: none;
+    border-style: solid solid none;
+    border-width: 1px 0;
+    display: flex;
+    margin: 0;
+}
+.row-middle-first {
+    position: relative;
+}
+.middle-first-top {
+    position: absolute;
+    bottom: 40px;
+    cursor: pointer;
+}
+.middle-first-top p span {
+    font-size: 45px;
+    margin-right: 5px;
+}
+.middle-first-bottom {
+    font-size: 14px;
+    position: absolute;
+    bottom: 18px;
+    cursor: pointer;
+}
+.h-150{
+    padding-top: 0;
+}
+.col-lg-4-bottom {
+    margin-bottom: 20px;
+}
