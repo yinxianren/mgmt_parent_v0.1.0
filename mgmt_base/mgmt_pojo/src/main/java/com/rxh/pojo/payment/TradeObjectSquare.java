@@ -1,12 +1,12 @@
 package com.rxh.pojo.payment;
 
-import com.rxh.pojo.AbstratorParamModel;
+import com.rxh.pojo.AbstractParamModel;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 
-public class TradeObjectSquare extends AbstratorParamModel implements Serializable {
+public class TradeObjectSquare extends AbstractParamModel implements Serializable {
     //接口编号
     private String bizType;
     private String charset;

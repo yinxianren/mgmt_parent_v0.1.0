@@ -1,13 +1,13 @@
 package com.rxh.pojo.merchant;
 
-import com.rxh.pojo.AbstratorParamModel;
+import com.rxh.pojo.AbstractParamModel;
 
 /**
  *  银行绑卡登记信息
  * @author  zhanguanghuo
  */
 
-public class MerchantBankCardBinding   extends AbstratorParamModel {
+public class MerchantBankCardBinding   extends AbstractParamModel {
     // 接口编号			用于区分不同的业务接口（进件接口ID）
     private String  bizType;
     //  参数字符集编码		请求使用的编码格式，固定UTF-8

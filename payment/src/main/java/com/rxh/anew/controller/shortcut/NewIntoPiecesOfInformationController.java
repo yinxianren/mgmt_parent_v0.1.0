@@ -1,0 +1,70 @@
+package com.rxh.anew.controller.shortcut;
+
+import com.alibaba.dubbo.common.json.JSON;
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.rxh.anew.controller.NewAbstractCommonController;
+import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
+import com.rxh.anew.inner.InnerPrintLogObject;
+import com.rxh.anew.inner.ParamRule;
+import com.rxh.anew.service.NewIntoPiecesOfInformationService;
+import com.rxh.anew.table.system.SystemOrderTrackTable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import com.rxh.service.anew.agent.AnewAgentMerchantInfoService;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: panda
+ * Date: 2019/10/18
+ * Time: 下午2:40
+ * Description:
+ */
+
+@Controller
+@RequestMapping("/shortcut")
+public class NewIntoPiecesOfInformationController extends NewAbstractCommonController {
+
+    @Autowired
+    private NewIntoPiecesOfInformationService newIntoPiecesOfInformationService;
+
+    @Autowired
+    private AnewAgentMerchantInfoService anewAgentMerchantInfoService;
+
+    @ResponseBody
+    @PostMapping(value = "/addCusInfo" ,produces = "text/html;charset=UTF-8")
+    public String intoPiecesOfInformation(HttpServletRequest request, @RequestBody(required = false) String param){
+
+        String test = anewAgentMerchantInfoService.test();
+
+
+        final String bussType = "【基本信息登记】";
+        String respResult=null;
+        SystemOrderTrackTable sotTable = null;
+        MerchantBasicInformationRegistrationDTO mbirDTO=null;
+        try{
+            //解析 以及 获取SystemOrderTrackTable对象
+            sotTable = this.getSystemOrderTrackTable(request,param,bussType);
+            //类型转换
+            mbirDTO = JSON.parse(sotTable.getRequestMsg(),MerchantBasicInformationRegistrationDTO.class);
+            //获取必要参数
+            Map<String, ParamRule> paramRuleMap =newIntoPiecesOfInformationService.getParamMapByIPOI();
+            //创建日志打印对象
+            InnerPrintLogObject ipo = new InnerPrintLogObject(mbirDTO.getMerId(),mbirDTO.getMerOrderId(),bussType);
+            //参数校验
+            this.verify(paramRuleMap,mbirDTO,MerchantBasicInformationRegistrationDTO.class,ipo);
+
+
+        }catch (Exception e){
+
+        }finally {
+
+            return respResult;
+        }
+    }
+
+
+
+}

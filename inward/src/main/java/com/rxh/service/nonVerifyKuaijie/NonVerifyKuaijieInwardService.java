@@ -2,7 +2,7 @@ package com.rxh.service.nonVerifyKuaijie;
 
 import com.alibaba.fastjson.JSONObject;
 import com.rxh.exception.PayException;
-import com.rxh.pojo.AbstratorParamModel;
+import com.rxh.pojo.AbstractParamModel;
 import com.rxh.pojo.cross.BankResult;
 import com.rxh.pojo.payment.ParamRule;
 import com.rxh.pojo.payment.SquareTrade;
@@ -458,13 +458,13 @@ public class NonVerifyKuaijieInwardService extends AbstractPayService {
     /**
      *  失败返回信息
      * @param systemOrderTrack
-     * @param abstratorParamModel
+     * @param abstractParamModel
      * @return
      */
-    public String errorResult(SystemOrderTrack systemOrderTrack, AbstratorParamModel abstratorParamModel, String message) throws PayException {
+    public String errorResult(SystemOrderTrack systemOrderTrack, AbstractParamModel abstractParamModel, String message) throws PayException {
         PayTreeMap<String,Object> map= new PayTreeMap<>();
         String merId= systemOrderTrack.getMerId();
-        String merOrderId=(null != abstratorParamModel ? abstratorParamModel.getMerOrderId() : "");
+        String merOrderId=(null != abstractParamModel ? abstractParamModel.getMerOrderId() : "");
 //        MerchantInfo merchantInfo = merchantInfoService.selectByMerId(merId);
         MerchantInfo merchantInfo = redisCacheCommonCompoment.merchantInfoCache.getOne(merId);
         map.lput("merId",merId)

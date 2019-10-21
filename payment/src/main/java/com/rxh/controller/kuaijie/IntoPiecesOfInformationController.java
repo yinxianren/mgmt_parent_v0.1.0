@@ -26,8 +26,8 @@ import javax.servlet.http.HttpServletRequest;
  *  业务开通接口  /kuaijie/ServiceFulfillment
  */
 
-@Controller
-@RequestMapping("/kuaijie")
+//@Controller
+//@RequestMapping("/kuaijie")
 public class IntoPiecesOfInformationController extends  AbstractCommonController{
 
     @Autowired
@@ -40,8 +40,8 @@ public class IntoPiecesOfInformationController extends  AbstractCommonController
      * @version：
     *    0.0.2 -->代码优化，增加商户同步锁，一个商户一把锁
      */
-    @RequestMapping(value="/addCusInfo", produces = "text/html;charset=UTF-8")
-    @ResponseBody
+//    @RequestMapping(value="/addCusInfo", produces = "text/html;charset=UTF-8")
+//    @ResponseBody
     public String intoPiecesOfInformation(HttpServletRequest req, @RequestBody String tradeInfo){
         SystemOrderTrack systemOrderTrack =new SystemOrderTrack();
         MerchantBasicInformationRegistration  merchantBasicInformationRegistration=null;
@@ -76,8 +76,8 @@ public class IntoPiecesOfInformationController extends  AbstractCommonController
      * @version：
      *    0.0.2 -->代码优化，增加商户同步锁，一个商户一把锁
      */
-    @RequestMapping(value="/bankCardBind", produces = "text/html;charset=UTF-8")
-    @ResponseBody
+//    @RequestMapping(value="/bankCardBind", produces = "text/html;charset=UTF-8")
+//    @ResponseBody
     public String bankCardBinding(HttpServletRequest req, @RequestBody String tradeInfo){
         SystemOrderTrack systemOrderTrack =new SystemOrderTrack();
         String result=null;
@@ -113,8 +113,8 @@ public class IntoPiecesOfInformationController extends  AbstractCommonController
      * @version：
      *    0.0.2 -->代码优化，增加商户同步锁，一个商户一把锁
      */
-    @RequestMapping(value="/serviceFulfillment", produces = "text/html;charset=UTF-8")
-    @ResponseBody
+//    @RequestMapping(value="/serviceFulfillment", produces = "text/html;charset=UTF-8")
+//    @ResponseBody
     public String  serviceFulfillment(HttpServletRequest req, @RequestBody String tradeInfo){
         SystemOrderTrack systemOrderTrack =new SystemOrderTrack();
         String result=null;

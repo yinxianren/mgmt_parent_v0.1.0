@@ -1,11 +1,11 @@
 package com.rxh.pojo.merchant;
 
-import com.rxh.pojo.AbstratorParamModel;
+import com.rxh.pojo.AbstractParamModel;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class MerchantAddCusInfo extends AbstratorParamModel implements Serializable {
+public class MerchantAddCusInfo extends AbstractParamModel implements Serializable {
 
     private String bizType;
     private String charset;

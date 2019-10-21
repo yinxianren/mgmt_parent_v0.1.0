@@ -8,7 +8,7 @@ import com.rxh.cache.ehcache.RiskQuotaDataCache;
 import com.rxh.exception.PayException;
 import com.rxh.payInterface.PayAssert;
 import com.rxh.payInterface.PayUtil;
-import com.rxh.pojo.AbstratorParamModel;
+import com.rxh.pojo.AbstractParamModel;
 import com.rxh.pojo.payment.ParamRule;
 import com.rxh.service.haiyi.HaiYiAgentWalletComponent;
 import com.rxh.service.haiyi.HaiYiChannelWalletComponent;
@@ -187,25 +187,25 @@ public class AbstractPayService implements PayAssert, PayUtil{
     /**
      *  抽取公共的代码
      * @param systemOrderTrack
-     * @param abstratorParamModel
+     * @param abstractParamModel
      * @author 詹光活
      * @date 20190628
      */
-    public  void setSystemOrderTrack(SystemOrderTrack systemOrderTrack, AbstratorParamModel abstratorParamModel){
-        if(!org.springframework.util.StringUtils.isEmpty(abstratorParamModel.getMerId())){
-            systemOrderTrack.setMerId(abstratorParamModel.getMerId());
+    public  void setSystemOrderTrack(SystemOrderTrack systemOrderTrack, AbstractParamModel abstractParamModel){
+        if(!org.springframework.util.StringUtils.isEmpty(abstractParamModel.getMerId())){
+            systemOrderTrack.setMerId(abstractParamModel.getMerId());
         }
-        if(!org.springframework.util.StringUtils.isEmpty(abstratorParamModel.getMerOrderId())){
-            systemOrderTrack.setMerOrderId(abstratorParamModel.getMerOrderId());
+        if(!org.springframework.util.StringUtils.isEmpty(abstractParamModel.getMerOrderId())){
+            systemOrderTrack.setMerOrderId(abstractParamModel.getMerOrderId());
         }
-        if(!org.springframework.util.StringUtils.isEmpty(abstratorParamModel.getAmount())){
-            systemOrderTrack.setAmount(abstratorParamModel.getAmount());
+        if(!org.springframework.util.StringUtils.isEmpty(abstractParamModel.getAmount())){
+            systemOrderTrack.setAmount(abstractParamModel.getAmount());
         }
-        if(!org.springframework.util.StringUtils.isEmpty(abstratorParamModel.getReturnUrl())){
-            systemOrderTrack.setReturnUrl(abstratorParamModel.getReturnUrl() != null ? abstratorParamModel.getReturnUrl():"");
+        if(!org.springframework.util.StringUtils.isEmpty(abstractParamModel.getReturnUrl())){
+            systemOrderTrack.setReturnUrl(abstractParamModel.getReturnUrl() != null ? abstractParamModel.getReturnUrl():"");
         }
-        if(!org.springframework.util.StringUtils.isEmpty(abstratorParamModel.getNoticeUrl())){
-            systemOrderTrack.setNoticeUrl(abstratorParamModel.getNoticeUrl() != null ? abstratorParamModel.getNoticeUrl():"");
+        if(!org.springframework.util.StringUtils.isEmpty(abstractParamModel.getNoticeUrl())){
+            systemOrderTrack.setNoticeUrl(abstractParamModel.getNoticeUrl() != null ? abstractParamModel.getNoticeUrl():"");
         }
     }
 

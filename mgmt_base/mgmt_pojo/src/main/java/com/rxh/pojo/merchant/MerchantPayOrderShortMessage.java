@@ -1,8 +1,8 @@
 package com.rxh.pojo.merchant;
 
-import com.rxh.pojo.AbstratorParamModel;
+import com.rxh.pojo.AbstractParamModel;
 
-public class MerchantPayOrderShortMessage extends AbstratorParamModel {
+public class MerchantPayOrderShortMessage extends AbstractParamModel {
 
     //接口编号
     private String bizType;
