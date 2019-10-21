@@ -11,7 +11,7 @@ import lombok.Data;
  * Time: 上午9:21
  * Description:
  */
-@TableName("1_agentMerchantInfoTable")
+@TableName("1_agent_merchant_info_table")
 @Data
 public class AgentMerchantInfoTable {
     @TableId

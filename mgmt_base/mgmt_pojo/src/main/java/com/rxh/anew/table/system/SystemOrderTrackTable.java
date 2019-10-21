@@ -15,7 +15,7 @@ import java.util.Date;
  * Time: 下午3:22
  * Description:
  */
-@TableName("1_systemOrderTrackTable")
+@TableName("1_system_order_track_table")
 @Getter
 public class SystemOrderTrackTable implements Serializable {
     @TableId

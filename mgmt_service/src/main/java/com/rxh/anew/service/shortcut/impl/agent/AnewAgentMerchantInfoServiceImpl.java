@@ -1,9 +1,8 @@
-package com.rxh.anew.service.impl.agent;
+package com.rxh.anew.service.shortcut.impl.agent;
 
 import com.rxh.anew.service.db.agent.AgentMerchantInfoDbService;
 import com.rxh.anew.table.agent.AgentMerchantInfoTable;
 import com.rxh.service.anew.agent.AnewAgentMerchantInfoService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -6,9 +6,13 @@
     <dubbo:application name="rxh-payment"/>
     <!-- 注册中心地址 -->
     <dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}"/>
+    <!--  *****************************************************************************************************************  -->
+    <dubbo:reference interface="com.rxh.service.anew.agent.AnewAgentMerchantInfoService"    id="anewAgentMerchantInfoService"/>
+    <dubbo:reference interface="com.rxh.service.anew.merchant.AnewMerchantInfoService"      id="anewMerchantInfoService"/>
 
-    <dubbo:reference interface="com.rxh.service.anew.agent.AnewAgentMerchantInfoService" id="anewAgentMerchantInfoService"/>
 
+
+    <!--  *****************************************************************************************************************  -->
     <!--四方支付服务接口-->
     <dubbo:reference interface="com.rxh.service.square.RiskQuotaDataService" id="riskQuotaDataService"/>
     <dubbo:reference interface="com.rxh.service.square.PaymentRecordSquareService" id="paymentRecordSquareService"/>

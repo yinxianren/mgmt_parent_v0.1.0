@@ -1,10 +1,9 @@
 package com.rxh.service.impl.sys;
 
+import com.rxh.service.impl.base.AbstractBaseService;
 import com.rxh.mapper.sys.SysPrivilegesMapper;
 import com.rxh.pojo.sys.SysPrivileges;
-import com.rxh.service.impl.base.AbstractBaseService;
 import com.rxh.service.sys.SysPrivilegesService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

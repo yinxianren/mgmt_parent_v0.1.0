@@ -1,8 +1,11 @@
-package com.rxh.anew.service.impl;
+package com.rxh.anew.service.shortcut.impl;
 
+import com.rxh.anew.CommonRPCComponent;
 import com.rxh.anew.inner.ParamRule;
+import com.rxh.anew.service.CommonServiceAbstract;
 import com.rxh.enums.ParamTypeEnum;
-import com.rxh.anew.service.NewIntoPiecesOfInformationService;
+import com.rxh.anew.service.shortcut.NewIntoPiecesOfInformationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -16,7 +19,12 @@ import java.util.Map;
  * Description:
  */
 @Service
-public class NewIntoPiecesOfInformationServiceImp implements NewIntoPiecesOfInformationService {
+public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract implements NewIntoPiecesOfInformationService {
+
+
+
+
+
 
     @Override
     public Map<String, ParamRule> getParamMapByIPOI() {

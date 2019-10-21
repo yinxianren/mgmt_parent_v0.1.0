@@ -1,8 +1,8 @@
 package com.rxh.service.impl.sys;
 
+import com.rxh.service.impl.base.AbstractBaseService;
 import com.rxh.mapper.sys.SysLogMapper;
 import com.rxh.pojo.sys.SysLog;
-import com.rxh.service.impl.base.AbstractBaseService;
 import com.rxh.service.sys.SysLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

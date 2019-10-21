@@ -72,7 +72,7 @@ public abstract class NewAbstractCommonController implements NewPayAssert, PayUt
                 String value = (String) fields[i].get(obj);//获取参数值
                 isBlank(value,//为空则是缺少必要值
                         ResponseCodeEnum.RXH00014.getCode(),
-                        format("%s-->商户号：%s\t终端号：%s\t错误信息( %s : %s )",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00014.getMsg(),fields[i]),
+                        format("%s-->商户号：%s；终端号：%s；错误信息( %s : %s )",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00014.getMsg(),fields[i]),
                         format(" %s : %s",ResponseCodeEnum.RXH00014.getMsg(),fields[i]));
                 ParamRule pr =  mustParamMap.get(fieldName);
                 switch (pr.getType()){
@@ -80,37 +80,37 @@ public abstract class NewAbstractCommonController implements NewPayAssert, PayUt
                         int strLenght = value.length();
                         isTrue( !(strLenght>pr.getMinLength() && strLenght<pr.getMaxLength()),
                                 ResponseCodeEnum.RXH00015.getCode(),
-                                format("%s-->商户号：%s\t终端号：%s\t错误信息( %s : %s )",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00016.getMsg(),fields[i]),
+                                format("%s-->商户号：%s；终端号：%s；错误信息( %s : %s )",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00016.getMsg(),fields[i]),
                                 format(" %s : %s，该值字符缺少或过长",ResponseCodeEnum.RXH00015.getMsg(),fields[i]));
                         break;
                     case AMOUNT:
                         isTrue( !(value.matches(ParamTypeEnum.AMOUNT.getMatches())),
                                 ResponseCodeEnum.RXH00016.getCode(),
-                                format("%s-->商户号：%s\t终端号：%s\t错误信息( %s : %s )",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00016.getMsg(),fields[i]),
+                                format("%s-->商户号：%s；终端号：%s；错误信息( %s : %s )",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00016.getMsg(),fields[i]),
                                 format(" %s : %s,该值必须是金额格式",ResponseCodeEnum.RXH00016.getMsg(),fields[i]));
                         break;
                     case IPv6:
                         isTrue( !(value.matches(ParamTypeEnum.IPv6.getMatches())),
                                 ResponseCodeEnum.RXH00016.getCode(),
-                                format("%s-->商户号：%s\t终端号：%s\t错误信息( %s : %s )",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00016.getMsg(),fields[i]),
+                                format("%s-->商户号：%s；终端号：%s；错误信息( %s : %s )",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00016.getMsg(),fields[i]),
                                 format(" %s : %s，该值必须是IPv6格式",ResponseCodeEnum.RXH00016.getMsg(),fields[i]));
                         break;
                     case IPv4:
                         isTrue( !(value.matches(ParamTypeEnum.IPv4.getMatches())),
                                 ResponseCodeEnum.RXH00016.getCode(),
-                                format("%s-->商户号：%s\t终端号：%s\t错误信息( %s : %s )",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00016.getMsg(),fields[i]),
+                                format("%s-->商户号：%s；终端号：%s；错误信息( %s : %s )",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00016.getMsg(),fields[i]),
                                 format(" %s : %s，该值必须是IPv4格式",ResponseCodeEnum.RXH00016.getMsg(),fields[i]));
                         break;
                     case URL:
                         isTrue( !(value.matches(ParamTypeEnum.URL.getMatches())),
                                 ResponseCodeEnum.RXH00016.getCode(),
-                                format("%s-->商户号：%s\t终端号：%s\t错误信息( %s : %s )",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00016.getMsg(),fields[i]),
+                                format("%s-->商户号：%s；终端号：%s；错误信息( %s : %s )",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00016.getMsg(),fields[i]),
                                 format(" %s : %s，该值必须是URL格式",ResponseCodeEnum.RXH00016.getMsg(),fields[i]));
                         break;
                     case PHONE:
                         isTrue( !(value.matches(ParamTypeEnum.PHONE.getMatches())),
                                 ResponseCodeEnum.RXH00016.getCode(),
-                                format("%s-->商户号：%s\t终端号：%s\t错误信息( %s : %s )",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00016.getMsg(),fields[i]),
+                                format("%s-->商户号：%s；终端号：%s；错误信息( %s : %s )",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00016.getMsg(),fields[i]),
                                 format(" %s : %s，该值必须是手机号格式",ResponseCodeEnum.RXH00016.getMsg(),fields[i]));
                         break;
                 }

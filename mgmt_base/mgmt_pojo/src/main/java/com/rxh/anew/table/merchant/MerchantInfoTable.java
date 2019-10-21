@@ -13,7 +13,7 @@ import java.io.Serializable;
  * Time: 下午5:33
  * Description:
  */
-@TableName("1_merchantInfoTable")
+@TableName("1_merchant_info_table")
 @Data
 public class MerchantInfoTable implements Serializable {
             @TableId
