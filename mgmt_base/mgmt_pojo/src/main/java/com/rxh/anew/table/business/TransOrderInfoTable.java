@@ -32,6 +32,7 @@ public class TransOrderInfoTable implements Serializable {
     private String bankCardNum ;//银行卡号
     private String bankCardPhone ;//银行卡手机号
     private String channelId ;//通道id
+    private String  busiType;//'业务类型，pay :收单，trans:代付'
     private String productId ;//产品类型ID
     private String productFee ;//产品费率
     private String currency;//币种

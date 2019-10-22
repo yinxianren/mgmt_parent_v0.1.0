@@ -1,16 +1,17 @@
 package com.rxh.anew.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.rxh.anew.CommonRPCComponent;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
+import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.exception.NewPayException;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.payInterface.PayUtil;
-import com.rxh.square.pojo.MerchantSetting;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,8 +27,16 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
     private CommonRPCComponent commonRPCComponent;
 
 
-    public MerchantSetting getMerchantSetting(InnerPrintLogObject ipo){
+    public List<MerchantSettingTable> getMerchantSetting(InnerPrintLogObject ipo) throws NewPayException {
 
+        List<MerchantSettingTable> list = commonRPCComponent.apiMerchantSettingService.getList(
+                new MerchantSettingTable().setMerchantId(ipo.getMerId())
+        );
+        isHasNotElement(list,
+                ResponseCodeEnum.RXH00019.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00019.getMsg()),
+                format(" %s",ResponseCodeEnum.RXH00019.getMsg()));
+        return list;
     }
 
 

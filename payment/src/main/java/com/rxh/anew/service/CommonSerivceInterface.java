@@ -2,8 +2,11 @@ package com.rxh.anew.service;
 
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
+import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.exception.NewPayException;
 import com.rxh.square.pojo.MerchantSetting;
+
+import java.util.List;
 
 public interface CommonSerivceInterface {
     /**
@@ -25,6 +28,6 @@ public interface CommonSerivceInterface {
      * @param ipo
      * @return
      */
-    MerchantSetting  getMerchantSetting(InnerPrintLogObject ipo);
+    List<MerchantSettingTable> getMerchantSetting(InnerPrintLogObject ipo);
 
 }

@@ -24,6 +24,8 @@ public enum ResponseCodeEnum {
     ,RXH00016("RXH00016","字段值格式错误")
     ,RXH00017("RXH00017","该商户号不存在")
     ,RXH00018("RXH00018","签名不匹配")
+    ,RXH00019("RXH00019","商户通道未进行配置")
+
     ,RXH99999("RXH99999","其他错误")
     ;
     private String code;

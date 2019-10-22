@@ -2,6 +2,7 @@ package com.rxh.anew.table.system;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.Date;
 
@@ -14,7 +15,7 @@ import java.util.Date;
  */
 
 @TableName("5_merchant_setting_table")
-@Data
+@Getter
 public class MerchantSettingTable {
     private Long id  ;//表主键
     private String  merchantId ;//商户号
@@ -24,4 +25,45 @@ public class MerchantSettingTable {
     private Integer status;//状态 0：启用1:禁用
     private Date createTime ;//创建时间
     private Date updateTime ;//更新时间
+
+
+    public MerchantSettingTable setId(Long id) {
+        this.id = id;
+        return  this;
+    }
+
+    public MerchantSettingTable setMerchantId(String merchantId) {
+        this.merchantId = merchantId;
+        return  this;
+    }
+
+    public MerchantSettingTable setProductId(String productId) {
+        this.productId = productId;
+        return  this;
+    }
+
+    public MerchantSettingTable setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
+        return  this;
+    }
+
+    public MerchantSettingTable setChannelId(String channelId) {
+        this.channelId = channelId;
+        return  this;
+    }
+
+    public MerchantSettingTable setStatus(Integer status) {
+        this.status = status;
+        return  this;
+    }
+
+    public MerchantSettingTable setCreateTime(Date createTime) {
+        this.createTime = createTime;
+        return  this;
+    }
+
+    public MerchantSettingTable setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+        return  this;
+    }
 }

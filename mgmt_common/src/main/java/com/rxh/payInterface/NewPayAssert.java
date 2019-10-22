@@ -2,6 +2,8 @@ package com.rxh.payInterface;
 
 import com.rxh.exception.NewPayException;
 
+import java.util.Collection;
+
 public interface NewPayAssert {
 
     /**
@@ -77,4 +79,29 @@ public interface NewPayAssert {
         if(null != object)
             throw new NewPayException(code,innerPrintMsg,responseMsg);
     }
+
+
+    /**
+     *
+     * @param collection
+     * @param code
+     * @param innerPrintMsg
+     * @param responseMsg
+     * @throws NewPayException
+     */
+    default void isHasNotElement(Collection collection, String code, String innerPrintMsg, String responseMsg) throws NewPayException {
+        if(null == collection || collection.size() == 0)
+            throw new NewPayException(code,innerPrintMsg,responseMsg);
+    }
+    default boolean isHasNotElement(Collection collection){
+        if(null == collection || collection.size() == 0) return true;
+        return false;
+    }
+    default boolean isHasElement(Collection collection){
+        if(null == collection || collection.size() == 0) return false;
+        return true;
+    }
+
+
+
 }

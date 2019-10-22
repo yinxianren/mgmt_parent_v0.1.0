@@ -8,6 +8,7 @@ import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.shortcut.NewIntoPiecesOfInformationService;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
+import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
 import com.rxh.utils.CheckMd5Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,6 +68,8 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //查看是否重复订单
             newIntoPiecesOfInformationService.multipleOrder(mbirDTO.getMerOrderId(),ipo);
             // 获取商户配置
+            List<MerchantSettingTable>  merchantSettingTableList=newIntoPiecesOfInformationService.getMerchantSetting(ipo);
+            //
 
 
         }catch (Exception e){

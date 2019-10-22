@@ -38,6 +38,7 @@ public class PayOrderInfoTable implements Serializable {
     private Integer   deviceType;// 交易设备类型(1-电脑;2-手机;3-其他) 字符串类型,
     private Integer   macAddr;// MAC地址,
     private String  channelId;// 通道id,
+    private String  busiType;//'业务类型，pay :收单，trans:代付'
     private String  productId;// 产品类型ID,
     private BigDecimal productFee ;// 产品费率,
     private String  currency;// 币种,
