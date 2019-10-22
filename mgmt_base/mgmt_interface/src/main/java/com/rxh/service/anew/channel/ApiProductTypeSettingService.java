@@ -11,4 +11,6 @@ public interface ApiProductTypeSettingService {
      Boolean removeById(String id);
 
      List<ProductSettingTable> list(ProductSettingTable productSettingTable);
+
+     ProductSettingTable  getOne(ProductSettingTable productSettingTable);
 }

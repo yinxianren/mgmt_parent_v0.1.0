@@ -6,6 +6,7 @@ import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonServiceAbstract;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
+import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.enums.ParamTypeEnum;
 import com.rxh.anew.service.shortcut.NewIntoPiecesOfInformationService;
 import com.rxh.enums.ResponseCodeEnum;
@@ -79,6 +80,11 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
 
     @Override
     public List<ChannelInfoTable> filtrationChannelInfoByProductType(List<ChannelInfoTable> list, String productType, InnerPrintLogObject ipo) throws NewPayException {
+        List<ProductSettingTable> productSettingTableList = commonRPCComponent.apiProductTypeSettingService.list(new ProductSettingTable().setProductName(productType));
+        isHasNotElement(productSettingTableList,
+                ResponseCodeEnum.RXH00021.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00021.getMsg()),
+                format(" %s",ResponseCodeEnum.RXH00021.getMsg()));
 
         list.stream().filter(t->t.getProductId().equalsIgnoreCase())
 

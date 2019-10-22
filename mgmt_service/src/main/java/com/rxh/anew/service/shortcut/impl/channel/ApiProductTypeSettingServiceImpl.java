@@ -32,6 +32,18 @@ public class ApiProductTypeSettingServiceImpl implements ApiProductTypeSettingSe
         LambdaQueryWrapper<ProductSettingTable> lambdaQueryWrapper = new QueryWrapper<ProductSettingTable>().lambda();
         if( !isBlank(productSettingTable.getOrganizationId()) ) lambdaQueryWrapper.eq(ProductSettingTable::getOrganizationId,productSettingTable.getOrganizationId());
         if( !isBlank(productSettingTable.getProductName()) ) lambdaQueryWrapper.eq(ProductSettingTable::getProductName,productSettingTable.getProductName());
+        if( !isNull(productSettingTable.getStatus()) ) lambdaQueryWrapper.eq(ProductSettingTable::getStatus,productSettingTable.getStatus());
         return productTypeSettingDBService.list(lambdaQueryWrapper);
+    }
+
+    @Override
+    public ProductSettingTable getOne(ProductSettingTable productSettingTable) {
+        if(isNull(productSettingTable)) return null;
+        LambdaQueryWrapper<ProductSettingTable> lambdaQueryWrapper = new QueryWrapper<ProductSettingTable>()
+                .lambda().eq(ProductSettingTable::getStatus,productSettingTable.getStatus());//默认只取可用的
+
+        if( !isBlank(productSettingTable.getOrganizationId()) ) lambdaQueryWrapper.eq(ProductSettingTable::getOrganizationId,productSettingTable.getOrganizationId());
+        if( !isBlank(productSettingTable.getProductName()) ) lambdaQueryWrapper.eq(ProductSettingTable::getProductName,productSettingTable.getProductName());
+        return productTypeSettingDBService.getOne(lambdaQueryWrapper);
     }
 }
