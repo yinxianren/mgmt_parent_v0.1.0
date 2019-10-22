@@ -14,8 +14,8 @@ public interface CommonSerivceInterface {
     MerchantInfoTable  getOneMerInfo(InnerPrintLogObject ipo) throws NewPayException;
 
     /**
-     *  判断多充订单
+     *  判断多重订单
      * @return
      */
-    boolean multipleOrder(String merId,String terMerId,String merOrderId) throws NewPayException;
+    boolean multipleOrder(String merOrderId,InnerPrintLogObject ipo) throws NewPayException;
 }

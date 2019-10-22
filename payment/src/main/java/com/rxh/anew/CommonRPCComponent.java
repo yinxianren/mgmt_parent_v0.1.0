@@ -1,5 +1,6 @@
 package com.rxh.anew;
 
+import com.rxh.service.anew.business.ApiRegisterCollectService;
 import com.rxh.service.anew.merchant.ApiMerchantInfoService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,6 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public  class CommonRPCComponent {
 
-    public final ApiMerchantInfoService anewMerchantInfoService;
-
+    public final ApiMerchantInfoService apiMerchantInfoService;
+    public final ApiRegisterCollectService apiRegisterCollectService;
 }

@@ -25,7 +25,7 @@ import java.util.Map;
  * Description:
  */
 
-@Controller
+@RestController
 @RequestMapping("/shortcut")
 public class NewIntoPiecesOfInformationController extends NewAbstractCommonController {
 
@@ -34,7 +34,14 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
     @Autowired
     private Md5Component md5Component;
 
-    @ResponseBody
+    /**
+     *
+     * @param request
+     * @param param
+     * @return
+     *
+     *
+     */
     @PostMapping(value = "/addCusInfo" ,produces = "text/html;charset=UTF-8")
     public String intoPiecesOfInformation(HttpServletRequest request, @RequestBody(required = false) String param){
         final String bussType = "【基本信息登记】";
@@ -57,6 +64,8 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
              //验证签名
             md5Component.checkMd5(sotTable.getRequestMsg(),merInfoTable.getSecretKey(),ipo);
             //查看是否重复订单
+            newIntoPiecesOfInformationService.multipleOrder(mbirDTO.getMerOrderId(),ipo);
+            // 获取商户配置
 
 
         }catch (Exception e){

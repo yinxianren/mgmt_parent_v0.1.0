@@ -1,12 +1,9 @@
 package com.rxh.anew.service.shortcut.impl.agent;
 
 import com.rxh.anew.service.db.agent.AgentMerchantInfoDbService;
-import com.rxh.anew.table.agent.AgentMerchantInfoTable;
 import com.rxh.service.anew.agent.ApiAgentMerchantInfoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,17 +12,10 @@ import java.util.List;
  * Time: 下午4:33
  * Description:
  */
-
+@AllArgsConstructor
 @Service
 public class ApiAgentMerchantInfoServiceImpl implements ApiAgentMerchantInfoService {
 
-    @Autowired
-    private AgentMerchantInfoDbService agentMerchantInfoDbService;
+    private final AgentMerchantInfoDbService agentMerchantInfoDbService;
 
-
-    @Override
-    public String test() {
-         List<AgentMerchantInfoTable>  list= agentMerchantInfoDbService.list();
-        return "AgentMerchantInfoServiceImpl implements AgentMerchantInfoService";
-    }
 }

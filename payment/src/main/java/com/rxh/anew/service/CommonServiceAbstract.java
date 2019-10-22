@@ -3,6 +3,7 @@ package com.rxh.anew.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.rxh.anew.CommonRPCComponent;
 import com.rxh.anew.inner.InnerPrintLogObject;
+import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.exception.NewPayException;
@@ -28,7 +29,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
     public MerchantInfoTable getOneMerInfo(InnerPrintLogObject ipo) throws NewPayException {
         MerchantInfoTable merchantInfoTable = new MerchantInfoTable();
         merchantInfoTable.setMerchantId(ipo.getMerId());
-        merchantInfoTable = commonRPCComponent.anewMerchantInfoService.getOne(merchantInfoTable);
+        merchantInfoTable = commonRPCComponent.apiMerchantInfoService.getOne(merchantInfoTable);
         isNull(merchantInfoTable,
                 ResponseCodeEnum.RXH00017.getCode(),
                 format("%s-->商户号：%s；终端号：%s；错误信息: %s ；",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00017.getMsg()),
@@ -36,8 +37,16 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
         return merchantInfoTable;
     }
 
-    public boolean multipleOrder(String merId,String terMerId,String merOrderId) throws NewPayException{
-
+    public boolean multipleOrder(String merOrderId,InnerPrintLogObject ipo) throws NewPayException{
+        RegisterCollectTable rct = new RegisterCollectTable();
+        rct.setMerchantId(ipo.getMerId());
+        rct.setTerminalMerId(ipo.getTerMerId());
+        rct.setMerOrderId(merOrderId);
+        rct = commonRPCComponent.apiRegisterCollectService.getOne(rct);
+        isNotNull(rct,
+                ResponseCodeEnum.RXH00009.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00009.getMsg()),
+                format(" %s",ResponseCodeEnum.RXH00009.getMsg()));
         return false;
     }
 

@@ -64,4 +64,17 @@ public interface NewPayAssert {
         return false;
     }
 
+
+    /**
+     * 空对象抛出异常
+     * @param object
+     * @param code
+     * @param innerPrintMsg
+     * @param responseMsg
+     * @throws NewPayException
+     */
+    default void isNotNull(Object object, String code, String innerPrintMsg, String responseMsg) throws NewPayException {
+        if(null != object)
+            throw new NewPayException(code,innerPrintMsg,responseMsg);
+    }
 }
