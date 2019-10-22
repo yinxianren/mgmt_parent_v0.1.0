@@ -1,5 +1,6 @@
 package com.rxh.anew.table.business;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -18,6 +19,7 @@ import java.util.Date;
 @TableName("6_register_collect_table")
 @Data
 public class RegisterCollectTable implements Serializable {
+    @TableId
     private Long id ;//表主键',
     private String platformOrderId;//平台订单号',
     private Long  ritId;//主表id',

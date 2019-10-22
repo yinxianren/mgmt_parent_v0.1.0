@@ -1,5 +1,6 @@
 package com.rxh.anew.table.business;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.sun.xml.internal.bind.v2.model.core.ID;
 import lombok.Data;
@@ -19,6 +20,7 @@ import java.util.Date;
 @TableName("8_pay_order_info_table")
 @Data
 public class PayOrderInfoTable implements Serializable {
+    @TableId
     private Long id ;// 表主键,
     private String platformOrderId;// 平台订单号,
     private String merchantId;// 商户号,
