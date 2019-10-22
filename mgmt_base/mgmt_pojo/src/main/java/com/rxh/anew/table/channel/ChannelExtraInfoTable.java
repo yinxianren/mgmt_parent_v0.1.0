@@ -19,7 +19,7 @@ public class ChannelExtraInfoTable  implements Serializable {
 	private String extraChannelId;//附属通道ID
 	private String extraChannelName;//附属通道名称
 	private String organizationId;//机构ID
-	private Integer bussType;//1：进件 ,2:绑卡
+	private String bussType;// ADDCUS：进件 ,BONDCARD:绑卡
 	private String requestUrl;//请求cross的路径
 	private String channelParam;//通道配置参数
 	private Integer status;//状态 0：启用 ,1:禁用

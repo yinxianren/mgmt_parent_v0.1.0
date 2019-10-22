@@ -27,7 +27,7 @@ public enum ResponseCodeEnum {
     ,RXH00019("RXH00019","商户通道未进行配置")
     ,RXH00020("RXH00020","商户配置通道未进行开放")
     ,RXH00021("RXH00021","产品类型不存在")
-
+    ,RXH00022("RXH00022","通道不匹配")
     ,RXH99999("RXH99999","其他错误")
     ;
     private String code;
