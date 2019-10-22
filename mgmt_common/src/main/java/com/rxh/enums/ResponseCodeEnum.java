@@ -23,7 +23,7 @@ public enum ResponseCodeEnum {
     ,RXH00015("RXH00015","字段值长度异常")
     ,RXH00016("RXH00016","字段值格式错误")
     ,RXH00017("RXH00017","该商户号不存在")
-
+    ,RXH00018("RXH00018","签名不匹配")
     ,RXH99999("RXH99999","其他错误")
     ;
     private String code;

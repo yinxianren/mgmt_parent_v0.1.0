@@ -1,12 +1,15 @@
 package com.rxh.anew.controller.shortcut;
 
 import com.alibaba.dubbo.common.json.JSON;
+import com.rxh.anew.component.Md5Component;
 import com.rxh.anew.controller.NewAbstractCommonController;
 import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.shortcut.NewIntoPiecesOfInformationService;
+import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
+import com.rxh.utils.CheckMd5Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +31,8 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
 
     @Autowired
     private NewIntoPiecesOfInformationService newIntoPiecesOfInformationService;
-
+    @Autowired
+    private Md5Component md5Component;
 
     @ResponseBody
     @PostMapping(value = "/addCusInfo" ,produces = "text/html;charset=UTF-8")
@@ -49,7 +53,10 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //参数校验
             this.verify(paramRuleMap,mbirDTO,MerchantBasicInformationRegistrationDTO.class,ipo);
             //获取商户信息
-
+            MerchantInfoTable merInfoTable = newIntoPiecesOfInformationService.getOneMerInfo(ipo);
+             //验证签名
+            md5Component.checkMd5(sotTable.getRequestMsg(),merInfoTable.getSecretKey(),ipo);
+            //查看是否重复订单
 
 
         }catch (Exception e){

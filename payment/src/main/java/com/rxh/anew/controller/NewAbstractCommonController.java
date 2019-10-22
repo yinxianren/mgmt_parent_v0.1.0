@@ -32,6 +32,10 @@ public abstract class NewAbstractCommonController implements NewPayAssert, PayUt
     private final int IPv4 = 4;//IPv4
     private final int URL = 5;//请求路径
     private final int PHONE = 7;//手机号
+
+
+
+
     /**
      * 获取风控前置表数据
      * @param request

@@ -25,12 +25,12 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
 
 
 
-    public MerchantInfoTable getOne(InnerPrintLogObject ipo) throws NewPayException {
+    public MerchantInfoTable getOneMerInfo(InnerPrintLogObject ipo) throws NewPayException {
         MerchantInfoTable merchantInfoTable = commonRPCComponent.anewMerchantInfoService.getOne(ipo);
         isNull(merchantInfoTable,
                 ResponseCodeEnum.RXH00017.getCode(),
                 format("%s-->商户号：%s；终端号：%s；错误信息: %s ；",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00017.getMsg()),
                 format(" %s",ResponseCodeEnum.RXH00017.getMsg()));
-        return null;
+        return merchantInfoTable;
     }
 }

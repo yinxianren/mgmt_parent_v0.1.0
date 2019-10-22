@@ -6,6 +6,6 @@ import com.rxh.exception.NewPayException;
 
 public interface CommonSerivceInterface {
 
-    MerchantInfoTable  getOne(InnerPrintLogObject ipo) throws NewPayException;
+    MerchantInfoTable  getOneMerInfo(InnerPrintLogObject ipo) throws NewPayException;
 
 }
