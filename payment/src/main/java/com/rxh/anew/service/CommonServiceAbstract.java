@@ -9,6 +9,7 @@ import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.exception.NewPayException;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.payInterface.PayUtil;
+import com.rxh.square.pojo.MerchantSetting;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -24,6 +25,10 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
     @Autowired
     private CommonRPCComponent commonRPCComponent;
 
+
+    public MerchantSetting getMerchantSetting(InnerPrintLogObject ipo){
+
+    }
 
 
     public MerchantInfoTable getOneMerInfo(InnerPrintLogObject ipo) throws NewPayException {

@@ -3,6 +3,7 @@ package com.rxh.anew.service;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.exception.NewPayException;
+import com.rxh.square.pojo.MerchantSetting;
 
 public interface CommonSerivceInterface {
     /**
@@ -18,4 +19,12 @@ public interface CommonSerivceInterface {
      * @return
      */
     boolean multipleOrder(String merOrderId,InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *  获取商户所有通道配置信息
+     * @param ipo
+     * @return
+     */
+    MerchantSetting  getMerchantSetting(InnerPrintLogObject ipo);
+
 }
