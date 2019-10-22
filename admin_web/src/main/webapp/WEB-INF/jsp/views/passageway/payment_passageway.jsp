@@ -94,6 +94,9 @@
                                                 <div class="btn btn-xs btn-success"  style="margin: 0 0 0 10px" ng-click="edit(1, row)">
                                                     编辑
                                                 </div>
+                                                <div class="btn btn-xs btn-success"  style="margin: 0 0 0 10px" ng-click="productEdit(1, row)">
+                                                    产品配置
+                                                </div>
                                             </td>
 
                                         </tr>

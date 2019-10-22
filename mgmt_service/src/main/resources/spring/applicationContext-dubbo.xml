@@ -16,7 +16,7 @@
     <dubbo:protocol name="dubbo" port="${dubbo.protocol.port}" payload="1073741824"/>
      <!--  ***********************************************new***********************************************************************   -->
     <dubbo:service interface="com.rxh.service.anew.agent.AnewAgentMerchantInfoService" ref="anewAgentMerchantInfoServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.merchant.AnewMerchantInfoService"   ref="anewMerchantInfoServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantInfoService" ref="anewMerchantInfoServiceImpl"/>
 
 
     <!--  **********************************************************************************************************************   -->

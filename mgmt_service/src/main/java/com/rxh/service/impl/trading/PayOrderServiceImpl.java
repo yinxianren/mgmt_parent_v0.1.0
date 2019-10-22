@@ -1,16 +1,12 @@
 package com.rxh.service.impl.trading;
 
-import com.rxh.mapper.square.PayCardholderInfoMapper;
-import com.rxh.mapper.square.PayOrderMapper;
-import com.rxh.mapper.square.PayProductDetailMapper;
+import com.rxh.mapper.square.*;
 import com.rxh.pojo.Result;
 import com.rxh.pojo.base.Page;
 import com.rxh.pojo.base.PageResult;
 import com.rxh.pojo.base.SearchInfo;
 import com.rxh.service.trading.PayOrderService;
-import com.rxh.square.pojo.PayCardholderInfo;
-import com.rxh.square.pojo.PayOrder;
-import com.rxh.square.pojo.PayProductDetail;
+import com.rxh.square.pojo.*;
 import com.rxh.square.vo.PayOrderDto;
 import com.rxh.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +33,10 @@ public class PayOrderServiceImpl implements PayOrderService {
     private PayProductDetailMapper payProductDetailMapper;
     @Autowired
     private PayCardholderInfoMapper payCardholderInfoMapper;
+    @Autowired
+    private AgentMerchantInfoMapper agentMerchantInfoMapper;
+    @Autowired
+    private ChannelInfoMapper channelInfoMapper;
 
     @Override
     public PageResult findPayOrder(Page page) {
@@ -124,8 +124,19 @@ public class PayOrderServiceImpl implements PayOrderService {
     @Override
     public Result getCardHolderInfo(String payId) {
         PayCardholderInfo cardholderInfo = payCardholderInfoMapper.selectByPrimaryKey(payId);
+        PayOrder payOrder = payOrderMapper.selectByPrimaryKey(payId);
         Result <PayCardholderInfo> result=new Result<>();
         if(cardholderInfo!=null){
+            AgentMerchantInfo agentMerchantInfo = agentMerchantInfoMapper.selectByPrimaryKey(payOrder.getAgmentId());
+            ChannelInfo channelInfo = channelInfoMapper.selectByChannelId(payOrder.getChannelId());
+            cardholderInfo.setAgentMerchantName(agentMerchantInfo != null?agentMerchantInfo.getAgentMerchantName():"");
+            cardholderInfo.setChannelBankResult(payOrder.getTradeResult());
+            cardholderInfo.setChannelBankTime(payOrder.getBankTime());
+            cardholderInfo.setOrgOrderId(payOrder.getOrgOrderId());
+            cardholderInfo.setCurrency(payOrder.getCurrency());
+            cardholderInfo.setTerminalMerId(payOrder.getTerminalMerId());
+            cardholderInfo.setOrderStatus(payOrder.getOrderStatus());
+            cardholderInfo.setChannelName(channelInfo == null ? "" : channelInfo.getChannelName());
             result.setCode(Result.SUCCESS);
             result.setMsg("获取持卡人详情成功");
             result.setData(cardholderInfo);

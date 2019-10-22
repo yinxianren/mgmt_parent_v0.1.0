@@ -2,7 +2,7 @@ package com.rxh.anew.service.shortcut.impl.merchant;
 
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
-import com.rxh.service.anew.merchant.AnewMerchantInfoService;
+import com.rxh.service.anew.merchant.ApiMerchantInfoService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  * Description:
  */
 @Service
-public class AnewMerchantInfoServiceImpl implements AnewMerchantInfoService {
+public class AnewMerchantInfoServiceImpl implements ApiMerchantInfoService {
     @Override
     public MerchantInfoTable getOne(InnerPrintLogObject ipo) {
         return null;
