@@ -105,7 +105,7 @@ function paymentPassagewayCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
     $scope.showModal = $scope.productEdit = function ( type,Organization) {
         var modalInstance = $uibModal.open({
             templateUrl: '/views/passageway/productAdd',
-            controller: 'OrganizationAddModalCtrl',
+            controller: 'productAddModalCtrl',
             resolve: {
                 type: function () {
                     return type;
@@ -192,6 +192,7 @@ function OrganizationAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, t
     //         angular.element('#bank-status').parent().addClass('has-success');
     //     }
     // });
+
     $scope.addOrganization = function () {
         if (type === 0) {
             httpSvc.getData('post', '/organization/insert', $scope.Organization).then(function (value) {
@@ -244,7 +245,7 @@ function productAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, 
     if (type === 1) {
         $scope.Organization = angular.copy(Organization);
     }
-    httpSvc.getData('post', '/organization/init', JSON.stringify('Status')).then(function (value) {
+    httpSvc.getData('post', '/product/getProductList', JSON.stringify('Status')).then(function (value) {
         $scope.status = value.status;
     });
     $scope.nameBlur = $scope.remarkBlur = $scope.elementBlur=function ($event, remark) {
@@ -258,7 +259,47 @@ function productAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, 
     // });
     $scope.addOrganization = function () {
         if (type === 0) {
-            httpSvc.getData('post', '/organization/insert', $scope.Organization).then(function (value) {
+            httpSvc.getData('post', '/product/getProductList', $scope.Organization).then(function (value) {
+                if (value) {
+                    $scope.bankInfo = null;
+                    toaster.pop({
+                        type: 'success',
+                        title: '支付产品管理',
+                        body: '支付机构添加成功！'
+                    });
+                    $uibModalInstance.close();
+                } else {
+                    toaster.pop({
+                        type: 'error',
+                        title: '支付产品管理',
+                        body: '支付机构添加失败！'
+                    });
+                }
+            });
+        } else {
+            httpSvc.getData('post', '/product/getProductList', $scope.Organization).then(function (value) {
+                if (value) {
+                    $scope.bankInfo = null;
+                    toaster.pop({
+                        type: 'success',
+                        title: '支付产品管理',
+                        body: '支付机构修改成功！'
+                    });
+                    $uibModalInstance.close();
+                } else {
+                    toaster.pop({
+                        type: 'error',
+                        title: '支付产品管理',
+                        body: '支付机构修改失败！'
+                    });
+                }
+            });
+        }
+    };
+
+    $scope.addProduct = function () {
+        if (type === 0) {
+            httpSvc.getData('post', '/product/getProductList', $scope.Organization).then(function (value) {
                 if (value) {
                     $scope.bankInfo = null;
                     toaster.pop({
@@ -276,7 +317,7 @@ function productAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, 
                 }
             });
         } else {
-            httpSvc.getData('post', '/organization/update', $scope.Organization).then(function (value) {
+            httpSvc.getData('post', '/product/getProductList', $scope.Organization).then(function (value) {
                 if (value) {
                     $scope.bankInfo = null;
                     toaster.pop({

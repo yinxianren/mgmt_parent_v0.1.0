@@ -8,6 +8,11 @@
     <dubbo:consumer check="false"/>
     <!-- 注册中心地址 -->
     <dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}"/>
+
+    <dubbo:reference interface="com.rxh.service.anew.channel.ApiProductTypeSettingService" id="apiProductTypeSettingService"/>
+
+
+
     <!--四方支付调用接口-->
     <dubbo:reference interface="com.rxh.service.square.RiskQuotaDataService" id="riskQuotaDataService"/>
     <dubbo:reference interface="com.rxh.service.square.ExtraChannelInfoService" id="extraChannelInfoService"/>
