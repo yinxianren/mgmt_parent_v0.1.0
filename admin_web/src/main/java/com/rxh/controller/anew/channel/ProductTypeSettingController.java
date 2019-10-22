@@ -1,6 +1,6 @@
 package com.rxh.controller.anew.channel;
 
-import com.rxh.anew.table.channel.ProductSettingTable;
+import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.service.ProductTypeSettingService;
 import com.rxh.vo.ResponseVO;
 import lombok.extern.slf4j.Slf4j;

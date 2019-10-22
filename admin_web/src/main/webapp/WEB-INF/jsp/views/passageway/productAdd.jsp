@@ -8,7 +8,7 @@
     <button class="close" ng-click="cancel()">
         <span aria-hidden="true">×</span>
     </button>
-    <h3 class="modal-title" id="modal-title">{{ type == 0 ? '编辑支付产品' : '添加支付产品'}}</h3>
+    <h3 class="modal-title" id="modal-title">{{ type == 0 ? '编辑支付产品' : '编辑支付产品'}}</h3>
 </div>
 <div class="modal-body" id="modal-body"  >
     <form id="OrganizationObjForm" name="OrganizationObjForm" class="form-horizontal">
@@ -52,7 +52,7 @@
     <div class="row padding-set">
         <div class="col-sm-12">
             <div class="center">
-                <button class="btn btn-sm btn-primary general-btn" id="addOrganizationID" type="button" ng-click="addOrganization()"
+                <button class="btn btn-sm btn-primary general-btn" id="addOrganizationID" type="button" ng-click="addProduct()"
                         ng-disabled="nextDisabled(OrganizationObjForm)">
                     确定
                 </button>

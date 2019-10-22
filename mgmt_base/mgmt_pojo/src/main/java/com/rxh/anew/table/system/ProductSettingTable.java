@@ -1,4 +1,4 @@
-package com.rxh.anew.table.channel;
+package com.rxh.anew.table.system;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
