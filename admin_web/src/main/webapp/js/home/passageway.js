@@ -102,6 +102,26 @@ function paymentPassagewayCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
         });
     };
 
+    $scope.showModal = $scope.productEdit = function ( type,Organization) {
+        var modalInstance = $uibModal.open({
+            templateUrl: '/views/passageway/productAdd',
+            controller: 'OrganizationAddModalCtrl',
+            resolve: {
+                type: function () {
+                    return type;
+                },
+                Organization: function () {
+                    return Organization;
+                }
+            }
+        });
+        modalInstance.result.then(function () {
+            tableReload()
+        }, function () {
+            tableReload()
+        });
+    };
+
 
     $scope.del = function () {
         var idList = [];
@@ -156,6 +176,70 @@ function paymentPassagewayCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
 }
 
 function OrganizationAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, Organization) {
+    $scope.type = type;
+    if (type === 1) {
+        $scope.Organization = angular.copy(Organization);
+    }
+    httpSvc.getData('post', '/organization/init', JSON.stringify('Status')).then(function (value) {
+        $scope.status = value.status;
+    });
+    $scope.nameBlur = $scope.remarkBlur = $scope.elementBlur=function ($event, remark) {
+        verification(remark, $event.target);
+    };
+    // $scope.$watch('Organization.status', function (newVal) {
+    //     if (newVal !== undefined) {
+    //         angular.element('#bank-status').parent().removeClass('has-error');
+    //         angular.element('#bank-status').parent().addClass('has-success');
+    //     }
+    // });
+    $scope.addOrganization = function () {
+        if (type === 0) {
+            httpSvc.getData('post', '/organization/insert', $scope.Organization).then(function (value) {
+                if (value) {
+                    $scope.bankInfo = null;
+                    toaster.pop({
+                        type: 'success',
+                        title: '支付机构管理',
+                        body: '支付机构添加成功！'
+                    });
+                    $uibModalInstance.close();
+                } else {
+                    toaster.pop({
+                        type: 'error',
+                        title: '支付机构管理',
+                        body: '支付机构添加失败！'
+                    });
+                }
+            });
+        } else {
+            httpSvc.getData('post', '/organization/update', $scope.Organization).then(function (value) {
+                if (value) {
+                    $scope.bankInfo = null;
+                    toaster.pop({
+                        type: 'success',
+                        title: '支付机构管理',
+                        body: '支付机构修改成功！'
+                    });
+                    $uibModalInstance.close();
+                } else {
+                    toaster.pop({
+                        type: 'error',
+                        title: '支付机构管理',
+                        body: '支付机构修改失败！'
+                    });
+                }
+            });
+        }
+    };
+    $scope.nextDisabled = function (OrganizationObjForm) {
+        return !(OrganizationObjForm.organizationName.$valid && OrganizationObjForm.remark.$valid && !angular.equals($scope.Organization, Organization));
+    };
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss();
+    };
+}
+
+function productAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, Organization) {
     $scope.type = type;
     if (type === 1) {
         $scope.Organization = angular.copy(Organization);
@@ -849,6 +933,7 @@ angular
     .module('inspinia')
     .controller('paymentPassagewayCtrl', paymentPassagewayCtrl)
     .controller('OrganizationAddModalCtrl', OrganizationAddModalCtrl)
+    .controller('productAddModalCtrl', productAddModalCtrl)
     .controller('channelInfoModalCtrl', channelInfoModalCtrl)
     .controller('channelInfoCtrl', channelInfoCtrl)
     .controller('attachPassagewayMgmtCtrl', attachPassagewayMgmtCtrl)

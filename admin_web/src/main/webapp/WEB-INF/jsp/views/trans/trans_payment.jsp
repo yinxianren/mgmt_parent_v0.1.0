@@ -183,28 +183,28 @@
                                         ng-click="showTransPayment(1,row)">
                                         {{row.payId}}
                                     </td>
-                                    <td class="text-center" data-title="'代理商名称'">
+                                    <%--<td class="text-center" data-title="'代理商名称'">
                                         {{row.agmentId | getValueByList : agents : 'agentMerchantId':'agentMerchantName' }}
-                                       <%-- {{row.agmentId}}--%>
-                                    </td>
-                                    <td class="text-center" data-title="'通道交易流水号'">
+                                       &lt;%&ndash; {{row.agmentId}}&ndash;%&gt;
+                                    </td>--%>
+                                   <%-- <td class="text-center" data-title="'通道交易流水号'">
                                         {{row.orgOrderId}}
-                                    </td>
+                                    </td>--%>
                                     <td class="text-center" data-title="'机构名称'">
                                         {{row.organizationId | getValueByList : organizations : 'organizationId':'organizationName' }}
                                     </td>
-                                    <td class="text-center" data-title="'通道名称'">
+                                    <%--<td class="text-center" data-title="'通道名称'">
                                         {{row.channelId | getValueByList : channels : 'channelId' : 'channelName' }}
-                                    </td>
+                                    </td>--%>
                                     <td class="text-center" data-title="'支付方式'">
                                         {{row.payType | getValueByList : payTypes : 'firstValue':'name'}}
                                     </td>
                                     <%--<td class="text-center" data-title="'通道商户编码'">--%>
                                 <%--{{row.channelTransCode}}--%>
                                 <%--</td>--%>
-                                    <td class="text-center" data-title="'订单币种'">
+                                    <%--<td class="text-center" data-title="'订单币种'">
                                         {{row.currency}}
-                                    </td>
+                                    </td>--%>
                                     <td class="text-center" data-title="'订单金额'" style="text-decoration: underline;color: #1ab394;cursor: pointer;"
                                         ng-click="showTransPayment(2,row)">
                                         {{row.amount | number: 2}}
@@ -248,9 +248,9 @@
                                     <td class="text-center" data-title="'交易时间'">
                                         {{row.tradeTime | date:'yyyy-MM-dd HH:mm:ss'}}
                                     </td>
-                                    <td class="text-center" data-title="'通道交易时间'">
+                                    <%--<td class="text-center" data-title="'通道交易时间'">
                                         {{row.bankTime | date:'yyyy-MM-dd HH:mm:ss'}}
-                                    </td>
+                                    </td>--%>
                                 </tr>
                             </table>
                         </div>

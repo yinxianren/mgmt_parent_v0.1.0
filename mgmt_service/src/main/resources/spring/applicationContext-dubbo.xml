@@ -16,7 +16,7 @@
     <dubbo:protocol name="dubbo" port="${dubbo.protocol.port}" payload="1073741824"/>
      <!--  ***********************************************new***********************************************************************   -->
     <dubbo:service interface="com.rxh.service.anew.agent.AnewAgentMerchantInfoService" ref="anewAgentMerchantInfoServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.merchant.AnewMerchantInfoService"   ref="anewMerchantInfoServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantInfoService" ref="anewMerchantInfoServiceImpl"/>
 
 
     <!--  **********************************************************************************************************************   -->
@@ -80,5 +80,6 @@
     <dubbo:service interface= "com.rxh.service.sys.SysConstantService" ref="sysConstantServiceImpl" timeout="30000"/>
     <dubbo:service interface= "com.rxh.service.merchant.MerchantSettingService" ref="merchantSettingServiceImpl" timeout="30000"/>
     <dubbo:service interface= "com.rxh.service.square.BankCodeService" ref="bankCodeServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.anew.channel.ApiProductTypeSettingService" ref="apiProductTypeSettingServiceImpl" timeout="30000" />
 
 </beans>
