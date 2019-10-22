@@ -80,5 +80,6 @@
     <dubbo:service interface= "com.rxh.service.sys.SysConstantService" ref="sysConstantServiceImpl" timeout="30000"/>
     <dubbo:service interface= "com.rxh.service.merchant.MerchantSettingService" ref="merchantSettingServiceImpl" timeout="30000"/>
     <dubbo:service interface= "com.rxh.service.square.BankCodeService" ref="bankCodeServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.anew.channel.ApiProductTypeSettingService" ref="apiProductTypeSettingServiceImpl" timeout="30000" />
 
 </beans>
