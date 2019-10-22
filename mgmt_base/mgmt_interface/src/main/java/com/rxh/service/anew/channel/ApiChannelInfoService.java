@@ -1,4 +1,12 @@
 package com.rxh.service.anew.channel;
 
-public class ApiChannelInfoService {
+import com.rxh.anew.table.channel.ChannelInfoTable;
+
+import java.util.List;
+import java.util.Set;
+
+public interface ApiChannelInfoService {
+
+    List<ChannelInfoTable>  batchGetByChannelId(Set<String> channelIdSet);
+
 }

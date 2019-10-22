@@ -7,6 +7,7 @@ import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.shortcut.NewIntoPiecesOfInformationService;
+import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
@@ -69,12 +70,18 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             newIntoPiecesOfInformationService.multipleOrder(mbirDTO.getMerOrderId(),ipo);
             // 获取商户配置
             List<MerchantSettingTable>  merchantSettingTableList=newIntoPiecesOfInformationService.getMerchantSetting(ipo);
-            //
+            //获取配置的所有通道
+            List<ChannelInfoTable>  channelInfoTableList = newIntoPiecesOfInformationService.getChannelInfoByMerSetting(merchantSettingTableList,ipo);
+            //根据产品类型进行过滤
+
+
 
 
         }catch (Exception e){
 
+
         }finally {
+
 
             return respResult;
         }

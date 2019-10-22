@@ -1,15 +1,23 @@
 package com.rxh.anew.service.shortcut.impl;
 
 import com.rxh.anew.CommonRPCComponent;
+import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonServiceAbstract;
+import com.rxh.anew.table.channel.ChannelInfoTable;
+import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.enums.ParamTypeEnum;
 import com.rxh.anew.service.shortcut.NewIntoPiecesOfInformationService;
+import com.rxh.enums.ResponseCodeEnum;
+import com.rxh.exception.NewPayException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -56,4 +64,26 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
             }
         };
     }
+
+
+    @Override
+    public List<ChannelInfoTable> getChannelInfoByMerSetting(List<MerchantSettingTable> list, InnerPrintLogObject ipo) throws NewPayException {
+        Set<String>  channelIdSet = list.stream().map(MerchantSettingTable::getChannelId).collect(Collectors.toSet());
+        List<ChannelInfoTable>   channelInfoTableList = commonRPCComponent.apiChannelInfoService.batchGetByChannelId(channelIdSet);
+        isHasNotElement(channelInfoTableList,
+                ResponseCodeEnum.RXH00020.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00020.getMsg()),
+                format(" %s",ResponseCodeEnum.RXH00020.getMsg()));
+        return channelInfoTableList;
+    }
+
+    @Override
+    public List<ChannelInfoTable> filtrationChannelInfoByProductType(List<ChannelInfoTable> list, String productType, InnerPrintLogObject ipo) throws NewPayException {
+
+        list.stream().filter(t->t.getProductId().equalsIgnoreCase())
+
+        return null;
+    }
+
+
 }

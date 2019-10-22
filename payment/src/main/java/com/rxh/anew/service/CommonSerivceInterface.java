@@ -28,6 +28,6 @@ public interface CommonSerivceInterface {
      * @param ipo
      * @return
      */
-    List<MerchantSettingTable> getMerchantSetting(InnerPrintLogObject ipo);
+    List<MerchantSettingTable> getMerchantSetting(InnerPrintLogObject ipo) throws NewPayException;
 
 }

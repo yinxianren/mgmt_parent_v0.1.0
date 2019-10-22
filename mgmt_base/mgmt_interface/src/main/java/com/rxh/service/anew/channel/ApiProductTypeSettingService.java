@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface ApiProductTypeSettingService {
 
-    public Boolean SaveOrUpdate(ProductSettingTable productSettingTable);
+     Boolean SaveOrUpdate(ProductSettingTable productSettingTable);
 
-    public Boolean removeById(String id);
+     Boolean removeById(String id);
 
-    public List<ProductSettingTable> list(ProductSettingTable productSettingTable);
+     List<ProductSettingTable> list(ProductSettingTable productSettingTable);
 }

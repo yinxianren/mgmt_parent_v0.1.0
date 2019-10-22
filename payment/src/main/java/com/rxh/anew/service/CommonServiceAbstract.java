@@ -24,7 +24,7 @@ import java.util.List;
 public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
 
     @Autowired
-    private CommonRPCComponent commonRPCComponent;
+    protected CommonRPCComponent commonRPCComponent;
 
 
     public List<MerchantSettingTable> getMerchantSetting(InnerPrintLogObject ipo) throws NewPayException {
