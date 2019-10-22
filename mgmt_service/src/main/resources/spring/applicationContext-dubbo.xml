@@ -20,6 +20,9 @@
     <dubbo:service interface="com.rxh.service.anew.business.ApiRegisterCollectService"  ref="apiRegisterCollectServiceImpl"/>
     <dubbo:service interface="com.rxh.service.anew.system.ApiMerchantSettingService"    ref="apiMerchantSettingServiceImpl"/>
     <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelInfoService"       ref="apiChannelInfoService"/>
+    <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelExtraInfoService"  ref="apiChannelExtraInfoService"/>
+
+
 
     <!--  **********************************************************************************************************************   -->
     <!--<dubbo:protocol name="dubbo" host="${dubbo.protocol.host}" port="${dubbo.protocol.port}" payload="1073741824"/>-->
