@@ -2,6 +2,7 @@ package com.rxh.anew;
 
 import com.rxh.service.anew.business.ApiRegisterCollectService;
 import com.rxh.service.anew.merchant.ApiMerchantInfoService;
+import com.rxh.service.anew.system.ApiMerchantSettingService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,4 +20,6 @@ public  class CommonRPCComponent {
 
     public final ApiMerchantInfoService apiMerchantInfoService;
     public final ApiRegisterCollectService apiRegisterCollectService;
+    public final ApiMerchantSettingService apiMerchantSettingService;
+
 }

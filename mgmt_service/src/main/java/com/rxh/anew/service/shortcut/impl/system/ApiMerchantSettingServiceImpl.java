@@ -1,9 +1,15 @@
 package com.rxh.anew.service.shortcut.impl.system;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.rxh.anew.service.db.system.MerchantSettingDbService;
+import com.rxh.anew.table.system.MerchantSettingTable;
+import com.rxh.payInterface.NewPayAssert;
 import com.rxh.service.anew.system.ApiMerchantSettingService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,8 +20,19 @@ import org.springframework.stereotype.Service;
  */
 @AllArgsConstructor
 @Service
-public class ApiMerchantSettingServiceImpl implements ApiMerchantSettingService {
+public class ApiMerchantSettingServiceImpl implements ApiMerchantSettingService, NewPayAssert {
+
 
     private final MerchantSettingDbService  merchantSettingDbService;
+
+
+    @Override
+    public List<MerchantSettingTable> getList(MerchantSettingTable mst) {
+        if(isNull(mst)) return null;
+        LambdaQueryWrapper<MerchantSettingTable> lambdaQueryWrapper = new QueryWrapper().lambda();
+        if( !isBlank(mst.getMerchantId()) ) lambdaQueryWrapper.eq(MerchantSettingTable::getMerchantId,mst.getMerchantId());
+        return merchantSettingDbService.list(lambdaQueryWrapper);
+    }
+
 
 }
