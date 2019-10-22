@@ -7,8 +7,9 @@ import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.service.anew.business.ApiRegisterCollectService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,6 +32,16 @@ public class ApiRegisterCollectServiceImpl implements ApiRegisterCollectService,
         if( !isBlank(rct.getTerminalMerId()) ) lambdaQueryWrapper.eq(RegisterCollectTable::getTerminalMerId,rct.getTerminalMerId());
         if( !isBlank(rct.getMerOrderId()) ) lambdaQueryWrapper.eq(RegisterCollectTable::getMerOrderId,rct.getMerOrderId());
         return registerCollectDbService.getOne(lambdaQueryWrapper);
+    }
+
+    @Override
+    public List<RegisterCollectTable> getList(RegisterCollectTable rct) {
+        if(isNull(rct)) return null;
+        LambdaQueryWrapper<RegisterCollectTable> lambdaQueryWrapper = new QueryWrapper().lambda();
+        if( !isBlank(rct.getMerchantId()) ) lambdaQueryWrapper.eq(RegisterCollectTable::getMerchantId,rct.getMerchantId());
+        if( !isBlank(rct.getTerminalMerId()) ) lambdaQueryWrapper.eq(RegisterCollectTable::getTerminalMerId,rct.getTerminalMerId());
+        if( !isBlank(rct.getMerOrderId()) ) lambdaQueryWrapper.eq(RegisterCollectTable::getMerOrderId,rct.getMerOrderId());
+        return registerCollectDbService.list(lambdaQueryWrapper);
     }
 
 }

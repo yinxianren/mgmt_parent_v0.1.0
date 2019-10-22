@@ -7,16 +7,21 @@ import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.shortcut.NewIntoPiecesOfInformationService;
+import com.rxh.anew.table.business.RegisterCollectTable;
+import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
+import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
+import com.rxh.tuple.Tuple2;
 import com.rxh.utils.CheckMd5Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -74,9 +79,15 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //获取配置的所有通道
             List<ChannelInfoTable>  channelInfoTableList = newIntoPiecesOfInformationService.getChannelInfoByMerSetting(merchantSettingTableList,ipo);
             //根据产品类型进行过滤
-            Set<ChannelInfoTable>  filterChannelInfoTableSet=newIntoPiecesOfInformationService.filtrationChannelInfoByProductType(channelInfoTableList,mbirDTO.getProductType(),ipo);
+            Tuple2<ProductSettingTable,Set<ChannelInfoTable>> tuple2=newIntoPiecesOfInformationService.filtrationChannelInfoByProductType(channelInfoTableList,mbirDTO.getProductType(),ipo);
             //获取商户成功进件的信息
-
+            List<RegisterCollectTable>  registerCollectTableList = newIntoPiecesOfInformationService.getRegisterCollectOnSuccess(ipo);
+            //过滤已经成功进件的通道
+            LinkedList<ChannelInfoTable> channelInfoTablesList=newIntoPiecesOfInformationService.filtrationChannelInfoBySuccessRegisterCollect(tuple2,registerCollectTableList,ipo);
+            //获取星级最高的通道，如果相同，取最后一个
+            ChannelInfoTable channelInfoTable = newIntoPiecesOfInformationService.filtrationChannelInfoByLevel(channelInfoTablesList,ipo);
+            //获取进件附属通道
+            ChannelExtraInfoTable extraInfoTable = newIntoPiecesOfInformationService.getAddCusChannelExtraInfo(channelInfoTable,ipo);
 
         }catch (Exception e){
 

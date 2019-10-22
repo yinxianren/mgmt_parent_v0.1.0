@@ -1,23 +1,21 @@
 package com.rxh.anew.service.shortcut.impl;
 
-import com.rxh.anew.CommonRPCComponent;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonServiceAbstract;
+import com.rxh.anew.service.shortcut.NewIntoPiecesOfInformationService;
+import com.rxh.anew.table.business.RegisterCollectTable;
+import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.enums.ParamTypeEnum;
-import com.rxh.anew.service.shortcut.NewIntoPiecesOfInformationService;
 import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.exception.NewPayException;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.rxh.tuple.Tuple2;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -31,9 +29,91 @@ import java.util.stream.Collectors;
 public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract implements NewIntoPiecesOfInformationService {
 
 
+    @Override
+    public List<RegisterCollectTable> getRegisterCollectOnSuccess(InnerPrintLogObject ipo) {
+        return  commonRPCComponent.apiRegisterCollectService.getList(
+                new RegisterCollectTable()
+                        .setMerchantId(ipo.getMerId())
+                        .setTerminalMerId(ipo.getTerMerId()));
+    }
+
+    @Override
+    public LinkedList<ChannelInfoTable> filtrationChannelInfoBySuccessRegisterCollect(Tuple2<ProductSettingTable,Set<ChannelInfoTable>> tuple2, List<RegisterCollectTable> registerCollectTableList, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="filtrationChannelInfoBySuccessRegisterCollect";
+        LinkedList<ChannelInfoTable>  channelInfoTableSet = new LinkedList<>(tuple2._2);
+        tuple2._2.forEach(channel->{
+            registerCollectTableList.forEach(regCollect->{
+                if(channel.getChannelId().equalsIgnoreCase(regCollect.getChannelId()))
+                    channelInfoTableSet.remove(channel);
+            });
+        });
+        isHasNotElement(channelInfoTableSet,//无更多可用通道
+                ResponseCodeEnum.RXH00023.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00020.getMsg(),localPoint),
+                format(" %s",ResponseCodeEnum.RXH00023.getMsg()));
+//       //保留产品符合的通道
+//        final String productId= tuple2._.getProductId();
+//        Set<ChannelInfoTable> set = channelInfoTableSet.stream().filter(t->t.getProductId().equalsIgnoreCase(productId)).collect(Collectors.toSet());
+//        isHasNotElement(channelInfoTableSet,//无更多可用通道
+//                ResponseCodeEnum.RXH00023.getCode(),
+//                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置（过滤产品符合的通道）：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00020.getMsg(),localPoint),
+//                format(" %s",ResponseCodeEnum.RXH00023.getMsg()));
+        return channelInfoTableSet;
+    }
+
+    @Override
+    public ChannelInfoTable filtrationChannelInfoByLevel(LinkedList<ChannelInfoTable> channelInfoTablesList, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="filtrationChannelInfoByLevel";
+        ChannelInfoTable channelInfoTable = channelInfoTablesList
+                .stream()
+                .reduce((t1,t2)-> t1.getChannelLevel() > t2.getChannelLevel() ? t1 : t2 )
+                .orElse(null);
+       isNull(channelInfoTable,
+               ResponseCodeEnum.RXH99999.getCode(),
+               format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置(取到空通道信息)：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint),
+               format(" %s",ResponseCodeEnum.RXH99999.getMsg()));
+
+        return channelInfoTable;
+    }
+
+    @Override
+    public ChannelExtraInfoTable getAddCusChannelExtraInfo(ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo) {
+
+        return null;
+    }
 
 
+    @Override
+    public List<ChannelInfoTable> getChannelInfoByMerSetting(List<MerchantSettingTable> list, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="getChannelInfoByMerSetting";
+        Set<String>  channelIdSet = list.stream().map(MerchantSettingTable::getChannelId).collect(Collectors.toSet());
+        List<ChannelInfoTable>   channelInfoTableList = commonRPCComponent.apiChannelInfoService.batchGetByChannelId(channelIdSet);
+        isHasNotElement(channelInfoTableList,
+                ResponseCodeEnum.RXH00020.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00020.getMsg(),localPoint),
+                format(" %s",ResponseCodeEnum.RXH00020.getMsg()));
+        return channelInfoTableList;
+    }
 
+    @Override
+    public Tuple2<ProductSettingTable,Set<ChannelInfoTable>> filtrationChannelInfoByProductType(List<ChannelInfoTable> list, String productType, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="filtrationChannelInfoByProductType";
+        ProductSettingTable productSettingTable = commonRPCComponent.apiProductTypeSettingService.getOne(new ProductSettingTable().setProductName(productType));
+        isNull(productSettingTable,//产品类型不存在
+                ResponseCodeEnum.RXH00021.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00021.getMsg()),
+                format(" %s",ResponseCodeEnum.RXH00021.getMsg()));
+
+        Set<ChannelInfoTable> channelInfoTableSet=list.stream()
+                .filter(t->t.getProductId().equalsIgnoreCase(productSettingTable.getProductId()))
+                .collect(Collectors.toSet());
+
+        isHasNotElement(channelInfoTableSet,//通道不匹配
+                ResponseCodeEnum.RXH00022.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00022.getMsg(),localPoint),
+                format(" %s",ResponseCodeEnum.RXH00022.getMsg()));
+        return new Tuple2(productSettingTable,channelInfoTableSet);
+    }
 
     @Override
     public Map<String, ParamRule> getParamMapByIPOI() {
@@ -67,34 +147,8 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
     }
 
 
-    @Override
-    public List<ChannelInfoTable> getChannelInfoByMerSetting(List<MerchantSettingTable> list, InnerPrintLogObject ipo) throws NewPayException {
-        final String localPoint="getChannelInfoByMerSetting";
-        Set<String>  channelIdSet = list.stream().map(MerchantSettingTable::getChannelId).collect(Collectors.toSet());
-        List<ChannelInfoTable>   channelInfoTableList = commonRPCComponent.apiChannelInfoService.batchGetByChannelId(channelIdSet);
-        isHasNotElement(channelInfoTableList,
-                ResponseCodeEnum.RXH00020.getCode(),
-                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00020.getMsg(),localPoint),
-                format(" %s",ResponseCodeEnum.RXH00020.getMsg()));
-        return channelInfoTableList;
-    }
 
-    @Override
-    public Set<ChannelInfoTable> filtrationChannelInfoByProductType(List<ChannelInfoTable> list, String productType, InnerPrintLogObject ipo) throws NewPayException {
-        final String localPoint="filtrationChannelInfoByProductType";
-        ProductSettingTable productSettingTable = commonRPCComponent.apiProductTypeSettingService.getOne(new ProductSettingTable().setProductName(productType));
-        isNull(productSettingTable,
-                ResponseCodeEnum.RXH00021.getCode(),
-                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00021.getMsg()),
-                format(" %s",ResponseCodeEnum.RXH00021.getMsg()));
 
-        Set<ChannelInfoTable> channelInfoTableSet=list.stream().filter(t->t.getProductId().equalsIgnoreCase(productSettingTable.getProductName())).collect(Collectors.toSet());
-        isHasNotElement(channelInfoTableSet,
-                ResponseCodeEnum.RXH00022.getCode(),
-                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00022.getMsg(),localPoint),
-                format(" %s",ResponseCodeEnum.RXH00022.getMsg()));
-        return channelInfoTableSet;
-    }
 
 
 }
