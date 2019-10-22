@@ -17,5 +17,5 @@ public interface CommonSerivceInterface {
      *  判断多充订单
      * @return
      */
-    boolean multipleOrder();
+    boolean multipleOrder(String merId,String terMerId,String merOrderId) throws NewPayException;
 }

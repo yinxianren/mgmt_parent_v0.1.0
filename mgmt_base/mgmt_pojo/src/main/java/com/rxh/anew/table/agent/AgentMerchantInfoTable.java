@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: panda
@@ -13,7 +15,7 @@ import lombok.Data;
  */
 @TableName("1_agent_merchant_info_table")
 @Data
-public class AgentMerchantInfoTable {
+public class AgentMerchantInfoTable implements Serializable {
     @TableId
     private Long id;//主键
     private String agentMerchantId ;//代理商ID

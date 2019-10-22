@@ -35,4 +35,10 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
                 format(" %s",ResponseCodeEnum.RXH00017.getMsg()));
         return merchantInfoTable;
     }
+
+    public boolean multipleOrder(String merId,String terMerId,String merOrderId) throws NewPayException{
+
+        return false;
+    }
+
 }
