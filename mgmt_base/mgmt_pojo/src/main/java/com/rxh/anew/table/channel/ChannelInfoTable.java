@@ -15,6 +15,7 @@ public class ChannelInfoTable implements Serializable {
     private String channelId;//通道id,
     private String channelName;//通道名称,
     private String channelTab;//通道标识,
+    private String  busiType;//'业务类型，pay :收单，trans:代付'
     private String organizationId;//机构ID,
     private String productId;//产品类型ID,
     private Integer channelLevel;//通道等级，数字越大等级越高，不超过99,
