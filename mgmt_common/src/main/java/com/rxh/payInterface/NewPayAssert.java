@@ -58,4 +58,10 @@ public interface NewPayAssert {
         if(null == object)
             throw new NewPayException(code,innerPrintMsg,responseMsg);
     }
+
+    default boolean isNull(Object object){
+        if(null == object) return true;
+        return false;
+    }
+
 }
