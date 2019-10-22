@@ -7,7 +7,7 @@
     <!-- 注册中心地址 -->
     <dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}"/>
     <!--  *****************************************************************************************************************  -->
-    <dubbo:reference interface="com.rxh.service.anew.agent.AnewAgentMerchantInfoService"    id="anewAgentMerchantInfoService"/>
+    <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantInfoService" id="anewAgentMerchantInfoService"/>
     <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantInfoService" id="anewMerchantInfoService"/>
 
 

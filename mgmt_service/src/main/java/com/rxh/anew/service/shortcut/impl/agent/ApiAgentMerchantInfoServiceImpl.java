@@ -2,7 +2,7 @@ package com.rxh.anew.service.shortcut.impl.agent;
 
 import com.rxh.anew.service.db.agent.AgentMerchantInfoDbService;
 import com.rxh.anew.table.agent.AgentMerchantInfoTable;
-import com.rxh.service.anew.agent.AnewAgentMerchantInfoService;
+import com.rxh.service.anew.agent.ApiAgentMerchantInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ import java.util.List;
  */
 
 @Service
-public class AnewAgentMerchantInfoServiceImpl implements AnewAgentMerchantInfoService {
+public class ApiAgentMerchantInfoServiceImpl implements ApiAgentMerchantInfoService {
 
     @Autowired
     private AgentMerchantInfoDbService agentMerchantInfoDbService;

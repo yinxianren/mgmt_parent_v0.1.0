@@ -15,7 +15,7 @@
     <dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" check="false"/>
     <dubbo:protocol name="dubbo" port="${dubbo.protocol.port}" payload="1073741824"/>
      <!--  ***********************************************new***********************************************************************   -->
-    <dubbo:service interface="com.rxh.service.anew.agent.AnewAgentMerchantInfoService" ref="anewAgentMerchantInfoServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantInfoService" ref="anewAgentMerchantInfoServiceImpl"/>
     <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantInfoService" ref="anewMerchantInfoServiceImpl"/>
 
 

@@ -13,9 +13,10 @@ import org.springframework.stereotype.Service;
  * Description:
  */
 @Service
-public class AnewMerchantInfoServiceImpl implements ApiMerchantInfoService {
+public class ApiMerchantInfoServiceImpl implements ApiMerchantInfoService {
+
     @Override
-    public MerchantInfoTable getOne(InnerPrintLogObject ipo) {
+    public MerchantInfoTable getOne(MerchantInfoTable merchantInfoTable) {
         return null;
     }
 }

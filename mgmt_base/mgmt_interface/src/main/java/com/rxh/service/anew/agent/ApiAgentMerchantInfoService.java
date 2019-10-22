@@ -1,6 +1,6 @@
 package com.rxh.service.anew.agent;
 
-public interface AnewAgentMerchantInfoService {
+public interface ApiAgentMerchantInfoService {
 
    String test();
 
