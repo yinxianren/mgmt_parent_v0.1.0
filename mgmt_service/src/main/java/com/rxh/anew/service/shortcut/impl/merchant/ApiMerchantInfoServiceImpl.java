@@ -28,7 +28,7 @@ public class ApiMerchantInfoServiceImpl implements ApiMerchantInfoService, NewPa
     public MerchantInfoTable getOne(MerchantInfoTable mit) {
         if(isNull(mit)) return null;
         LambdaQueryWrapper<MerchantInfoTable>  lambdaQueryWrapper=new QueryWrapper<MerchantInfoTable>().lambda();
-        if(!isBlank(mit.getMerchantId())) lambdaQueryWrapper.eq(MerchantInfoTable::getMerchantId,mit.getMerchantId());
+        if( !isBlank(mit.getMerchantId()) ) lambdaQueryWrapper.eq(MerchantInfoTable::getMerchantId,mit.getMerchantId());
         return merchantInfoDbService.getOne(lambdaQueryWrapper);
     }
 

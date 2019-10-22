@@ -27,9 +27,9 @@ public class ApiRegisterCollectServiceImpl implements ApiRegisterCollectService,
     public RegisterCollectTable getOne(RegisterCollectTable rct) {
         if(isNull(rct)) return null;
         LambdaQueryWrapper<RegisterCollectTable> lambdaQueryWrapper = new QueryWrapper().lambda();
-        if( !isBlank(rct.getMerchantId())) lambdaQueryWrapper.eq(RegisterCollectTable::getMerchantId,rct.getMerchantId());
-        if( !isBlank(rct.getTerminalMerId())) lambdaQueryWrapper.eq(RegisterCollectTable::getTerminalMerId,rct.getTerminalMerId());
-        if( !isBlank(rct.getMerOrderId())) lambdaQueryWrapper.eq(RegisterCollectTable::getMerOrderId,rct.getMerOrderId());
+        if( !isBlank(rct.getMerchantId()) ) lambdaQueryWrapper.eq(RegisterCollectTable::getMerchantId,rct.getMerchantId());
+        if( !isBlank(rct.getTerminalMerId()) ) lambdaQueryWrapper.eq(RegisterCollectTable::getTerminalMerId,rct.getTerminalMerId());
+        if( !isBlank(rct.getMerOrderId()) ) lambdaQueryWrapper.eq(RegisterCollectTable::getMerOrderId,rct.getMerOrderId());
         return registerCollectDbService.getOne(lambdaQueryWrapper);
     }
 
