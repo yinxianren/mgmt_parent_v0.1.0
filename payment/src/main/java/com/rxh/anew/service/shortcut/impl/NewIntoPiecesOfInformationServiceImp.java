@@ -69,26 +69,31 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
 
     @Override
     public List<ChannelInfoTable> getChannelInfoByMerSetting(List<MerchantSettingTable> list, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="getChannelInfoByMerSetting";
         Set<String>  channelIdSet = list.stream().map(MerchantSettingTable::getChannelId).collect(Collectors.toSet());
         List<ChannelInfoTable>   channelInfoTableList = commonRPCComponent.apiChannelInfoService.batchGetByChannelId(channelIdSet);
         isHasNotElement(channelInfoTableList,
                 ResponseCodeEnum.RXH00020.getCode(),
-                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00020.getMsg()),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00020.getMsg(),localPoint),
                 format(" %s",ResponseCodeEnum.RXH00020.getMsg()));
         return channelInfoTableList;
     }
 
     @Override
-    public List<ChannelInfoTable> filtrationChannelInfoByProductType(List<ChannelInfoTable> list, String productType, InnerPrintLogObject ipo) throws NewPayException {
-        List<ProductSettingTable> productSettingTableList = commonRPCComponent.apiProductTypeSettingService.list(new ProductSettingTable().setProductName(productType));
-        isHasNotElement(productSettingTableList,
+    public Set<ChannelInfoTable> filtrationChannelInfoByProductType(List<ChannelInfoTable> list, String productType, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="filtrationChannelInfoByProductType";
+        ProductSettingTable productSettingTable = commonRPCComponent.apiProductTypeSettingService.getOne(new ProductSettingTable().setProductName(productType));
+        isNull(productSettingTable,
                 ResponseCodeEnum.RXH00021.getCode(),
                 format("%s-->商户号：%s；终端号：%s；错误信息: %s ；",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00021.getMsg()),
                 format(" %s",ResponseCodeEnum.RXH00021.getMsg()));
 
-        list.stream().filter(t->t.getProductId().equalsIgnoreCase())
-
-        return null;
+        Set<ChannelInfoTable> channelInfoTableSet=list.stream().filter(t->t.getProductId().equalsIgnoreCase(productSettingTable.getProductName())).collect(Collectors.toSet());
+        isHasNotElement(channelInfoTableSet,
+                ResponseCodeEnum.RXH00022.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00022.getMsg(),localPoint),
+                format(" %s",ResponseCodeEnum.RXH00022.getMsg()));
+        return channelInfoTableSet;
     }
 
 

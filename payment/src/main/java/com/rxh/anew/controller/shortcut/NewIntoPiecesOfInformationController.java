@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -73,8 +74,8 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //获取配置的所有通道
             List<ChannelInfoTable>  channelInfoTableList = newIntoPiecesOfInformationService.getChannelInfoByMerSetting(merchantSettingTableList,ipo);
             //根据产品类型进行过滤
-
-
+            Set<ChannelInfoTable>  filterChannelInfoTableSet=newIntoPiecesOfInformationService.filtrationChannelInfoByProductType(channelInfoTableList,mbirDTO.getProductType(),ipo);
+            //获取商户成功进件的信息
 
 
         }catch (Exception e){

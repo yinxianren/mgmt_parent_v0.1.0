@@ -4,12 +4,14 @@ package com.rxh.anew.service.shortcut;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonSerivceInterface;
+import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.exception.NewPayException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterface {
     /**
@@ -34,5 +36,8 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      * @param ipo
      * @return
      */
-    List<ChannelInfoTable>   filtrationChannelInfoByProductType(List<ChannelInfoTable> list,String productType,InnerPrintLogObject ipo) throws NewPayException;
+    Set<ChannelInfoTable> filtrationChannelInfoByProductType(List<ChannelInfoTable> list, String productType, InnerPrintLogObject ipo) throws NewPayException;
+
+
+    List<RegisterCollectTable> getRegisterCollectOnSuccess(String bankCardNum,InnerPrintLogObject ipo);
 }

@@ -12,12 +12,13 @@ import lombok.Getter;
 @Getter
 public enum BusinessTypeEnum {
 
-    PAY("pay"), //收单
-    TRANS("trans");//代付
+    PAY("pay","收单"),
+    TRANS("trans","代付");
 
     private String busiType;
-
-    BusinessTypeEnum(String busiType){
+    private String remark;
+    BusinessTypeEnum(String busiType,String remark){
         this.busiType = busiType;
+        this.remark = remark;
     }
 }
