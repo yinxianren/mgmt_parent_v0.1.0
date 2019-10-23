@@ -2,7 +2,7 @@ package com.rxh.anew.service.shortcut.impl.channel;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.rxh.anew.service.db.channel.ProductTypeSettingDBService;
+import com.rxh.anew.service.db.system.ProductTypeSettingDBService;
 import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.service.anew.channel.ApiProductTypeSettingService;

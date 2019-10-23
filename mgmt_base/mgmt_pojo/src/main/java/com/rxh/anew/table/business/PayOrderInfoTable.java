@@ -2,9 +2,7 @@ package com.rxh.anew.table.business;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.sun.xml.internal.bind.v2.model.core.ID;
 import lombok.Data;
-import sun.management.resources.agent;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
