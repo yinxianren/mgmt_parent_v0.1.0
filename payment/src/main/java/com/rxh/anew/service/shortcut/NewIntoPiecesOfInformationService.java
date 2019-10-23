@@ -2,6 +2,7 @@ package com.rxh.anew.service.shortcut;
 
 
 import com.rxh.anew.dto.CrossResponseMsgDTO;
+import com.rxh.anew.dto.MerchantBankCardBindingDTO;
 import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
@@ -30,6 +31,12 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      */
     Map<String, ParamRule>  getParamMapByIPOI();
 
+
+    /**
+     *
+     * @return
+     */
+    Map<String, ParamRule>  getParamMapByBCB();
     /**
      *  根据商户配置获取所有通道
      * @param list
@@ -104,5 +111,22 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      * @param errorMsg
      * @return
      */
-    String responseMsg(MerchantBasicInformationRegistrationDTO mbirDTO,MerchantInfoTable merInfoTable, RequestCrossMsgDTO  requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO,String errorCode,String errorMsg,InnerPrintLogObject ipo) throws NewPayException;
+    String responseMsg(String merOrderId,MerchantInfoTable merInfoTable, RequestCrossMsgDTO  requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO,String errorCode,String errorMsg,InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *  查看订单是否存在
+     * @param mbcbDTO
+     * @param ipo
+     * @return
+     */
+    RegisterCollectTable getRegisterCollectTable(MerchantBankCardBindingDTO mbcbDTO, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *  更新b2z值
+     * @param registerCollectTable
+     * @param mbcbDTO
+     * @param ipo
+     * @return
+     */
+    Tuple2<RegisterInfoTable,RegisterCollectTable> saveOnRegisterInfo(RegisterCollectTable registerCollectTable, MerchantBankCardBindingDTO mbcbDTO, InnerPrintLogObject ipo) throws NewPayException;
 }

@@ -2,12 +2,13 @@ package com.rxh.anew.table.channel;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.Getter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Data
+@Getter
 @TableName("5_channel_info_table")
 public class ChannelInfoTable implements Serializable {
 
@@ -33,4 +34,114 @@ public class ChannelInfoTable implements Serializable {
     private Integer status;//状态 0：启用 ,1:禁用,
     private Date createTime ;//创建时间,
     private Date updateTime ;//更新时间,
+
+    public ChannelInfoTable setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public ChannelInfoTable setChannelId(String channelId) {
+        this.channelId = channelId;
+        return this;
+    }
+
+    public ChannelInfoTable setChannelName(String channelName) {
+        this.channelName = channelName;
+        return this;
+    }
+
+    public ChannelInfoTable setChannelTab(String channelTab) {
+        this.channelTab = channelTab;
+        return this;
+    }
+
+    public ChannelInfoTable setBusiType(String busiType) {
+        this.busiType = busiType;
+        return this;
+    }
+
+    public ChannelInfoTable setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
+        return this;
+    }
+
+    public ChannelInfoTable setProductId(String productId) {
+        this.productId = productId;
+        return this;
+    }
+
+    public ChannelInfoTable setChannelLevel(Integer channelLevel) {
+        this.channelLevel = channelLevel;
+        return this;
+    }
+
+    public ChannelInfoTable setChannelTransCode(String channelTransCode) {
+        this.channelTransCode = channelTransCode;
+        return this;
+    }
+
+    public ChannelInfoTable setRequestUrl(String requestUrl) {
+        this.requestUrl = requestUrl;
+        return this;
+    }
+
+    public ChannelInfoTable setChannelParam(String channelParam) {
+        this.channelParam = channelParam;
+        return this;
+    }
+
+    public ChannelInfoTable setSettleCycle(String settleCycle) {
+        this.settleCycle = settleCycle;
+        return this;
+    }
+
+    public ChannelInfoTable setProductFee(BigDecimal productFee) {
+        this.productFee = productFee;
+        return this;
+    }
+
+    public ChannelInfoTable setChannelSingleFee(BigDecimal channelSingleFee) {
+        this.channelSingleFee = channelSingleFee;
+        return this;
+    }
+
+    public ChannelInfoTable setChannelRateFee(BigDecimal channelRateFee) {
+        this.channelRateFee = channelRateFee;
+        return this;
+    }
+
+    public ChannelInfoTable setSingleMinAmount(BigDecimal singleMinAmount) {
+        this.singleMinAmount = singleMinAmount;
+        return this;
+    }
+
+    public ChannelInfoTable setSingleMaxAmount(BigDecimal singleMaxAmount) {
+        this.singleMaxAmount = singleMaxAmount;
+        return this;
+    }
+
+    public ChannelInfoTable setDayQuotaAmount(BigDecimal dayQuotaAmount) {
+        this.dayQuotaAmount = dayQuotaAmount;
+        return this;
+    }
+
+    public ChannelInfoTable setMonthQuotaAmount(BigDecimal monthQuotaAmount) {
+        this.monthQuotaAmount = monthQuotaAmount;
+        return this;
+    }
+
+    public ChannelInfoTable setStatus(Integer status) {
+        this.status = status;
+        return this;
+    }
+
+    public ChannelInfoTable setCreateTime(Date createTime) {
+        this.createTime = createTime;
+        return this;
+    }
+
+    public ChannelInfoTable setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+        return this;
+    }
 }

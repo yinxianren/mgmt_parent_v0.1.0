@@ -4,6 +4,7 @@ import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.table.channel.ChannelExtraInfoTable;
+import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
@@ -66,4 +67,21 @@ public interface CommonSerivceInterface {
      * @return
      */
     boolean saveSysLog(SystemOrderTrackTable systemOrderTrackTable);
+
+    /**
+     *  获取通道信息
+     * @param channelId
+     * @param ipo
+     * @return
+     */
+    ChannelInfoTable getChannelInfoByChannelId(String channelId, InnerPrintLogObject ipo);
+
+    /**
+     *  获取附属通道信息
+     * @param organizationId
+     * @param bussType
+     * @param ipo
+     * @return
+     */
+    ChannelExtraInfoTable getChannelExtraInfoByOrgId(String organizationId, String bussType, InnerPrintLogObject ipo);
 }

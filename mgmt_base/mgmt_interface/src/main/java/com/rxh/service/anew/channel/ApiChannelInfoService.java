@@ -9,4 +9,5 @@ public interface ApiChannelInfoService {
 
     List<ChannelInfoTable>  batchGetByChannelId(Set<String> channelIdSet);
 
+    ChannelInfoTable getOne(ChannelInfoTable cit);
 }

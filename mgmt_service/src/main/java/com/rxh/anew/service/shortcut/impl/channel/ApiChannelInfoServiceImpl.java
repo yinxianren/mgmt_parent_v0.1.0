@@ -35,4 +35,13 @@ public class ApiChannelInfoServiceImpl implements ApiChannelInfoService , NewPay
         lambdaQueryWrapper.in(ChannelInfoTable::getChannelId,channelIdSet);
         return channelInfoDbService.list();
     }
+
+    @Override
+    public ChannelInfoTable getOne(ChannelInfoTable cit) {
+        if(isNull(cit)) return null;
+        LambdaQueryWrapper<ChannelInfoTable>  lambdaQueryWrapper = new QueryWrapper<ChannelInfoTable>()
+                .lambda().eq(ChannelInfoTable::getStatus, StatusEnum._0.getStatus());//默认只取可用通道
+        if( !isBlank(cit.getChannelId()) ) lambdaQueryWrapper.eq(ChannelInfoTable::getChannelId,cit.getChannelId());
+        return channelInfoDbService.getOne(lambdaQueryWrapper);
+    }
 }

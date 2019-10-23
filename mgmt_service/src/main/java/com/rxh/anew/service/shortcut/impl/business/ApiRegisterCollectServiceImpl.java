@@ -31,6 +31,9 @@ public class ApiRegisterCollectServiceImpl implements ApiRegisterCollectService,
         if( !isBlank(rct.getMerchantId()) ) lambdaQueryWrapper.eq(RegisterCollectTable::getMerchantId,rct.getMerchantId());
         if( !isBlank(rct.getTerminalMerId()) ) lambdaQueryWrapper.eq(RegisterCollectTable::getTerminalMerId,rct.getTerminalMerId());
         if( !isBlank(rct.getMerOrderId()) ) lambdaQueryWrapper.eq(RegisterCollectTable::getMerOrderId,rct.getMerOrderId());
+        if( !isBlank(rct.getPlatformOrderId()) ) lambdaQueryWrapper.eq(RegisterCollectTable::getPlatformOrderId,rct.getPlatformOrderId());
+        if( !isNull(rct.getStatus()) ) lambdaQueryWrapper.eq(RegisterCollectTable::getStatus,rct.getStatus());
+        if( !isBlank(rct.getBussType()) )  lambdaQueryWrapper.eq(RegisterCollectTable::getBussType,rct.getBussType());
         return registerCollectDbService.getOne(lambdaQueryWrapper);
     }
 
