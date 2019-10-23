@@ -83,7 +83,13 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      * @param mbirDTO
      * @param channelInfoTable
      */
-    Tuple2<RegisterInfoTable,RegisterCollectTable> saveByRegister(MerchantBasicInformationRegistrationDTO mbirDTO, ChannelInfoTable channelInfoTable);
+    Tuple2<RegisterInfoTable,RegisterCollectTable> saveByRegister(MerchantBasicInformationRegistrationDTO mbirDTO, ChannelInfoTable channelInfoTable,InnerPrintLogObject ipo);
 
-
+    /**
+     * 更新进件新
+     * @param bankResult
+     * @param registerCollectTable
+     * @return
+     */
+    RegisterCollectTable updataByRegisterCollectTable(BankResult bankResult, RegisterCollectTable registerCollectTable);
 }

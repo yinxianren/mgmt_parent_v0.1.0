@@ -52,9 +52,9 @@ public interface CommonSerivceInterface {
 
     /**
      *  将结果转对象
-     * @param result
+     * @param crossResponseMsg
      * @param ipo
      * @return
      */
-    BankResult jsonToPojo(String result, InnerPrintLogObject ipo);
+    BankResult jsonToPojo(String crossResponseMsg, InnerPrintLogObject ipo);
 }

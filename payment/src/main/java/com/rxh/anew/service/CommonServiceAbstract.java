@@ -78,7 +78,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
             result = HttpClientUtils.doPostJson(HttpClientUtils.getHttpsClient(), extraInfoTable.getRequestUrl(), JsonUtils.objectToJsonNonNull(requestCrossMsgDTO));
         }catch (Exception e){
             e.printStackTrace();
-            throw  new NewPayException(
+            throw new NewPayException(
                     ResponseCodeEnum.RXH99999.getCode(),
                     format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：请求cross工程失败",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint),
                     format(" %s",ResponseCodeEnum.RXH99999.getMsg())
@@ -89,7 +89,20 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
     }
 
 
-    public BankResult jsonToPojo(String result, InnerPrintLogObject ipo) {
-        return null;
+    public BankResult jsonToPojo(String crossResponseMsg, InnerPrintLogObject ipo) {
+        final String localPoint="jsonToPojo";
+        BankResult bankResult = null;
+        try {
+            bankResult = JsonUtils.jsonToPojo(crossResponseMsg, BankResult.class);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：将cross返回结果转BankResult对象",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint),
+                    format(" %s",ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }finally {
+            return bankResult;
+        }
     }
 }

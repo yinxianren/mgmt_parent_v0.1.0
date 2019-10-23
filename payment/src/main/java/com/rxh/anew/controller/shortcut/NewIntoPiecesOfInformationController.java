@@ -97,14 +97,15 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //获取进件附属通道
             ChannelExtraInfoTable extraInfoTable = newIntoPiecesOfInformationService.getAddCusChannelExtraInfo(channelInfoTable,ipo);
             //保存进件信息
-            Tuple2<RegisterInfoTable,RegisterCollectTable> tuple = newIntoPiecesOfInformationService.saveByRegister(mbirDTO,channelInfoTable);
+            Tuple2<RegisterInfoTable,RegisterCollectTable> tuple = newIntoPiecesOfInformationService.saveByRegister(mbirDTO,channelInfoTable,ipo);
             //封装请求cross必要参数
             RequestCrossMsgDTO  requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,extraInfoTable,tuple._,tuple._2));
             //发生cross请求
-            String result = newIntoPiecesOfInformationService.doPostJson(requestCrossMsgDTO,extraInfoTable,ipo);
+            String crossResponseMsg = newIntoPiecesOfInformationService.doPostJson(requestCrossMsgDTO,extraInfoTable,ipo);
             //将请求结果转为对象
-            BankResult bankResult = newIntoPiecesOfInformationService.jsonToPojo(result,ipo);
-
+            BankResult bankResult = newIntoPiecesOfInformationService.jsonToPojo(crossResponseMsg,ipo);
+            //更新进件信息
+            RegisterCollectTable registerCollectTable = newIntoPiecesOfInformationService.updataByRegisterCollectTable(bankResult,tuple._2);
 
         }catch (Exception e){
 

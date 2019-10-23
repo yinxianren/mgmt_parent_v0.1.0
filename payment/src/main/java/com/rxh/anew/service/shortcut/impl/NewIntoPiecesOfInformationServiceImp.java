@@ -1,5 +1,6 @@
 package com.rxh.anew.service.shortcut.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
@@ -17,6 +18,7 @@ import com.rxh.enums.ParamTypeEnum;
 import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.enums.StatusEnum;
 import com.rxh.exception.NewPayException;
+import com.rxh.pojo.cross.BankResult;
 import com.rxh.tuple.Tuple2;
 import com.rxh.tuple.Tuple4;
 import org.springframework.stereotype.Service;
@@ -99,63 +101,82 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
     }
 
     @Override
-    public Tuple2<RegisterInfoTable,RegisterCollectTable> saveByRegister(MerchantBasicInformationRegistrationDTO mbirDTO, ChannelInfoTable channelInfoTable) {
-        RegisterInfoTable registerInfoTable =  commonRPCComponent.apiRegisterInfoService.getOne(
-                new RegisterInfoTable().setMerchantId(mbirDTO.getMerId())
-                        .setTerminalMerId(mbirDTO.getTerminalMerId())
-                        .setUserName(mbirDTO.getCardHolderName())
-                        .setIdentityType(new Integer(mbirDTO.getIdentityType()))
-                        .setIdentityNum(mbirDTO.getIdentityNum())
-        );
+    public Tuple2<RegisterInfoTable,RegisterCollectTable> saveByRegister(MerchantBasicInformationRegistrationDTO mbirDTO, ChannelInfoTable channelInfoTable,InnerPrintLogObject ipo) {
+        final String localPoint="saveByRegister";
+        RegisterInfoTable registerInfoTable = null;
+        RegisterCollectTable registerCollectTable = null;
+        try {
+            registerInfoTable = commonRPCComponent.apiRegisterInfoService.getOne(
+                    new RegisterInfoTable().setMerchantId(mbirDTO.getMerId())
+                            .setTerminalMerId(mbirDTO.getTerminalMerId())
+                            .setUserName(mbirDTO.getCardHolderName())
+                            .setIdentityType(new Integer(mbirDTO.getIdentityType()))
+                            .setIdentityNum(mbirDTO.getIdentityNum())
+            );
 
-        if(null == registerInfoTable) registerInfoTable = new RegisterInfoTable();
-        if(isNull(registerInfoTable.getCreateTime()))  registerInfoTable.setCreateTime(new Date());
-        registerInfoTable.setMerchantId(mbirDTO.getMerId())
-                .setTerminalMerId(mbirDTO.getTerminalMerId())
-                .setTerminalMerName(mbirDTO.getTerminalMerName())
-                .setUserName(mbirDTO.getCardHolderName())
-                .setUserShortName(mbirDTO.getUserShortName())
-                .setIdentityType(new Integer(mbirDTO.getIdentityType()))
-                .setIdentityNum(mbirDTO.getIdentityNum())
-                .setPhone(mbirDTO.getPhone())
-                .setMerchantType(mbirDTO.getMerchantType())
-                .setProvince(mbirDTO.getProvince())
-                .setCity(mbirDTO.getCity())
-                .setAddress(mbirDTO.getAddress())
-                .setUpdateTime(new Date());
+            if (null == registerInfoTable) registerInfoTable = new RegisterInfoTable();
+            if (isNull(registerInfoTable.getCreateTime())) registerInfoTable.setCreateTime(new Date());
+            registerInfoTable.setMerchantId(mbirDTO.getMerId())
+                    .setTerminalMerId(mbirDTO.getTerminalMerId())
+                    .setTerminalMerName(mbirDTO.getTerminalMerName())
+                    .setUserName(mbirDTO.getCardHolderName())
+                    .setUserShortName(mbirDTO.getUserShortName())
+                    .setIdentityType(new Integer(mbirDTO.getIdentityType()))
+                    .setIdentityNum(mbirDTO.getIdentityNum())
+                    .setPhone(mbirDTO.getPhone())
+                    .setMerchantType(mbirDTO.getMerchantType())
+                    .setProvince(mbirDTO.getProvince())
+                    .setCity(mbirDTO.getCity())
+                    .setAddress(mbirDTO.getAddress())
+                    .setUpdateTime(new Date());
 
-        //保持或更新
-        commonRPCComponent.apiRegisterInfoService.replaceSave(registerInfoTable);
-        RegisterCollectTable registerCollectTable = new RegisterCollectTable();
-        commonRPCComponent.apiRegisterCollectService.save(registerCollectTable
-                .setChannelId(channelInfoTable.getChannelId())
-                .setProductId(channelInfoTable.getProductId())
-                .setPlatformOrderId("RXH"+new Random(System.currentTimeMillis()).nextInt(1000000)+"-"+System.currentTimeMillis())
-                .setRitId(registerInfoTable.getId())
-                .setMerchantId(mbirDTO.getMerId())
-                .setTerminalMerId(mbirDTO.getTerminalMerId())
-                .setMerOrderId(mbirDTO.getMerOrderId())
-                .setCategory(mbirDTO.getCategory())
-                .setMiMerCertPic1(mbirDTO.getMiMerCertPic1())
-                .setMiMerCertPic2(mbirDTO.getMiMerCertPic2())
-                .setBankCode(mbirDTO.getBankCode())
-                .setBankCardType(new Integer(mbirDTO.getBankCardType()))
-                .setCardHolderName(mbirDTO.getCardHolderName())
-                .setBankCardNum(mbirDTO.getBankCardNum())
-                .setBankCardPhone(mbirDTO.getBankCardPhone())
-                .setPayFee(new BigDecimal(mbirDTO.getPayFee()))
-                .setBackFee(new BigDecimal(mbirDTO.getBackFee()))
-                .setChannelRespResult(null)
-                .setCrossRespResult(null)
-                .setStatus(StatusEnum._3.getStatus())
-                .setCreateTime(new Date())
-                .setUpdateTime(new Date())
-        );
-        return new Tuple2(registerInfoTable,registerCollectTable);
+            //保持或更新
+            commonRPCComponent.apiRegisterInfoService.replaceSave(registerInfoTable);
+            registerCollectTable = new RegisterCollectTable();
+            commonRPCComponent.apiRegisterCollectService.save(registerCollectTable
+                    .setChannelId(channelInfoTable.getChannelId())
+                    .setProductId(channelInfoTable.getProductId())
+                    .setPlatformOrderId("RXH" + new Random(System.currentTimeMillis()).nextInt(1000000) + "-" + System.currentTimeMillis())
+                    .setRitId(registerInfoTable.getId())
+                    .setMerchantId(mbirDTO.getMerId())
+                    .setTerminalMerId(mbirDTO.getTerminalMerId())
+                    .setMerOrderId(mbirDTO.getMerOrderId())
+                    .setCategory(mbirDTO.getCategory())
+                    .setMiMerCertPic1(mbirDTO.getMiMerCertPic1())
+                    .setMiMerCertPic2(mbirDTO.getMiMerCertPic2())
+                    .setBankCode(mbirDTO.getBankCode())
+                    .setBankCardType(new Integer(mbirDTO.getBankCardType()))
+                    .setCardHolderName(mbirDTO.getCardHolderName())
+                    .setBankCardNum(mbirDTO.getBankCardNum())
+                    .setBankCardPhone(mbirDTO.getBankCardPhone())
+                    .setPayFee(new BigDecimal(mbirDTO.getPayFee()))
+                    .setBackFee(new BigDecimal(mbirDTO.getBackFee()))
+                    .setChannelRespResult(null)
+                    .setCrossRespResult(null)
+                    .setStatus(StatusEnum._3.getStatus())
+                    .setCreateTime(new Date())
+                    .setUpdateTime(new Date())
+            );
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：保存进件信息发生异常",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint),
+                    format(" %s",ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }finally {
+            return new Tuple2(registerInfoTable,registerCollectTable);
+        }
+
     }
 
-
-
+    @Override
+    public RegisterCollectTable updataByRegisterCollectTable(BankResult bankResult, RegisterCollectTable registerCollectTable) {
+        return registerCollectTable
+                .setStatus(Integer.valueOf(bankResult.getStatus()))
+                .setCrossRespResult()
+                ;
+    }
 
 
     @Override
