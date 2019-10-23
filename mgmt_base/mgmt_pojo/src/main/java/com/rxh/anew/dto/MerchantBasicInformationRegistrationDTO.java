@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class MerchantBasicInformationRegistrationDTO extends AbstractParamModelDTO {
+    private String  merOrderId;//商户订单号
     private String  productType; // 产品类型
     private String  charset;    //参数字符集编码	 请求使用的编码格式，固定UTF-8
     private String  signType; //签名类型 固定为MD5

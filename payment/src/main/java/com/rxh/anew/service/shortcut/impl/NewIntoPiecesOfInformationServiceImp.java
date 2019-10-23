@@ -1,5 +1,6 @@
 package com.rxh.anew.service.shortcut.impl;
 
+import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonServiceAbstract;
@@ -9,6 +10,7 @@ import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.ProductSettingTable;
+import com.rxh.enums.BussTypeEnum;
 import com.rxh.enums.ParamTypeEnum;
 import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.exception.NewPayException;
@@ -77,9 +79,24 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
     }
 
     @Override
-    public ChannelExtraInfoTable getAddCusChannelExtraInfo(ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo) {
+    public ChannelExtraInfoTable getAddCusChannelExtraInfo(ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="getAddCusChannelExtraInfo";
+        ChannelExtraInfoTable channelExtraInfoTable =  commonRPCComponent.apiChannelExtraInfoService.getOne(
+                new ChannelExtraInfoTable()
+                        .setOrganizationId(channelInfoTable.getOrganizationId())
+                        .setBussType(BussTypeEnum.ADDCUS.getBussType())
+        );
+        isNull(channelExtraInfoTable,
+                ResponseCodeEnum.RXH00024.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00024.getMsg(),localPoint),
+                format(" %s",ResponseCodeEnum.RXH00024.getMsg()));
+        return channelExtraInfoTable;
+    }
 
-        return null;
+    @Override
+    public void saveByRegister(MerchantBasicInformationRegistrationDTO mbirDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo) {
+
+
     }
 
 

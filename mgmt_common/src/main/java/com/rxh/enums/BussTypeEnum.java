@@ -1,5 +1,8 @@
 package com.rxh.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum BussTypeEnum {
 
     ADDCUS("ADDCUS","进件"),

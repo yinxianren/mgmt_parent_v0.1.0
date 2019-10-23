@@ -1,6 +1,7 @@
 package com.rxh.anew.service.shortcut;
 
 
+import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonSerivceInterface;
@@ -72,5 +73,13 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      * @param ipo
      * @return
      */
-    ChannelExtraInfoTable getAddCusChannelExtraInfo(ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo);
+    ChannelExtraInfoTable getAddCusChannelExtraInfo(ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *  保存进件信息
+     * @param mbirDTO
+     * @param channelInfoTable
+     * @param ipo
+     */
+    void saveByRegister(MerchantBasicInformationRegistrationDTO mbirDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo);
 }

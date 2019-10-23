@@ -88,6 +88,9 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             ChannelInfoTable channelInfoTable = newIntoPiecesOfInformationService.filtrationChannelInfoByLevel(channelInfoTablesList,ipo);
             //获取进件附属通道
             ChannelExtraInfoTable extraInfoTable = newIntoPiecesOfInformationService.getAddCusChannelExtraInfo(channelInfoTable,ipo);
+            //保存进件信息
+            newIntoPiecesOfInformationService.saveByRegister(mbirDTO,channelInfoTable,ipo);
+
 
         }catch (Exception e){
 
