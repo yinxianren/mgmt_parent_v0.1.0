@@ -265,13 +265,13 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
 
 
     @Override
-    public RegisterCollectTable getRegisterCollectTable(MerchantBankCardBindingDTO mbcbDTO, InnerPrintLogObject ipo) throws NewPayException {
+    public RegisterCollectTable getRegisterCollectTable(String platformOrderId,String busiType, InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="getRegisterCollectTable";
         RegisterCollectTable rct = new RegisterCollectTable();
         rct.setMerchantId(ipo.getMerId());
         rct.setTerminalMerId(ipo.getTerMerId());
-        rct.setPlatformOrderId(mbcbDTO.getPlatformOrderId());
-        rct.setBussType(BusinessTypeEnum.b1.getBusiType());
+        rct.setPlatformOrderId(platformOrderId);
+        rct.setBussType(busiType);
         rct.setStatus(StatusEnum._0.getStatus());
         rct = commonRPCComponent.apiRegisterCollectService.getOne(rct);
         isNull(rct,
@@ -286,7 +286,7 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
         final String localPoint="saveOnRegisterInfo";
         RegisterInfoTable registerInfoTable = null;
         try{
-            registerInfoTable = commonRPCComponent.apiRegisterInfoService.getOne(new RegisterInfoTable().setId(registerCollectTable.getId()));
+            registerInfoTable = commonRPCComponent.apiRegisterInfoService.getOne(new RegisterInfoTable().setId(registerCollectTable.getRitId()));
             registerInfoTable
                     .setIdentityType(Integer.valueOf(mbcbDTO.getIdentityType()))
                     .setIdentityNum(mbcbDTO.getIdentityNum())
@@ -303,6 +303,8 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
                     .setBankCardNum(mbcbDTO.getBankCardNum())
                     .setBankCardPhone(mbcbDTO.getBankCardPhone())
                     .setBussType(BusinessTypeEnum.b2.getBusiType())
+                    .setCrossRespResult(null)
+                    .setChannelRespResult(null)
             ;
             commonRPCComponent.apiRegisterInfoService.replaceSave(registerInfoTable);
             commonRPCComponent.apiRegisterCollectService.save(registerCollectTable);
@@ -316,6 +318,50 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
         }finally {
             return new Tuple2<>(registerInfoTable,registerCollectTable);
         }
+    }
+
+    @Override
+    public RegisterInfoTable getRegisterInfoTable(Long ritId, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="saveOnRegisterInfo";
+        RegisterInfoTable registerInfoTable = null;
+        try{
+            registerInfoTable = commonRPCComponent.apiRegisterInfoService.getOne(new RegisterInfoTable().setId(ritId));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置B3：%s,异常根源：获取进件信息主表信息", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }
+        isNull(registerInfoTable,
+                ResponseCodeEnum.RXH00027.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00027.getMsg(),localPoint),
+                format(" %s",ResponseCodeEnum.RXH00027.getMsg()));
+
+        return  registerInfoTable;
+    }
+
+    @Override
+    public RegisterCollectTable saveRegisterCollectTableByB3(RegisterCollectTable registerCollectTable, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="saveRegisterCollectTableByB3";
+        registerCollectTable.setId(null)
+                .setBussType(BusinessTypeEnum.b3.getBusiType())
+                .setPlatformOrderId("RXH" + new Random(System.currentTimeMillis()).nextInt(1000000) + "-B3" + System.currentTimeMillis())
+                .setCrossRespResult(null)
+                .setChannelRespResult(null)
+                .setStatus(StatusEnum._3.getStatus());
+        try{
+            commonRPCComponent.apiRegisterCollectService.save(registerCollectTable);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置B3：%s,异常根源：保存进件附属信息", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }
+        return registerCollectTable;
     }
 
     @Override
@@ -373,6 +419,22 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
                 put("bankCardNum", new ParamRule(ParamTypeEnum.STRING.getType(), 12, 32));//银行卡号
                 put("province", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 16));// 省份
                 put("city", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 16));// 城市
+                put("signMsg", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 256));//签名字符串
+            }
+        };
+    }
+
+    @Override
+    public  Map<String, ParamRule>  getParamMapBySF(){
+        return new HashMap<String, ParamRule>() {
+            {
+                put("charset", new ParamRule(ParamTypeEnum.STRING.getType(), 5, 5));//参数字符集编码 固定UTF-8
+                put("signType", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 3));//签名类型	固定为MD5
+                put("merId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));//商户号
+                put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 商户订单号
+                put("platformOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 平台流水号
+                put("merchantType", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 2));//商户类型
+                put("terminalMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id
                 put("signMsg", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 256));//签名字符串
             }
         };

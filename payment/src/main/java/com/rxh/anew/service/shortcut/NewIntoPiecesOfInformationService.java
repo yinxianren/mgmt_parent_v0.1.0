@@ -37,6 +37,12 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      * @return
      */
     Map<String, ParamRule>  getParamMapByBCB();
+
+    /**
+     *
+     * @return
+     */
+    Map<String, ParamRule>  getParamMapBySF();
     /**
      *  根据商户配置获取所有通道
      * @param list
@@ -114,12 +120,14 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
     String responseMsg(String merOrderId,MerchantInfoTable merInfoTable, RequestCrossMsgDTO  requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO,String errorCode,String errorMsg,InnerPrintLogObject ipo) throws NewPayException;
 
     /**
-     *  查看订单是否存在
-     * @param mbcbDTO
+     * 查看订单是否存在
+     * @param platformOrderId
+     * @param busiType
      * @param ipo
      * @return
+     * @throws NewPayException
      */
-    RegisterCollectTable getRegisterCollectTable(MerchantBankCardBindingDTO mbcbDTO, InnerPrintLogObject ipo) throws NewPayException;
+    RegisterCollectTable getRegisterCollectTable(String platformOrderId,String busiType, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      *  更新b2z值
@@ -129,4 +137,20 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      * @return
      */
     Tuple2<RegisterInfoTable,RegisterCollectTable> saveOnRegisterInfo(RegisterCollectTable registerCollectTable, MerchantBankCardBindingDTO mbcbDTO, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *  获取进件主表
+      * @param ritId
+     * @param ipo
+     * @return
+     */
+    RegisterInfoTable getRegisterInfoTable(Long ritId, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param registerCollectTable
+     * @param ipo
+     * @return
+     */
+    RegisterCollectTable saveRegisterCollectTableByB3(RegisterCollectTable registerCollectTable, InnerPrintLogObject ipo) throws NewPayException;
 }

@@ -32,6 +32,7 @@ public enum ResponseCodeEnum {
     ,RXH00024("RXH00024","未找到合适的进件附属通道")
     ,RXH00025("RXH00025","平台订单号不存在")
     ,RXH00026("RXH00026","附属通道不匹配")
+    ,RXH00027("RXH00027","进件主表信息不匹配")
     ,RXH99999("RXH99999","其他错误")
     ;
     private String code;

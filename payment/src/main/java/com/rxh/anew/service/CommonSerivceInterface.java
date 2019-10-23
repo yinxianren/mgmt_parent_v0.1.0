@@ -9,7 +9,6 @@ import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
 import com.rxh.exception.NewPayException;
-import com.rxh.pojo.cross.BankResult;
 import com.rxh.tuple.Tuple2;
 
 import java.util.List;
@@ -74,7 +73,7 @@ public interface CommonSerivceInterface {
      * @param ipo
      * @return
      */
-    ChannelInfoTable getChannelInfoByChannelId(String channelId, InnerPrintLogObject ipo);
+    ChannelInfoTable getChannelInfoByChannelId(String channelId, InnerPrintLogObject ipo)throws NewPayException;
 
     /**
      *  获取附属通道信息
@@ -83,5 +82,5 @@ public interface CommonSerivceInterface {
      * @param ipo
      * @return
      */
-    ChannelExtraInfoTable getChannelExtraInfoByOrgId(String organizationId, String bussType, InnerPrintLogObject ipo);
+    ChannelExtraInfoTable getChannelExtraInfoByOrgId(String organizationId, String bussType, InnerPrintLogObject ipo)throws NewPayException;
 }

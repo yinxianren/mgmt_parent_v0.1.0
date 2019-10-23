@@ -3,10 +3,7 @@ package com.rxh.anew.controller.shortcut;
 import com.alibaba.dubbo.common.json.JSON;
 import com.rxh.anew.component.Md5Component;
 import com.rxh.anew.controller.NewAbstractCommonController;
-import com.rxh.anew.dto.CrossResponseMsgDTO;
-import com.rxh.anew.dto.MerchantBankCardBindingDTO;
-import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
-import com.rxh.anew.dto.RequestCrossMsgDTO;
+import com.rxh.anew.dto.*;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.shortcut.NewIntoPiecesOfInformationService;
@@ -18,6 +15,7 @@ import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
+import com.rxh.enums.BusinessTypeEnum;
 import com.rxh.enums.BussTypeEnum;
 import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.enums.StatusEnum;
@@ -126,12 +124,12 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
                 printErrorMsg = isBlank(e.getMessage()) ? "" : (e.getMessage().length()>=526 ? e.getMessage().substring(0,526) : e.getMessage());
                 errorCode = ResponseCodeEnum.RXH99999.getCode();
             }
-            respResult = newIntoPiecesOfInformationService.responseMsg(null != mbirDTO?mbirDTO.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,errorCode,errorMsg,ipo);
+            respResult = newIntoPiecesOfInformationService.responseMsg(null != mbirDTO ? mbirDTO.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,errorCode,errorMsg,ipo);
             sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
         }finally {
             sotTable.setResponseResult(respResult).setCreateTime(new Date());
             newIntoPiecesOfInformationService.saveSysLog(sotTable);
-            return respResult;
+            return null == respResult ? "系统内部错误！" : respResult;
         }
     }
 
@@ -170,7 +168,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //查看是否重复订单
             newIntoPiecesOfInformationService.multipleOrder(mbcbDTO.getMerOrderId(),ipo);
             //判断订单是否存在
-            RegisterCollectTable registerCollectTable = newIntoPiecesOfInformationService.getRegisterCollectTable(mbcbDTO,ipo);
+            RegisterCollectTable registerCollectTable = newIntoPiecesOfInformationService.getRegisterCollectTable(mbcbDTO.getPlatformOrderId(), BusinessTypeEnum.b1.getBusiType(),ipo);
             //更新RegisterCollectTable并保存
             Tuple2<RegisterInfoTable,RegisterCollectTable>  tuple2 = newIntoPiecesOfInformationService.saveOnRegisterInfo(registerCollectTable,mbcbDTO,ipo);
             sotTable.setPlatformOrderId(tuple2._2.getPlatformOrderId());
@@ -201,15 +199,92 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
                 printErrorMsg = isBlank(e.getMessage()) ? "" : (e.getMessage().length()>=526 ? e.getMessage().substring(0,526) : e.getMessage());
                 errorCode = ResponseCodeEnum.RXH99999.getCode();
             }
-            respResult = newIntoPiecesOfInformationService.responseMsg(null,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,errorCode,errorMsg,ipo);
+            respResult = newIntoPiecesOfInformationService.responseMsg(null != mbcbDTO ? mbcbDTO.getMerOrderId() : null,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,errorCode,errorMsg,ipo);
             sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
         }finally {
             sotTable.setResponseResult(respResult).setCreateTime(new Date());
             newIntoPiecesOfInformationService.saveSysLog(sotTable);
-            return respResult;
+            return null == respResult ? "系统内部错误！" : respResult;
         }
     }
 
+
+    /**
+     *  业务开通接口
+     * @param request
+     * @param param
+     * @return
+     */
+    @PostMapping(value="/serviceFulfillment", produces = "text/html;charset=UTF-8")
+    public String  serviceFulfillment(HttpServletRequest request, @RequestBody(required = false) String param){
+        final String bussType = "【业务开通接口】";
+        String errorMsg = null,errorCode = null,printErrorMsg,respResult=null;
+        SystemOrderTrackTable sotTable = null;
+        MerchantServiceFulfillmentDTO msDTO = null;
+        MerchantInfoTable merInfoTable = null;
+        RequestCrossMsgDTO  requestCrossMsgDTO = null;
+        CrossResponseMsgDTO crossResponseMsgDTO = null;
+        InnerPrintLogObject ipo = null ;
+        try{
+            //解析 以及 获取SystemOrderTrackTable对象
+            sotTable = this.getSystemOrderTrackTable(request,param,bussType);
+            //类型转换
+            msDTO = JSON.parse(sotTable.getRequestMsg(),MerchantServiceFulfillmentDTO.class);
+            sotTable.setMerId(msDTO.getMerId()).setMerOrderId(msDTO.getMerOrderId());
+            //获取必要参数
+            Map<String, ParamRule> paramRuleMap =newIntoPiecesOfInformationService.getParamMapBySF();
+            //创建日志打印对象
+            ipo = new InnerPrintLogObject(msDTO.getMerId(),msDTO.getMerOrderId(),bussType);
+            //参数校验
+            this.verify(paramRuleMap,msDTO,MerchantBankCardBindingDTO.class,ipo);
+            //获取商户信息
+            merInfoTable = newIntoPiecesOfInformationService.getOneMerInfo(ipo);
+            //验证签名
+            md5Component.checkMd5(sotTable.getRequestMsg(),merInfoTable.getSecretKey(),ipo);
+            //查看是否重复订单
+            newIntoPiecesOfInformationService.multipleOrder(msDTO.getMerOrderId(),ipo);
+            //判断订单是否存在
+            RegisterCollectTable registerCollectTable = newIntoPiecesOfInformationService.getRegisterCollectTable(msDTO.getPlatformOrderId(), BusinessTypeEnum.b2.getBusiType(),ipo);
+            //更新进件附属表信息
+            registerCollectTable = newIntoPiecesOfInformationService.saveRegisterCollectTableByB3(registerCollectTable,ipo);
+            sotTable.setPlatformOrderId(registerCollectTable.getPlatformOrderId());
+            //获取进件主表信息
+            RegisterInfoTable registerInfoTable = newIntoPiecesOfInformationService.getRegisterInfoTable(registerCollectTable.getRitId(),ipo);
+            //获取通道信息
+            ChannelInfoTable channelInfoTable = newIntoPiecesOfInformationService.getChannelInfoByChannelId(registerCollectTable.getChannelId(),ipo);
+            //获取附属通道信息
+            ChannelExtraInfoTable channelExtraInfoTable =  newIntoPiecesOfInformationService.getChannelExtraInfoByOrgId(channelInfoTable.getOrganizationId(), BussTypeEnum.ADDCUS.getBussType(),ipo);
+            //封装请求cross必要参数
+            requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,channelExtraInfoTable,registerInfoTable,registerCollectTable));
+            //发生cross请求
+            String crossResponseMsg = newIntoPiecesOfInformationService.doPostJson(requestCrossMsgDTO,channelExtraInfoTable,ipo);
+            //将请求结果转为对象
+            crossResponseMsgDTO = newIntoPiecesOfInformationService.jsonToPojo(crossResponseMsg,ipo);
+            //更新进件信息
+            newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsg,registerCollectTable,ipo);
+            //封装放回结果
+            respResult = newIntoPiecesOfInformationService.responseMsg(msDTO.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,null,null,ipo);
+            sotTable.setPlatformPrintLog(StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode())).setTradeCode( crossResponseMsgDTO.getCrossStatusCode() );
+        }catch (Exception e){
+            if(e instanceof NewPayException){
+                NewPayException npe = (NewPayException) e;
+                errorMsg = npe.getResponseMsg();
+                printErrorMsg = npe.getInnerPrintMsg();
+                errorCode = npe.getCode();
+            }else{
+                e.printStackTrace();
+                errorMsg = ResponseCodeEnum.RXH99999.getMsg();
+                printErrorMsg = isBlank(e.getMessage()) ? "" : (e.getMessage().length()>=526 ? e.getMessage().substring(0,526) : e.getMessage());
+                errorCode = ResponseCodeEnum.RXH99999.getCode();
+            }
+            respResult = newIntoPiecesOfInformationService.responseMsg(null != msDTO ? msDTO.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,errorCode,errorMsg,ipo);
+            sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
+        }finally {
+            sotTable.setResponseResult(respResult).setCreateTime(new Date());
+            newIntoPiecesOfInformationService.saveSysLog(sotTable);
+            return null == respResult ? "系统内部错误！" : respResult;
+        }
+    }
 
 
 
