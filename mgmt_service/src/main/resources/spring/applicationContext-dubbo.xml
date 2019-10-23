@@ -19,9 +19,9 @@
     <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantInfoService"     ref="apiMerchantInfoServiceImpl"/>
     <dubbo:service interface="com.rxh.service.anew.business.ApiRegisterCollectService"  ref="apiRegisterCollectServiceImpl"/>
     <dubbo:service interface="com.rxh.service.anew.system.ApiMerchantSettingService"    ref="apiMerchantSettingServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelInfoService"       ref="apiChannelInfoService"/>
-    <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelExtraInfoService"  ref="apiChannelExtraInfoService"/>
-    <dubbo:service interface="com.rxh.service.anew.business.ApiRegisterInfoService"     ref="apiRegisterInfoService"/>
+    <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelInfoService"       ref="apiChannelInfoServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelExtraInfoService"  ref="apiChannelExtraInfoServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.anew.business.ApiRegisterInfoService"     ref="apiRegisterInfoServiceImpl"/>
 
 
     <!--  **********************************************************************************************************************   -->
