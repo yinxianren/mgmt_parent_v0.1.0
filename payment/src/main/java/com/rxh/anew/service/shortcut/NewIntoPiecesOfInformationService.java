@@ -1,6 +1,7 @@
 package com.rxh.anew.service.shortcut;
 
 
+import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
@@ -10,6 +11,7 @@ import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.business.RegisterInfoTable;
 import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
+import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.exception.NewPayException;
@@ -87,9 +89,20 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
 
     /**
      * 更新进件新
-     * @param bankResult
+     * @param crossResponseMsgDTO
      * @param registerCollectTable
      * @return
      */
-    RegisterCollectTable updataByRegisterCollectTable(BankResult bankResult, RegisterCollectTable registerCollectTable);
+    RegisterCollectTable updateByRegisterCollectTable(CrossResponseMsgDTO crossResponseMsgDTO, String crossResponseMsg, RegisterCollectTable registerCollectTable, InnerPrintLogObject ipo);
+
+    /**
+     * 封装响应结果
+     * @param merInfoTable
+     * @param requestCrossMsgDTO
+     * @param crossResponseMsgDTO
+     * @param errorCode
+     * @param errorMsg
+     * @return
+     */
+    String responseMsg(MerchantBasicInformationRegistrationDTO mbirDTO,MerchantInfoTable merInfoTable, RequestCrossMsgDTO  requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO,String errorCode,String errorMsg,InnerPrintLogObject ipo) throws NewPayException;
 }

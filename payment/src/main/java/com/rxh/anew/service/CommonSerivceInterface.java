@@ -1,5 +1,6 @@
 package com.rxh.anew.service;
 
+import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.table.channel.ChannelExtraInfoTable;
@@ -56,5 +57,5 @@ public interface CommonSerivceInterface {
      * @param ipo
      * @return
      */
-    BankResult jsonToPojo(String crossResponseMsg, InnerPrintLogObject ipo);
+    CrossResponseMsgDTO jsonToPojo(String crossResponseMsg, InnerPrintLogObject ipo);
 }

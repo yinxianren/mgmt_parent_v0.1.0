@@ -50,4 +50,10 @@ public class ApiRegisterCollectServiceImpl implements ApiRegisterCollectService,
         return registerCollectDbService.save(rct);
     }
 
+    @Override
+    public boolean updateByPrimaryKey(RegisterCollectTable rct) {
+        if(isNull(rct))  return false;
+        return registerCollectDbService.updateById(rct);
+    }
+
 }

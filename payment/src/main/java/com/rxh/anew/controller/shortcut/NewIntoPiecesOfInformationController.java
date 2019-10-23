@@ -3,6 +3,7 @@ package com.rxh.anew.controller.shortcut;
 import com.alibaba.dubbo.common.json.JSON;
 import com.rxh.anew.component.Md5Component;
 import com.rxh.anew.controller.NewAbstractCommonController;
+import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
@@ -16,16 +17,12 @@ import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
-import com.rxh.pojo.cross.BankResult;
+import com.rxh.enums.ResponseCodeEnum;
+import com.rxh.exception.NewPayException;
+import com.rxh.payInterface.NewPayAssert;
 import com.rxh.tuple.Tuple2;
-import com.rxh.tuple.Tuple3;
 import com.rxh.tuple.Tuple4;
-import com.rxh.tuple.Tuple5;
-import com.rxh.utils.CheckMd5Utils;
-import com.rxh.utils.HttpClientUtils;
-import com.rxh.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,9 +59,13 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
     @PostMapping(value = "/addCusInfo" ,produces = "text/html;charset=UTF-8")
     public String intoPiecesOfInformation(HttpServletRequest request, @RequestBody(required = false) String param){
         final String bussType = "【基本信息登记】";
-        String respResult=null;
+        String errorMsg = null,errorCode = null,printErrorMsg,respResult=null;
         SystemOrderTrackTable sotTable = null;
         MerchantBasicInformationRegistrationDTO mbirDTO=null;
+        MerchantInfoTable merInfoTable = null;
+        RequestCrossMsgDTO  requestCrossMsgDTO = null;
+        CrossResponseMsgDTO crossResponseMsgDTO = null;
+        InnerPrintLogObject ipo = null ;
         try{
             //解析 以及 获取SystemOrderTrackTable对象
             sotTable = this.getSystemOrderTrackTable(request,param,bussType);
@@ -73,12 +74,12 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //获取必要参数
             Map<String, ParamRule> paramRuleMap =newIntoPiecesOfInformationService.getParamMapByIPOI();
             //创建日志打印对象
-            InnerPrintLogObject ipo = new InnerPrintLogObject(mbirDTO.getMerId(),mbirDTO.getMerOrderId(),bussType);
+            ipo = new InnerPrintLogObject(mbirDTO.getMerId(),mbirDTO.getMerOrderId(),bussType);
             //参数校验
             this.verify(paramRuleMap,mbirDTO,MerchantBasicInformationRegistrationDTO.class,ipo);
             //获取商户信息
-            MerchantInfoTable merInfoTable = newIntoPiecesOfInformationService.getOneMerInfo(ipo);
-             //验证签名
+            merInfoTable = newIntoPiecesOfInformationService.getOneMerInfo(ipo);
+            //验证签名
             md5Component.checkMd5(sotTable.getRequestMsg(),merInfoTable.getSecretKey(),ipo);
             //查看是否重复订单
             newIntoPiecesOfInformationService.multipleOrder(mbirDTO.getMerOrderId(),ipo);
@@ -99,20 +100,29 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //保存进件信息
             Tuple2<RegisterInfoTable,RegisterCollectTable> tuple = newIntoPiecesOfInformationService.saveByRegister(mbirDTO,channelInfoTable,ipo);
             //封装请求cross必要参数
-            RequestCrossMsgDTO  requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,extraInfoTable,tuple._,tuple._2));
+            requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,extraInfoTable,tuple._,tuple._2));
             //发生cross请求
             String crossResponseMsg = newIntoPiecesOfInformationService.doPostJson(requestCrossMsgDTO,extraInfoTable,ipo);
             //将请求结果转为对象
-            BankResult bankResult = newIntoPiecesOfInformationService.jsonToPojo(crossResponseMsg,ipo);
+            crossResponseMsgDTO = newIntoPiecesOfInformationService.jsonToPojo(crossResponseMsg,ipo);
             //更新进件信息
-            RegisterCollectTable registerCollectTable = newIntoPiecesOfInformationService.updataByRegisterCollectTable(bankResult,tuple._2);
-
+            RegisterCollectTable registerCollectTable = newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsg,tuple._2,ipo);
+            //封装放回结果
+            respResult = newIntoPiecesOfInformationService.responseMsg(mbirDTO,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,null,null,ipo);
         }catch (Exception e){
-
-
+            if(e instanceof NewPayException){
+                NewPayException npe = (NewPayException) e;
+                errorMsg = npe.getResponseMsg();
+                printErrorMsg = npe.getInnerPrintMsg();
+                errorCode = npe.getCode();
+            }else{
+                e.printStackTrace();
+                errorMsg = ResponseCodeEnum.RXH99999.getMsg();
+                printErrorMsg = isBlank(e.getMessage()) ? "" : (e.getMessage().length()>=526 ? e.getMessage().substring(0,526) : e.getMessage());
+                errorCode = ResponseCodeEnum.RXH99999.getCode();
+            }
+            respResult = newIntoPiecesOfInformationService.responseMsg(mbirDTO,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,errorCode,errorMsg,ipo);
         }finally {
-
-
             return respResult;
         }
     }

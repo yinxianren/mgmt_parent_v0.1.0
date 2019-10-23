@@ -11,4 +11,6 @@ public interface ApiRegisterCollectService {
     List<RegisterCollectTable> getList(RegisterCollectTable rct);
 
     boolean save(RegisterCollectTable rct);
+
+    boolean updateByPrimaryKey(RegisterCollectTable rct);
 }

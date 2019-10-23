@@ -1,8 +1,10 @@
 package com.rxh.anew.service.shortcut.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
+import com.rxh.anew.dto.ResponseEntity;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonServiceAbstract;
@@ -11,6 +13,7 @@ import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.business.RegisterInfoTable;
 import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
+import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.enums.BussTypeEnum;
@@ -21,8 +24,10 @@ import com.rxh.exception.NewPayException;
 import com.rxh.pojo.cross.BankResult;
 import com.rxh.tuple.Tuple2;
 import com.rxh.tuple.Tuple4;
+import com.rxh.utils.PayTreeMap;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -171,11 +176,63 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
     }
 
     @Override
-    public RegisterCollectTable updataByRegisterCollectTable(BankResult bankResult, RegisterCollectTable registerCollectTable) {
-        return registerCollectTable
-                .setStatus(Integer.valueOf(bankResult.getStatus()))
-                .setCrossRespResult()
-                ;
+    public RegisterCollectTable updateByRegisterCollectTable(CrossResponseMsgDTO crossResponseMsgDTO, String crossResponseMsg, RegisterCollectTable registerCollectTable, InnerPrintLogObject ipo) {
+        final String localPoint="updateByRegisterCollectTable";
+        registerCollectTable
+                .setStatus(Integer.valueOf(crossResponseMsgDTO.getCrossStatusCode()))
+                .setCrossRespResult(crossResponseMsg)
+                .setChannelRespResult(crossResponseMsgDTO.getChannelResponseMsg());
+        try {
+            commonRPCComponent.apiRegisterCollectService.updateByPrimaryKey(registerCollectTable);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：更新进件信息发生异常",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint),
+                    format(" %s",ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }finally {
+            return registerCollectTable;
+        }
+    }
+
+    @Override
+    public String responseMsg(MerchantBasicInformationRegistrationDTO mbirDTO,MerchantInfoTable merInfoTable, RequestCrossMsgDTO  requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO,String errorCode,String errorMsg,InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="responseMsg";
+        String responseMsg = null;
+        try {
+            ResponseEntity responseEntity = new ResponseEntity()
+                    .setMerId( null !=merInfoTable ? merInfoTable.getMerchantId() : null)
+                    .setStatus( null != crossResponseMsgDTO ? crossResponseMsgDTO.getCrossStatusCode() :  StatusEnum._1.getStatus() )
+                    .setMsg( null != crossResponseMsgDTO ? StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()) : StatusEnum._1.getRemark())
+                    .setMerOrderId( null != mbirDTO ? mbirDTO.getMerOrderId() : null )
+                    .setPlatformOrderId( null != requestCrossMsgDTO ? requestCrossMsgDTO.getRegisterCollectTable().getPlatformOrderId() : null)
+                    .setErrorCode(errorCode)
+                    .setErrorMsg(errorMsg)
+                    ;
+
+            Field[] fields = responseEntity.getClass().getDeclaredFields();
+            PayTreeMap<String,Object>  map = new PayTreeMap<>();
+            for (Field field : fields) {
+                String fieldName = field.getName();
+                Object object = field.get(responseEntity);
+                if(null != object) map.lput(fieldName,object);
+            }
+            map.lput("signMsg", null != merInfoTable ? md5Component.getMd5SignWithKey(map,merInfoTable.getSecretKey()) : "" );
+            responseMsg = JSON.toJSONString(map);
+        }catch (Exception e){
+            e.printStackTrace();
+            if(null != ipo) {
+                throw new NewPayException(
+                        ResponseCodeEnum.RXH99999.getCode(),
+                        format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：封装响应报文", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint),
+                        format(" %s", ResponseCodeEnum.RXH99999.getMsg())
+                );
+            } else
+                throw  e;
+        }finally {
+            return  null == responseMsg ? "系统内部错误！" : responseMsg;
+        }
     }
 
 

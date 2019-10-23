@@ -30,8 +30,19 @@ public class SystemOrderTrackTable implements Serializable {
     private String requestMsg;//请求报文，最佳是明文
     private String requestPath; // 请求网址
     private String responseResult; // 返回结果
+    private String platformPrintLog;//平台打印日志
     private Date tradeTime; // 交易时间
     private Date createTime;//创建时间
+
+    public SystemOrderTrackTable setRequestPath(String requestPath) {
+        this.requestPath = requestPath;
+        return  this;
+    }
+
+    public SystemOrderTrackTable setPlatformPrintLog(String platformPrintLog) {
+        this.platformPrintLog = platformPrintLog;
+        return  this;
+    }
 
     public SystemOrderTrackTable setId(Long id) {
         this.id = id;

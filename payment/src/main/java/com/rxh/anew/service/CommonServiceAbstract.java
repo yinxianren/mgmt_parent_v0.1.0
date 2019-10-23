@@ -1,6 +1,8 @@
 package com.rxh.anew.service;
 
 import com.rxh.anew.CommonRPCComponent;
+import com.rxh.anew.component.Md5Component;
+import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.table.business.RegisterCollectTable;
@@ -30,6 +32,9 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
 
     @Autowired
     protected CommonRPCComponent commonRPCComponent;
+    @Autowired
+    protected Md5Component md5Component;
+
 
 
     public List<MerchantSettingTable> getMerchantSetting(InnerPrintLogObject ipo) throws NewPayException {
@@ -89,11 +94,11 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
     }
 
 
-    public BankResult jsonToPojo(String crossResponseMsg, InnerPrintLogObject ipo) {
+    public CrossResponseMsgDTO jsonToPojo(String crossResponseMsg, InnerPrintLogObject ipo) {
         final String localPoint="jsonToPojo";
-        BankResult bankResult = null;
+        CrossResponseMsgDTO crossResponseMsgDTO = null;
         try {
-            bankResult = JsonUtils.jsonToPojo(crossResponseMsg, BankResult.class);
+            crossResponseMsgDTO = JsonUtils.jsonToPojo(crossResponseMsg, CrossResponseMsgDTO.class);
         }catch (Exception e){
             e.printStackTrace();
             throw new NewPayException(
@@ -102,7 +107,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
                     format(" %s",ResponseCodeEnum.RXH99999.getMsg())
             );
         }finally {
-            return bankResult;
+            return crossResponseMsgDTO;
         }
     }
 }

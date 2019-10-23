@@ -24,4 +24,13 @@ public enum  StatusEnum {
         this.status = status ;
         this.remark = remark;
     }
+
+    public static String  remark(int status){
+        for(StatusEnum statusEnum : StatusEnum.values()){
+            if(statusEnum.getStatus() == status){
+                return  statusEnum.getRemark();
+            }
+        }
+        return "该状态码不存在";
+    }
 }
