@@ -21,7 +21,7 @@
     <dubbo:service interface="com.rxh.service.anew.system.ApiMerchantSettingService"    ref="apiMerchantSettingServiceImpl"/>
     <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelInfoService"       ref="apiChannelInfoService"/>
     <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelExtraInfoService"  ref="apiChannelExtraInfoService"/>
-
+    <dubbo:service interface="com.rxh.service.anew.business.ApiRegisterInfoService"     ref="apiRegisterInfoService"/>
 
 
     <!--  **********************************************************************************************************************   -->
