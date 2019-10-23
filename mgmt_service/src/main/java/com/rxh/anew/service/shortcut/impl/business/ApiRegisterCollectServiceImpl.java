@@ -44,4 +44,10 @@ public class ApiRegisterCollectServiceImpl implements ApiRegisterCollectService,
         return registerCollectDbService.list(lambdaQueryWrapper);
     }
 
+    @Override
+    public boolean save(RegisterCollectTable rct) {
+        if(isNull(rct))  return false;
+        return registerCollectDbService.save(rct);
+    }
+
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.rxh.anew.service.db.channel.ChannelInfoDbService;
 import com.rxh.anew.table.channel.ChannelInfoTable;
+import com.rxh.enums.StatusEnum;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.service.anew.channel.ApiChannelInfoService;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,7 @@ public class ApiChannelInfoServiceImpl implements ApiChannelInfoService , NewPay
     public List<ChannelInfoTable> batchGetByChannelId(Set<String> channelIdSet) {
         if(isHasNotElement(channelIdSet)) return null;
         LambdaQueryWrapper<ChannelInfoTable>  lambdaQueryWrapper = new QueryWrapper<ChannelInfoTable>()
-                .lambda().eq(ChannelInfoTable::getStatus,0);//默认只取可用通道
+                .lambda().eq(ChannelInfoTable::getStatus, StatusEnum._0.getStatus());//默认只取可用通道
         lambdaQueryWrapper.in(ChannelInfoTable::getChannelId,channelIdSet);
         return channelInfoDbService.list();
     }

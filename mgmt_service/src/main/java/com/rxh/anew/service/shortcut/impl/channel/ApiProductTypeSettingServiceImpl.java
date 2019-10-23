@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.rxh.anew.service.db.channel.ProductTypeSettingDBService;
 import com.rxh.anew.table.system.ProductSettingTable;
+import com.rxh.enums.StatusEnum;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.service.anew.channel.ApiProductTypeSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class ApiProductTypeSettingServiceImpl implements ApiProductTypeSettingSe
     public ProductSettingTable getOne(ProductSettingTable productSettingTable) {
         if(isNull(productSettingTable)) return null;
         LambdaQueryWrapper<ProductSettingTable> lambdaQueryWrapper = new QueryWrapper<ProductSettingTable>()
-                .lambda().eq(ProductSettingTable::getStatus,productSettingTable.getStatus());//默认只取可用的
+                .lambda().eq(ProductSettingTable::getStatus, StatusEnum._0.getStatus());//默认只取可用的
 
         if( !isBlank(productSettingTable.getOrganizationId()) ) lambdaQueryWrapper.eq(ProductSettingTable::getOrganizationId,productSettingTable.getOrganizationId());
         if( !isBlank(productSettingTable.getProductName()) ) lambdaQueryWrapper.eq(ProductSettingTable::getProductName,productSettingTable.getProductName());

@@ -6,5 +6,5 @@ import com.rxh.mapper.anew.agent.AnewAgentWalletMapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AgentWalletDBServiceImmpl extends ServiceImpl<AnewAgentWalletMapper, AgentWalletTable> {
+public class AgentWalletDBServiceImpl extends ServiceImpl<AnewAgentWalletMapper, AgentWalletTable> {
 }

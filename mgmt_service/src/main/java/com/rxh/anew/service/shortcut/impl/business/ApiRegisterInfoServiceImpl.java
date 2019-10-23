@@ -2,8 +2,11 @@ package com.rxh.anew.service.shortcut.impl.business;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rxh.anew.service.db.business.RegisterInfoDBService;
+import com.rxh.anew.service.db.business.imple.RegisterInfoDBServiceImpl;
 import com.rxh.anew.table.business.RegisterInfoTable;
+import com.rxh.enums.StatusEnum;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.service.anew.business.ApiRegisterInfoService;
 import lombok.AllArgsConstructor;
@@ -27,7 +30,7 @@ public class ApiRegisterInfoServiceImpl implements ApiRegisterInfoService, NewPa
     public RegisterInfoTable getOne(RegisterInfoTable rit) {
         if(isNull(rit)) return null;
         LambdaQueryWrapper<RegisterInfoTable> lambdaQueryWrapper = new QueryWrapper<RegisterInfoTable>()
-                .lambda().eq(RegisterInfoTable::getStatus,0);
+                .lambda().eq(RegisterInfoTable::getStatus, StatusEnum._0.getStatus());
         if( !isBlank(rit.getMerchantId()) ) lambdaQueryWrapper.eq(RegisterInfoTable::getMerchantId,rit.getMerchantId());
         if( !isBlank(rit.getTerminalMerId()) ) lambdaQueryWrapper.eq(RegisterInfoTable::getTerminalMerId,rit.getTerminalMerId());
         if( isNull(rit.getIdentityType()) ) lambdaQueryWrapper.eq(RegisterInfoTable::getIdentityType,rit.getIdentityType());
@@ -37,8 +40,10 @@ public class ApiRegisterInfoServiceImpl implements ApiRegisterInfoService, NewPa
     }
 
     @Override
-    public boolean save(RegisterInfoTable rit) {
+    public boolean replaceSave(RegisterInfoTable rit) {
         if(isNull(rit)) return false;
-        return registerInfoDBService.save(rit);
+        return registerInfoDBService.replaceSave(rit);
     }
+
+
 }

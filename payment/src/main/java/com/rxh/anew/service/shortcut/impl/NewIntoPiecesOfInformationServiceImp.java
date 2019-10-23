@@ -6,6 +6,7 @@ import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonServiceAbstract;
 import com.rxh.anew.service.shortcut.NewIntoPiecesOfInformationService;
 import com.rxh.anew.table.business.RegisterCollectTable;
+import com.rxh.anew.table.business.RegisterInfoTable;
 import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
@@ -15,8 +16,10 @@ import com.rxh.enums.ParamTypeEnum;
 import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.exception.NewPayException;
 import com.rxh.tuple.Tuple2;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -70,10 +73,10 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
                 .stream()
                 .reduce((t1,t2)-> t1.getChannelLevel() > t2.getChannelLevel() ? t1 : t2 )
                 .orElse(null);
-       isNull(channelInfoTable,
-               ResponseCodeEnum.RXH99999.getCode(),
-               format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置(取到空通道信息)：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint),
-               format(" %s",ResponseCodeEnum.RXH99999.getMsg()));
+        isNull(channelInfoTable,
+                ResponseCodeEnum.RXH99999.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置(取到空通道信息)：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint),
+                format(" %s",ResponseCodeEnum.RXH99999.getMsg()));
 
         return channelInfoTable;
     }
@@ -95,9 +98,59 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
 
     @Override
     public void saveByRegister(MerchantBasicInformationRegistrationDTO mbirDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo) {
+        RegisterInfoTable registerInfoTable =  commonRPCComponent.apiRegisterInfoService.getOne(
+                new RegisterInfoTable().setMerchantId(mbirDTO.getMerId())
+                        .setTerminalMerId(mbirDTO.getTerminalMerId())
+                        .setUserName(mbirDTO.getCardHolderName())
+                        .setIdentityType(mbirDTO.getIdentityType())
+                        .setIdentityNum(mbirDTO.getIdentityNum())
+        );
 
+        if(null == registerInfoTable) registerInfoTable = new RegisterInfoTable();
+        if(isNull(registerInfoTable.getCreateTime()))  registerInfoTable.setCreateTime(new Date());
+        registerInfoTable.setMerchantId(mbirDTO.getMerId())
+                .setTerminalMerId(mbirDTO.getTerminalMerId())
+                .setTerminalMerName(mbirDTO.getTerminalMerName())
+                .setUserName(mbirDTO.getCardHolderName())
+                .setUserShortName(mbirDTO.getUserShortName())
+                .setIdentityType(mbirDTO.getIdentityType())
+                .setIdentityNum(mbirDTO.getIdentityNum())
+                .setPhone(mbirDTO.getPhone())
+                .setMerchantType(mbirDTO.getMerchantType())
+                .setProvince(mbirDTO.getProvince())
+                .setCity(mbirDTO.getCity())
+                .setAddress(mbirDTO.getAddress())
+                .setUpdateTime(new Date());
+
+        //保持或更新
+        commonRPCComponent.apiRegisterInfoService.replaceSave(registerInfoTable);
+        commonRPCComponent.apiRegisterCollectService.save(new RegisterCollectTable()
+                .setChannelId(channelInfoTable.getChannelId())
+                .setProductId(channelInfoTable.getProductId())
+                .setPlatformOrderId("RXH"+new Random(System.currentTimeMillis()).nextInt(1000000)+"-"+System.currentTimeMillis())
+                .setRitId(registerInfoTable.getId())
+                .setMerchantId(mbirDTO.getMerId())
+                .setTerminalMerId(mbirDTO.getTerminalMerId())
+                .setMerOrderId(mbirDTO.getMerOrderId())
+                .setCategory(mbirDTO.getCategory())
+                .setMiMerCertPic1(mbirDTO.getMiMerCertPic1())
+                .setMiMerCertPic2(mbirDTO.getMiMerCertPic2())
+                .setBankCode(mbirDTO.getBankCode())
+                .setBankCardType(new Integer(mbirDTO.getBankCardType()))
+                .setCardHolderName(mbirDTO.getCardHolderName())
+                .setBankCardNum(mbirDTO.getBankCardNum())
+                .setBankCardPhone(mbirDTO.getBankCardPhone())
+                .setPayFee(new BigDecimal(mbirDTO.getPayFee()))
+                .setBackFee(new BigDecimal(mbirDTO.getBackFee()))
+                .setChannelRespResult(null)
+                .setCrossRespResult(null)
+                .setStatus()
+                .setCreateTime()
+                .setUpdateTime()
+        );
 
     }
+
 
 
     @Override

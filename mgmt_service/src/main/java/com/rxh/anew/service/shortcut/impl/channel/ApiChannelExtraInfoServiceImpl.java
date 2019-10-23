@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.rxh.anew.service.db.channel.ChannelExtraInfoDbService;
 import com.rxh.anew.table.channel.ChannelExtraInfoTable;
+import com.rxh.enums.StatusEnum;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.service.anew.channel.ApiChannelExtraInfoService;
 import lombok.AllArgsConstructor;
@@ -29,7 +30,7 @@ public class ApiChannelExtraInfoServiceImpl implements ApiChannelExtraInfoServic
     public ChannelExtraInfoTable getOne(ChannelExtraInfoTable cei) {
         if( isNull(cei) )  return null;
         LambdaQueryWrapper<ChannelExtraInfoTable> lambdaQueryWrapper = new QueryWrapper<ChannelExtraInfoTable>()
-                .lambda().eq(ChannelExtraInfoTable::getStatus,0);//默认只取启用
+                .lambda().eq(ChannelExtraInfoTable::getStatus, StatusEnum._0.getStatus());//默认只取启用
         if( !isBlank(cei.getOrganizationId()) ) lambdaQueryWrapper.eq(ChannelExtraInfoTable::getOrganizationId,cei.getOrganizationId());
         if( !isBlank(cei.getBussType()) ) lambdaQueryWrapper.eq(ChannelExtraInfoTable::getBussType,cei.getBussType());
         return channelExtraInfoDbService.getOne(lambdaQueryWrapper);

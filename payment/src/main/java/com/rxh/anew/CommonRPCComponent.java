@@ -1,6 +1,7 @@
 package com.rxh.anew;
 
 import com.rxh.service.anew.business.ApiRegisterCollectService;
+import com.rxh.service.anew.business.ApiRegisterInfoService;
 import com.rxh.service.anew.channel.ApiChannelExtraInfoService;
 import com.rxh.service.anew.channel.ApiChannelInfoService;
 import com.rxh.service.anew.channel.ApiProductTypeSettingService;
@@ -27,4 +28,5 @@ public  class CommonRPCComponent {
     public final ApiChannelInfoService        apiChannelInfoService;
     public final ApiProductTypeSettingService apiProductTypeSettingService;
     public final ApiChannelExtraInfoService   apiChannelExtraInfoService;
+    public final ApiRegisterInfoService       apiRegisterInfoService;
 }

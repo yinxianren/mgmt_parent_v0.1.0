@@ -13,7 +13,7 @@ public class MerchantBasicInformationRegistrationDTO extends AbstractParamModelD
     private String  terminalMerId; //子商户id		商户系统中商户的编码，要求唯一
     private String  terminalMerName;// 子商户名称	商户系统中商户的名称
     private String  userShortName; //商户简称
-    private Integer identityType; //证件类型	1身份证、2护照、3港澳回乡证、4台胞证、5军官证、
+    private String identityType; //证件类型	1身份证、2护照、3港澳回乡证、4台胞证、5军官证、
     private String  identityNum; //证件号码
     private String phone; // 手机号
     private String  province;   // 省份		所在省份
@@ -28,5 +28,7 @@ public class MerchantBasicInformationRegistrationDTO extends AbstractParamModelD
     private String cardHolderName;
     private String bankName;
     private String category;//经营类目
+    private byte[]  miMerCertPic1;//资质影印件',
+    private byte[]  miMerCertPic2;//资质影印件',
 
 }

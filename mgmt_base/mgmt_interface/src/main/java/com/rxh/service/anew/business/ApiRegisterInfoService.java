@@ -6,5 +6,5 @@ public interface ApiRegisterInfoService {
 
     RegisterInfoTable  getOne(RegisterInfoTable  rit);
 
-    boolean save(RegisterInfoTable  rit);
+    boolean replaceSave(RegisterInfoTable  rit);
 }
