@@ -4,18 +4,26 @@ import com.alibaba.dubbo.common.json.JSON;
 import com.rxh.anew.component.Md5Component;
 import com.rxh.anew.controller.NewAbstractCommonController;
 import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
+import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.shortcut.NewIntoPiecesOfInformationService;
 import com.rxh.anew.table.business.RegisterCollectTable;
+import com.rxh.anew.table.business.RegisterInfoTable;
 import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
+import com.rxh.pojo.cross.BankResult;
 import com.rxh.tuple.Tuple2;
+import com.rxh.tuple.Tuple3;
+import com.rxh.tuple.Tuple4;
+import com.rxh.tuple.Tuple5;
 import com.rxh.utils.CheckMd5Utils;
+import com.rxh.utils.HttpClientUtils;
+import com.rxh.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -89,7 +97,13 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //获取进件附属通道
             ChannelExtraInfoTable extraInfoTable = newIntoPiecesOfInformationService.getAddCusChannelExtraInfo(channelInfoTable,ipo);
             //保存进件信息
-            newIntoPiecesOfInformationService.saveByRegister(mbirDTO,channelInfoTable,ipo);
+            Tuple2<RegisterInfoTable,RegisterCollectTable> tuple = newIntoPiecesOfInformationService.saveByRegister(mbirDTO,channelInfoTable);
+            //封装请求cross必要参数
+            RequestCrossMsgDTO  requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,extraInfoTable,tuple._,tuple._2));
+            //发生cross请求
+            String result = newIntoPiecesOfInformationService.doPostJson(requestCrossMsgDTO,extraInfoTable,ipo);
+            //将请求结果转为对象
+            BankResult bankResult = newIntoPiecesOfInformationService.jsonToPojo(result,ipo);
 
 
         }catch (Exception e){

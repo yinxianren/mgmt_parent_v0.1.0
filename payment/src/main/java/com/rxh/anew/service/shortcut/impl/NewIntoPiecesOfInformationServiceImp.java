@@ -1,6 +1,7 @@
 package com.rxh.anew.service.shortcut.impl;
 
 import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
+import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonServiceAbstract;
@@ -14,9 +15,10 @@ import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.enums.BussTypeEnum;
 import com.rxh.enums.ParamTypeEnum;
 import com.rxh.enums.ResponseCodeEnum;
+import com.rxh.enums.StatusEnum;
 import com.rxh.exception.NewPayException;
 import com.rxh.tuple.Tuple2;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+import com.rxh.tuple.Tuple4;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -97,12 +99,12 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
     }
 
     @Override
-    public void saveByRegister(MerchantBasicInformationRegistrationDTO mbirDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo) {
+    public Tuple2<RegisterInfoTable,RegisterCollectTable> saveByRegister(MerchantBasicInformationRegistrationDTO mbirDTO, ChannelInfoTable channelInfoTable) {
         RegisterInfoTable registerInfoTable =  commonRPCComponent.apiRegisterInfoService.getOne(
                 new RegisterInfoTable().setMerchantId(mbirDTO.getMerId())
                         .setTerminalMerId(mbirDTO.getTerminalMerId())
                         .setUserName(mbirDTO.getCardHolderName())
-                        .setIdentityType(mbirDTO.getIdentityType())
+                        .setIdentityType(new Integer(mbirDTO.getIdentityType()))
                         .setIdentityNum(mbirDTO.getIdentityNum())
         );
 
@@ -113,7 +115,7 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
                 .setTerminalMerName(mbirDTO.getTerminalMerName())
                 .setUserName(mbirDTO.getCardHolderName())
                 .setUserShortName(mbirDTO.getUserShortName())
-                .setIdentityType(mbirDTO.getIdentityType())
+                .setIdentityType(new Integer(mbirDTO.getIdentityType()))
                 .setIdentityNum(mbirDTO.getIdentityNum())
                 .setPhone(mbirDTO.getPhone())
                 .setMerchantType(mbirDTO.getMerchantType())
@@ -124,7 +126,8 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
 
         //保持或更新
         commonRPCComponent.apiRegisterInfoService.replaceSave(registerInfoTable);
-        commonRPCComponent.apiRegisterCollectService.save(new RegisterCollectTable()
+        RegisterCollectTable registerCollectTable = new RegisterCollectTable();
+        commonRPCComponent.apiRegisterCollectService.save(registerCollectTable
                 .setChannelId(channelInfoTable.getChannelId())
                 .setProductId(channelInfoTable.getProductId())
                 .setPlatformOrderId("RXH"+new Random(System.currentTimeMillis()).nextInt(1000000)+"-"+System.currentTimeMillis())
@@ -144,12 +147,14 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
                 .setBackFee(new BigDecimal(mbirDTO.getBackFee()))
                 .setChannelRespResult(null)
                 .setCrossRespResult(null)
-                .setStatus()
-                .setCreateTime()
-                .setUpdateTime()
+                .setStatus(StatusEnum._3.getStatus())
+                .setCreateTime(new Date())
+                .setUpdateTime(new Date())
         );
-
+        return new Tuple2(registerInfoTable,registerCollectTable);
     }
+
+
 
 
 
@@ -217,8 +222,14 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
     }
 
 
-
-
-
+    @Override
+    public RequestCrossMsgDTO getRequestCrossMsgDTO(Tuple2 tuple) {
+        Tuple4<ChannelInfoTable,ChannelExtraInfoTable, RegisterInfoTable,RegisterCollectTable> tuple4 = (Tuple4<ChannelInfoTable, ChannelExtraInfoTable,  RegisterInfoTable,RegisterCollectTable>) tuple;
+        return new RequestCrossMsgDTO()
+                .setChannelInfoTable(tuple4._)
+                .setChannelExtraInfoTable(tuple4._2)
+                .setRegisterInfoTable(tuple4._3)
+                .setRegisterCollectTable(tuple4._4);
+    }
 
 }

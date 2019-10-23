@@ -1,7 +1,8 @@
 package com.rxh.anew.dto;
 
-import com.rxh.anew.dto.nest.*;
-import lombok.AllArgsConstructor;
+import com.rxh.anew.table.business.*;
+import com.rxh.anew.table.channel.ChannelExtraInfoTable;
+import com.rxh.anew.table.channel.ChannelInfoTable;
 import lombok.Getter;
 
 /**
@@ -14,34 +15,46 @@ import lombok.Getter;
 @Getter
 public class RequestCrossMsgDTO {
 
-    private RegisterMsgNest registerMsgNest;
-    private BondCardMsgNest bondCardMsgNest;
-    private PayOrderMsgNest payOrderMsgNest;
-    private TransOrderMsgNest transOrderMsgNest;
-    private ChannelMsgNest channelMsgNest;
+    private RegisterCollectTable registerCollectTable;
+    private RegisterInfoTable registerInfoTable;
+    private MerchantCardTable merchantCardTable;
+    private PayOrderInfoTable payOrderInfoTable;
+    private TransOrderInfoTable transOrderInfoTable;
+    private ChannelInfoTable channelInfoTable;
+    private ChannelExtraInfoTable channelExtraInfoTable;
 
-    public RequestCrossMsgDTO setChannelMsgNest(ChannelMsgNest channelMsgNest) {
-        this.channelMsgNest = channelMsgNest;
+    public RequestCrossMsgDTO setRegisterCollectTable(RegisterCollectTable registerCollectTable) {
+        this.registerCollectTable = registerCollectTable;
         return this;
     }
 
-    public RequestCrossMsgDTO setRegisterMsgNest(RegisterMsgNest registerMsgNest) {
-        this.registerMsgNest = registerMsgNest;
+    public RequestCrossMsgDTO setRegisterInfoTable(RegisterInfoTable registerInfoTable) {
+        this.registerInfoTable = registerInfoTable;
         return this;
     }
 
-    public RequestCrossMsgDTO setBondCardMsgNest(BondCardMsgNest bondCardMsgNest) {
-        this.bondCardMsgNest = bondCardMsgNest;
+    public RequestCrossMsgDTO setMerchantCardTable(MerchantCardTable merchantCardTable) {
+        this.merchantCardTable = merchantCardTable;
         return this;
     }
 
-    public RequestCrossMsgDTO setPayOrderMsgNest(PayOrderMsgNest payOrderMsgNest) {
-        this.payOrderMsgNest = payOrderMsgNest;
+    public RequestCrossMsgDTO setPayOrderInfoTable(PayOrderInfoTable payOrderInfoTable) {
+        this.payOrderInfoTable = payOrderInfoTable;
         return this;
     }
 
-    public RequestCrossMsgDTO setTransOrderMsgNest(TransOrderMsgNest transOrderMsgNest) {
-        this.transOrderMsgNest = transOrderMsgNest;
+    public RequestCrossMsgDTO setTransOrderInfoTable(TransOrderInfoTable transOrderInfoTable) {
+        this.transOrderInfoTable = transOrderInfoTable;
+        return this;
+    }
+
+    public RequestCrossMsgDTO setChannelInfoTable(ChannelInfoTable channelInfoTable) {
+        this.channelInfoTable = channelInfoTable;
+        return this;
+    }
+
+    public RequestCrossMsgDTO setChannelExtraInfoTable(ChannelExtraInfoTable channelExtraInfoTable) {
+        this.channelExtraInfoTable = channelExtraInfoTable;
         return this;
     }
 }

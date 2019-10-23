@@ -2,15 +2,18 @@ package com.rxh.anew.service.shortcut;
 
 
 import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
+import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonSerivceInterface;
 import com.rxh.anew.table.business.RegisterCollectTable;
+import com.rxh.anew.table.business.RegisterInfoTable;
 import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.exception.NewPayException;
+import com.rxh.pojo.cross.BankResult;
 import com.rxh.tuple.Tuple2;
 
 import java.util.LinkedList;
@@ -79,7 +82,8 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      *  保存进件信息
      * @param mbirDTO
      * @param channelInfoTable
-     * @param ipo
      */
-    void saveByRegister(MerchantBasicInformationRegistrationDTO mbirDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo);
+    Tuple2<RegisterInfoTable,RegisterCollectTable> saveByRegister(MerchantBasicInformationRegistrationDTO mbirDTO, ChannelInfoTable channelInfoTable);
+
+
 }
