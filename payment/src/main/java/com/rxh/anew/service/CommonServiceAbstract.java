@@ -9,11 +9,11 @@ import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
+import com.rxh.anew.table.system.SystemOrderTrackTable;
 import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.exception.NewPayException;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.payInterface.PayUtil;
-import com.rxh.pojo.cross.BankResult;
 import com.rxh.utils.HttpClientUtils;
 import com.rxh.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,4 +110,10 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
             return crossResponseMsgDTO;
         }
     }
+
+
+    public boolean saveSysLog(SystemOrderTrackTable systemOrderTrackTable){
+       return commonRPCComponent.apiSystemOrderTrackService.save(systemOrderTrackTable);
+    }
+
 }

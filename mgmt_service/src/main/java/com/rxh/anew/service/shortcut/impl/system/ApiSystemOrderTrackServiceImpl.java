@@ -21,9 +21,9 @@ public class ApiSystemOrderTrackServiceImpl implements ApiSystemOrderTrackServic
     private final SystemOrderTrackDbService systemOrderTrackDbService;
 
     @Override
-    public boolean save(SystemOrderTrackTable sott) {
-        if(isNull(sott)) return false;
-        return systemOrderTrackDbService.save(sott);
+    public boolean save(SystemOrderTrackTable sot) {
+        if(isNull(sot)) return false;
+        return systemOrderTrackDbService.save(sot);
     }
 
 

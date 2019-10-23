@@ -18,18 +18,18 @@ import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
 import com.rxh.enums.ResponseCodeEnum;
+import com.rxh.enums.StatusEnum;
 import com.rxh.exception.NewPayException;
-import com.rxh.payInterface.NewPayAssert;
 import com.rxh.tuple.Tuple2;
 import com.rxh.tuple.Tuple4;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -49,7 +49,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
     private Md5Component md5Component;
 
     /**
-     *
+     *  基本信息登记
      * @param request
      * @param param
      * @return
@@ -71,6 +71,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             sotTable = this.getSystemOrderTrackTable(request,param,bussType);
             //类型转换
             mbirDTO = JSON.parse(sotTable.getRequestMsg(),MerchantBasicInformationRegistrationDTO.class);
+            sotTable.setMerId(mbirDTO.getMerId()).setMerOrderId(mbirDTO.getMerOrderId()).setReturnUrl(mbirDTO.getReturnUrl()).setNoticeUrl(mbirDTO.getNoticeUrl());
             //获取必要参数
             Map<String, ParamRule> paramRuleMap =newIntoPiecesOfInformationService.getParamMapByIPOI();
             //创建日志打印对象
@@ -99,6 +100,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             ChannelExtraInfoTable extraInfoTable = newIntoPiecesOfInformationService.getAddCusChannelExtraInfo(channelInfoTable,ipo);
             //保存进件信息
             Tuple2<RegisterInfoTable,RegisterCollectTable> tuple = newIntoPiecesOfInformationService.saveByRegister(mbirDTO,channelInfoTable,ipo);
+            sotTable.setPlatformOrderId(tuple._2.getPlatformOrderId());
             //封装请求cross必要参数
             requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,extraInfoTable,tuple._,tuple._2));
             //发生cross请求
@@ -109,6 +111,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             RegisterCollectTable registerCollectTable = newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsg,tuple._2,ipo);
             //封装放回结果
             respResult = newIntoPiecesOfInformationService.responseMsg(mbirDTO,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,null,null,ipo);
+            sotTable.setPlatformPrintLog(StatusEnum._0.getRemark()).setTradeCode( StatusEnum._0.getStatus());
         }catch (Exception e){
             if(e instanceof NewPayException){
                 NewPayException npe = (NewPayException) e;
@@ -122,10 +125,17 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
                 errorCode = ResponseCodeEnum.RXH99999.getCode();
             }
             respResult = newIntoPiecesOfInformationService.responseMsg(mbirDTO,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,errorCode,errorMsg,ipo);
+            sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
         }finally {
+            sotTable.setResponseResult(respResult).setCreateTime(new Date());
+            newIntoPiecesOfInformationService.saveSysLog(sotTable);
             return respResult;
         }
     }
+
+
+
+
 
 
 

@@ -6,6 +6,7 @@ import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
+import com.rxh.anew.table.system.SystemOrderTrackTable;
 import com.rxh.exception.NewPayException;
 import com.rxh.pojo.cross.BankResult;
 import com.rxh.tuple.Tuple2;
@@ -58,4 +59,11 @@ public interface CommonSerivceInterface {
      * @return
      */
     CrossResponseMsgDTO jsonToPojo(String crossResponseMsg, InnerPrintLogObject ipo);
+
+    /**
+     *
+     * @param systemOrderTrackTable
+     * @return
+     */
+    boolean saveSysLog(SystemOrderTrackTable systemOrderTrackTable);
 }
