@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class RegisterInfoDBServiceImpl extends ServiceImpl<AnewRegisterInfoMapper, RegisterInfoTable> implements RegisterInfoDBService {
 
-
     @Override
     public boolean replaceSave(RegisterInfoTable registerInfoTable) {
         return this.baseMapper.replaceSave(registerInfoTable);

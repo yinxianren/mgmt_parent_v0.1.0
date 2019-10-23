@@ -257,45 +257,6 @@ function productAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, 
     //         angular.element('#bank-status').parent().addClass('has-success');
     //     }
     // });
-    $scope.addOrganization = function () {
-        if (type === 0) {
-            httpSvc.getData('post', '/product/getProductList', $scope.Organization).then(function (value) {
-                if (value) {
-                    $scope.bankInfo = null;
-                    toaster.pop({
-                        type: 'success',
-                        title: '支付产品管理',
-                        body: '支付机构添加成功！'
-                    });
-                    $uibModalInstance.close();
-                } else {
-                    toaster.pop({
-                        type: 'error',
-                        title: '支付产品管理',
-                        body: '支付机构添加失败！'
-                    });
-                }
-            });
-        } else {
-            httpSvc.getData('post', '/product/getProductList', $scope.Organization).then(function (value) {
-                if (value) {
-                    $scope.bankInfo = null;
-                    toaster.pop({
-                        type: 'success',
-                        title: '支付产品管理',
-                        body: '支付机构修改成功！'
-                    });
-                    $uibModalInstance.close();
-                } else {
-                    toaster.pop({
-                        type: 'error',
-                        title: '支付产品管理',
-                        body: '支付机构修改失败！'
-                    });
-                }
-            });
-        }
-    };
 
     $scope.addProduct = function () {
         if (type === 0) {

@@ -1,4 +1,4 @@
-package com.rxh.anew.service.db.channel;
+package com.rxh.anew.service.db.system;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.rxh.anew.table.system.ProductSettingTable;
