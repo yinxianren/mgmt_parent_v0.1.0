@@ -10,12 +10,12 @@ function paymentPassagewayCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
 
     httpSvc.getData('post', '/organization/init').then(function (value) {
 
-        $scope.organizations= value.organizations;
+        // $scope.organizations= value.organizations;
         $scope.status= value.status;
     httpSvc.getData('post', '/organization/getAll',searchInfo).then(function (value1) {
-        OrganizationInfo = value1;
+        OrganizationInfo = value1.data;
         $scope.OrganizationTable = new NgTableParams({}, {
-            dataset: value1
+            dataset: value1.data
         });
         angular.element('.ibox-content').removeClass('sk-loading');
     });
@@ -54,7 +54,7 @@ function paymentPassagewayCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
         angular.element('.ibox-content').addClass('sk-loading');
         httpSvc.getData('post', '/organization/getAll',defaultSearch).then(function (value) {
             $scope.OrganizationTable.settings({
-                dataset: value
+                dataset: value.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
@@ -69,9 +69,9 @@ function paymentPassagewayCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
         if($scope.searchInfo!=defaultSearch){
             console.log(searchInfo);
             httpSvc.getData('post', '/organization/getAll',searchInfo).then(function (value1) {
-                OrganizationInfo = value1;
+                OrganizationInfo = value1.data;
                 $scope.OrganizationTable = new NgTableParams({}, {
-                    dataset: value1
+                    dataset: value1.data
                 });
                 angular.element('.ibox-content').removeClass('sk-loading');
             });
@@ -102,7 +102,7 @@ function paymentPassagewayCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
         });
     };
 
-    $scope.showModal = $scope.productEdit = function ( type,Organization) {
+   $scope.productEdit = function ( type,Organization) {
         var modalInstance = $uibModal.open({
             templateUrl: '/views/passageway/productAdd',
             controller: 'productAddModalCtrl',
@@ -182,6 +182,7 @@ function OrganizationAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, t
     }
     httpSvc.getData('post', '/organization/init', JSON.stringify('Status')).then(function (value) {
         $scope.status = value.status;
+        $scope.Organizations = value.organizations;
     });
     $scope.nameBlur = $scope.remarkBlur = $scope.elementBlur=function ($event, remark) {
         verification(remark, $event.target);
@@ -193,7 +194,35 @@ function OrganizationAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, t
     //     }
     // });
 
+    $scope.exists = function (value, selected) {
+        if (value === undefined || selected === undefined) {
+            return false;
+        }
+        var checkab = selected.split(",") ;
+        var flag = false;
+        for(j = 0; j < checkab.length; j++) {
+            if (checkab[j] == value){
+                flag =true;
+            }
+        }
+        return flag;
+    };
+    $scope.orgtoggle = function (value) {
+        var index = orgpayids.indexOf(value);
+        console.log(orgpayids)
+        if (index > -1) {
+            orgpayids.splice(index, 1);
+        } else {
+            orgpayids.push(value);
+        }
+        console.log(orgpayids)
+    };
     $scope.addOrganization = function () {
+        var orgpayids=[];
+        $.each($("input[name='productIds']:checked"),function(){
+            orgpayids.push($(this).val());
+        });
+        $scope.Organization.productIds = orgpayids.join(",");
         if (type === 0) {
             httpSvc.getData('post', '/organization/insert', $scope.Organization).then(function (value) {
                 if (value) {
@@ -232,9 +261,9 @@ function OrganizationAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, t
             });
         }
     };
-    $scope.nextDisabled = function (OrganizationObjForm) {
-        return !(OrganizationObjForm.organizationName.$valid && OrganizationObjForm.remark.$valid && !angular.equals($scope.Organization, Organization));
-    };
+    // $scope.nextDisabled = function (OrganizationObjForm) {
+    //     return !(OrganizationObjForm.organizationName.$valid && OrganizationObjForm.productIds.$valid  && !angular.equals($scope.Organization, Organization));
+    // };
     $scope.cancel = function () {
         $uibModalInstance.dismiss();
     };
@@ -242,11 +271,12 @@ function OrganizationAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, t
 
 function productAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, Organization) {
     $scope.type = type;
+    $scope.firstValue =null;
     if (type === 1) {
-        $scope.Organization = angular.copy(Organization);
+        $scope.Product = angular.copy(Organization);
     }
-    httpSvc.getData('post', '/product/getProductList', JSON.stringify('Status')).then(function (value) {
-        $scope.status = value.status;
+    httpSvc.getData('post', '/product/getProductAll').then(function (value) {
+        $scope.products = value.data;
     });
     $scope.nameBlur = $scope.remarkBlur = $scope.elementBlur=function ($event, remark) {
         verification(remark, $event.target);
@@ -260,45 +290,42 @@ function productAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, 
 
     $scope.addProduct = function () {
         if (type === 0) {
-            httpSvc.getData('post', '/product/getProductList', $scope.Organization).then(function (value) {
+            httpSvc.getData('post', '/product/addProduct', $scope.Product).then(function (value) {
                 if (value) {
                     $scope.bankInfo = null;
                     toaster.pop({
                         type: 'success',
-                        title: '支付机构管理',
+                        title: '支付产品管理',
                         body: '支付机构添加成功！'
                     });
                     $uibModalInstance.close();
                 } else {
                     toaster.pop({
                         type: 'error',
-                        title: '支付机构管理',
-                        body: '支付机构添加失败！'
+                        title: '支付产品管理',
+                        body: '支付产品添加失败！'
                     });
                 }
             });
         } else {
-            httpSvc.getData('post', '/product/getProductList', $scope.Organization).then(function (value) {
+            httpSvc.getData('post', '/product/addProduct', $scope.Product).then(function (value) {
                 if (value) {
                     $scope.bankInfo = null;
                     toaster.pop({
                         type: 'success',
-                        title: '支付机构管理',
-                        body: '支付机构修改成功！'
+                        title: '支付产品管理',
+                        body: '支付产品修改成功！'
                     });
                     $uibModalInstance.close();
                 } else {
                     toaster.pop({
                         type: 'error',
-                        title: '支付机构管理',
+                        title: '支付产品管理',
                         body: '支付机构修改失败！'
                     });
                 }
             });
         }
-    };
-    $scope.nextDisabled = function (OrganizationObjForm) {
-        return !(OrganizationObjForm.organizationName.$valid && OrganizationObjForm.remark.$valid && !angular.equals($scope.Organization, Organization));
     };
     $scope.cancel = function () {
         $uibModalInstance.dismiss();
@@ -648,7 +675,7 @@ function attachPassagewayMgmtCtrl($scope, $uibModal, toaster, NgTableParams, htt
 
 
     httpSvc.getData('post', '/ExtraChannelInfo/getInit').then(function (value) {
-        init = value;
+        init = value.data;
         $scope.organizations = value.organizations;
         $scope.paytype = value.paytype;
         $scope.status = value.status;
@@ -674,7 +701,7 @@ function attachPassagewayMgmtCtrl($scope, $uibModal, toaster, NgTableParams, htt
         angular.element('.ibox-content').addClass('sk-loading');
         httpSvc.getData('post', '/ExtraChannelInfo/getAll').then(function (value) {
             $scope.extraChannelInfoTable.settings({
-                dataset: value
+                dataset: value.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
@@ -710,7 +737,7 @@ function attachPassagewayMgmtCtrl($scope, $uibModal, toaster, NgTableParams, htt
             channelId: row.channelId,
             status: row.status ? 0 : 1
         }).then(function (value) {
-            if (value) {
+            if (value.code) {
                 toaster.pop({
                     type: 'success',
                     title: '附属通道',
@@ -778,7 +805,7 @@ function attachPassagewayMgmtCtrl($scope, $uibModal, toaster, NgTableParams, htt
         });
         modalInstance.result.then(function () {
             httpSvc.getData('post', '/ExtraChannelInfo/delete', idList).then(function (value) {
-                if (value> 0) {
+                if (value.code) {
                     toaster.pop({
                         type: 'success',
                         title: '附属通道',

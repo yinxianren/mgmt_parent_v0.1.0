@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SysConstantServiceImpl extends AbstractBaseService<SysConstant,String> implements SysConstantService {
+
     private final SysConstantMapper sysConstantMapper;
 
     @Autowired

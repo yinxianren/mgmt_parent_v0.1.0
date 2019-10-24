@@ -16,9 +16,9 @@
             <label   class="col-sm-2 control-label"><font color="red">*</font>机构名称:</label>
             <div class="col-sm-10" >
                 <input  class="form-control b-r-sm" type="text" id="organizationName" name="organizationName" tip="1"
-                        ng-model="Organization.organizationName" class="form-control"
+                        ng-model="Product.organizationName" class="form-control"
                         placeholder="必填/唯一" required="required" disabled="disabled"
-                        ng-blur="nameBlur($event,Organization.organizationName)"
+                        ng-blur="nameBlur($event,Product.organizationName)"
                 />
             </div>
         </div>
@@ -28,9 +28,9 @@
                 <%--<input type="text" id="status" name="status" ng-model="Organization.status" tip="2" class="form-control" placeholder="必填/唯一"--%>
                 <%--ng-blur="remarkBlur($event,Organization.status)"--%>
                 <%--required="required" />--%>
-                <select class="form-control b-r-sm" name="status" ng-model="Organization.status"
-                        ng-blur="statusBlur($event, Organization.status)" required
-                        ng-options="+(x.firstValue) as x.name for x in status">
+                <select class="form-control b-r-sm" name="productId"  ng-model="Product.productId"
+                        required="required"
+                        ng-options="(x.firstValue) as x.name for x in products">
                 </select>
             </div>
         </div>
@@ -40,7 +40,7 @@
             <label   class="col-sm-2 control-label" ><font color="red">*</font><span class="hidden-text" uib-tooltip="必填数字">费率:</span></label>
 
             <div class="col-sm-10" >
-                <input type="number" id="rate" name="rate" max = "100"  class="form-control"
+                <input type="number" id="rate" name="productFee" max = "100"  class="form-control" ng-model="Product.productFee"
                        onkeyup="value=value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3')"
                        required="required" />
             </div>
@@ -52,8 +52,8 @@
     <div class="row padding-set">
         <div class="col-sm-12">
             <div class="center">
-                <button class="btn btn-sm btn-primary general-btn" id="addOrganizationID" type="button" ng-click="addProduct()"
-                        ng-disabled="nextDisabled(productObjForm)">
+                <button class="btn btn-sm btn-primary general-btn" id="addProduct" type="button" ng-click="addProduct()"
+                        >
                     确定
                 </button>
             </div>

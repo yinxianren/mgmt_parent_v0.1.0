@@ -32,7 +32,7 @@ public class ApiProductTypeSettingServiceImpl implements ApiProductTypeSettingSe
         if(isNull(productSettingTable)) return null;
         LambdaQueryWrapper<ProductSettingTable> lambdaQueryWrapper = new QueryWrapper<ProductSettingTable>().lambda();
         if( !isBlank(productSettingTable.getOrganizationId()) ) lambdaQueryWrapper.eq(ProductSettingTable::getOrganizationId,productSettingTable.getOrganizationId());
-        if( !isBlank(productSettingTable.getProductName()) ) lambdaQueryWrapper.eq(ProductSettingTable::getProductName,productSettingTable.getProductName());
+        if( !isBlank(productSettingTable.getProductId()) ) lambdaQueryWrapper.eq(ProductSettingTable::getProductId,productSettingTable.getProductId());
         if( !isNull(productSettingTable.getStatus()) ) lambdaQueryWrapper.eq(ProductSettingTable::getStatus,productSettingTable.getStatus());
         return productTypeSettingDBService.list(lambdaQueryWrapper);
     }
@@ -46,5 +46,11 @@ public class ApiProductTypeSettingServiceImpl implements ApiProductTypeSettingSe
         if( !isBlank(productSettingTable.getOrganizationId()) ) lambdaQueryWrapper.eq(ProductSettingTable::getOrganizationId,productSettingTable.getOrganizationId());
         if( !isBlank(productSettingTable.getProductName()) ) lambdaQueryWrapper.eq(ProductSettingTable::getProductName,productSettingTable.getProductName());
         return productTypeSettingDBService.getOne(lambdaQueryWrapper);
+    }
+
+    @Override
+    public Boolean batchUpdate(List<ProductSettingTable> productSettingTableList) {
+        if(isHasNotElement(productSettingTableList)) return false;
+        return productTypeSettingDBService.updateBatchById(productSettingTableList);
     }
 }

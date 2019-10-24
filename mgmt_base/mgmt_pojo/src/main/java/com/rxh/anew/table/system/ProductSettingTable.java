@@ -1,5 +1,6 @@
 package com.rxh.anew.table.system;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.Date;
 @TableName("5_product_type_setting_table")
 @Getter
 public class ProductSettingTable implements Serializable {
-     @TableId
+     @TableId(type = IdType.AUTO)
      private Long id ;//主键
      private String productId;//'产品类型ID
      private String productName;//产品类型名称

@@ -81,9 +81,9 @@
                                                 <%--{{row.createTime  | date : 'yyyy/MM/dd ' }}--%>
                                                 {{row.createTime  | date : 'yyyy/MM/dd HH:mm:ss' }}
                                             </td>
-                                            <td class="text-center" data-title="'备注'">
+                                           <%-- <td class="text-center" data-title="'备注'">
                                                 {{row.remark }}
-                                            </td>
+                                            </td>--%>
                                             <td class="text-center ng-isolate-scope" data-title="'操作'" >
                                                 <div class="btn btn-xs no-margins btn-primary active" ng-click="statusChange($event, row)" ng-show="row.status == 0 ">
                                                     启用
