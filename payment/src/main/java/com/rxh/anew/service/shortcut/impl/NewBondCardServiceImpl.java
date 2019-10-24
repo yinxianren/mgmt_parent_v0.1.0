@@ -260,8 +260,10 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
         final String localPoint="getRegisterInfoTableByPlatformOrderId";
         RegisterCollectTable registerCollectTable = null;
         try {
-             registerCollectTable = commonRPCComponent.apiRegisterCollectService.getOne(new RegisterCollectTable()
+            registerCollectTable = commonRPCComponent.apiRegisterCollectService.getOne(new RegisterCollectTable()
                     .setPlatformOrderId(platformOrderId)
+                    .setMerchantId(ipo.getMerId())
+                    .setTerminalMerId(ipo.getTerMerId())
                     .setBussType(BusinessTypeEnum.b3.getBusiType())
                     .setStatus(StatusEnum._0.getStatus())
             );
@@ -281,31 +283,6 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
         return registerCollectTable;
     }
 
-    @Override
-    public MerchantCardTable getMerchantCardInfoByPlatformOrderId(String platformOrderId, String busiType,InnerPrintLogObject ipo) throws NewPayException {
-        final String localPoint="getMerchantCardInfoByPlatformOrderId";
-        MerchantCardTable merchantCardTable=null;
-        try {
-            merchantCardTable = commonRPCComponent.apiMerchantCardService.getOne(new MerchantCardTable()
-                    .setMerchantId(ipo.getMerId())
-                    .setTerminalMerId(ipo.getTerMerId())
-                    .setPlatformOrderId(platformOrderId)
-                    .setBussType(busiType)
-                    .setStatus(StatusEnum._0.getStatus()));
-        }catch (Exception e){
-          e.printStackTrace();
-            throw new NewPayException(
-                    ResponseCodeEnum.RXH99999.getCode(),
-                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：根据平台流水号获取绑卡申请记录发生异常,异常信息：%s", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
-                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
-            );
-        }
-        isNull(merchantCardTable,
-                ResponseCodeEnum.RXH00032.getCode(),
-                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00032.getMsg(),localPoint),
-                format(" %s",ResponseCodeEnum.RXH00032.getMsg()));
-        return merchantCardTable;
-    }
 
     @Override
     public RequestCrossMsgDTO getRequestCrossMsgDTO(Tuple2 tuple) {
@@ -320,13 +297,14 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
 
 
     @Override
-    public Map<String, ParamRule> getParamMapByBC() {
+    public Map<String, ParamRule> getParamMapByB4() {
         return new HashMap<String, ParamRule>() {
             {
                 put("charset", new ParamRule(ParamTypeEnum.STRING.getType(), 5, 5));//参数字符集编码 固定UTF-8
                 put("signType", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 3));//签名类型	固定为MD5
                 put("merId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));//商户号
                 put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 商户订单号
+                put("platformOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 平台流水号
                 put("cardHolderName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));// 持卡人姓名
                 put("identityType", new ParamRule(ParamTypeEnum.STRING.getType(), 1, 1));//证件类型	1身份证、2护照、3港澳回乡证、4台胞证、5军官证、	否	1
                 put("identityNum", new ParamRule(ParamTypeEnum.STRING.getType(), 12, 32));//证件号码		否	32
@@ -338,19 +316,20 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
                 put("terminalMerName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));//子商户名称	商户系统中商户的名称	否	32
                 put("returnUrl", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 128));//签名字符串
                 put("noticeUrl", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 128));//签名字符串
-                put("signMsg", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 125));//签名字符串
+                put("signMsg", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 256));//签名字符串
             }
         };
     }
 
     @Override
-    public Map<String, ParamRule> getParamMapByMRGBC() {
+    public Map<String, ParamRule> getParamMapByB5() {
         return new HashMap<String, ParamRule>() {
             {
                 put("charset", new ParamRule(ParamTypeEnum.STRING.getType(), 5, 5));//参数字符集编码 固定UTF-8
                 put("signType", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 3));//签名类型	固定为MD5
                 put("merId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));//商户号
                 put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 商户订单号
+                put("platformOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 平台流水号
                 put("cardHolderName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));// 持卡人姓名
                 put("identityType", new ParamRule(ParamTypeEnum.STRING.getType(), 1, 1));//证件类型	1身份证、2护照、3港澳回乡证、4台胞证、5军官证、	否	1
                 put("identityNum", new ParamRule(ParamTypeEnum.STRING.getType(), 12, 32));//证件号码		否	32
@@ -362,19 +341,20 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
                 put("terminalMerName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));//子商户名称	商户系统中商户的名称	否	32
                 put("returnUrl", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 128));//签名字符串
                 put("noticeUrl", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 128));//签名字符串
-                put("signMsg", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 125));//签名字符串
+                put("signMsg", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 256));//签名字符串
             }
         };
     }
 
     @Override
-    public Map<String, ParamRule> getParamMapByCBC() {
+    public Map<String, ParamRule> getParamMapByB6() {
         return new HashMap<String, ParamRule>() {
             {
                 put("charset", new ParamRule(ParamTypeEnum.STRING.getType(), 5, 5));//参数字符集编码 固定UTF-8
                 put("signType", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 3));//签名类型	固定为MD5
                 put("merId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));//商户号
                 put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 商户订单号
+                put("platformOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 平台流水号
                 put("cardHolderName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));// 持卡人姓名
                 put("identityType", new ParamRule(ParamTypeEnum.STRING.getType(), 1, 1));//证件类型	1身份证、2护照、3港澳回乡证、4台胞证、5军官证、	否	1
                 put("identityNum", new ParamRule(ParamTypeEnum.STRING.getType(), 12, 32));//证件号码		否	32
@@ -384,9 +364,9 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
                 put("bankCardPhone", new ParamRule(ParamTypeEnum.PHONE.getType(), 11, 11));//银行卡手机号		否	11
                 put("terminalMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id	商户系统中商户的编码，要求唯一	否	64
                 put("terminalMerName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));//子商户名称	商户系统中商户的名称	否	32
-                put("returnUrl", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 128));//签名字符串
-                put("noticeUrl", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 128));//签名字符串
-                put("signMsg", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 125));//签名字符串
+                put("returnUrl", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 128));//返回地址
+                put("noticeUrl", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 128));//通知地址
+                put("signMsg", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 256));//签名字符串
                 put("smsCode", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 6));//短信验证码
                 put("payFee", new ParamRule(ParamTypeEnum.AMOUNT.getType(), 3, 6));//代付手续费
                 put("backFee", new ParamRule(ParamTypeEnum.AMOUNT.getType(), 3, 6));//代付手续费

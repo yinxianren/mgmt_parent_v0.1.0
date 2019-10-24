@@ -40,7 +40,7 @@ public class MerchantCardTable  implements Serializable {
 	private String securityCode;//信用卡必填，格式：信用卡必填，信用卡背面三位安全码
 	private String channelRespResult;//通道响应结果
 	private String crossRespResult;//cross响应结果
-	private String bussType;//b4：绑卡申请,b5:获取验证码，b6：短信确认
+	private String bussType;//b4：绑卡申请,b5:绑卡验证码，b6：确认绑卡
 	private BigDecimal payFee;//	扣款手续费
 	private BigDecimal backFee;//	代付手续费
 	private String backCardNum;//	还款银行卡号

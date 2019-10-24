@@ -1,6 +1,7 @@
 package com.rxh.anew;
 
 import com.rxh.service.anew.business.ApiMerchantCardService;
+import com.rxh.service.anew.business.ApiPayOrderInfoService;
 import com.rxh.service.anew.business.ApiRegisterCollectService;
 import com.rxh.service.anew.business.ApiRegisterInfoService;
 import com.rxh.service.anew.channel.ApiChannelExtraInfoService;
@@ -32,4 +33,5 @@ public  class CommonRPCComponent {
     public final ApiRegisterInfoService       apiRegisterInfoService;
     public final ApiSystemOrderTrackService   apiSystemOrderTrackService;
     public final ApiMerchantCardService       apiMerchantCardService;
+    public final ApiPayOrderInfoService       apiPayOrderInfoService;
 }

@@ -26,20 +26,20 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      *
       * @return
      */
-    Map<String, ParamRule>  getParamMapByIPOI();
+    Map<String, ParamRule> getParamMapByB1();
 
 
     /**
      *
      * @return
      */
-    Map<String, ParamRule>  getParamMapByBCB();
+    Map<String, ParamRule> getParamMapByB2();
 
     /**
      *
      * @return
      */
-    Map<String, ParamRule>  getParamMapBySF();
+    Map<String, ParamRule> getParamMapByB3();
     /**
      *  根据商户配置获取所有通道
      * @param list

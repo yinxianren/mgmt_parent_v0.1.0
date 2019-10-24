@@ -319,7 +319,7 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
 
 
     @Override
-    public Map<String, ParamRule> getParamMapByIPOI() {
+    public Map<String, ParamRule> getParamMapByB1() {
         return new HashMap<String, ParamRule>() {
             {
                 put("charset", new ParamRule(ParamTypeEnum.STRING.getType(), 5, 5));//固定UTF-8
@@ -365,7 +365,7 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
     }
 
     @Override
-    public Map<String, ParamRule>  getParamMapByBCB(){
+    public Map<String, ParamRule> getParamMapByB2(){
 
         return new HashMap<String, ParamRule>() {
             {
@@ -392,7 +392,7 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
     }
 
     @Override
-    public  Map<String, ParamRule>  getParamMapBySF(){
+    public  Map<String, ParamRule> getParamMapByB3(){
         return new HashMap<String, ParamRule>() {
             {
                 put("charset", new ParamRule(ParamTypeEnum.STRING.getType(), 5, 5));//参数字符集编码 固定UTF-8

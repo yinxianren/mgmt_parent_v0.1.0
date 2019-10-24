@@ -7,6 +7,7 @@ import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.dto.ResponseEntity;
 import com.rxh.anew.inner.InnerPrintLogObject;
+import com.rxh.anew.table.business.MerchantCardTable;
 import com.rxh.anew.table.business.RegisterInfoTable;
 import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
@@ -217,5 +218,31 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
                 format(" %s",ResponseCodeEnum.RXH00027.getMsg()));
 
         return  registerInfoTable;
+    }
+
+
+    public MerchantCardTable getMerchantCardInfoByPlatformOrderId(String platformOrderId, String busiType, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="getMerchantCardInfoByPlatformOrderId";
+        MerchantCardTable merchantCardTable=null;
+        try {
+            merchantCardTable = commonRPCComponent.apiMerchantCardService.getOne(new MerchantCardTable()
+                    .setMerchantId(ipo.getMerId())
+                    .setTerminalMerId(ipo.getTerMerId())
+                    .setPlatformOrderId(platformOrderId)
+                    .setBussType(busiType)
+                    .setStatus(StatusEnum._0.getStatus()));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：根据平台流水号获取绑卡申请记录发生异常,异常信息：%s", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }
+        isNull(merchantCardTable,
+                ResponseCodeEnum.RXH00032.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00032.getMsg(),localPoint),
+                format(" %s",ResponseCodeEnum.RXH00032.getMsg()));
+        return merchantCardTable;
     }
 }

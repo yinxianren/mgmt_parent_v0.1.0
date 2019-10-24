@@ -14,7 +14,7 @@ import java.math.BigDecimal;
  * @Date 2019-10-22 
  */
 
-@TableName ( "5_merchant_rate_table" )
+@TableName ( "2_merchant_rate_table" )
 @Data
 public class MerchantRateTable  implements Serializable {
 	@TableId(type= IdType.AUTO)

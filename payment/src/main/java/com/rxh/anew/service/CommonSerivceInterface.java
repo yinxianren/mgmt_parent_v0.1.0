@@ -3,10 +3,12 @@ package com.rxh.anew.service;
 import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
+import com.rxh.anew.table.business.MerchantCardTable;
 import com.rxh.anew.table.business.RegisterInfoTable;
 import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
+import com.rxh.anew.table.merchant.MerchantQuotaRiskTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
 import com.rxh.exception.NewPayException;
@@ -98,4 +100,14 @@ public interface CommonSerivceInterface {
      * @return
      */
     RegisterInfoTable getRegisterInfoTable(Long ritId, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     * 更加平台订单号获取B4操作记录
+     * @param platformOrderId
+     * @param ipo
+     * @return
+     */
+    MerchantCardTable getMerchantCardInfoByPlatformOrderId(String platformOrderId, String busiType, InnerPrintLogObject ipo) throws NewPayException;
+
+
 }

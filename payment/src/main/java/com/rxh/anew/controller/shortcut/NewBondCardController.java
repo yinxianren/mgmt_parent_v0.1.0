@@ -69,7 +69,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             mbcaDTO = JSON.parse(sotTable.getRequestMsg(),MerchantBondCardApplyDTO.class);
             sotTable.setMerId(mbcaDTO.getMerId()).setMerOrderId(mbcaDTO.getMerOrderId()).setReturnUrl(mbcaDTO.getReturnUrl()).setNoticeUrl(mbcaDTO.getNoticeUrl());
             //获取必要参数
-            Map<String, ParamRule> paramRuleMap = newBondCardService.getParamMapByBC();
+            Map<String, ParamRule> paramRuleMap = newBondCardService.getParamMapByB4();
             //创建日志打印对象
             ipo = new InnerPrintLogObject(mbcaDTO.getMerId(),mbcaDTO.getMerOrderId(),bussType);
             //参数校验
@@ -148,7 +148,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             mrgbcDTO = JSON.parse(sotTable.getRequestMsg(),MerchantReGetBondCodeDTO.class);
             sotTable.setMerId(mrgbcDTO.getMerId()).setMerOrderId(mrgbcDTO.getMerOrderId()).setReturnUrl(mrgbcDTO.getReturnUrl()).setNoticeUrl(mrgbcDTO.getNoticeUrl());
             //获取必要参数
-            Map<String, ParamRule> paramRuleMap = newBondCardService.getParamMapByMRGBC();
+            Map<String, ParamRule> paramRuleMap = newBondCardService.getParamMapByB5();
             //创建日志打印对象
             ipo = new InnerPrintLogObject(mrgbcDTO.getMerId(),mrgbcDTO.getMerOrderId(),bussType);
             //参数校验
@@ -228,7 +228,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             mcbcDTO = JSON.parse(sotTable.getRequestMsg(),MerchantConfirmBondCardDTO.class);
             sotTable.setMerId(mcbcDTO.getMerId()).setMerOrderId(mcbcDTO.getMerOrderId()).setReturnUrl(mcbcDTO.getReturnUrl()).setNoticeUrl(mcbcDTO.getNoticeUrl());
             //获取必要参数
-            Map<String, ParamRule> paramRuleMap = newBondCardService.getParamMapByCBC();
+            Map<String, ParamRule> paramRuleMap = newBondCardService.getParamMapByB6();
             //创建日志打印对象
             ipo = new InnerPrintLogObject(mcbcDTO.getMerId(),mcbcDTO.getMerOrderId(),bussType);
             //参数校验

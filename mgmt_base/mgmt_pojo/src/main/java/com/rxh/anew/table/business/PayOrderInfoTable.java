@@ -3,7 +3,7 @@ package com.rxh.anew.table.business;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
+import lombok.Getter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -17,7 +17,7 @@ import java.util.Date;
  * Description:
  */
 @TableName("8_pay_order_info_table")
-@Data
+@Getter
 public class PayOrderInfoTable implements Serializable {
     @TableId(type= IdType.INPUT)
     private Long id ;// 表主键,
@@ -37,7 +37,7 @@ public class PayOrderInfoTable implements Serializable {
     private Integer   deviceType;// 交易设备类型(1-电脑;2-手机;3-其他) 字符串类型,
     private Integer   macAddr;// MAC地址,
     private String  channelId;// 通道id,
-    private String  busiType;//'业务类型，pay :收单，trans:代付'
+    private String  bussType;//'b7:支付申请,b8:支付验证码,b9:确认交易
     private String  productId;// 产品类型ID,
     private BigDecimal productFee ;// 产品费率,
     private String  currency;// 币种,
@@ -59,4 +59,200 @@ public class PayOrderInfoTable implements Serializable {
     private Integer status;// 状态 0：success,1:fail,
     private Date createTime;// 创建时间,
     private Date updateTime;// 更新时间,
+
+
+    public PayOrderInfoTable setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public PayOrderInfoTable setPlatformOrderId(String platformOrderId) {
+        this.platformOrderId = platformOrderId;
+        return this;
+    }
+
+    public PayOrderInfoTable setMerchantId(String merchantId) {
+        this.merchantId = merchantId;
+        return this;
+    }
+
+    public PayOrderInfoTable setTerminalMerId(String terminalMerId) {
+        this.terminalMerId = terminalMerId;
+        return this;
+    }
+
+    public PayOrderInfoTable setMerOrderId(String merOrderId) {
+        this.merOrderId = merOrderId;
+        return this;
+    }
+
+    public PayOrderInfoTable setIdentityType(Integer identityType) {
+        this.identityType = identityType;
+        return this;
+    }
+
+    public PayOrderInfoTable setIdentityNum(String identityNum) {
+        this.identityNum = identityNum;
+        return this;
+    }
+
+    public PayOrderInfoTable setBankCode(String bankCode) {
+        this.bankCode = bankCode;
+        return this;
+    }
+
+    public PayOrderInfoTable setBankCardType(Integer bankCardType) {
+        this.bankCardType = bankCardType;
+        return this;
+    }
+
+    public PayOrderInfoTable setBankCardNum(String bankCardNum) {
+        this.bankCardNum = bankCardNum;
+        return this;
+    }
+
+    public PayOrderInfoTable setBankCardPhone(String bankCardPhone) {
+        this.bankCardPhone = bankCardPhone;
+        return this;
+    }
+
+    public PayOrderInfoTable setValidDate(String validDate) {
+        this.validDate = validDate;
+        return this;
+    }
+
+    public PayOrderInfoTable setSecurityCode(String securityCode) {
+        this.securityCode = securityCode;
+        return this;
+    }
+
+    public PayOrderInfoTable setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+        return this;
+    }
+
+    public PayOrderInfoTable setDeviceType(Integer deviceType) {
+        this.deviceType = deviceType;
+        return this;
+    }
+
+    public PayOrderInfoTable setMacAddr(Integer macAddr) {
+        this.macAddr = macAddr;
+        return this;
+    }
+
+    public PayOrderInfoTable setChannelId(String channelId) {
+        this.channelId = channelId;
+        return this;
+    }
+
+    public PayOrderInfoTable setBussType(String bussType) {
+        this.bussType = bussType;
+        return this;
+    }
+
+    public PayOrderInfoTable setProductId(String productId) {
+        this.productId = productId;
+        return this;
+    }
+
+    public PayOrderInfoTable setProductFee(BigDecimal productFee) {
+        this.productFee = productFee;
+        return this;
+    }
+
+    public PayOrderInfoTable setCurrency(String currency) {
+        this.currency = currency;
+        return this;
+    }
+
+    public PayOrderInfoTable setAmount(BigDecimal amount) {
+        this.amount = amount;
+        return this;
+    }
+
+    public PayOrderInfoTable setInAmount(BigDecimal inAmount) {
+        this.inAmount = inAmount;
+        return this;
+    }
+
+    public PayOrderInfoTable setPayFee(BigDecimal payFee) {
+        this.payFee = payFee;
+        return this;
+    }
+
+    public PayOrderInfoTable setTerFee(BigDecimal terFee) {
+        this.terFee = terFee;
+        return this;
+    }
+
+    public PayOrderInfoTable setChannelRate(BigDecimal channelRate) {
+        this.channelRate = channelRate;
+        return this;
+    }
+
+    public PayOrderInfoTable setChannelFee(BigDecimal channelFee) {
+        this.channelFee = channelFee;
+        return this;
+    }
+
+    public PayOrderInfoTable setAgentRate(BigDecimal agentRate) {
+        this.agentRate = agentRate;
+        return this;
+    }
+
+    public PayOrderInfoTable setAgentFee(BigDecimal agentFee) {
+        this.agentFee = agentFee;
+        return this;
+    }
+
+    public PayOrderInfoTable setMerRate(BigDecimal merRate) {
+        this.merRate = merRate;
+        return this;
+    }
+
+    public PayOrderInfoTable setMerFee(BigDecimal merFee) {
+        this.merFee = merFee;
+        return this;
+    }
+
+    public PayOrderInfoTable setPlatformIncome(BigDecimal platformIncome) {
+        this.platformIncome = platformIncome;
+        return this;
+    }
+
+    public PayOrderInfoTable setSettleCycle(String settleCycle) {
+        this.settleCycle = settleCycle;
+        return this;
+    }
+
+    public PayOrderInfoTable setSettleStatus(Integer settleStatus) {
+        this.settleStatus = settleStatus;
+        return this;
+    }
+
+    public PayOrderInfoTable setChannelRespResult(String channelRespResult) {
+        this.channelRespResult = channelRespResult;
+        return this;
+    }
+
+    public PayOrderInfoTable setCrossRespResult(String crossRespResult) {
+        this.crossRespResult = crossRespResult;
+        return this;
+    }
+
+    public PayOrderInfoTable setStatus(Integer status) {
+        this.status = status;
+        return this;
+    }
+
+    public PayOrderInfoTable setCreateTime(Date createTime) {
+        this.createTime = createTime;
+        return this;
+    }
+
+    public PayOrderInfoTable setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+        return this;
+    }
 }

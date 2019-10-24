@@ -19,19 +19,19 @@ public interface NewBondCardService extends CommonSerivceInterface {
      *  绑卡申请接口
      * @return
      */
-    Map<String, ParamRule> getParamMapByBC();
+    Map<String, ParamRule> getParamMapByB4();
 
     /**
      * 重新获取绑卡验证码
      * @return
      */
-    Map<String, ParamRule> getParamMapByMRGBC();
+    Map<String, ParamRule> getParamMapByB5();
 
     /**
      * 确认短信
      * @return
      */
-    Map<String, ParamRule> getParamMapByCBC();
+    Map<String, ParamRule> getParamMapByB6();
     /**
      *  判断订单是否重复
      * @param merOrderId
@@ -90,14 +90,6 @@ public interface NewBondCardService extends CommonSerivceInterface {
      * @return
      */
     RegisterCollectTable getRegisterInfoTableByPlatformOrderId(String platformOrderId, InnerPrintLogObject ipo) throws NewPayException;
-
-    /**
-     * 更加平台订单号获取B4操作记录
-     * @param platformOrderId
-     * @param ipo
-     * @return
-     */
-    MerchantCardTable getMerchantCardInfoByPlatformOrderId(String platformOrderId, String busiType, InnerPrintLogObject ipo) throws NewPayException;
 
 
 
