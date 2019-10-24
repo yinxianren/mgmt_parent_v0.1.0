@@ -4,7 +4,7 @@ import com.rxh.anew.dto.*;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonServiceAbstract;
-import com.rxh.anew.service.shortcut.NewPayPaymentBondCardService;
+import com.rxh.anew.service.shortcut.NewBondCardService;
 import com.rxh.anew.table.business.MerchantCardTable;
 import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.business.RegisterInfoTable;
@@ -33,7 +33,7 @@ import java.util.Random;
  * Description:
  */
 @Service
-public class NewPayPaymentBondCardServiceImpl extends CommonServiceAbstract implements NewPayPaymentBondCardService {
+public class NewBondCardServiceImpl extends CommonServiceAbstract implements NewBondCardService {
 
 
     @Override

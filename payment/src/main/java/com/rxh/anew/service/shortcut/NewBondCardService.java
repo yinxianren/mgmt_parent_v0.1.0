@@ -14,7 +14,7 @@ import com.rxh.exception.NewPayException;
 
 import java.util.Map;
 
-public interface NewPayPaymentBondCardService extends CommonSerivceInterface {
+public interface NewBondCardService extends CommonSerivceInterface {
     /**
      *  绑卡申请接口
      * @return

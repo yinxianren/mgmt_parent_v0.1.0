@@ -2,9 +2,7 @@ package com.rxh.anew.service.shortcut.impl.business;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rxh.anew.service.db.business.RegisterInfoDBService;
-import com.rxh.anew.service.db.business.imple.RegisterInfoDBServiceImpl;
 import com.rxh.anew.table.business.RegisterInfoTable;
 import com.rxh.enums.StatusEnum;
 import com.rxh.payInterface.NewPayAssert;
