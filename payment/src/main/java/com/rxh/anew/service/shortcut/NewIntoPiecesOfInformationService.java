@@ -131,13 +131,7 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      */
     Tuple2<RegisterInfoTable,RegisterCollectTable> saveOnRegisterInfo(RegisterCollectTable registerCollectTable, MerchantBankCardBindingDTO mbcbDTO, InnerPrintLogObject ipo) throws NewPayException;
 
-    /**
-     *  获取进件主表
-      * @param ritId
-     * @param ipo
-     * @return
-     */
-    RegisterInfoTable getRegisterInfoTable(Long ritId, InnerPrintLogObject ipo) throws NewPayException;
+
 
     /**
      *
@@ -146,4 +140,6 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      * @return
      */
     RegisterCollectTable saveRegisterCollectTableByB3(RegisterCollectTable registerCollectTable, InnerPrintLogObject ipo) throws NewPayException;
+
+
 }

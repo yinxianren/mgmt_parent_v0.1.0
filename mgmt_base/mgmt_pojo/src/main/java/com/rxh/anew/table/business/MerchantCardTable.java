@@ -4,20 +4,25 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @Description  
+ * @Description
  * @Author  monkey
  * @Date 2019-10-22 
  */
 
 @TableName ( "7_merchant_card_table" )
-@Data
+@Getter
 public class MerchantCardTable  implements Serializable {
-    @TableId(type= IdType.AUTO)
+	@TableId(type= IdType.INPUT)
 	private Long id;//表主键
+	private String organizationId;
+	private String channelId;
+	private String productId;
 	private String platformOrderId;//平台订单号
 	private String merchantId;//商户号
 	private String merOrderId;//商户订单号
@@ -37,4 +42,113 @@ public class MerchantCardTable  implements Serializable {
 	private Date createTime;//创建时间
 	private Date updateTime;//更新时间
 
+	public MerchantCardTable setChannelId(String channelId) {
+		this.channelId = channelId;
+		return this;
+	}
+
+	public MerchantCardTable setOrganizationId(String organizationId) {
+		this.organizationId = organizationId;
+		return this;
+	}
+
+	public MerchantCardTable setProductId(String productId) {
+		this.productId = productId;
+		return this;
+	}
+
+	public MerchantCardTable setId(Long id) {
+		this.id = id;
+		return this;
+	}
+
+	public MerchantCardTable setPlatformOrderId(String platformOrderId) {
+		this.platformOrderId = platformOrderId;
+		return this;
+	}
+
+	public MerchantCardTable setMerchantId(String merchantId) {
+		this.merchantId = merchantId;
+		return this;
+	}
+
+	public MerchantCardTable setMerOrderId(String merOrderId) {
+		this.merOrderId = merOrderId;
+		return this;
+	}
+
+	public MerchantCardTable setTerminalMerId(String terminalMerId) {
+		this.terminalMerId = terminalMerId;
+		return this;
+	}
+
+	public MerchantCardTable setCardHolderName(String cardHolderName) {
+		this.cardHolderName = cardHolderName;
+		return this;
+	}
+
+	public MerchantCardTable setIdentityType(Integer identityType) {
+		this.identityType = identityType;
+		return this;
+	}
+
+	public MerchantCardTable setIdentityNum(String identityNum) {
+		this.identityNum = identityNum;
+		return this;
+	}
+
+	public MerchantCardTable setBankCode(String bankCode) {
+		this.bankCode = bankCode;
+		return this;
+	}
+
+	public MerchantCardTable setBankCardType(Integer bankCardType) {
+		this.bankCardType = bankCardType;
+		return this;
+	}
+
+	public MerchantCardTable setBankCardNum(String bankCardNum) {
+		this.bankCardNum = bankCardNum;
+		return this;
+	}
+
+	public MerchantCardTable setBankCardPhone(String bankCardPhone) {
+		this.bankCardPhone = bankCardPhone;
+		return this;
+	}
+
+	public MerchantCardTable setValidDate(String validDate) {
+		this.validDate = validDate;
+		return this;
+	}
+
+	public MerchantCardTable setSecurityCode(String securityCode) {
+		this.securityCode = securityCode;
+		return this;
+	}
+
+	public MerchantCardTable setChannelRespResult(String channelRespResult) {
+		this.channelRespResult = channelRespResult;
+		return this;
+	}
+
+	public MerchantCardTable setCrossRespResult(String crossRespResult) {
+		this.crossRespResult = crossRespResult;
+		return this;
+	}
+
+	public MerchantCardTable setStatus(Integer status) {
+		this.status = status;
+		return this;
+	}
+
+	public MerchantCardTable setCreateTime(Date createTime) {
+		this.createTime = createTime;
+		return this;
+	}
+
+	public MerchantCardTable setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+		return this;
+	}
 }

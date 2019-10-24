@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.rxh.anew.service.db.business.RegisterCollectDbService;
 import com.rxh.anew.table.business.RegisterCollectTable;
+import com.rxh.enums.BusinessTypeEnum;
+import com.rxh.enums.StatusEnum;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.service.anew.business.ApiRegisterCollectService;
 import lombok.AllArgsConstructor;
@@ -44,9 +46,10 @@ public class ApiRegisterCollectServiceImpl implements ApiRegisterCollectService,
         if( !isBlank(rct.getMerchantId()) ) lambdaQueryWrapper.eq(RegisterCollectTable::getMerchantId,rct.getMerchantId());
         if( !isBlank(rct.getTerminalMerId()) ) lambdaQueryWrapper.eq(RegisterCollectTable::getTerminalMerId,rct.getTerminalMerId());
         if( !isBlank(rct.getMerOrderId()) ) lambdaQueryWrapper.eq(RegisterCollectTable::getMerOrderId,rct.getMerOrderId());
+        if( !isBlank(rct.getBussType()) ) lambdaQueryWrapper.eq(RegisterCollectTable::getBussType,rct.getBussType());
+        if( !isNull(rct.getStatus()) )  lambdaQueryWrapper.eq(RegisterCollectTable::getStatus,rct.getStatus());
         return registerCollectDbService.list(lambdaQueryWrapper);
     }
-
     @Override
     public boolean save(RegisterCollectTable rct) {
         if(isNull(rct))  return false;

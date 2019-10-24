@@ -10,13 +10,21 @@ import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.shortcut.NewPayPaymentBondCardService;
+import com.rxh.anew.table.business.MerchantCardTable;
+import com.rxh.anew.table.business.RegisterCollectTable;
+import com.rxh.anew.table.business.RegisterInfoTable;
+import com.rxh.anew.table.channel.ChannelExtraInfoTable;
+import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
+import com.rxh.enums.BusinessTypeEnum;
+import com.rxh.enums.BussTypeEnum;
 import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.enums.StatusEnum;
 import com.rxh.exception.NewPayException;
+import com.rxh.tuple.Tuple4;
+import com.rxh.tuple.Tuple5;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -77,9 +85,28 @@ public class NewPayPaymentBondCardController  extends NewAbstractCommonControlle
             md5Component.checkMd5(sotTable.getRequestMsg(),merInfoTable.getSecretKey(),ipo);
             //查看是否重复订单
             newPayPaymentBondCardService.multipleOrder(mbcaDTO.getMerOrderId(),ipo);
-
-
-
+            //获取进件成功的附属表
+            RegisterCollectTable registerCollectTable = newPayPaymentBondCardService.getSuccessRegisterCollectInfo(mbcaDTO,ipo);
+            //获取进件主表
+            RegisterInfoTable registerInfoTable = newPayPaymentBondCardService.getRegisterInfoTable(registerCollectTable.getRitId(),ipo);
+            //获取通道信息
+            ChannelInfoTable channelInfoTable = newPayPaymentBondCardService.getChannelInfoByChannelId(registerCollectTable.getChannelId(),ipo);
+            //获取通道附属信息
+            ChannelExtraInfoTable channelExtraInfoTable = newPayPaymentBondCardService.getChannelExtraInfoByOrgId(channelInfoTable.getOrganizationId(), BussTypeEnum.BONDCARD.getBussType(),ipo);
+            //保存绑卡申请记录
+            MerchantCardTable merchantCardTable = newPayPaymentBondCardService.saveCardInfo(mbcaDTO,channelInfoTable,ipo);
+            sotTable.setPlatformOrderId(merchantCardTable.getPlatformOrderId());
+            //封装请求cross必要参数
+            requestCrossMsgDTO = newPayPaymentBondCardService.getRequestCrossMsgDTO(new Tuple5(registerInfoTable,registerCollectTable,channelInfoTable,channelExtraInfoTable,merchantCardTable));
+            //发生cross请求
+            String crossResponseMsg = newPayPaymentBondCardService.doPostJson(requestCrossMsgDTO,channelExtraInfoTable,ipo);
+            //将请求结果转为对象
+            crossResponseMsgDTO = newPayPaymentBondCardService.jsonToPojo(crossResponseMsg,ipo);
+            //更新进件信息
+            newPayPaymentBondCardService.updateByBondCardInfo(crossResponseMsgDTO,crossResponseMsg,merchantCardTable,ipo);
+            //封装放回结果
+            respResult = newPayPaymentBondCardService.responseMsg(mbcaDTO.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,null,null,ipo);
+            sotTable.setPlatformPrintLog(StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode())).setTradeCode( crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
             if(e instanceof NewPayException){
                 NewPayException npe = (NewPayException) e;
@@ -100,4 +127,11 @@ public class NewPayPaymentBondCardController  extends NewAbstractCommonControlle
             return null == respResult ? "系统内部错误！" : respResult;
         }
     }
+
+
+
+
+
+
+
 }

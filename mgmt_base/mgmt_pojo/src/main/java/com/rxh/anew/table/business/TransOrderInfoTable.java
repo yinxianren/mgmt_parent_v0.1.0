@@ -19,7 +19,7 @@ import java.util.Date;
 @TableName("9_trans_order_info_table")
 @Data
 public class TransOrderInfoTable implements Serializable {
-    @TableId(type= IdType.AUTO)
+    @TableId(type= IdType.INPUT)
     private Long id;//表主键
     private String platformOrderId ;//平台订单号
     private String merchantId ;//商户号

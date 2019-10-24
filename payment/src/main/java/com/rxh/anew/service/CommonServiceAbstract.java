@@ -82,7 +82,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
             e.printStackTrace();
             throw new NewPayException(
                     ResponseCodeEnum.RXH99999.getCode(),
-                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：请求cross工程失败",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：请求cross工程失败,异常信息：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint,e.getMessage()),
                     format(" %s",ResponseCodeEnum.RXH99999.getMsg())
             );
         }finally {
@@ -100,7 +100,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
             e.printStackTrace();
             throw new NewPayException(
                     ResponseCodeEnum.RXH99999.getCode(),
-                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：将cross返回结果转BankResult对象",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：将cross返回结果转BankResult对象发生异常，异常信息：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint,e.getMessage()),
                     format(" %s",ResponseCodeEnum.RXH99999.getMsg())
             );
         }finally {
@@ -122,7 +122,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
             e.printStackTrace();
             throw new NewPayException(
                     ResponseCodeEnum.RXH99999.getCode(),
-                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：根据通道ID获取通道信息", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：根据通道ID获取通道信息发生异常，异常信息：%s", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
                     format(" %s", ResponseCodeEnum.RXH99999.getMsg())
             );
 
@@ -148,7 +148,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
             e.printStackTrace();
             throw new NewPayException(
                     ResponseCodeEnum.RXH99999.getCode(),
-                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：根据通道组织ID获取附属进件通道信息", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：根据通道组织ID获取附属进件通道信息发生异常,异常信息：%s", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
                     format(" %s", ResponseCodeEnum.RXH99999.getMsg())
             );
         }
@@ -160,14 +160,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
         return channelExtraInfoTable;
     }
 
-    public RequestCrossMsgDTO getRequestCrossMsgDTO(Tuple2 tuple) {
-        Tuple4<ChannelInfoTable,ChannelExtraInfoTable, RegisterInfoTable,RegisterCollectTable> tuple4 = (Tuple4<ChannelInfoTable, ChannelExtraInfoTable,  RegisterInfoTable,RegisterCollectTable>) tuple;
-        return new RequestCrossMsgDTO()
-                .setChannelInfoTable(tuple4._)
-                .setChannelExtraInfoTable(tuple4._2)
-                .setRegisterInfoTable(tuple4._3)
-                .setRegisterCollectTable(tuple4._4);
-    }
+
 
     public String responseMsg(String merOrderId,MerchantInfoTable merInfoTable, RequestCrossMsgDTO  requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO,String errorCode,String errorMsg,InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="responseMsg";
@@ -197,7 +190,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
             if(null != ipo) {
                 throw new NewPayException(
                         ResponseCodeEnum.RXH99999.getCode(),
-                        format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：封装响应报文", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint),
+                        format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：封装响应报文发生异常，异常信息：%s", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
                         format(" %s", ResponseCodeEnum.RXH99999.getMsg())
                 );
             } else
@@ -205,5 +198,27 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
         }finally {
             return  null == responseMsg ? "系统内部错误！" : responseMsg;
         }
+    }
+
+
+    public RegisterInfoTable getRegisterInfoTable(Long ritId, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="saveOnRegisterInfo";
+        RegisterInfoTable registerInfoTable = null;
+        try{
+            registerInfoTable = commonRPCComponent.apiRegisterInfoService.getOne(new RegisterInfoTable().setId(ritId));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置B3：%s,异常根源：获取进件信息主表信息发生异常，异常信息：%s", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }
+        isNull(registerInfoTable,
+                ResponseCodeEnum.RXH00027.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00027.getMsg(),localPoint),
+                format(" %s",ResponseCodeEnum.RXH00027.getMsg()));
+
+        return  registerInfoTable;
     }
 }

@@ -16,6 +16,7 @@ import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.enums.*;
 import com.rxh.exception.NewPayException;
 import com.rxh.tuple.Tuple2;
+import com.rxh.tuple.Tuple4;
 import com.rxh.utils.PayTreeMap;
 import org.springframework.stereotype.Service;
 
@@ -104,15 +105,19 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
         RegisterCollectTable registerCollectTable = null;
         try {
             registerInfoTable = commonRPCComponent.apiRegisterInfoService.getOne(
-                    new RegisterInfoTable().setMerchantId(mbirDTO.getMerId())
+                    new RegisterInfoTable()
+                            .setMerchantId(mbirDTO.getMerId())
                             .setTerminalMerId(mbirDTO.getTerminalMerId())
                             .setUserName(mbirDTO.getCardHolderName())
                             .setIdentityType(new Integer(mbirDTO.getIdentityType()))
                             .setIdentityNum(mbirDTO.getIdentityNum())
             );
 
-            if (null == registerInfoTable) registerInfoTable = new RegisterInfoTable();
-            if (isNull(registerInfoTable.getCreateTime())) registerInfoTable.setCreateTime(new Date());
+            if (null == registerInfoTable){
+                registerInfoTable = new RegisterInfoTable()
+                        .setId(System.currentTimeMillis())
+                        .setCreateTime(new Date());
+            }
             registerInfoTable.setMerchantId(mbirDTO.getMerId())
                     .setTerminalMerId(mbirDTO.getTerminalMerId())
                     .setTerminalMerName(mbirDTO.getTerminalMerName())
@@ -127,14 +132,13 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
                     .setAddress(mbirDTO.getAddress())
                     .setUpdateTime(new Date());
 
-            //保持或更新
-            commonRPCComponent.apiRegisterInfoService.replaceSave(registerInfoTable);
-            registerCollectTable = new RegisterCollectTable();
-            commonRPCComponent.apiRegisterCollectService.save(registerCollectTable
+            registerCollectTable = new RegisterCollectTable()
+                    .setId(System.currentTimeMillis())
                     .setChannelId(channelInfoTable.getChannelId())
                     .setProductId(channelInfoTable.getProductId())
                     .setPlatformOrderId("RXH" + new Random(System.currentTimeMillis()).nextInt(1000000) + "-B1" + System.currentTimeMillis())
                     .setRitId(registerInfoTable.getId())
+                    .setOrganizationId(channelInfoTable.getOrganizationId())
                     .setMerchantId(mbirDTO.getMerId())
                     .setTerminalMerId(mbirDTO.getTerminalMerId())
                     .setMerOrderId(mbirDTO.getMerOrderId())
@@ -153,19 +157,30 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
                     .setStatus(StatusEnum._3.getStatus())
                     .setCreateTime(new Date())
                     .setBussType(BusinessTypeEnum.b1.getBusiType()) //基础信息登记
-                    .setUpdateTime(new Date())
-            );
+                    .setUpdateTime(new Date());
+            //保持或更新
+            commonRPCComponent.apiRegisterInfoService.replaceSave(registerInfoTable);
+            commonRPCComponent.apiRegisterCollectService.save(registerCollectTable);
         }catch (Exception e){
             e.printStackTrace();
             throw new NewPayException(
                     ResponseCodeEnum.RXH99999.getCode(),
-                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：保存进件信息发生异常",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：保存进件信息发生异常,异常信息:%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint,e.getMessage()),
                     format(" %s",ResponseCodeEnum.RXH99999.getMsg())
             );
         }finally {
             return new Tuple2(registerInfoTable,registerCollectTable);
         }
 
+    }
+
+    public RequestCrossMsgDTO getRequestCrossMsgDTO(Tuple2 tuple) {
+        Tuple4<ChannelInfoTable,ChannelExtraInfoTable, RegisterInfoTable,RegisterCollectTable> tuple4 = (Tuple4<ChannelInfoTable, ChannelExtraInfoTable,  RegisterInfoTable,RegisterCollectTable>) tuple;
+        return new RequestCrossMsgDTO()
+                .setChannelInfoTable(tuple4._)
+                .setChannelExtraInfoTable(tuple4._2)
+                .setRegisterInfoTable(tuple4._3)
+                .setRegisterCollectTable(tuple4._4);
     }
 
     @Override
@@ -181,7 +196,7 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
             e.printStackTrace();
             throw new NewPayException(
                     ResponseCodeEnum.RXH99999.getCode(),
-                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：更新进件信息发生异常",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：更新进件信息发生异常,异常信息：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint,e.getMessage()),
                     format(" %s",ResponseCodeEnum.RXH99999.getMsg())
             );
         }finally {
@@ -273,7 +288,7 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
             e.printStackTrace();
             throw new NewPayException(
                     ResponseCodeEnum.RXH99999.getCode(),
-                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置B2：%s,异常根源：保存绑定银行卡发生异常", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置B2：%s,异常根源：保存绑定银行卡发生异常,异常信息：%s", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
                     format(" %s", ResponseCodeEnum.RXH99999.getMsg())
             );
         }finally {
@@ -281,27 +296,7 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
         }
     }
 
-    @Override
-    public RegisterInfoTable getRegisterInfoTable(Long ritId, InnerPrintLogObject ipo) throws NewPayException {
-        final String localPoint="saveOnRegisterInfo";
-        RegisterInfoTable registerInfoTable = null;
-        try{
-            registerInfoTable = commonRPCComponent.apiRegisterInfoService.getOne(new RegisterInfoTable().setId(ritId));
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new NewPayException(
-                    ResponseCodeEnum.RXH99999.getCode(),
-                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置B3：%s,异常根源：获取进件信息主表信息", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint),
-                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
-            );
-        }
-        isNull(registerInfoTable,
-                ResponseCodeEnum.RXH00027.getCode(),
-                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00027.getMsg(),localPoint),
-                format(" %s",ResponseCodeEnum.RXH00027.getMsg()));
 
-        return  registerInfoTable;
-    }
 
     @Override
     public RegisterCollectTable saveRegisterCollectTableByB3(RegisterCollectTable registerCollectTable, InnerPrintLogObject ipo) throws NewPayException {
@@ -324,6 +319,8 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
         }
         return registerCollectTable;
     }
+
+
 
     @Override
     public Map<String, ParamRule> getParamMapByIPOI() {
