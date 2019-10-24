@@ -107,7 +107,11 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      */
     RegisterCollectTable updateByRegisterCollectTable(CrossResponseMsgDTO crossResponseMsgDTO, String crossResponseMsg, RegisterCollectTable registerCollectTable, InnerPrintLogObject ipo);
 
-
+    /**
+     *  判断多重订单
+     * @return
+     */
+    boolean multipleOrder(String merOrderId,InnerPrintLogObject ipo) throws NewPayException;
     /**
      * 查看订单是否存在
      * @param platformOrderId

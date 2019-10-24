@@ -1,5 +1,7 @@
 package com.rxh.anew.table.channel;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import java.io.Serializable;
@@ -15,7 +17,7 @@ import java.math.BigDecimal;
 @TableName ( "8_channel_history_table" )
 @Data
 public class ChannelHistoryTable  implements Serializable {
-   
+	@TableId(type= IdType.AUTO)
 	private Long id;//表主键
 	private String channelId;//通道id
 	private String merchantId;//商户号

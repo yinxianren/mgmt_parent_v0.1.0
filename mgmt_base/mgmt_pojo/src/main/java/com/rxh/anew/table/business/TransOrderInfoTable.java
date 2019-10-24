@@ -1,5 +1,6 @@
 package com.rxh.anew.table.business;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -18,7 +19,7 @@ import java.util.Date;
 @TableName("9_trans_order_info_table")
 @Data
 public class TransOrderInfoTable implements Serializable {
-    @TableId
+    @TableId(type= IdType.AUTO)
     private Long id;//表主键
     private String platformOrderId ;//平台订单号
     private String merchantId ;//商户号

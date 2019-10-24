@@ -1,5 +1,6 @@
 package com.rxh.anew.table.agent;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -16,7 +17,7 @@ import java.io.Serializable;
 @TableName("1_agent_merchant_info_table")
 @Data
 public class AgentMerchantInfoTable implements Serializable {
-    @TableId
+    @TableId(type= IdType.AUTO)
     private Long id;//主键
     private String agentMerchantId ;//代理商ID
     private String agentMerchantName ;//代理商名称

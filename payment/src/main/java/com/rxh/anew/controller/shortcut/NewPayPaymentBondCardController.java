@@ -1,5 +1,6 @@
 package com.rxh.anew.controller.shortcut;
 
+import com.alibaba.dubbo.common.json.JSON;
 import com.rxh.anew.component.Md5Component;
 import com.rxh.anew.controller.NewAbstractCommonController;
 import com.rxh.anew.dto.CrossResponseMsgDTO;
@@ -7,6 +8,7 @@ import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
 import com.rxh.anew.dto.MerchantBondCardApplyDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
+import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.shortcut.NewPayPaymentBondCardService;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -48,7 +51,7 @@ public class NewPayPaymentBondCardController  extends NewAbstractCommonControlle
     @RequestMapping(value = "/bondCard", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String bondCard(HttpServletRequest request, @RequestBody(required = false) String param){
-        final String bussType = "【基本信息登记】";
+        final String bussType = "【绑卡申请接口】";
         String errorMsg = null,errorCode = null,printErrorMsg,respResult=null;
         SystemOrderTrackTable sotTable = null;
         MerchantBondCardApplyDTO mbcaDTO=null;
@@ -57,6 +60,25 @@ public class NewPayPaymentBondCardController  extends NewAbstractCommonControlle
         CrossResponseMsgDTO crossResponseMsgDTO = null;
         InnerPrintLogObject ipo = null ;
         try{
+            //解析 以及 获取SystemOrderTrackTable对象
+            sotTable = this.getSystemOrderTrackTable(request,param,bussType);
+            //类型转换
+            mbcaDTO = JSON.parse(sotTable.getRequestMsg(),MerchantBondCardApplyDTO.class);
+            sotTable.setMerId(mbcaDTO.getMerId()).setMerOrderId(mbcaDTO.getMerOrderId()).setReturnUrl(mbcaDTO.getReturnUrl()).setNoticeUrl(mbcaDTO.getNoticeUrl());
+            //获取必要参数
+            Map<String, ParamRule> paramRuleMap =newPayPaymentBondCardService.getParamMapByBC();
+            //创建日志打印对象
+            ipo = new InnerPrintLogObject(mbcaDTO.getMerId(),mbcaDTO.getMerOrderId(),bussType);
+            //参数校验
+            this.verify(paramRuleMap,mbcaDTO,MerchantBasicInformationRegistrationDTO.class,ipo);
+            //获取商户信息
+            merInfoTable = newPayPaymentBondCardService.getOneMerInfo(ipo);
+            //验证签名
+            md5Component.checkMd5(sotTable.getRequestMsg(),merInfoTable.getSecretKey(),ipo);
+            //查看是否重复订单
+            newPayPaymentBondCardService.multipleOrder(mbcaDTO.getMerOrderId(),ipo);
+
+
 
         }catch (Exception e){
             if(e instanceof NewPayException){

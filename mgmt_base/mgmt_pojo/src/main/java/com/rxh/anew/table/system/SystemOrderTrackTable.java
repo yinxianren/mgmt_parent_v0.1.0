@@ -1,5 +1,6 @@
 package com.rxh.anew.table.system;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
@@ -18,7 +19,7 @@ import java.util.Date;
 @TableName("1_system_order_track_table")
 @Getter
 public class SystemOrderTrackTable implements Serializable {
-    @TableId
+    @TableId(type= IdType.AUTO)
     private Long id;//主键
     private String merId;//商户号
     private String merOrderId;//商户订单号

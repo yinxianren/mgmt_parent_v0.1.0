@@ -1,5 +1,7 @@
 package com.rxh.anew.table.business;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import java.io.Serializable;
@@ -14,7 +16,7 @@ import java.util.Date;
 @TableName ( "7_merchant_card_table" )
 @Data
 public class MerchantCardTable  implements Serializable {
-   
+    @TableId(type= IdType.AUTO)
 	private Long id;//表主键
 	private String platformOrderId;//平台订单号
 	private String merchantId;//商户号

@@ -1,5 +1,7 @@
 package com.rxh.anew.table.channel;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.Getter;
@@ -11,7 +13,7 @@ import java.util.Date;
 @Getter
 @TableName("5_channel_info_table")
 public class ChannelInfoTable implements Serializable {
-
+    @TableId(type= IdType.AUTO)
     private Long id;//表主键,
     private String channelId;//通道id,
     private String channelName;//通道名称,
