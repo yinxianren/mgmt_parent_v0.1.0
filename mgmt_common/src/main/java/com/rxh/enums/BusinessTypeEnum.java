@@ -16,7 +16,10 @@ public enum BusinessTypeEnum {
     TRANS("trans","代付"),
     b1("b1","业务登记"),
     b2("b2","绑定银行卡"),
-    b3("b3","业务开通")
+    b3("b3","业务开通"),
+    b4("b4","绑卡申请"),
+    b5("b5","获取验证码"),
+    b6("b6","短信确认")
     ;
 
     private String busiType;

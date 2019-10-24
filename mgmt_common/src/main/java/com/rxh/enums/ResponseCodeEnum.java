@@ -37,6 +37,7 @@ public enum ResponseCodeEnum {
     ,RXH00029("RXH00029","该卡已经有成功进件记录")
     ,RXH00030("RXH00030","未找到成功业务开通记录")
     ,RXH00031("RXH00031","请先进行进件操作，再进行绑卡操作")
+    ,RXH00032("RXH00032","平台订单号无效")
     ,RXH99999("RXH99999","其他错误")
     ;
     private String code;

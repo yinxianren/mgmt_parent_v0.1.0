@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.Getter;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -24,6 +25,7 @@ public class MerchantCardTable  implements Serializable {
 	private String channelId;
 	private String productId;
 	private String platformOrderId;//平台订单号
+	private String registerCollectPlatformOrderId;//进件附属表的流水号
 	private String merchantId;//商户号
 	private String merOrderId;//商户订单号
 	private String terminalMerId;//终端商户号
@@ -38,9 +40,50 @@ public class MerchantCardTable  implements Serializable {
 	private String securityCode;//信用卡必填，格式：信用卡必填，信用卡背面三位安全码
 	private String channelRespResult;//通道响应结果
 	private String crossRespResult;//cross响应结果
+	private String bussType;//b4：绑卡申请,b5:获取验证码，b6：短信确认
+	private BigDecimal payFee;//	扣款手续费
+	private BigDecimal backFee;//	代付手续费
+	private String backCardNum;//	还款银行卡号
+	private String backBankCode;//	还款银行编码
+	private String backCardPhone;//	还款银行卡手机号
 	private Integer status;//状态 0：success ,1:fail
 	private Date createTime;//创建时间
 	private Date updateTime;//更新时间
+
+	public MerchantCardTable setPayFee(BigDecimal payFee) {
+		this.payFee = payFee;
+		return this;
+	}
+
+	public MerchantCardTable setBackFee(BigDecimal backFee) {
+		this.backFee = backFee;
+		return this;
+	}
+
+	public MerchantCardTable setBackCardNum(String backCardNum) {
+		this.backCardNum = backCardNum;
+		return this;
+	}
+
+	public MerchantCardTable setBackBankCode(String backBankCode) {
+		this.backBankCode = backBankCode;
+		return this;
+	}
+
+	public MerchantCardTable setBackCardPhone(String backCardPhone) {
+		this.backCardPhone = backCardPhone;
+		return this;
+	}
+
+	public MerchantCardTable setRegisterCollectPlatformOrderId(String registerCollectPlatformOrderId) {
+		this.registerCollectPlatformOrderId = registerCollectPlatformOrderId;
+		return this;
+	}
+
+	public MerchantCardTable setBussType(String bussType) {
+		this.bussType = bussType;
+		return this;
+	}
 
 	public MerchantCardTable setChannelId(String channelId) {
 		this.channelId = channelId;

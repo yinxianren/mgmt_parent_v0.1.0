@@ -37,7 +37,7 @@ public class ApiMerchantCardServiceImpl implements ApiMerchantCardService , NewP
         if( !isBlank(mct.getMerchantId()) )  lambdaQueryWrapper.eq(MerchantCardTable::getMerchantId,mct.getMerchantId());
         if( !isBlank(mct.getTerminalMerId()) )  lambdaQueryWrapper.eq(MerchantCardTable::getTerminalMerId,mct.getTerminalMerId());
         if( !isBlank(mct.getBankCardNum()) )  lambdaQueryWrapper.eq(MerchantCardTable::getBankCardNum,mct.getBankCardNum());
-
+        if( !isBlank(mct.getBussType()) )  lambdaQueryWrapper.eq(MerchantCardTable::getBussType,mct.getBussType());
         return merchantCardDBService.getOne(lambdaQueryWrapper);
     }
 
@@ -50,6 +50,7 @@ public class ApiMerchantCardServiceImpl implements ApiMerchantCardService , NewP
         if( !isBlank(mct.getMerchantId()) )  lambdaQueryWrapper.eq(MerchantCardTable::getMerchantId,mct.getMerchantId());
         if( !isBlank(mct.getTerminalMerId()) )  lambdaQueryWrapper.eq(MerchantCardTable::getTerminalMerId,mct.getTerminalMerId());
         if( !isBlank(mct.getBankCardNum()) )  lambdaQueryWrapper.eq(MerchantCardTable::getBankCardNum,mct.getBankCardNum());
+        if( !isBlank(mct.getBussType()) )  lambdaQueryWrapper.eq(MerchantCardTable::getBussType,mct.getBussType());
         return  merchantCardDBService.list(lambdaQueryWrapper);
     }
 

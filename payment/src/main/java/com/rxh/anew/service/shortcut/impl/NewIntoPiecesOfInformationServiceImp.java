@@ -1,7 +1,9 @@
 package com.rxh.anew.service.shortcut.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.rxh.anew.dto.*;
+import com.rxh.anew.dto.CrossResponseMsgDTO;
+import com.rxh.anew.dto.MerchantBankCardBindingDTO;
+import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
+import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonServiceAbstract;
@@ -10,17 +12,14 @@ import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.business.RegisterInfoTable;
 import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
-import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.enums.*;
 import com.rxh.exception.NewPayException;
 import com.rxh.tuple.Tuple2;
 import com.rxh.tuple.Tuple4;
-import com.rxh.utils.PayTreeMap;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -203,9 +202,6 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
             return registerCollectTable;
         }
     }
-
-
-
 
     @Override
     public List<ChannelInfoTable> getChannelInfoByMerSetting(List<MerchantSettingTable> list, InnerPrintLogObject ipo) throws NewPayException {

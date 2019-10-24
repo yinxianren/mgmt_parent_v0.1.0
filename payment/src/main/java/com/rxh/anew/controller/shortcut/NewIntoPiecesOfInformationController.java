@@ -23,7 +23,6 @@ import com.rxh.exception.NewPayException;
 import com.rxh.tuple.Tuple2;
 import com.rxh.tuple.Tuple4;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -235,7 +234,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //创建日志打印对象
             ipo = new InnerPrintLogObject(msDTO.getMerId(),msDTO.getMerOrderId(),bussType);
             //参数校验
-            this.verify(paramRuleMap,msDTO,MerchantBankCardBindingDTO.class,ipo);
+            this.verify(paramRuleMap,msDTO,MerchantServiceFulfillmentDTO.class,ipo);
             //获取商户信息
             merInfoTable = newIntoPiecesOfInformationService.getOneMerInfo(ipo);
             //验证签名
