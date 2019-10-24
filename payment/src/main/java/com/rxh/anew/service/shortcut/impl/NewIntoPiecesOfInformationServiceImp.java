@@ -16,7 +16,6 @@ import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.enums.*;
 import com.rxh.exception.NewPayException;
 import com.rxh.tuple.Tuple2;
-import com.rxh.tuple.Tuple4;
 import com.rxh.utils.PayTreeMap;
 import org.springframework.stereotype.Service;
 
@@ -190,44 +189,6 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
         }
     }
 
-    @Override
-    public String responseMsg(String merOrderId,MerchantInfoTable merInfoTable, RequestCrossMsgDTO  requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO,String errorCode,String errorMsg,InnerPrintLogObject ipo) throws NewPayException {
-        final String localPoint="responseMsg";
-        String responseMsg = null;
-        try {
-            ResponseEntity responseEntity = new ResponseEntity()
-                    .setMerId( null !=merInfoTable ? merInfoTable.getMerchantId() : null)
-                    .setStatus( null != crossResponseMsgDTO ? crossResponseMsgDTO.getCrossStatusCode() :  StatusEnum._1.getStatus() )
-                    .setMsg( null != crossResponseMsgDTO ? StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()) : StatusEnum._1.getRemark())
-                    .setMerOrderId( null != merOrderId ? merOrderId : null )
-                    .setPlatformOrderId( null != requestCrossMsgDTO ? requestCrossMsgDTO.getRegisterCollectTable().getPlatformOrderId() : null)
-                    .setErrorCode(errorCode)
-                    .setErrorMsg(errorMsg)
-                    ;
-
-            Field[] fields = responseEntity.getClass().getDeclaredFields();
-            PayTreeMap<String,Object>  map = new PayTreeMap<>();
-            for (Field field : fields) {
-                String fieldName = field.getName();
-                Object object = field.get(responseEntity);
-                if(null != object) map.lput(fieldName,object);
-            }
-            map.lput("signMsg", null != merInfoTable ? md5Component.getMd5SignWithKey(map,merInfoTable.getSecretKey()) : "" );
-            responseMsg = JSON.toJSONString(map);
-        }catch (Exception e){
-            e.printStackTrace();
-            if(null != ipo) {
-                throw new NewPayException(
-                        ResponseCodeEnum.RXH99999.getCode(),
-                        format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：封装响应报文", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint),
-                        format(" %s", ResponseCodeEnum.RXH99999.getMsg())
-                );
-            } else
-                throw  e;
-        }finally {
-            return  null == responseMsg ? "系统内部错误！" : responseMsg;
-        }
-    }
 
 
 
@@ -439,16 +400,4 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
             }
         };
     }
-
-
-    @Override
-    public RequestCrossMsgDTO getRequestCrossMsgDTO(Tuple2 tuple) {
-        Tuple4<ChannelInfoTable,ChannelExtraInfoTable, RegisterInfoTable,RegisterCollectTable> tuple4 = (Tuple4<ChannelInfoTable, ChannelExtraInfoTable,  RegisterInfoTable,RegisterCollectTable>) tuple;
-        return new RequestCrossMsgDTO()
-                .setChannelInfoTable(tuple4._)
-                .setChannelExtraInfoTable(tuple4._2)
-                .setRegisterInfoTable(tuple4._3)
-                .setRegisterCollectTable(tuple4._4);
-    }
-
 }

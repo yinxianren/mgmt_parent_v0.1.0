@@ -16,7 +16,6 @@ import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.exception.NewPayException;
-import com.rxh.pojo.cross.BankResult;
 import com.rxh.tuple.Tuple2;
 
 import java.util.LinkedList;
@@ -108,16 +107,6 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      */
     RegisterCollectTable updateByRegisterCollectTable(CrossResponseMsgDTO crossResponseMsgDTO, String crossResponseMsg, RegisterCollectTable registerCollectTable, InnerPrintLogObject ipo);
 
-    /**
-     * 封装响应结果
-     * @param merInfoTable
-     * @param requestCrossMsgDTO
-     * @param crossResponseMsgDTO
-     * @param errorCode
-     * @param errorMsg
-     * @return
-     */
-    String responseMsg(String merOrderId,MerchantInfoTable merInfoTable, RequestCrossMsgDTO  requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO,String errorCode,String errorMsg,InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      * 查看订单是否存在

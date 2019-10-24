@@ -22,6 +22,7 @@ import com.rxh.enums.StatusEnum;
 import com.rxh.exception.NewPayException;
 import com.rxh.tuple.Tuple2;
 import com.rxh.tuple.Tuple4;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,15 +39,13 @@ import java.util.*;
  * Time: 下午2:40
  * Description:
  */
-
+@AllArgsConstructor
 @RestController
 @RequestMapping("/shortcut")
 public class NewIntoPiecesOfInformationController extends NewAbstractCommonController {
 
-    @Autowired
-    private NewIntoPiecesOfInformationService newIntoPiecesOfInformationService;
-    @Autowired
-    private Md5Component md5Component;
+    private final NewIntoPiecesOfInformationService newIntoPiecesOfInformationService;
+    private final Md5Component md5Component;
 
     /**
      *  基本信息登记
@@ -71,7 +70,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             sotTable = this.getSystemOrderTrackTable(request,param,bussType);
             //类型转换
             mbirDTO = JSON.parse(sotTable.getRequestMsg(),MerchantBasicInformationRegistrationDTO.class);
-            sotTable.setMerId(mbirDTO.getMerId()).setMerOrderId(mbirDTO.getMerOrderId()).setReturnUrl(mbirDTO.getReturnUrl()).setNoticeUrl(mbirDTO.getNoticeUrl());
+            sotTable.setMerId(mbirDTO.getMerId()).setMerOrderId(mbirDTO.getMerOrderId());
             //获取必要参数
             Map<String, ParamRule> paramRuleMap =newIntoPiecesOfInformationService.getParamMapByIPOI();
             //创建日志打印对象
@@ -121,7 +120,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             }else{
                 e.printStackTrace();
                 errorMsg = ResponseCodeEnum.RXH99999.getMsg();
-                printErrorMsg = isBlank(e.getMessage()) ? "" : (e.getMessage().length()>=526 ? e.getMessage().substring(0,526) : e.getMessage());
+                printErrorMsg = isBlank(e.getMessage()) ? "" : (e.getMessage().length()>=512 ? e.getMessage().substring(0,526) : e.getMessage());
                 errorCode = ResponseCodeEnum.RXH99999.getCode();
             }
             respResult = newIntoPiecesOfInformationService.responseMsg(null != mbirDTO ? mbirDTO.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,errorCode,errorMsg,ipo);
@@ -196,7 +195,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             }else{
                 e.printStackTrace();
                 errorMsg = ResponseCodeEnum.RXH99999.getMsg();
-                printErrorMsg = isBlank(e.getMessage()) ? "" : (e.getMessage().length()>=526 ? e.getMessage().substring(0,526) : e.getMessage());
+                printErrorMsg = isBlank(e.getMessage()) ? "" : (e.getMessage().length()>=512 ? e.getMessage().substring(0,526) : e.getMessage());
                 errorCode = ResponseCodeEnum.RXH99999.getCode();
             }
             respResult = newIntoPiecesOfInformationService.responseMsg(null != mbcbDTO ? mbcbDTO.getMerOrderId() : null,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,errorCode,errorMsg,ipo);
@@ -274,7 +273,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             }else{
                 e.printStackTrace();
                 errorMsg = ResponseCodeEnum.RXH99999.getMsg();
-                printErrorMsg = isBlank(e.getMessage()) ? "" : (e.getMessage().length()>=526 ? e.getMessage().substring(0,526) : e.getMessage());
+                printErrorMsg = isBlank(e.getMessage()) ? "" : (e.getMessage().length()>=512 ? e.getMessage().substring(0,526) : e.getMessage());
                 errorCode = ResponseCodeEnum.RXH99999.getCode();
             }
             respResult = newIntoPiecesOfInformationService.responseMsg(null != msDTO ? msDTO.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,errorCode,errorMsg,ipo);

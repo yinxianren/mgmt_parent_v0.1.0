@@ -2,6 +2,8 @@ package com.rxh.anew.dto;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: panda
@@ -10,7 +12,7 @@ import lombok.Data;
  * Description:
  */
 @Data
-public class MerchantServiceFulfillmentDTO {
+public class MerchantServiceFulfillmentDTO  implements Serializable {
     private String charset;//	字符集编码
     private String signType;//	签名类型
     private String merId;//	商户号

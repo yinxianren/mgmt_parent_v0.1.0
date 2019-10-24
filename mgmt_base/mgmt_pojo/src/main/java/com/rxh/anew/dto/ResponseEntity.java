@@ -2,6 +2,8 @@ package com.rxh.anew.dto;
 
 import lombok.Getter;
 
+import java.io.Serializable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: panda
@@ -10,7 +12,7 @@ import lombok.Getter;
  * Description:
  */
 @Getter
-public class ResponseEntity {
+public class ResponseEntity  implements Serializable {
     private String merId;
     private String merOrderId;
     private String platformOrderId;

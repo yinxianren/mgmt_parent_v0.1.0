@@ -5,6 +5,8 @@ import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import lombok.Getter;
 
+import java.io.Serializable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: panda
@@ -13,7 +15,7 @@ import lombok.Getter;
  * Description:
  */
 @Getter
-public class RequestCrossMsgDTO {
+public class RequestCrossMsgDTO  implements Serializable {
 
     private RegisterCollectTable registerCollectTable;
     private RegisterInfoTable registerInfoTable;

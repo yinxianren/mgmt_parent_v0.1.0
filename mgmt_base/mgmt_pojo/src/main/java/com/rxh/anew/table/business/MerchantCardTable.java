@@ -20,7 +20,7 @@ public class MerchantCardTable  implements Serializable {
 	private String merchantId;//商户号
 	private String merOrderId;//商户订单号
 	private String terminalMerId;//终端商户号
-	private String userName;//身份证用户名
+	private String cardHolderName;//身份证用户名
 	private Integer identityType;//身份证类型，1身份证、2护照、3港澳回乡证、4台胞证、5军官证
 	private String identityNum;//证件号
 	private String bankCode;//银行简称	如：中国农业银行： ABC，中国工商银行： ICBC

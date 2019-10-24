@@ -42,6 +42,16 @@ public interface CommonSerivceInterface {
      */
     RequestCrossMsgDTO getRequestCrossMsgDTO(Tuple2 tuple);
 
+    /**
+     * 封装响应结果
+     * @param merInfoTable
+     * @param requestCrossMsgDTO
+     * @param crossResponseMsgDTO
+     * @param errorCode
+     * @param errorMsg
+     * @return
+     */
+    String responseMsg(String merOrderId,MerchantInfoTable merInfoTable, RequestCrossMsgDTO  requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO,String errorCode,String errorMsg,InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      *   请求cross
