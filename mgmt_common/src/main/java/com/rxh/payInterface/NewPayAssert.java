@@ -103,5 +103,8 @@ public interface NewPayAssert {
     }
 
 
-
+    default void state(boolean state,String code, String innerPrintMsg, String responseMsg) throws NewPayException {
+        if(state)
+            throw new NewPayException(code,innerPrintMsg,responseMsg);
+    }
 }

@@ -14,6 +14,10 @@ public enum BusinessTypeEnum {
 
     PAY("pay","收单"),
     TRANS("trans","代付"),
+
+    C("C","通道"),
+    M("M","商户"),
+
     b1("b1","业务登记"),
     b2("b2","绑定银行卡"),
     b3("b3","业务开通"),

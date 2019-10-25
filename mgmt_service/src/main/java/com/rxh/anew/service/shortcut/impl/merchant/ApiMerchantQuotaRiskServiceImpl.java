@@ -1,5 +1,7 @@
 package com.rxh.anew.service.shortcut.impl.merchant;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.rxh.anew.service.db.merchant.MerchantQuotaRiskDBService;
 import com.rxh.anew.table.merchant.MerchantQuotaRiskTable;
 import com.rxh.payInterface.NewPayAssert;
@@ -26,13 +28,20 @@ public class ApiMerchantQuotaRiskServiceImpl implements ApiMerchantQuotaRiskServ
     @Override
     public MerchantQuotaRiskTable getOne(MerchantQuotaRiskTable mqr) {
         if(isNull(mqr)) return null;
-        return null;
+        LambdaQueryWrapper<MerchantQuotaRiskTable> lambdaQueryWrapper = new QueryWrapper<MerchantQuotaRiskTable>().lambda();
+        if( !isNull(mqr.getStatus())) lambdaQueryWrapper.eq(MerchantQuotaRiskTable::getStatus,mqr.getStatus());
+        if( !isBlank(mqr.getMerchantId()) ) lambdaQueryWrapper.eq(MerchantQuotaRiskTable::getMerchantId,mqr.getMerchantId());
+
+        return merchantQuotaRiskDBService.getOne(lambdaQueryWrapper);
     }
 
     @Override
     public List<MerchantQuotaRiskTable> getList(MerchantQuotaRiskTable mqr) {
         if(isNull(mqr)) return null;
-        return null;
+        LambdaQueryWrapper<MerchantQuotaRiskTable> lambdaQueryWrapper = new QueryWrapper<MerchantQuotaRiskTable>().lambda();
+        if( !isNull(mqr.getStatus())) lambdaQueryWrapper.eq(MerchantQuotaRiskTable::getStatus,mqr.getStatus());
+        if( !isBlank(mqr.getMerchantId()) ) lambdaQueryWrapper.eq(MerchantQuotaRiskTable::getMerchantId,mqr.getMerchantId());
+        return merchantQuotaRiskDBService.list(lambdaQueryWrapper);
     }
 
     @Override

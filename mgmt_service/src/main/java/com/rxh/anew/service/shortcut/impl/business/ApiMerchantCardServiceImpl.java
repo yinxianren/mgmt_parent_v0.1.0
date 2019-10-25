@@ -4,12 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.rxh.anew.service.db.business.MerchantCardDBService;
 import com.rxh.anew.table.business.MerchantCardTable;
+import com.rxh.enums.StatusEnum;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.service.anew.business.ApiMerchantCardService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -61,5 +63,20 @@ public class ApiMerchantCardServiceImpl implements ApiMerchantCardService , NewP
     public boolean save(MerchantCardTable mct) {
         if(isNull(mct)) return false;
         return merchantCardDBService.save(mct);
+    }
+
+    @Override
+    public List<MerchantCardTable> getListByPlatformOrderId(Set<String> platformOrderIds,MerchantCardTable mct){
+        if(isHasNotElement(platformOrderIds)) return null;
+        LambdaQueryWrapper<MerchantCardTable> lambdaQueryWrapper = new QueryWrapper<MerchantCardTable>()
+                .lambda().in(MerchantCardTable::getPlatformOrderId,platformOrderIds);
+
+        if( !isBlank(mct.getBussType()) )  lambdaQueryWrapper.eq(MerchantCardTable::getBussType,mct.getBussType());
+        if( !isNull(mct.getStatus()) )  lambdaQueryWrapper.eq(MerchantCardTable::getStatus,mct.getStatus());
+        if( !isBlank(mct.getMerOrderId()) )  lambdaQueryWrapper.eq(MerchantCardTable::getMerOrderId,mct.getMerOrderId());
+        if( !isBlank(mct.getMerchantId()) )  lambdaQueryWrapper.eq(MerchantCardTable::getMerchantId,mct.getMerchantId());
+        if( !isBlank(mct.getTerminalMerId()) )  lambdaQueryWrapper.eq(MerchantCardTable::getTerminalMerId,mct.getTerminalMerId());
+        return  merchantCardDBService.list(lambdaQueryWrapper);
+
     }
 }

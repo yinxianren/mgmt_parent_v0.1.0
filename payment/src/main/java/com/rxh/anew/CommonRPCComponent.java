@@ -5,10 +5,13 @@ import com.rxh.service.anew.business.ApiPayOrderInfoService;
 import com.rxh.service.anew.business.ApiRegisterCollectService;
 import com.rxh.service.anew.business.ApiRegisterInfoService;
 import com.rxh.service.anew.channel.ApiChannelExtraInfoService;
+import com.rxh.service.anew.channel.ApiChannelHistoryService;
 import com.rxh.service.anew.channel.ApiChannelInfoService;
 import com.rxh.service.anew.channel.ApiProductTypeSettingService;
 import com.rxh.service.anew.merchant.ApiMerchantInfoService;
+import com.rxh.service.anew.merchant.ApiMerchantQuotaRiskService;
 import com.rxh.service.anew.system.ApiMerchantSettingService;
+import com.rxh.service.anew.system.ApiRiskQuotaService;
 import com.rxh.service.anew.system.ApiSystemOrderTrackService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -34,4 +37,7 @@ public  class CommonRPCComponent {
     public final ApiSystemOrderTrackService   apiSystemOrderTrackService;
     public final ApiMerchantCardService       apiMerchantCardService;
     public final ApiPayOrderInfoService       apiPayOrderInfoService;
+    public final ApiChannelHistoryService     apiChannelHistoryService;
+    public final ApiMerchantQuotaRiskService  apiMerchantQuotaRiskService;
+    public final ApiRiskQuotaService          apiRiskQuotaService;
 }
