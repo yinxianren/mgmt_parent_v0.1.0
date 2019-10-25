@@ -1,5 +1,7 @@
 package com.rxh.anew.table.merchant;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import java.io.Serializable;
@@ -12,10 +14,10 @@ import java.math.BigDecimal;
  * @Date 2019-10-22 
  */
 
-@TableName ( "5_merchant_rate_table" )
+@TableName ( "2_merchant_rate_table" )
 @Data
 public class MerchantRateTable  implements Serializable {
-   
+	@TableId(type= IdType.AUTO)
 	private Long id;//表主键
 	private String merchantId;//商户号
 	private String productId;//产品类型ID

@@ -1,5 +1,7 @@
 package com.rxh.anew.table.system;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import java.io.Serializable;
@@ -15,7 +17,7 @@ import java.math.BigDecimal;
 @TableName ( "8_risk_quota_table" )
 @Data
 public class RiskQuotaTable  implements Serializable {
-   
+	@TableId(type= IdType.AUTO)
 	private Long id;//表主键
 	private String merIdOrChannelId;//商户号/通道ID
 	private String bussType;// C:通道,M:商户 

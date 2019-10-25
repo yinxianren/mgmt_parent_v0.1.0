@@ -1,5 +1,7 @@
 package com.rxh.anew.table.terminal;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import java.io.Serializable;
@@ -15,7 +17,7 @@ import java.math.BigDecimal;
 @TableName ( "4_terminal_merchants_details_table" )
 @Data
 public class TerminalMerchantsDetailsTable  implements Serializable {
-   
+	@TableId(type= IdType.AUTO)
 	private Long id;//表主键
 	private String merchantId;//商户号
 	private String terminalMerId;//终端商户号

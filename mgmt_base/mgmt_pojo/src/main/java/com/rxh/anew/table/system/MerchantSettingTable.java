@@ -1,5 +1,7 @@
 package com.rxh.anew.table.system;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.Getter;
@@ -17,6 +19,7 @@ import java.util.Date;
 @TableName("5_merchant_setting_table")
 @Getter
 public class MerchantSettingTable {
+    @TableId(type= IdType.AUTO)
     private Long id  ;//表主键
     private String  merchantId ;//商户号
     private String productId ;//产品类型ID

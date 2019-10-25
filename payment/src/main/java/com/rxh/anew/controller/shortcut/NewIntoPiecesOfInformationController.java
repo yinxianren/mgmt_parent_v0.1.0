@@ -23,7 +23,6 @@ import com.rxh.exception.NewPayException;
 import com.rxh.tuple.Tuple2;
 import com.rxh.tuple.Tuple4;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,7 +71,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             mbirDTO = JSON.parse(sotTable.getRequestMsg(),MerchantBasicInformationRegistrationDTO.class);
             sotTable.setMerId(mbirDTO.getMerId()).setMerOrderId(mbirDTO.getMerOrderId());
             //获取必要参数
-            Map<String, ParamRule> paramRuleMap =newIntoPiecesOfInformationService.getParamMapByIPOI();
+            Map<String, ParamRule> paramRuleMap =newIntoPiecesOfInformationService.getParamMapByB1();
             //创建日志打印对象
             ipo = new InnerPrintLogObject(mbirDTO.getMerId(),mbirDTO.getMerOrderId(),bussType);
             //参数校验
@@ -155,7 +154,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             mbcbDTO = JSON.parse(sotTable.getRequestMsg(),MerchantBankCardBindingDTO.class);
             sotTable.setMerId(mbcbDTO.getMerId()).setMerOrderId(mbcbDTO.getMerOrderId());
             //获取必要参数
-            Map<String, ParamRule> paramRuleMap =newIntoPiecesOfInformationService.getParamMapByBCB();
+            Map<String, ParamRule> paramRuleMap =newIntoPiecesOfInformationService.getParamMapByB2();
             //创建日志打印对象
             ipo = new InnerPrintLogObject(mbcbDTO.getMerId(),mbcbDTO.getMerOrderId(),bussType);
             //参数校验
@@ -231,11 +230,11 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             msDTO = JSON.parse(sotTable.getRequestMsg(),MerchantServiceFulfillmentDTO.class);
             sotTable.setMerId(msDTO.getMerId()).setMerOrderId(msDTO.getMerOrderId());
             //获取必要参数
-            Map<String, ParamRule> paramRuleMap =newIntoPiecesOfInformationService.getParamMapBySF();
+            Map<String, ParamRule> paramRuleMap =newIntoPiecesOfInformationService.getParamMapByB3();
             //创建日志打印对象
             ipo = new InnerPrintLogObject(msDTO.getMerId(),msDTO.getMerOrderId(),bussType);
             //参数校验
-            this.verify(paramRuleMap,msDTO,MerchantBankCardBindingDTO.class,ipo);
+            this.verify(paramRuleMap,msDTO,MerchantServiceFulfillmentDTO.class,ipo);
             //获取商户信息
             merInfoTable = newIntoPiecesOfInformationService.getOneMerInfo(ipo);
             //验证签名

@@ -7,13 +7,12 @@ import java.io.Serializable;
 /**
  * Created with IntelliJ IDEA.
  * User: panda
- * Date: 2019/10/23
- * Time: 下午10:13
+ * Date: 2019/10/24
+ * Time: 下午3:12
  * Description:
  */
 @Data
-public class MerchantBondCardApplyDTO implements Serializable {
-
+public class MerchantReGetBondCodeDTO implements Serializable {
     private String charset;//	参数字符集编码	固定UTF-8
     private String signType;//	签名类型	固定为MD5
     private String merId;//	商户号	我司分配给接入方的唯一编码

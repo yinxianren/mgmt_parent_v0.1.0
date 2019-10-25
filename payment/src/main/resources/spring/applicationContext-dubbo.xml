@@ -16,7 +16,8 @@
     <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelExtraInfoService"       id="apiChannelExtraInfoService"/>
     <dubbo:reference interface="com.rxh.service.anew.business.ApiRegisterInfoService"          id="apiRegisterInfoService"/>
     <dubbo:reference interface="com.rxh.service.anew.system.ApiSystemOrderTrackService"        id="apiSystemOrderTrackService"/>
-
+    <dubbo:reference interface="com.rxh.service.anew.business.ApiMerchantCardService"          id="apiMerchantCardService"/>
+    <dubbo:reference interface="com.rxh.service.anew.business.ApiPayOrderInfoService"          id="apiPayOrderInfoService"/>
 
 
     <!--  *****************************************************************************************************************  -->

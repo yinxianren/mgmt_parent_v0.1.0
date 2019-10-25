@@ -1,5 +1,6 @@
 package com.rxh.anew.table.business;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -19,7 +20,7 @@ import java.util.Date;
 @TableName("6_register_info_table")
 @Getter
 public class RegisterInfoTable implements Serializable {
-    @TableId
+    @TableId(type= IdType.INPUT)
     private Long id ;//表主键,
     private String merchantId ;// 商户号,
     private String terminalMerId;// 终端商户号,

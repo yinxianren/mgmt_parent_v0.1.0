@@ -1,5 +1,7 @@
 package com.rxh.anew;
 
+import com.rxh.service.anew.business.ApiMerchantCardService;
+import com.rxh.service.anew.business.ApiPayOrderInfoService;
 import com.rxh.service.anew.business.ApiRegisterCollectService;
 import com.rxh.service.anew.business.ApiRegisterInfoService;
 import com.rxh.service.anew.channel.ApiChannelExtraInfoService;
@@ -22,7 +24,6 @@ import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
 public  class CommonRPCComponent {
-
     public final ApiMerchantInfoService       apiMerchantInfoService;
     public final ApiRegisterCollectService    apiRegisterCollectService;
     public final ApiMerchantSettingService    apiMerchantSettingService;
@@ -31,4 +32,6 @@ public  class CommonRPCComponent {
     public final ApiChannelExtraInfoService   apiChannelExtraInfoService;
     public final ApiRegisterInfoService       apiRegisterInfoService;
     public final ApiSystemOrderTrackService   apiSystemOrderTrackService;
+    public final ApiMerchantCardService       apiMerchantCardService;
+    public final ApiPayOrderInfoService       apiPayOrderInfoService;
 }

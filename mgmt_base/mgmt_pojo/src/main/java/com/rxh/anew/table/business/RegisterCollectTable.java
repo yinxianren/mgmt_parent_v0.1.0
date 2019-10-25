@@ -1,5 +1,6 @@
 package com.rxh.anew.table.business;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -20,10 +21,11 @@ import java.util.Date;
 @TableName("6_register_collect_table")
 @Getter
 public class RegisterCollectTable implements Serializable {
-    @TableId
+    @TableId(type= IdType.INPUT)
     private Long id ;//表主键',
     private String platformOrderId;//平台订单号',
     private Long  ritId;//主表id',
+    private String organizationId;//通道机构ID
     private String  channelId;// 通道id,
     private String  productId;// 产品类型ID,
     private String  merchantId;//商户号',
@@ -46,6 +48,11 @@ public class RegisterCollectTable implements Serializable {
     private Integer status;//状态 0：success ,1:fail',
     private Date   createTime;//创建时间',
     private Date   updateTime;//更新时间',
+
+    public RegisterCollectTable setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
+        return this;
+    }
 
     public RegisterCollectTable setBussType(String bussType) {
         this.bussType = bussType;

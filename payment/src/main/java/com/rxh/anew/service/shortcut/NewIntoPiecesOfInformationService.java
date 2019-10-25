@@ -4,7 +4,6 @@ package com.rxh.anew.service.shortcut;
 import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.MerchantBankCardBindingDTO;
 import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
-import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonSerivceInterface;
@@ -12,7 +11,6 @@ import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.business.RegisterInfoTable;
 import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
-import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.exception.NewPayException;
@@ -28,20 +26,20 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      *
       * @return
      */
-    Map<String, ParamRule>  getParamMapByIPOI();
+    Map<String, ParamRule> getParamMapByB1();
 
 
     /**
      *
      * @return
      */
-    Map<String, ParamRule>  getParamMapByBCB();
+    Map<String, ParamRule> getParamMapByB2();
 
     /**
      *
      * @return
      */
-    Map<String, ParamRule>  getParamMapBySF();
+    Map<String, ParamRule> getParamMapByB3();
     /**
      *  根据商户配置获取所有通道
      * @param list
@@ -107,7 +105,11 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      */
     RegisterCollectTable updateByRegisterCollectTable(CrossResponseMsgDTO crossResponseMsgDTO, String crossResponseMsg, RegisterCollectTable registerCollectTable, InnerPrintLogObject ipo);
 
-
+    /**
+     *  判断多重订单
+     * @return
+     */
+    boolean multipleOrder(String merOrderId,InnerPrintLogObject ipo) throws NewPayException;
     /**
      * 查看订单是否存在
      * @param platformOrderId
@@ -127,13 +129,7 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      */
     Tuple2<RegisterInfoTable,RegisterCollectTable> saveOnRegisterInfo(RegisterCollectTable registerCollectTable, MerchantBankCardBindingDTO mbcbDTO, InnerPrintLogObject ipo) throws NewPayException;
 
-    /**
-     *  获取进件主表
-      * @param ritId
-     * @param ipo
-     * @return
-     */
-    RegisterInfoTable getRegisterInfoTable(Long ritId, InnerPrintLogObject ipo) throws NewPayException;
+
 
     /**
      *
@@ -142,4 +138,6 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      * @return
      */
     RegisterCollectTable saveRegisterCollectTableByB3(RegisterCollectTable registerCollectTable, InnerPrintLogObject ipo) throws NewPayException;
+
+
 }
