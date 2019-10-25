@@ -2,11 +2,8 @@ package com.rxh.controller.anew.channel;
 
 
 import com.rxh.anew.table.system.OrganizationInfoTable;
-import com.rxh.cache.RedisCacheCommonCompoment;
 import com.rxh.service.ConstantService;
 import com.rxh.service.OrganizationInfoService;
-import com.rxh.service.anew.channel.ApiProductTypeSettingService;
-import com.rxh.service.square.OrganizationService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
