@@ -50,6 +50,7 @@ public class AnewExtraChannelInfoController {
         extraChannelInfo.setCreator(UserInfoUtils.getName());
         extraChannelInfo.setCreateTime(new Date());
         extraChannelInfo.setUpdateTime(new Date());
+        extraChannelInfo.setExtraChannelId("EX"+System.currentTimeMillis());
         return anewExtraChannelInfoService.saveOrUpdate(extraChannelInfo);
     }
     @SystemLogInfo(description = "支付通道删除")
@@ -77,7 +78,7 @@ public class AnewExtraChannelInfoController {
         init.put("organizations",organizationService.getAll(new OrganizationInfo()));
         init.put("status", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.availableStatus));
         init.put("paytype", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
-        init.put("extraTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.EXTRATYPE));
+        init.put("extraTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.BUSSTYPE));
         init.put("channelLevel", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.channelLevel));
         init.put("channelInfoList", channelWalletService.getIdsAndName());
         return init;

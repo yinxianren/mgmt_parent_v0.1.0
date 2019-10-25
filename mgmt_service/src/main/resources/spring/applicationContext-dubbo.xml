@@ -30,8 +30,12 @@
     <dubbo:service interface="com.rxh.service.anew.system.ApiRiskQuotaService"            ref="apiRiskQuotaServiceImpl"/>
     <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantSettingService"  ref="apiAgentMerchantSettingServiceImpl"/>
     <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantRateService"       ref="apiMerchantRateServiceImpl"/>
-
-
+    <dubbo:service interface="com.rxh.service.anew.system.ApiRiskQuotaService"            ref="apiRiskQuotaServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.anew.channel.ApiProductTypeSettingService"  ref="apiProductTypeSettingServiceImpl" timeout="30000" />
+    <dubbo:service interface="com.rxh.service.anew.system.ApiOrganizationInfoService"     ref="apiOrganizationInfoServiceImpl"   timeout="300000" />
+    <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelExtraInfoService"    ref="apiChannelExtraInfoServiceImpl"   timeout="30000" />
+    <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelInfoService"         ref="apiChannelInfoServiceImpl"        timeout="30000" />
+    <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantInfoService"       ref="apiMerchantInfoServiceImpl" />
 
     <!--  **********************************************************************************************************************   -->
     <!--<dubbo:protocol name="dubbo" host="${dubbo.protocol.host}" port="${dubbo.protocol.port}" payload="1073741824"/>-->

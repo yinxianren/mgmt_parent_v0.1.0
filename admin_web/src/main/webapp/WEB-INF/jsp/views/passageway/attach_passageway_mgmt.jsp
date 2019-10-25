@@ -35,7 +35,7 @@
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
                                         <span class="input-group-addon">请求地址：</span>
-                                        <input type="text" class="form-control" ng-model="searchInfo.url">
+                                        <input type="text" class="form-control" ng-model="searchInfo.requestUrl">
                                     </div>
                                 </div>
                             </div>
@@ -69,19 +69,19 @@
                                         {{row.extraChannelName}}
                                     </td>
                                     <td class="text-center" data-title="'通道类型'">
-                                        {{row.type | getValueByList : extraTypes : 'firstValue' : 'name'}}
+                                        {{row.bussType | getValueByList : extraTypes : 'firstValue' : 'name'}}
                                     </td>
                                     <td class="text-center" style="max-width: 80px" data-title="'请求地址'">
                                         <div class="hidden-text">
-                                            <a ng-click="showInfo(row.url)">
-                                                {{row.url}}
+                                            <a ng-click="showInfo(row.requestUrl)">
+                                                {{row.requestUrl}}
                                             </a>
                                         </div>
                                     </td>
                                     <td class="text-center" style="max-width: 100px" data-title="'参数'">
                                         <div class="hidden-text">
-                                            <a ng-click="showInfo(row.data)">
-                                                {{row.data}}
+                                            <a ng-click="showInfo(row.channelParam)">
+                                                {{row.channelParam}}
                                             </a>
                                         </div>
                                     </td>
@@ -89,10 +89,10 @@
                                         {{row.organizationId | getValueByList : organizations : 'organizationId' : 'organizationName' }}
                                     </td>
                                     <td class="text-center" data-title="'操作人'">
-                                        {{row.operator}}
+                                        {{row.creator}}
                                     </td>
                                     <td class="text-center" data-title="'创建时间'">
-                                        {{row.crateTime | date : 'yyyy/MM/dd HH:mm:ss'}}
+                                        {{row.createTime | date : 'yyyy/MM/dd HH:mm:ss'}}
                                     </td>
                                     <td class="text-center p-6" style="width: 110px" data-title="'操作'">
                                         <div class="btn btn-xs no-margins btn-primary active" ng-click="statusChange($event, row)" ng-show="row.status == 0 ">

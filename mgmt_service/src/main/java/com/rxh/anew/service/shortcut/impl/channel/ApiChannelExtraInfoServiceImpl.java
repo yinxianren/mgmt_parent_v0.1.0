@@ -38,11 +38,13 @@ public class ApiChannelExtraInfoServiceImpl implements ApiChannelExtraInfoServic
 
     @Override
     public List<ChannelExtraInfoTable> list(ChannelExtraInfoTable cei) {
-        if( isNull(cei) )  return null;
+        if( isNull(cei) )  return channelExtraInfoDbService.list();
         LambdaQueryWrapper<ChannelExtraInfoTable> lambdaQueryWrapper = new QueryWrapper<ChannelExtraInfoTable>().lambda();
         if( !isBlank(cei.getOrganizationId()) ) lambdaQueryWrapper.eq(ChannelExtraInfoTable::getOrganizationId,cei.getOrganizationId());
         if( !isBlank(cei.getBussType()) ) lambdaQueryWrapper.eq(ChannelExtraInfoTable::getBussType,cei.getBussType());
-        if( isNull(cei.getStatus()) ) lambdaQueryWrapper.eq(ChannelExtraInfoTable::getStatus,cei.getStatus());
+        if( !isNull(cei.getStatus()) ) lambdaQueryWrapper.eq(ChannelExtraInfoTable::getStatus,cei.getStatus());
+        if( !isBlank(cei.getExtraChannelName()) ) lambdaQueryWrapper.eq(ChannelExtraInfoTable::getExtraChannelName,cei.getExtraChannelName());
+        if( !isBlank(cei.getRequestUrl()) ) lambdaQueryWrapper.eq(ChannelExtraInfoTable::getRequestUrl,cei.getRequestUrl());
         return channelExtraInfoDbService.list(lambdaQueryWrapper);
     }
 
@@ -53,8 +55,8 @@ public class ApiChannelExtraInfoServiceImpl implements ApiChannelExtraInfoServic
     }
 
     @Override
-    public Boolean removeByIds(List<ChannelExtraInfoTable> extraInfoTables) {
-        if (isHasNotElement(extraInfoTables)) return false;
-        return channelExtraInfoDbService.removeByIds(extraInfoTables);
+    public Boolean removeByIds(List<String> ids) {
+        if (isHasNotElement(ids)) return false;
+        return channelExtraInfoDbService.removeByIds(ids);
     }
 }

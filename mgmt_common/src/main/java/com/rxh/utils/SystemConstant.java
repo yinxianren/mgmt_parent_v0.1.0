@@ -251,9 +251,14 @@ public class SystemConstant {
     public final static String channelLevel = "channelLevel";
     public final static String PAYTYPE = "PayType";
     public final static String DETAILSTYPE = "detailsType";
-
+    //业务类型
+    public final static String BUSITYPE ="busiType";
     // 附属通道类型
     public final static String EXTRATYPE = "extraType";
+    // 附属通道类型
+    public final static String BUSSTYPE = "bussType";
+    // 支付产品类型
+    public final static String PRODUCTTYPE = "productType";
     public final static String ORDERSTATUS = "orderStatus";
     public final static String SETTLESTATUS = "settleStatus";
     //商户类型

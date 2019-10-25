@@ -28,8 +28,8 @@
             <div class="col-sm-10">
                 <input class="form-control b-r-sm"
                        name="url" type="text" placeholder="必填"
-                       ng-model="ExtraChannelInfo.url"
-                       ng-blur="nameBlur($event, ExtraChannelInfo.url)"
+                       ng-model="ExtraChannelInfo.requestUrl"
+                       ng-blur="nameBlur($event, ExtraChannelInfo.requestUrl)"
                        required>
             </div>
         </div>
@@ -38,15 +38,15 @@
             <div class="col-sm-10">
                 <input class="form-control b-r-sm"
                        name="data" type="text" placeholder="必填"
-                       ng-model="ExtraChannelInfo.data"
-                       ng-blur="nameBlur($event, ExtraChannelInfo.data)"
+                       ng-model="ExtraChannelInfo.channelParam"
+                       ng-blur="nameBlur($event, ExtraChannelInfo.channelParam)"
                        required>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label p-w-xs"><span class="text-danger">*</span>通道类型：</label>
             <div class="col-sm-10">
-                <select class="form-control b-r-sm" ng-model="ExtraChannelInfo.type">
+                <select class="form-control b-r-sm" ng-model="ExtraChannelInfo.bussType">
                     <option ng-repeat="x in extraTypes" value="{{x.firstValue}}">{{x.name}}</option>
                 </select>
             </div>

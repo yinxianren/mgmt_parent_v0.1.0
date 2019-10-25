@@ -10,6 +10,6 @@ public interface ApiOrganizationInfoService {
 
     public Boolean savaOrUpdate(OrganizationInfoTable organizationInfoTable);
 
-    public Boolean remove(List<OrganizationInfoTable> organizationInfoTables);
+    public Boolean remove(List<String> ids);
 
 }

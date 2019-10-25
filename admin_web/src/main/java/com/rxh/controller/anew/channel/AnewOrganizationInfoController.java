@@ -43,6 +43,7 @@ public class AnewOrganizationInfoController {
     public ResponseVO delete (@RequestBody List<String> idList){
         return organizationInfoService.removeByIds(idList);
     }
+
     @SystemLogInfo(description = "支付机构修改")
     @RequestMapping("/update")
     public ResponseVO update(@RequestBody OrganizationInfoTable record){

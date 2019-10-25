@@ -32,7 +32,8 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label p-w-xs label-name-left"><span class="text-danger">*</span>通道机构：</label>
                     <div class="col-sm-9">
-                        <select class="form-control b-r-sm" ng-model="ChannelInfo.organizationId">
+                        <select class="form-control b-r-sm" ng-model="ChannelInfo.organizationId" ng-blur="checkChannelCode(ChannelInfo.organizationId)"
+                                >
                             <option ng-repeat="x in organizations" value="{{x.organizationId}}">{{x.organizationName}}</option>
                         </select>
                     </div>
@@ -46,17 +47,24 @@
                                required>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label class="col-sm-3 control-label p-w-xs label-name-left"><span class="text-danger">*</span>支付方式：</label>
+                <div class="form-group m-t">
+                    <label class="col-sm-3 control-label p-w-xs label-name-left"><span class="text-danger">*</span>通道标识：</label>
                     <div class="col-sm-9">
-                        <select class="form-control b-r-sm" name="type" ng-model="ChannelInfo.type"
-                                ng-blur="statusBlur($event, ChannelInfo.type)" required
-                                ng-options="+(x.firstValue) as x.name for x in paytype">
-                        </select>
+                        <input class="form-control b-r-sm" name="channelTab" type="text" placeholder="必填"
+                               ng-model="ChannelInfo.channelTab"
+                               required />
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-3 control-label p-w-xs label-name-left"><span class="text-danger">*</span>支付产品：</label>
+                    <div class="col-sm-9">
+                        <select class="form-control b-r-sm" name="productId" ng-model="ChannelInfo.productId"
+                                ng-blur="statusBlur($event, products)" required
+                                ng-options="(x.productId) as x.productName for x in products">
+                        </select>
+                    </div>
+                </div>
+               <%-- <div class="form-group">
                     <label class="col-sm-3 control-label p-w-xs label-name-left">代付通道：</label>
                     <div class="col-sm-9">
                         <select class="form-control b-r-sm" ng-model="ChannelInfo.outChannelId" ng-blur="checkChannelTransCode()">
@@ -70,13 +78,12 @@
                     <div class="col-sm-9" style="color: #e6bd76;">
                        支付商户号和代付通道支付商户号不一致！
                     </div>
-                </div>
+                </div>--%>
                 <div class="form-group">
                     <label class="col-sm-3 control-label p-w-xs label-name-left"><span class="text-danger">*</span>请求地址：</label>
                     <div class="col-sm-9">
-                        <input class="form-control b-r-sm" name="payUrl" type="text" placeholder="必填"
-                               ng-model="ChannelInfo.payUrl" ng-blur="nameBlur($event, ChannelInfo.payUrl)"
-                               required>
+                        <input class="form-control b-r-sm" name="requestUrl" type="text" placeholder="必填"
+                               ng-model="ChannelInfo.requestUrl" required>
                     </div>
                 </div>
                 <div class="form-group">
@@ -88,7 +95,15 @@
                         </select>
                     </div>
                 </div>
-
+                <div class="form-group">
+                    <label class="col-sm-3 control-label p-w-xs label-name-left"><span class="text-danger">*</span>业务类型：</label>
+                    <div class="col-sm-9">
+                        <select class="form-control b-r-sm" name="busiType" ng-model="ChannelInfo.busiType"
+                                ng-blur="statusBlur($event, ChannelInfo.busiType)" required
+                                ng-options="(x.firstValue) as x.name for x in busiTypes">
+                        </select>
+                    </div>
+                </div>
             </uib-tab>
             <uib-tab index="1" disable="nextDisabled(myForm, 0)">
                 <uib-tab-heading><i class="fa fa-address-card"></i>&nbsp;通道配置</uib-tab-heading>
@@ -145,7 +160,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label p-w-xs label-name-left">银行参数：</label>
                     <div class="col-sm-9">
-                    <textarea class="form-control b-r-sm" ng-model="ChannelInfo.others"
+                    <textarea class="form-control b-r-sm" ng-model="ChannelInfo.channelParam"
                               style="max-width: 100%;height: 100px"></textarea>
                     </div>
                 </div>

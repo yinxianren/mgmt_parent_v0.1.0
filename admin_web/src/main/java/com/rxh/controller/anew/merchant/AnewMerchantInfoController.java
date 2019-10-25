@@ -1,5 +1,6 @@
-package com.rxh.controller;
+package com.rxh.controller.anew.merchant;
 
+import com.rxh.cache.RedisCacheCommonCompoment;
 import com.rxh.pojo.Result;
 import com.rxh.service.ConstantService;
 import com.rxh.service.square.*;
@@ -7,7 +8,6 @@ import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.square.pojo.MerchantInfo;
 import com.rxh.util.UserInfoUtils;
 import com.rxh.utils.SystemConstant;
-import com.rxh.cache.RedisCacheCommonCompoment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/merchantInfo")
-public class MerchantInfoController {
+public class AnewMerchantInfoController {
 
 
     @Autowired

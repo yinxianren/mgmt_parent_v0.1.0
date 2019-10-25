@@ -23,9 +23,9 @@ public class ApiProductTypeSettingServiceImpl implements ApiProductTypeSettingSe
         return productTypeSettingDBService.saveOrUpdate(productSettingTable);
     }
 
-    public Boolean removeById(String id){
-        if(isBlank(id))  return false;
-        return productTypeSettingDBService.removeById(id);
+    public Boolean removeById(List<Long> ids){
+        if(isHasNotElement(ids))  return false;
+        return productTypeSettingDBService.removeByIds(ids);
     }
 
     public List<ProductSettingTable> list(ProductSettingTable productSettingTable){

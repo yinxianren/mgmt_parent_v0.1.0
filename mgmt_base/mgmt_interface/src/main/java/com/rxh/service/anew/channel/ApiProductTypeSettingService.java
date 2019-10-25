@@ -8,7 +8,7 @@ public interface ApiProductTypeSettingService {
 
      Boolean SaveOrUpdate(ProductSettingTable productSettingTable);
 
-     Boolean removeById(String id);
+     Boolean removeById(List<Long> id);
 
      List<ProductSettingTable> list(ProductSettingTable productSettingTable);
 

@@ -23,6 +23,7 @@ public class ApiOrganizationInfoServiceImpl implements ApiOrganizationInfoServic
         if (isNull(organizationInfoTable)) return organizationInfoDBService.list();
         LambdaQueryWrapper<OrganizationInfoTable> queryWrapper = new QueryWrapper<OrganizationInfoTable>().lambda();
         if (StringUtils.isNotEmpty(organizationInfoTable.getOrganizationName()))  queryWrapper.eq(OrganizationInfoTable::getOrganizationName, organizationInfoTable.getOrganizationName());
+        if ((organizationInfoTable.getId()!= null) && organizationInfoTable.getId()>0)  queryWrapper.eq(OrganizationInfoTable::getId, organizationInfoTable.getId());
         return organizationInfoDBService.list(queryWrapper);
     }
 
@@ -33,8 +34,8 @@ public class ApiOrganizationInfoServiceImpl implements ApiOrganizationInfoServic
     }
 
     @Override
-    public Boolean remove(List<OrganizationInfoTable> organizationInfoTables) {
-        if (isHasNotElement(organizationInfoTables)) return false;
-        return organizationInfoDBService.removeByIds(organizationInfoTables);
+    public Boolean remove(List<String> ids) {
+        if (isHasNotElement(ids)) return false;
+        return organizationInfoDBService.removeByIds(ids);
     }
 }

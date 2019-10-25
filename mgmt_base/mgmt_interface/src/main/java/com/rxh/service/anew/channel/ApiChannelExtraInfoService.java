@@ -12,5 +12,5 @@ public interface ApiChannelExtraInfoService {
 
     Boolean saveOrUpdate(ChannelExtraInfoTable channelExtraInfoTable);
 
-    Boolean removeByIds(List<ChannelExtraInfoTable> extraInfoTables);
+    Boolean removeByIds(List<String> ids);
 }

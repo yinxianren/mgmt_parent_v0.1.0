@@ -9,6 +9,8 @@ import com.rxh.service.anew.merchant.ApiMerchantInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: panda
@@ -28,6 +30,27 @@ public class ApiMerchantInfoServiceImpl implements ApiMerchantInfoService, NewPa
         LambdaQueryWrapper<MerchantInfoTable>  lambdaQueryWrapper=new QueryWrapper<MerchantInfoTable>().lambda();
         if( !isBlank(mit.getMerchantId()) ) lambdaQueryWrapper.eq(MerchantInfoTable::getMerchantId,mit.getMerchantId());
         return merchantInfoDbService.getOne(lambdaQueryWrapper);
+    }
+
+    @Override
+    public List<MerchantInfoTable> getMerchant(MerchantInfoTable merchantInfoTable) {
+        if (isNull(merchantInfoTable)) return merchantInfoDbService.list();
+        LambdaQueryWrapper<MerchantInfoTable>  lambdaQueryWrapper=new QueryWrapper<MerchantInfoTable>().lambda();
+        if( !isBlank(merchantInfoTable.getMerchantId()) ) lambdaQueryWrapper.eq(MerchantInfoTable::getMerchantId,merchantInfoTable.getMerchantId());
+        if( !isBlank(merchantInfoTable.getMerchantId()) ) lambdaQueryWrapper.eq(MerchantInfoTable::getMerchantId,merchantInfoTable.getMerchantId());
+        if( !isBlank(merchantInfoTable.getMerchantId()) ) lambdaQueryWrapper.eq(MerchantInfoTable::getMerchantId,merchantInfoTable.getMerchantId());
+        if( !isBlank(merchantInfoTable.getMerchantId()) ) lambdaQueryWrapper.eq(MerchantInfoTable::getMerchantId,merchantInfoTable.getMerchantId());
+        return null;
+    }
+
+    @Override
+    public Boolean saveOrUpdate(MerchantInfoTable merchantInfoTable) {
+        return null;
+    }
+
+    @Override
+    public Boolean delByIds(List<String> ids) {
+        return null;
     }
 
 

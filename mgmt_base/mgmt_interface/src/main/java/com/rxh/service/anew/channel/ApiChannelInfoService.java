@@ -10,4 +10,10 @@ public interface ApiChannelInfoService {
     List<ChannelInfoTable>  batchGetByChannelId(Set<String> channelIdSet);
 
     ChannelInfoTable getOne(ChannelInfoTable cit);
+
+    List<ChannelInfoTable> getChannel(ChannelInfoTable cit);
+
+    Boolean savaOrUpdate(ChannelInfoTable cit);
+
+    Boolean delByIds(List<String> ids);
 }

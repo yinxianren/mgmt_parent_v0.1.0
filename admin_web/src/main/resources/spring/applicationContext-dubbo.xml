@@ -55,5 +55,8 @@
     <dubbo:reference interface="com.rxh.service.AgentSystemService" id="agentSystemService"/>
     <dubbo:reference interface="com.rxh.service.sys.SysConstantService" id="sysConstantService" />
     <dubbo:reference interface="com.rxh.service.anew.system.ApiOrganizationInfoService" id="apiOrganizationInfoService" />
+    <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelExtraInfoService" id="apiChannelExtraInfoService" />
+    <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelInfoService" id="apiChannelInfoService" />
+    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantInfoService" id="apiMerchantInfoService" />
 
 </beans>
