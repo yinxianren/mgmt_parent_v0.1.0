@@ -4,17 +4,19 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @Description  
+ * @Description
  * @Author  monkey
  * @Date 2019-10-22 
  */
 
 @TableName ( "2_merchant_info_table" )
-@Data
+@Getter
 public class MerchantInfoTable  implements Serializable {
 	@TableId(type= IdType.AUTO)
 	private Long id;//表主键
@@ -38,4 +40,103 @@ public class MerchantInfoTable  implements Serializable {
 	private Date createTime;//创建时间
 	private Date updateTime;//更新时间
 
+	public MerchantInfoTable setId(Long id) {
+		this.id = id;
+		return this;
+	}
+
+	public MerchantInfoTable setMerchantId(String merchantId) {
+		this.merchantId = merchantId;
+		return this;
+	}
+
+	public MerchantInfoTable setMerchantName(String merchantName) {
+		this.merchantName = merchantName;
+		return this;
+	}
+
+	public MerchantInfoTable setMerchantShortName(String merchantShortName) {
+		this.merchantShortName = merchantShortName;
+		return this;
+	}
+
+	public MerchantInfoTable setType(String type) {
+		this.type = type;
+		return this;
+	}
+
+	public MerchantInfoTable setAgentMerchantId(String agentMerchantId) {
+		this.agentMerchantId = agentMerchantId;
+		return this;
+	}
+
+	public MerchantInfoTable setSecretKey(String secretKey) {
+		this.secretKey = secretKey;
+		return this;
+	}
+
+	public MerchantInfoTable setPrivateKey(String privateKey) {
+		this.privateKey = privateKey;
+		return this;
+	}
+
+	public MerchantInfoTable setPublicKey(String publicKey) {
+		this.publicKey = publicKey;
+		return this;
+	}
+
+	public MerchantInfoTable setIdentityType(Integer identityType) {
+		this.identityType = identityType;
+		return this;
+	}
+
+	public MerchantInfoTable setIdentityNum(String identityNum) {
+		this.identityNum = identityNum;
+		return this;
+	}
+
+	public MerchantInfoTable setIdentityPath(String identityPath) {
+		this.identityPath = identityPath;
+		return this;
+	}
+
+	public MerchantInfoTable setPhone(String phone) {
+		this.phone = phone;
+		return this;
+	}
+
+	public MerchantInfoTable setPhoneStatus(Integer phoneStatus) {
+		this.phoneStatus = phoneStatus;
+		return this;
+	}
+
+	public MerchantInfoTable setEmail(String email) {
+		this.email = email;
+		return this;
+	}
+
+	public MerchantInfoTable setEmailStatus(Integer emailStatus) {
+		this.emailStatus = emailStatus;
+		return this;
+	}
+
+	public MerchantInfoTable setQq(String qq) {
+		this.qq = qq;
+		return this;
+	}
+
+	public MerchantInfoTable setStatus(Integer status) {
+		this.status = status;
+		return this;
+	}
+
+	public MerchantInfoTable setCreateTime(Date createTime) {
+		this.createTime = createTime;
+		return this;
+	}
+
+	public MerchantInfoTable setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+		return this;
+	}
 }

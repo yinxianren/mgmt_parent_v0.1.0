@@ -5,6 +5,7 @@ import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonSerivceInterface;
 import com.rxh.anew.table.business.MerchantCardTable;
+import com.rxh.anew.table.business.PayOrderInfoTable;
 import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.channel.ChannelHistoryTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
@@ -132,4 +133,13 @@ public interface NewPayOrderService extends CommonSerivceInterface {
      * @return
      */
     ChannelInfoTable getFeasibleChannel(MerchantPayOrderDTO merchantPayOrderDTO,List<ChannelInfoTable> channelInfoTableList, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     * 保存订单信息
+     * @param merchantPayOrderDTO
+     * @param channelInfoTable
+     * @param ipo
+     * @return
+     */
+    PayOrderInfoTable savePayOrderInfo(MerchantInfoTable merInfoTable,MerchantPayOrderDTO merchantPayOrderDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo) throws NewPayException;
 }

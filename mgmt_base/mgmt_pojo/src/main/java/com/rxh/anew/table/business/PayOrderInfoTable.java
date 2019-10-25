@@ -35,7 +35,7 @@ public class PayOrderInfoTable implements Serializable {
     private String securityCode;// 信用卡必填，格式：信用卡必填，信用卡背面三位安全码,
     private String  deviceId;// 交易设备号,
     private Integer   deviceType;// 交易设备类型(1-电脑;2-手机;3-其他) 字符串类型,
-    private Integer   macAddr;// MAC地址,
+    private String   macAddr;// MAC地址,
     private String  channelId;// 通道id,
     private String  bussType;//'b7:支付申请,b8:支付验证码,b9:确认交易
     private String  productId;// 产品类型ID,
@@ -136,7 +136,7 @@ public class PayOrderInfoTable implements Serializable {
         return this;
     }
 
-    public PayOrderInfoTable setMacAddr(Integer macAddr) {
+    public PayOrderInfoTable setMacAddr(String macAddr) {
         this.macAddr = macAddr;
         return this;
     }

@@ -4,18 +4,20 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.math.BigDecimal;
 
 /**
- * @Description  
+ * @Description
  * @Author  monkey
  * @Date 2019-10-22 
  */
 
 @TableName ( "2_merchant_rate_table" )
-@Data
+@Getter
 public class MerchantRateTable  implements Serializable {
 	@TableId(type= IdType.AUTO)
 	private Long id;//表主键
@@ -30,4 +32,58 @@ public class MerchantRateTable  implements Serializable {
 	private Date createTime;//创建时间
 	private Date updateTime;//更新时间
 
+	public MerchantRateTable setId(Long id) {
+		this.id = id;
+		return this;
+	}
+
+	public MerchantRateTable setMerchantId(String merchantId) {
+		this.merchantId = merchantId;
+		return this;
+	}
+
+	public MerchantRateTable setProductId(String productId) {
+		this.productId = productId;
+		return this;
+	}
+
+	public MerchantRateTable setSingleFee(BigDecimal singleFee) {
+		this.singleFee = singleFee;
+		return this;
+	}
+
+	public MerchantRateTable setRateFee(BigDecimal rateFee) {
+		this.rateFee = rateFee;
+		return this;
+	}
+
+	public MerchantRateTable setMarginRatio(BigDecimal marginRatio) {
+		this.marginRatio = marginRatio;
+		return this;
+	}
+
+	public MerchantRateTable setMarginCycle(String marginCycle) {
+		this.marginCycle = marginCycle;
+		return this;
+	}
+
+	public MerchantRateTable setSettleCycle(String settleCycle) {
+		this.settleCycle = settleCycle;
+		return this;
+	}
+
+	public MerchantRateTable setStatus(Integer status) {
+		this.status = status;
+		return this;
+	}
+
+	public MerchantRateTable setCreateTime(Date createTime) {
+		this.createTime = createTime;
+		return this;
+	}
+
+	public MerchantRateTable setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+		return this;
+	}
 }

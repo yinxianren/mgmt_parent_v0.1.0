@@ -27,7 +27,9 @@
     <dubbo:service interface="com.rxh.service.anew.business.ApiPayOrderInfoService"       ref="apiPayOrderInfoServiceImpl"/>
     <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelHistoryService"      ref="apiChannelHistoryServiceImpl"/>
     <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantQuotaRiskService"  ref="apiMerchantQuotaRiskServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.system.ApiRiskQuotaService"            ref="apiRiskQuotaService"/>
+    <dubbo:service interface="com.rxh.service.anew.system.ApiRiskQuotaService"            ref="apiRiskQuotaServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantSettingService"  ref="apiAgentMerchantSettingServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantRateService"       ref="apiMerchantRateServiceImpl"/>
 
 
 

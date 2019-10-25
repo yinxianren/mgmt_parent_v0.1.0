@@ -21,6 +21,8 @@
     <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelHistoryService"         id="apiChannelHistoryService"/>
     <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantQuotaRiskService"     id="apiMerchantQuotaRiskService"/>
     <dubbo:reference interface="com.rxh.service.anew.system.ApiRiskQuotaService"               id="apiRiskQuotaService"/>
+    <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantSettingService"     id="apiAgentMerchantSettingService"/>
+    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantRateService"          id="apiMerchantRateService"/>
 
 
     <!--  *****************************************************************************************************************  -->

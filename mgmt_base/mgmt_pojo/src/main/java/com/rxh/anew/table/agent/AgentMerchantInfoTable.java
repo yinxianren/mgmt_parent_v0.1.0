@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.Getter;
 
 import java.io.Serializable;
 
@@ -14,8 +15,8 @@ import java.io.Serializable;
  * Time: 上午9:21
  * Description:
  */
-@TableName("1_agent_merchant_info_table")
-@Data
+@TableName("3_agent_merchant_info_table")
+@Getter
 public class AgentMerchantInfoTable implements Serializable {
     @TableId(type= IdType.AUTO)
     private Long id;//主键
@@ -33,4 +34,79 @@ public class AgentMerchantInfoTable implements Serializable {
     private Integer status ;//商户审核状态 0：启用 ,1:禁用，2：未审核
     private String createTime ;//创建时间
     private String updateTime ;//更新时间
+
+    public AgentMerchantInfoTable setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public AgentMerchantInfoTable setAgentMerchantId(String agentMerchantId) {
+        this.agentMerchantId = agentMerchantId;
+        return this;
+    }
+
+    public AgentMerchantInfoTable setAgentMerchantName(String agentMerchantName) {
+        this.agentMerchantName = agentMerchantName;
+        return this;
+    }
+
+    public AgentMerchantInfoTable setAgentMerchantShortName(String agentMerchantShortName) {
+        this.agentMerchantShortName = agentMerchantShortName;
+        return this;
+    }
+
+    public AgentMerchantInfoTable setAgentIdentityType(Integer agentIdentityType) {
+        this.agentIdentityType = agentIdentityType;
+        return this;
+    }
+
+    public AgentMerchantInfoTable setAgentIdentityNum(String agentIdentityNum) {
+        this.agentIdentityNum = agentIdentityNum;
+        return this;
+    }
+
+    public AgentMerchantInfoTable setAgentIdentityPath(String agentIdentityPath) {
+        this.agentIdentityPath = agentIdentityPath;
+        return this;
+    }
+
+    public AgentMerchantInfoTable setPhone(String phone) {
+        this.phone = phone;
+        return this;
+    }
+
+    public AgentMerchantInfoTable setPhoneStatus(Integer phoneStatus) {
+        this.phoneStatus = phoneStatus;
+        return this;
+    }
+
+    public AgentMerchantInfoTable setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public AgentMerchantInfoTable setEmailStatus(Integer emailStatus) {
+        this.emailStatus = emailStatus;
+        return this;
+    }
+
+    public AgentMerchantInfoTable setQq(String qq) {
+        this.qq = qq;
+        return this;
+    }
+
+    public AgentMerchantInfoTable setStatus(Integer status) {
+        this.status = status;
+        return this;
+    }
+
+    public AgentMerchantInfoTable setCreateTime(String createTime) {
+        this.createTime = createTime;
+        return this;
+    }
+
+    public AgentMerchantInfoTable setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+        return this;
+    }
 }

@@ -10,6 +10,7 @@ import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.shortcut.NewPayOrderService;
 import com.rxh.anew.table.business.MerchantCardTable;
+import com.rxh.anew.table.business.PayOrderInfoTable;
 import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.channel.ChannelHistoryTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
@@ -122,6 +123,9 @@ public class NewPayOrderController extends NewAbstractCommonController {
                 //获取一个可用通
                 channelInfoTable = newPayOrderService.getFeasibleChannel(merchantPayOrderDTO,channelInfoTableList,ipo);
             }
+            //保存订单信息
+            PayOrderInfoTable payOrderInfoTable = newPayOrderService.savePayOrderInfo(merInfoTable,merchantPayOrderDTO,channelInfoTable,ipo);
+
             //获取进件成功的附属表
 //            RegisterCollectTable registerCollectTable = newPayPaymentBondCardService.getSuccessRegisterCollectInfo(merchantPayOrderDTO,ipo);
             //根据平台流水号获取进件成功的附属表

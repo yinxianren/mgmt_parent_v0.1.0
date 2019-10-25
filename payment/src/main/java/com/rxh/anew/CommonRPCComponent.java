@@ -1,5 +1,7 @@
 package com.rxh.anew;
 
+import com.rxh.service.anew.agent.ApiAgentMerchantInfoService;
+import com.rxh.service.anew.agent.ApiAgentMerchantSettingService;
 import com.rxh.service.anew.business.ApiMerchantCardService;
 import com.rxh.service.anew.business.ApiPayOrderInfoService;
 import com.rxh.service.anew.business.ApiRegisterCollectService;
@@ -10,6 +12,7 @@ import com.rxh.service.anew.channel.ApiChannelInfoService;
 import com.rxh.service.anew.channel.ApiProductTypeSettingService;
 import com.rxh.service.anew.merchant.ApiMerchantInfoService;
 import com.rxh.service.anew.merchant.ApiMerchantQuotaRiskService;
+import com.rxh.service.anew.merchant.ApiMerchantRateService;
 import com.rxh.service.anew.system.ApiMerchantSettingService;
 import com.rxh.service.anew.system.ApiRiskQuotaService;
 import com.rxh.service.anew.system.ApiSystemOrderTrackService;
@@ -40,4 +43,7 @@ public  class CommonRPCComponent {
     public final ApiChannelHistoryService     apiChannelHistoryService;
     public final ApiMerchantQuotaRiskService  apiMerchantQuotaRiskService;
     public final ApiRiskQuotaService          apiRiskQuotaService;
+    public final ApiAgentMerchantInfoService  apiAgentMerchantInfoService;
+    public final ApiAgentMerchantSettingService apiAgentMerchantSettingService;
+    public final ApiMerchantRateService       apiMerchantRateService;
 }
