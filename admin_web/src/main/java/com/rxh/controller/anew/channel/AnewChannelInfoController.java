@@ -1,81 +1,73 @@
-package com.rxh.controller;
+package com.rxh.controller.anew.channel;
 
+import com.rxh.anew.table.channel.ChannelInfoTable;
+import com.rxh.anew.table.system.ProductSettingTable;
+import com.rxh.cache.RedisCacheCommonCompoment;
+import com.rxh.service.AnewChannelService;
 import com.rxh.service.ConstantService;
+import com.rxh.service.ProductTypeSettingService;
 import com.rxh.service.square.ChannelInfoService;
 import com.rxh.service.square.OrganizationService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.square.pojo.ChannelInfo;
 import com.rxh.square.pojo.OrganizationInfo;
 import com.rxh.utils.SystemConstant;
-import com.rxh.cache.RedisCacheCommonCompoment;
+import com.rxh.vo.ResponseVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/ChannelInfo")
-public class ChannelInfoController {
+@Slf4j
+public class AnewChannelInfoController {
 
-    @Autowired
-    private ChannelInfoService channelInfoService;
     @Autowired
     private OrganizationService organizationService;
     @Autowired
     private ConstantService constantService;
     @Autowired
-    private RedisCacheCommonCompoment redisCacheCommonCompoment;
+    private AnewChannelService anewChannelService;
+    @Autowired
+    private ProductTypeSettingService productTypeSettingService;
 
     @SystemLogInfo(description = "支付通道查询")
     @RequestMapping("/getAll")
-    public List<ChannelInfo> getAll(){
-        //modify by gjm 添加redis  at 20190808 start
-        List<ChannelInfo> list = redisCacheCommonCompoment.channelInfoCache.getAll();
-        if(null == list || list.isEmpty()){
-            list = channelInfoService.getAll();
-        }
-        //modify by gjm 添加redis  at 20190808 end
-        return list;
+    public ResponseVO getAll(){
+        return anewChannelService.getAll(new ChannelInfoTable());
     }
     @SystemLogInfo(description = "支付通道增加")
     @RequestMapping("/insert")
-    public int insert(@RequestBody ChannelInfo channelInfo){
-        int i = channelInfoService.insert(channelInfo);
-        return i;
+    public ResponseVO insert(@RequestBody ChannelInfoTable channelInfo){
+        channelInfo.setCreateTime(new Date());
+        channelInfo.setUpdateTime(new Date());
+        channelInfo.setChannelId("CH"+System.currentTimeMillis());
+        return anewChannelService.saveOrUpdate(channelInfo);
     }
     @SystemLogInfo(description = "支付通道删除")
     @RequestMapping("/delete")
-    public boolean delete(@RequestBody List<String> ids){
-        String[] strArr=new String[ids.size()];
-        for(int i=0;i<ids.size();i++){
-            strArr[i]=ids.get(i);
-        }
-        boolean flag = channelInfoService.deleteByPrimaryKey(strArr);
-        return flag;
+    public ResponseVO delete(@RequestBody List<String> ids){
+        return anewChannelService.delByIds(ids);
     }
 
     @SystemLogInfo(description = "支付通道修改")
     @RequestMapping("/update")
-    public int update(@RequestBody ChannelInfo channelInfo){
-        int i = channelInfoService.updateByPrimaryKeySelective(channelInfo);
-        return i;
+    public ResponseVO update(@RequestBody ChannelInfoTable channelInfo){
+        channelInfo.setUpdateTime(new Date());
+        return anewChannelService.saveOrUpdate(channelInfo);
     }
     @SystemLogInfo(description = "支付通道查询")
     @RequestMapping("/search")
-    public List<ChannelInfo> search(@RequestBody ChannelInfo channelInfo){
-        //modify by gjm 添加redis  at 20190808 start
-        List<ChannelInfo> list = null;
-        if (channelInfo == null){
-            list = redisCacheCommonCompoment.channelInfoCache.getAll();
-        }
-        if(null == list || list.isEmpty()){
-            list = channelInfoService.selectByExample(channelInfo);
-        }
-        //modify by gjm 添加redis  at 20190808 end
-        return list;
+    public ResponseVO search(@RequestBody ChannelInfoTable channelInfo){
+        return anewChannelService.getAll(channelInfo);
     }
 
     @RequestMapping(value = "/getInit")
@@ -86,8 +78,10 @@ public class ChannelInfoController {
         init.put("status", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.availableStatus));
         init.put("paytype", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
         init.put("channelLevel", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.channelLevel));
+        init.put("busiTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.BUSITYPE));
+        init.put("products", productTypeSettingService.selectByOrganizationId(new ProductSettingTable()).getData());
+        init.put("productTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PRODUCTTYPE));
         return init;
     }
-
 
 }

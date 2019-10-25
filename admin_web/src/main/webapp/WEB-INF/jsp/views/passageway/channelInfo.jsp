@@ -26,14 +26,6 @@
                             <div class="col-sm-6 col-md-6 col-lg-1-5">
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
-                                        <span class="input-group-addon">通道名称：</span>
-                                        <input type="text" class="form-control" ng-model="searchInfo.channelName">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-md-6 col-lg-1-5">
-                                <div class="form-group form-group-sm">
-                                    <div class="input-group">
                                         <span class="input-group-addon">机构名称：</span>
                                         <select class="form-control b-r-sm" ng-model="searchInfo.organizationId"
                                                 ng-options="x.organizationId as x.organizationName for x in organizations">
@@ -56,9 +48,9 @@
                             <div class="col-sm-6 col-md-6 col-lg-1-5">
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
-                                        <span class="input-group-addon">支付方式：</span>
-                                        <select class="form-control b-r-sm" ng-model="searchInfo.type"
-                                                ng-options="x.firstValue as x.name for x in paytype">
+                                        <span class="input-group-addon">支付产品：</span>
+                                        <select class="form-control b-r-sm" ng-model="searchInfo.productId"
+                                                ng-options="x.firstValue as x.name for x in productTypes">
                                             <option value=""></option>
                                         </select>
                                     </div>
@@ -83,22 +75,16 @@
                                    class="table table-condensed table-striped table-hover table-bordered">
                                 <tr ng-repeat="row in $data">
                                     <td class="text-center p-6" style="width: 35px">
-                                        <input type="checkbox" ng-model="selected[row.channelId]">
+                                        <input type="checkbox" ng-model="selected[row.id]">
                                     </td>
                                     <td class="text-center" data-title="'通道ID'">
                                         {{row.channelId  }}
                                     </td>
-                                    <td class="text-center" data-title="'通道名称'">
-                                        {{row.channelName}}
-                                    </td>
                                     <td class="text-center" data-title="'机构名称'">
                                         {{row.organizationId | getValueByList : organizations : 'organizationId' : 'organizationName'}}
                                     </td>
-                                    <td class="text-center" data-title="'支付方式'">
-                                        {{row.type | getValueByList : paytype : 'firstValue' : 'name'}}
-                                    </td>
-                                    <td class="text-center" data-title="'代付通道'">
-                                        {{row.outChannelId | getValueByList : outChannels : 'channelId' : 'channelName'}}
+                                    <td class="text-center" data-title="'支付产品'">
+                                        {{row.productId | getValueByList : productTypes : 'firstValue' : 'name'}}
                                     </td>
                                     <td class="text-center" data-title="'单笔手续费'">
                                         {{row.channelSingleFee  }}
@@ -119,16 +105,16 @@
                                     </td>
                                     <td class="text-center"  style="max-width: 100px" data-title="'其他参数'">
                                         <div class="hidden-text">
-                                            <a ng-click="showInfo(row.others)">
-                                                {{row.others}}
+                                            <a ng-click="showInfo(row.channelParam)">
+                                                {{row.channelParam}}
                                             </a>
                                         </div>
                                     </td>
                                     <td class="text-center" style="max-width: 80px" data-title="'请求地址'">
-                                        <div class="hidden-text" uib-tooltip="{{row.payUrl}}">
+                                        <div class="hidden-text" uib-tooltip="{{row.requestUrl}}">
                                             <div class="hidden-text">
-                                                <a ng-click="showInfo(row.payUrl)">
-                                                    {{row.payUrl}}
+                                                <a ng-click="showInfo(row.requestUrl)">
+                                                    {{row.requestUrl}}
                                                 </a>
                                             </div>
                                            <%-- {{row.payUrl}}--%>

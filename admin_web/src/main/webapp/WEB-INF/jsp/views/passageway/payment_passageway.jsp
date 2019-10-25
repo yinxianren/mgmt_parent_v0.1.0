@@ -65,7 +65,7 @@
                                            class="table table-condensed table-striped table-hover table-bordered">
                                         <tr ng-repeat="row in $data">
                                             <td class="text-center p-6" style="width: 35px">
-                                                <input type="checkbox" ng-model="selected[row.organizationId]">
+                                                <input type="checkbox" ng-model="selected[row.id]">
                                             </td>
                                             <td class="text-center" data-title="'机构ID'">
                                                 {{row.organizationId}}

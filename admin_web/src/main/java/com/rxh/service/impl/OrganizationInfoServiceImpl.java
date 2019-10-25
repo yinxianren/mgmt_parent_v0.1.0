@@ -9,6 +9,7 @@ import com.rxh.service.anew.channel.ApiProductTypeSettingService;
 import com.rxh.service.anew.system.ApiOrganizationInfoService;
 import com.rxh.square.pojo.OrganizationInfo;
 import com.rxh.vo.ResponseVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,7 +65,7 @@ public class OrganizationInfoServiceImpl implements OrganizationInfoService, New
         ProductSettingTable table = new ProductSettingTable();
         table.setOrganizationId(organizationInfo.getOrganizationId());
         List<ProductSettingTable> list = apiProductTypeSettingService.list(table);
-        List<String> ids = Arrays.asList(organizationInfo.getProductIds().split(","));
+        List<String> ids = StringUtils.isNotEmpty(organizationInfo.getProductIds())?Arrays.asList(organizationInfo.getProductIds().split(",")):new ArrayList<>();
         for (ProductSettingTable productSettingTable : list){
             if (ids.contains(productSettingTable.getProductId())){
                 if (productSettingTable.getStatus() == 1)
@@ -86,14 +87,21 @@ public class OrganizationInfoServiceImpl implements OrganizationInfoService, New
 
     @Override
     public ResponseVO removeByIds(List<String> idList) {
-        List<OrganizationInfoTable> list = new ArrayList<>();
-
+        List<Long> productIds = new ArrayList<>();
         for (String id : idList){
+            ProductSettingTable productSettingTable = new ProductSettingTable();
             OrganizationInfoTable organizationInfoTable = new OrganizationInfoTable();
             organizationInfoTable.setId(Long.valueOf(id));
-            list.add(organizationInfoTable);
+            List<OrganizationInfoTable> list = apiOrganizationInfoService.getAll(organizationInfoTable);
+            organizationInfoTable = list.get(0);
+            productSettingTable.setOrganizationId(organizationInfoTable.getOrganizationId());
+            List<ProductSettingTable> productSettingTables = apiProductTypeSettingService.list(productSettingTable);
+            for (ProductSettingTable productSettingTable1 : productSettingTables){
+                productIds.add(productSettingTable1.getId());
+            }
         }
-        Boolean b = apiOrganizationInfoService.remove(list);
+        apiProductTypeSettingService.removeById(productIds);
+        Boolean b = apiOrganizationInfoService.remove(idList);
         ResponseVO responseVO = new ResponseVO();
         if (b){
             responseVO.setCode(0);

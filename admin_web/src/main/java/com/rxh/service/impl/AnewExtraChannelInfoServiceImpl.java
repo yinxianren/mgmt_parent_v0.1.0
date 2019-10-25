@@ -38,13 +38,7 @@ public class AnewExtraChannelInfoServiceImpl implements AnewExtraChannelInfoServ
 
     @Override
     public ResponseVO removeByIds(List<String> idLists) {
-        List<ChannelExtraInfoTable> extraInfoTables = new ArrayList<>();
-        for (String id : idLists){
-            ChannelExtraInfoTable extraInfoTable = new ChannelExtraInfoTable();
-            extraInfoTable.setId(Long.valueOf(id));
-            extraInfoTables.add(extraInfoTable);
-        }
-        Boolean b = apiChannelExtraInfoService.removeByIds(extraInfoTables);
+        Boolean b = apiChannelExtraInfoService.removeByIds(idLists);
         ResponseVO responseVO = new ResponseVO();
         if (b){
             responseVO.setCode(0);

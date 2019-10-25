@@ -4,6 +4,7 @@ import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.pojo.sys.SysConstant;
 import com.rxh.service.ConstantService;
 import com.rxh.service.ProductTypeSettingService;
+import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,7 @@ public class ProductTypeSettingController {
     public ResponseVO getProductTypeAll(String id){
         log.info("请求获取所有支付产品接口");
         try {
-            List<SysConstant> list = constantService.getConstantByGroupName("productType");
+            List<SysConstant> list = constantService.getConstantByGroupName(SystemConstant.PRODUCTTYPE);
             ResponseVO responseVO = new ResponseVO();
             responseVO.setCode(0);
             responseVO.setData(list);

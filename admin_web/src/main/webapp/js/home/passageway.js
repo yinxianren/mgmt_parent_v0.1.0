@@ -24,6 +24,7 @@ function paymentPassagewayCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
     $scope.statusChange = function ($event, row) {
         httpSvc.getData('post', '/organization/update', {
             organizationId: row.organizationId,
+            id: row.id,
             status: row.status ? 0 : 1
         }).then(function (value) {
             if (value) {
@@ -149,7 +150,7 @@ function paymentPassagewayCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
         });
         modalInstance.result.then(function () {
             httpSvc.getData('post', '/organization/delete', idList).then(function (value) {
-                if (value> 0) {
+                if (!value.code) {
                     toaster.pop({
                         type: 'success',
                         title: '支付机构',
@@ -157,7 +158,6 @@ function paymentPassagewayCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
                     });
                     tableReload();
                 } else {
-
                     toaster.pop({
                         type: 'warning',
                         title: '支付机构',
@@ -343,31 +343,32 @@ function channelInfoCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
     var ChannelInfo;
     $scope.outChannels = [];
     httpSvc.getData('post', '/ChannelInfo/getInit').then(function (value) {
-        init = value;
+        init = value.data;
         $scope.organizations = value.organizations;
         $scope.paytype = value.paytype;
         $scope.status = value.status;
         $scope.channelLevel = value.channelLevel;
+        $scope.productTypes = value.productTypes;
         httpSvc.getData('post', '/ChannelInfo/search',searchInfo).then(function (value1) {
-            ChannelInfo = value1;
+            ChannelInfo = value1.data;
             $scope.ChannelInfoTable = new NgTableParams({}, {
-                dataset: value1
+                dataset: value1.data
             });
             // 代付通道
-            initOutChannels(value1);
+            // initOutChannels(value1);
             angular.element('.ibox-content').removeClass('sk-loading');
         });
     });
-    function  initOutChannels(value1){
-        $scope.outChannels = [];
-        /*for(var i=0;i<value1.length;i++){
-            if (value1[i].type === 4){
-                $scope.outChannels.push(value1[i]);
-            }
-        }*/
-        $scope.outChannels = angular.copy(value1);
-        console.log($scope.outChannels);
-    }
+    // function  initOutChannels(value1){
+    //     $scope.outChannels = [];
+    //     /*for(var i=0;i<value1.length;i++){
+    //         if (value1[i].type === 4){
+    //             $scope.outChannels.push(value1[i]);
+    //         }
+    //     }*/
+    //     $scope.outChannels = angular.copy(value1);
+    //     console.log($scope.outChannels);
+    // }
 
     $scope.reset=function () {
         $scope.searchInfo = angular.copy(defaultSearch);
@@ -379,9 +380,9 @@ function channelInfoCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
         angular.element('.ibox-content').addClass('sk-loading');
         httpSvc.getData('post', '/ChannelInfo/getAll').then(function (value) {
             $scope.ChannelInfoTable.settings({
-                dataset: value
+                dataset: value.data
             });
-            initOutChannels(value);
+            // initOutChannels(value.data);
             angular.element('.ibox-content').removeClass('sk-loading');
         });
     }
@@ -489,7 +490,7 @@ function channelInfoCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
         });
         modalInstance.result.then(function () {
             httpSvc.getData('post', '/ChannelInfo/delete', idList).then(function (value) {
-                if (value> 0) {
+                if (value.code == 0) {
                     toaster.pop({
                         type: 'success',
                         title: '支付通道',
@@ -524,9 +525,9 @@ function channelInfoCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
         searchInfo = angular.copy($scope.searchInfo);
         console.log(searchInfo);
         httpSvc.getData('post', '/ChannelInfo/search',searchInfo).then(function (value1) {
-            ChannelInfo = value1;
+            ChannelInfo = value1.data;
             $scope.ChannelInfoTable = new NgTableParams({}, {
-                dataset: value1
+                dataset: value1.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
@@ -550,12 +551,25 @@ function channelInfoModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type,
     }
     $scope.searchInfo = angular.copy(defaultSearch);
     $scope.type = type;
-    $scope.organizations = init.organizations;
+    /*$scope.organizations = init.organizations;
     $scope.paytype = init.paytype;
     $scope.status = init.status;
-    $scope.channelLevel = init.channelLevel;
+    $scope.channelLevel = init.channelLevel;*/
+    httpSvc.getData('post', '/ChannelInfo/getInit').then(function (value) {
+        init = value.data;
+        $scope.organizations = value.organizations;
+        $scope.paytype = value.paytype;
+        $scope.status = value.status;
+        $scope.channelLevel = value.channelLevel;
+        $scope.busiTypes = value.busiTypes;
+    });
     if (type === 1) {
         $scope.ChannelInfo = angular.copy(ChannelInfo);
+        httpSvc.getData('get', '/product/getProductList',{
+            organizationId: ChannelInfo.organizationId
+        }).then(function (value) {
+            $scope.products = value.data;
+        });
         checkChannelTransCodeUpdate();
     }else  {
         $scope.ChannelInfo = {others:'{}'};
@@ -568,6 +582,13 @@ function channelInfoModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type,
     });
     $scope.checkChannelTransCode =  function(){
         checkChannelTransCodeUpdate();
+    }
+    $scope.checkChannelCode = function (value) {
+        httpSvc.getData('get', '/product/getProductList',{
+            organizationId: value
+        }).then(function (value) {
+            $scope.products = value.data;
+        });
     }
     function checkChannelTransCodeUpdate(){
 
@@ -616,7 +637,7 @@ function channelInfoModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type,
                 if (type === 0) {
                     console.log(myForm);
                     httpSvc.getData('post', '/ChannelInfo/insert', myForm).then(function (value) {
-                        if (value) {
+                        if (!value.code) {
                             $scope.bankInfo = null;
                             toaster.pop({
                                 type: 'success',
@@ -635,7 +656,7 @@ function channelInfoModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type,
                     });
                 } else {
                     httpSvc.getData('post', '/ChannelInfo/update', $scope.ChannelInfo).then(function (value) {
-                        if (value) {
+                        if (!value.code) {
                             $scope.bankInfo = null;
                             toaster.pop({
                                 type: 'success',
@@ -684,9 +705,9 @@ function attachPassagewayMgmtCtrl($scope, $uibModal, toaster, NgTableParams, htt
         $scope.extraTypes = value.extraTypes;
         console.log($scope.channelInfoList);
         httpSvc.getData('post', '/ExtraChannelInfo/search',searchInfo).then(function (value1) {
-            extraChannelInfo = value1;
+            extraChannelInfo = value1.data;
             $scope.extraChannelInfoTable = new NgTableParams({}, {
-                dataset: value1
+                dataset: value1.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
@@ -734,10 +755,10 @@ function attachPassagewayMgmtCtrl($scope, $uibModal, toaster, NgTableParams, htt
     //更新状态
     $scope.statusChange = function ($event, row) {
         httpSvc.getData('post', '/ExtraChannelInfo/update', {
-            channelId: row.channelId,
+            id: row.id,
             status: row.status ? 0 : 1
         }).then(function (value) {
-            if (value.code) {
+            if (!value.code) {
                 toaster.pop({
                     type: 'success',
                     title: '附属通道',
@@ -805,7 +826,7 @@ function attachPassagewayMgmtCtrl($scope, $uibModal, toaster, NgTableParams, htt
         });
         modalInstance.result.then(function () {
             httpSvc.getData('post', '/ExtraChannelInfo/delete', idList).then(function (value) {
-                if (value.code) {
+                if (!value.code) {
                     toaster.pop({
                         type: 'success',
                         title: '附属通道',
@@ -841,9 +862,9 @@ function attachPassagewayMgmtCtrl($scope, $uibModal, toaster, NgTableParams, htt
         searchInfo = angular.copy($scope.searchInfo);
         console.log(searchInfo);
         httpSvc.getData('post', '/ExtraChannelInfo/search',searchInfo).then(function (value1) {
-            extraChannelInfo = value1;
+            extraChannelInfo = value1.data;
             $scope.extraChannelInfoTable = new NgTableParams({}, {
-                dataset: value1
+                dataset: value1.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
@@ -854,13 +875,16 @@ function ExtraChannelInfoAddModalCtrl($scope, $uibModalInstance, httpSvc, toaste
     var searchInfo = angular.copy(defaultSearch);
     $scope.searchInfo = angular.copy(defaultSearch);
     $scope.type = type;
-    $scope.organizations  = [];
-    $scope.organizations = init.organizations;
+    httpSvc.getData('post', '/ExtraChannelInfo/getInit').then(function (value) {
+        init = value.data;
+        $scope.organizations = value.organizations;
+        $scope.extraTypes = value.extraTypes;
+    });
+    // $scope.organizations  = [];
+    // $scope.organizations = init.organizations;
     // $scope.paytype = init.paytype;
     // $scope.status = init.status;
     // 通道类型
-    $scope.extraTypes = [];
-    $scope.extraTypes = init.extraTypes;
     if (type === 1) {
         $scope.ExtraChannelInfo = angular.copy(ExtraChannelInfo);
     }else  {
@@ -878,7 +902,7 @@ function ExtraChannelInfoAddModalCtrl($scope, $uibModalInstance, httpSvc, toaste
     $scope.addOrganization = function (myForm) {
         if (type === 0) {
             httpSvc.getData('post', '/ExtraChannelInfo/insert', myForm).then(function (value) {
-                if (value.code == 1) {
+                if (value.code == 0) {
                     $scope.bankInfo = null;
                     toaster.pop({
                         type: 'success',
@@ -896,7 +920,7 @@ function ExtraChannelInfoAddModalCtrl($scope, $uibModalInstance, httpSvc, toaste
             });
         } else {
             httpSvc.getData('post', '/ExtraChannelInfo/update', myForm).then(function (value) {
-                if (value.code == 1) {
+                if (value.code == 0) {
                     $scope.bankInfo = null;
                     toaster.pop({
                         type: 'success',

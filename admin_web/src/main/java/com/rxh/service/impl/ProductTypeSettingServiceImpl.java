@@ -7,6 +7,7 @@ import com.rxh.service.ConstantService;
 import com.rxh.service.ProductTypeSettingService;
 import com.rxh.service.anew.channel.ApiProductTypeSettingService;
 import com.rxh.service.sys.SysConstantService;
+import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class ProductTypeSettingServiceImpl implements ProductTypeSettingService 
         }else {
             productSettingTable.setId(list.get(0).getId());
         }
-        SysConstant sysConstant = sysConstantService.getOneByFirstValueAndCode(productSettingTable.getProductId(),"productType");
+        SysConstant sysConstant = sysConstantService.getOneByFirstValueAndCode(productSettingTable.getProductId(), SystemConstant.PRODUCTTYPE);
         productSettingTable.setProductName(sysConstant == null?"":sysConstant.getName());
         productSettingTable.setUpdateTime(date);
         Boolean b = apiProductTypeSettingService.SaveOrUpdate(productSettingTable);
