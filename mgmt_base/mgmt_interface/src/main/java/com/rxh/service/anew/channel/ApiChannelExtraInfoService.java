@@ -8,5 +8,9 @@ public interface ApiChannelExtraInfoService {
 
     ChannelExtraInfoTable  getOne(ChannelExtraInfoTable cei);
 
-    List<ChannelExtraInfoTable> lsit(ChannelExtraInfoTable cei);
+    List<ChannelExtraInfoTable> list(ChannelExtraInfoTable cei);
+
+    Boolean saveOrUpdate(ChannelExtraInfoTable channelExtraInfoTable);
+
+    Boolean removeByIds(List<ChannelExtraInfoTable> extraInfoTables);
 }

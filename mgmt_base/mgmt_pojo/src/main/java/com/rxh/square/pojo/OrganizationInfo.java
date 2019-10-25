@@ -1,7 +1,12 @@
 package com.rxh.square.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.rxh.anew.table.system.ProductSettingTable;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
 /*
 lin
 机构信息表
@@ -21,6 +26,14 @@ public class OrganizationInfo implements Serializable {
     private String remark;
     //启用状态
     private Integer status;
+
+    @TableField(exist = false)
+    //启用产品
+    private String productIds;
+    @TableField(exist = false)
+    //所有产品
+    private List<ProductSettingTable> productTypes;
+
 
     public Integer getStatus() {
         return status;
@@ -68,5 +81,21 @@ public class OrganizationInfo implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getProductIds() {
+        return productIds;
+    }
+
+    public void setProductIds(String productIds) {
+        this.productIds = productIds;
+    }
+
+    public List<ProductSettingTable> getProductTypes() {
+        return productTypes;
+    }
+
+    public void setProductTypes(List<ProductSettingTable> productTypes) {
+        this.productTypes = productTypes;
     }
 }

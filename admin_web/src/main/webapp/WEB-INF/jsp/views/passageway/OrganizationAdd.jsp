@@ -22,14 +22,14 @@
 				 />
 			    </div>
 			  </div>
-			  <div class="form-group">
+			  <%--<div class="form-group">
 			    <label   class="col-sm-2 control-label" ><font color="red">*</font>备注:</label>
 			    <div class="col-sm-10" >
 			     <input type="text" id="remark" name="remark" ng-model="Organization.remark" tip="2" class="form-control" placeholder="必填/唯一"
 						ng-blur="remarkBlur($event,Organization.remark)"
 						required="required" />
 		        </div>
-			  </div>
+			  </div>--%>
 
 			 <div class="form-group">
 				 <label   class="col-sm-2 control-label" ><font color="red">*</font>状态:</label>
@@ -43,13 +43,27 @@
 					 </select>
 				 </div>
 			 </div>
+
+			 <div class="form-group">
+				 <label class="col-sm-2 control-label p-w-xs"><span class="text-danger">*</span>支付产品：</label>
+				 <div class="col-sm-10">
+					 <div class="col-sm-3 p-w-xs" ng-repeat="x in Organization.productTypes">
+						 <div class="checkbox no-margins">
+							 <input id="{{x.productId}}" type="checkbox" name="productIds"
+									ng-checked="exists(x.productId,Organization.productIds)"
+									value="{{x.productId}}" required>
+							 <label for="{{x.productId}}" class="no-padding">{{x.productName}}({{x.productFee}})</label>
+						 </div>
+					 </div>
+				 </div>
+			 </div>
 		</form>
 
 <div class="row padding-set">
         <div class="col-sm-12">
             <div class="center">
                 <button class="btn btn-sm btn-primary general-btn" id="addOrganizationID" type="button" ng-click="addOrganization()"
-						ng-disabled="nextDisabled(OrganizationObjForm)">
+						>
                  确定
                 </button>
             </div>

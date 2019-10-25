@@ -5,7 +5,7 @@ import com.rxh.vo.ResponseVO;
 
 public interface ProductTypeSettingService {
 
-    ResponseVO selectByOrganizationId(String id);
+    ResponseVO selectByOrganizationId(ProductSettingTable productSettingTable);
 
     ResponseVO addProduct(ProductSettingTable productSettingTable);
 }

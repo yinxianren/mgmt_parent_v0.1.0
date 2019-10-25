@@ -37,12 +37,24 @@ public class ApiChannelExtraInfoServiceImpl implements ApiChannelExtraInfoServic
     }
 
     @Override
-    public List<ChannelExtraInfoTable> lsit(ChannelExtraInfoTable cei) {
+    public List<ChannelExtraInfoTable> list(ChannelExtraInfoTable cei) {
         if( isNull(cei) )  return null;
         LambdaQueryWrapper<ChannelExtraInfoTable> lambdaQueryWrapper = new QueryWrapper<ChannelExtraInfoTable>().lambda();
         if( !isBlank(cei.getOrganizationId()) ) lambdaQueryWrapper.eq(ChannelExtraInfoTable::getOrganizationId,cei.getOrganizationId());
         if( !isBlank(cei.getBussType()) ) lambdaQueryWrapper.eq(ChannelExtraInfoTable::getBussType,cei.getBussType());
         if( isNull(cei.getStatus()) ) lambdaQueryWrapper.eq(ChannelExtraInfoTable::getStatus,cei.getStatus());
         return channelExtraInfoDbService.list(lambdaQueryWrapper);
+    }
+
+    @Override
+    public Boolean saveOrUpdate(ChannelExtraInfoTable channelExtraInfoTable) {
+        if (isNull(channelExtraInfoTable)) return  false;
+        return channelExtraInfoDbService.saveOrUpdate(channelExtraInfoTable);
+    }
+
+    @Override
+    public Boolean removeByIds(List<ChannelExtraInfoTable> extraInfoTables) {
+        if (isHasNotElement(extraInfoTables)) return false;
+        return channelExtraInfoDbService.removeByIds(extraInfoTables);
     }
 }

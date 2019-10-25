@@ -13,4 +13,6 @@ public interface ApiProductTypeSettingService {
      List<ProductSettingTable> list(ProductSettingTable productSettingTable);
 
      ProductSettingTable  getOne(ProductSettingTable productSettingTable);
+
+     Boolean batchUpdate(List<ProductSettingTable> productSettingTableList);
 }

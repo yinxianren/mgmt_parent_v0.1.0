@@ -29,6 +29,7 @@ public class ChannelExtraInfoTable  implements Serializable {
 	private Integer status;//状态 0：启用 ,1:禁用
 	private Date createTime;//创建时间
 	private Date updateTime;//更新时间
+	private String creator;//创建者
 
 	public ChannelExtraInfoTable setId(Long id) {
 		this.id = id;
@@ -78,5 +79,9 @@ public class ChannelExtraInfoTable  implements Serializable {
 	public ChannelExtraInfoTable setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 		return this;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
 	}
 }
