@@ -27,9 +27,11 @@ public class ApiMerchantRateServiceImpl implements ApiMerchantRateService, NewPa
         if(isNull(mr)) return null;
         LambdaQueryWrapper<MerchantRateTable> lambdaQueryWrapper = new QueryWrapper<MerchantRateTable>().lambda();
         if(!isBlank(mr.getMerchantId())) lambdaQueryWrapper.eq(MerchantRateTable::getMerchantId,mr.getMerchantId());
+        if( !isBlank(mr.getProductId())) lambdaQueryWrapper.eq(MerchantRateTable::getProductId,mr.getProductId());
         if(!isNull(mr.getStatus())) lambdaQueryWrapper.eq(MerchantRateTable::getStatus,mr.getStatus());
         return merchantRateDBService.getOne(lambdaQueryWrapper);
     }
+
 
     @Override
     public boolean save(MerchantRateTable mr) {

@@ -20,7 +20,7 @@
     </bean>
     <!-- 点对点 -->
     <bean id="activeMQQueue" class="org.apache.activemq.command.ActiveMQQueue">
-        <constructor-arg value="merchantNotify,orderNotify,getOrdeyNotify,transWallet,queryPayOrder,queryTransOrder"/>
+        <constructor-arg value="merchantNotify,orderNotify,getOrdeyNotify,transWallet,queryPayOrder,queryTransOrder,payOderMsg,transOderMsg"/>
     </bean>
 
     <!-- 点对点消息发布模板 -->

@@ -73,7 +73,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //获取必要参数
             Map<String, ParamRule> paramRuleMap =newIntoPiecesOfInformationService.getParamMapByB1();
             //创建日志打印对象
-            ipo = new InnerPrintLogObject(mbirDTO.getMerId(),mbirDTO.getMerOrderId(),bussType);
+            ipo = new InnerPrintLogObject(mbirDTO.getMerId(),mbirDTO.getTerminalMerId(),bussType);
             //参数校验
             this.verify(paramRuleMap,mbirDTO,MerchantBasicInformationRegistrationDTO.class,ipo);
             //获取商户信息
@@ -101,7 +101,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             sotTable.setPlatformOrderId(tuple._2.getPlatformOrderId());
             //封装请求cross必要参数
             requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,extraInfoTable,tuple._,tuple._2));
-            //发生cross请求
+            //请求cross请求
             String crossResponseMsg = newIntoPiecesOfInformationService.doPostJson(requestCrossMsgDTO,extraInfoTable,ipo);
             //将请求结果转为对象
             crossResponseMsgDTO = newIntoPiecesOfInformationService.jsonToPojo(crossResponseMsg,ipo);
@@ -156,7 +156,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //获取必要参数
             Map<String, ParamRule> paramRuleMap =newIntoPiecesOfInformationService.getParamMapByB2();
             //创建日志打印对象
-            ipo = new InnerPrintLogObject(mbcbDTO.getMerId(),mbcbDTO.getMerOrderId(),bussType);
+            ipo = new InnerPrintLogObject(mbcbDTO.getMerId(),mbcbDTO.getTerminalMerId(),bussType);
             //参数校验
             this.verify(paramRuleMap,mbcbDTO,MerchantBankCardBindingDTO.class,ipo);
             //获取商户信息
@@ -176,7 +176,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             ChannelExtraInfoTable channelExtraInfoTable =  newIntoPiecesOfInformationService.getChannelExtraInfoByOrgId(channelInfoTable.getOrganizationId(), BussTypeEnum.ADDCUS.getBussType(),ipo);
             //封装请求cross必要参数
             requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,channelExtraInfoTable,tuple2._,tuple2._2));
-            //发生cross请求
+            //请求cross请求
             String crossResponseMsg = newIntoPiecesOfInformationService.doPostJson(requestCrossMsgDTO,channelExtraInfoTable,ipo);
             //将请求结果转为对象
             crossResponseMsgDTO = newIntoPiecesOfInformationService.jsonToPojo(crossResponseMsg,ipo);
@@ -232,7 +232,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //获取必要参数
             Map<String, ParamRule> paramRuleMap =newIntoPiecesOfInformationService.getParamMapByB3();
             //创建日志打印对象
-            ipo = new InnerPrintLogObject(msDTO.getMerId(),msDTO.getMerOrderId(),bussType);
+            ipo = new InnerPrintLogObject(msDTO.getMerId(),msDTO.getTerminalMerId(),bussType);
             //参数校验
             this.verify(paramRuleMap,msDTO,MerchantServiceFulfillmentDTO.class,ipo);
             //获取商户信息
@@ -254,7 +254,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             ChannelExtraInfoTable channelExtraInfoTable =  newIntoPiecesOfInformationService.getChannelExtraInfoByOrgId(channelInfoTable.getOrganizationId(), BussTypeEnum.ADDCUS.getBussType(),ipo);
             //封装请求cross必要参数
             requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,channelExtraInfoTable,registerInfoTable,registerCollectTable));
-            //发生cross请求
+            //请求cross请求
             String crossResponseMsg = newIntoPiecesOfInformationService.doPostJson(requestCrossMsgDTO,channelExtraInfoTable,ipo);
             //将请求结果转为对象
             crossResponseMsgDTO = newIntoPiecesOfInformationService.jsonToPojo(crossResponseMsg,ipo);

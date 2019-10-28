@@ -62,6 +62,14 @@ public interface CommonSerivceInterface {
     String doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelExtraInfoTable extraInfoTable, InnerPrintLogObject ipo);
 
     /**
+     *   请求cross
+     * @param requestCrossMsgDTO
+     * @param channelInfoTable
+     * @param ipo
+     * @return
+     */
+    String doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo);
+    /**
      *  将结果转对象
      * @param crossResponseMsg
      * @param ipo

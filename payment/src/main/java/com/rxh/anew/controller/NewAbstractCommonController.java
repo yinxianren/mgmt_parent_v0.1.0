@@ -5,6 +5,7 @@ import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
 import com.rxh.enums.ParamTypeEnum;
 import com.rxh.enums.ResponseCodeEnum;
+import com.rxh.exception.NewPayException;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.payInterface.PayUtil;
 import org.apache.commons.codec.binary.Base64;
@@ -16,6 +17,7 @@ import java.net.URLDecoder;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,6 +38,14 @@ public abstract class NewAbstractCommonController implements NewPayAssert, PayUt
 
 
 
+
+    protected  void  assertIsNull(Object object,ResponseCodeEnum responseCodeEnum,InnerPrintLogObject ipo) throws NewPayException {
+        isNull(object,
+                responseCodeEnum.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：根据通道ID获取通道信息",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),responseCodeEnum.getMsg()),
+                format(" %s",responseCodeEnum.getMsg()));
+    }
     /**
      * 获取风控前置表数据
      * @param request

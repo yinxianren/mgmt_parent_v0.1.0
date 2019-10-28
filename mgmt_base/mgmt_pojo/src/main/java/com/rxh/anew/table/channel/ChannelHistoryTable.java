@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 @TableName ( "8_channel_history_table" )
 @Getter
 public class ChannelHistoryTable  implements Serializable {
-	@TableId(type= IdType.AUTO)
+	@TableId(type= IdType.INPUT)
 	private Long id;//表主键
 	private String merchantId;//商户号
 	private String terminalMerId;
