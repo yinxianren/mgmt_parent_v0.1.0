@@ -40,6 +40,34 @@ public class TransOrderMQ {
     }
 
     /**
+     *  向队列发送收单订单
+     * @param object
+     */
+    public void sendObjectMessageToPayOderMsgMQ(final Serializable object) {
+        jmsTemplate.send( "payOderMsg", new MessageCreator() {
+            public Message createMessage(Session session) throws JMSException {
+                ObjectMessage objectMessage = session.createObjectMessage(object);
+                return (Message) objectMessage;
+            }
+        });
+    }
+
+
+    /**
+     *  向队列发送代付订单
+     * @param object
+     */
+    public void sendObjectMessageToTransOderMsgMQ(final Serializable object) {
+        jmsTemplate.send( "transOderMsg", new MessageCreator() {
+            public Message createMessage(Session session) throws JMSException {
+                ObjectMessage objectMessage = session.createObjectMessage(object);
+                return (Message) objectMessage;
+            }
+        });
+    }
+
+
+    /**
      *  向查询队列发送收单订单对象
      * @param time 重发间隔时间 秒（可空）
      * @param object

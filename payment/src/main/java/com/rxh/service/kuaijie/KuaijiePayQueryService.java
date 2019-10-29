@@ -536,6 +536,7 @@ public class KuaijiePayQueryService extends AbstractCommonService {
         return queryOrderObjectToMQ;
     }
 
+
     public String  kuaiJieToQueryOrder(SystemOrderTrack systemOrderTrack,TradeObjectSquare tradeObjectSquare) throws  Exception{
         String merId = tradeObjectSquare.getMerId();
         String merOrderId = tradeObjectSquare.getMerOrderId();

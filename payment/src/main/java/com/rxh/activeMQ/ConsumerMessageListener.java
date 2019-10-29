@@ -1,5 +1,6 @@
 package com.rxh.activeMQ;
 
+import com.rxh.anew.wallet.PayWalletComponent;
 import com.rxh.cache.ehcache.BaseCache;
 import com.rxh.exception.PayException;
 import com.rxh.pojo.cross.BankResult;
@@ -42,6 +43,10 @@ public class ConsumerMessageListener implements MessageListener {
     public final static String TRANS_WALLET = "transWallet";
     public final static String QUERYPAY = "queryPayOrder";
     public final static String QUERYTRANS = "queryTransOrder";
+    public final static String PAY_ODER_MSG = "payOderMsg";
+    public final static String TRANS_ODER_MSG = "transOderMsg";
+
+
     private static  Object object=new Object();
 
     @Autowired
@@ -60,6 +65,9 @@ public class ConsumerMessageListener implements MessageListener {
 
     @Resource
     private KuaijiePayQueryService kuaijiePayQueryService;
+
+    @Autowired
+    private PayWalletComponent payWalletComponent;
 
 
     @Override
@@ -102,6 +110,12 @@ public class ConsumerMessageListener implements MessageListener {
                         break;
                     case QUERYTRANS://查询代付业务
                         handleQueryTransService(objectMessage);
+                        break;
+                    case PAY_ODER_MSG:
+                        payWalletComponent.payOrderWallet(objectMessage);
+                        break;
+                    case TRANS_ODER_MSG:
+                        payWalletComponent.transOrderWallet(objectMessage);
                         break;
                     default:
                         break;

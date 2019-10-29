@@ -72,10 +72,28 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
 
 
     public String doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelExtraInfoTable extraInfoTable, InnerPrintLogObject ipo) {
-        final String localPoint="doPostJson";
+        final String localPoint="doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelExtraInfoTable extraInfoTable, InnerPrintLogObject ipo)";
         String result = null;
         try {
             result = HttpClientUtils.doPostJson(HttpClientUtils.getHttpsClient(), extraInfoTable.getRequestUrl(), JsonUtils.objectToJsonNonNull(requestCrossMsgDTO));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：请求cross工程失败,异常信息：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint,e.getMessage()),
+                    format(" %s",ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }finally {
+            return result;
+        }
+    }
+
+
+    public  String doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo){
+        final String localPoint="doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo)";
+        String result = null;
+        try {
+            result = HttpClientUtils.doPostJson(HttpClientUtils.getHttpsClient(), channelInfoTable.getRequestUrl(), JsonUtils.objectToJsonNonNull(requestCrossMsgDTO));
         }catch (Exception e){
             e.printStackTrace();
             throw new NewPayException(

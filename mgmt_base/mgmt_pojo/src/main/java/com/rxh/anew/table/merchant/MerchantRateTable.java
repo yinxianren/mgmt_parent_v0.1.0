@@ -23,6 +23,8 @@ public class MerchantRateTable  implements Serializable {
 	private Long id;//表主键
 	private String merchantId;//商户号
 	private String productId;//产品类型ID
+	private String organizationId;//机构ID
+	private String channelId;//通道id
 	private BigDecimal singleFee;//单笔费用，元/笔
 	private BigDecimal rateFee;//单笔费率
 	private BigDecimal marginRatio;//保证金比例
@@ -31,6 +33,16 @@ public class MerchantRateTable  implements Serializable {
 	private Integer status;//状态 0：启用,1:禁用
 	private Date createTime;//创建时间
 	private Date updateTime;//更新时间
+
+	public MerchantRateTable setOrganizationId(String organizationId) {
+		this.organizationId = organizationId;
+		return this;
+	}
+
+	public MerchantRateTable setChannelId(String channelId) {
+		this.channelId = channelId;
+		return this;
+	}
 
 	public MerchantRateTable setId(Long id) {
 		this.id = id;

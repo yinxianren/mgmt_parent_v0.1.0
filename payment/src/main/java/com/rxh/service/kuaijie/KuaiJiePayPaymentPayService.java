@@ -123,8 +123,8 @@ public class KuaiJiePayPaymentPayService extends AbstractCommonService {
         //保证先保存到数据库，在发送到队列去
         map.lput("payOrder",payOrder);
         int count= kuaiJiePayService.saveAndUpdateWalletsAndRecord(map);
-        if(bankResult.getStatus()==0) transOrderMQ.sendObjectMessageToTransOderMQ(orderObjectToMQ);
-        if(bankResult.getStatus()!=3) {
+        if(bankResult.getStatus() == 0) transOrderMQ.sendObjectMessageToTransOderMQ(orderObjectToMQ);
+        if(bankResult.getStatus() != 3 ) {
             //保存同步结果，推送到MQ做查询
             payOrder.setTradeResult(bankResult.getParam());
             payOrder.setOrderStatus(Integer.valueOf(bankResult.getStatus()));
@@ -133,7 +133,6 @@ public class KuaiJiePayPaymentPayService extends AbstractCommonService {
             transOrderMQ.sendObjectMessageToQueryPayOderMQ(queryOrderObjectToMQ, 20L);
         }
         trade.setPayOrder(payOrder);
-//        if ()
         return getTradeReturnJson1(trade,bankResult);
     }
 

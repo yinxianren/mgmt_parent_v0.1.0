@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 @TableName ( "8_risk_quota_table" )
 @Getter
 public class RiskQuotaTable  implements Serializable {
-	@TableId(type= IdType.AUTO)
+	@TableId(type= IdType.INPUT)
 	private Long id;//表主键
 	private String meridChannelid;//商户号/通道ID
 	private String bussType;// C:通道,M:商户 

@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @TableName ( "2_merchants_details_table" )
 @Data
 public class MerchantsDetailsTable  implements Serializable {
-	@TableId(type= IdType.AUTO)
+	@TableId(type= IdType.INPUT)
 	private Long id;//表主键
 	private String merchantId;//商户号
 	private String productId;//产品类型ID

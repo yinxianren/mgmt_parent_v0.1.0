@@ -1,6 +1,7 @@
 package com.rxh.anew.service.shortcut;
 
-import com.rxh.anew.dto.MerchantPayOrderDTO;
+import com.rxh.anew.dto.CrossResponseMsgDTO;
+import com.rxh.anew.dto.MerchantPayOrderApplyDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonSerivceInterface;
@@ -17,6 +18,7 @@ import com.rxh.tuple.Tuple2;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface NewPayOrderService extends CommonSerivceInterface {
     /**
@@ -25,6 +27,16 @@ public interface NewPayOrderService extends CommonSerivceInterface {
      */
     Map<String, ParamRule> getParamMapByB7();
 
+    /**
+     *
+     * @return
+     */
+    Map<String, ParamRule> getParamMapByB8();
+    /**
+     *
+     * @return
+     */
+    Map<String, ParamRule> getParamMapByB9();
     /**
      * 查看是否重复订单
      * @param merOrderId
@@ -41,11 +53,11 @@ public interface NewPayOrderService extends CommonSerivceInterface {
 
     /**
      *  获取成功进件记录
-     * @param merchantPayOrderDTO
+     * @param merchantPayOrderApplyDTO
      * @param ipo
      * @return
      */
-    List<RegisterCollectTable> getSuccessRegisterInfo(MerchantPayOrderDTO merchantPayOrderDTO, InnerPrintLogObject ipo) throws NewPayException;
+    List<RegisterCollectTable> getSuccessRegisterInfo(MerchantPayOrderApplyDTO merchantPayOrderApplyDTO, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      * 根据进件信息获取邦卡记录
@@ -57,19 +69,19 @@ public interface NewPayOrderService extends CommonSerivceInterface {
 
     /**
      *  查询通道使用记录
-     * @param merchantPayOrderDTO
+     * @param merchantPayOrderApplyDTO
      * @param ipo
      * @return
      */
-    ChannelHistoryTable getChannelHistoryInfo(MerchantPayOrderDTO merchantPayOrderDTO, InnerPrintLogObject ipo) throws NewPayException;
+    ChannelHistoryTable getChannelHistoryInfo(MerchantPayOrderApplyDTO merchantPayOrderApplyDTO, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      * 判断该卡是否进行绑卡操作
      * @param merchantCardTableList
-     * @param merchantPayOrderDTO
+     * @param merchantPayOrderApplyDTO
      * @param ipo
      */
-    void checkBondCardByCardNum(List<MerchantCardTable> merchantCardTableList, MerchantPayOrderDTO merchantPayOrderDTO, InnerPrintLogObject ipo) throws NewPayException;
+    void checkBondCardByCardNum(List<MerchantCardTable> merchantCardTableList, MerchantPayOrderApplyDTO merchantPayOrderApplyDTO, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      *  获取风控交易量统计数据
@@ -80,17 +92,17 @@ public interface NewPayOrderService extends CommonSerivceInterface {
     Tuple2<RiskQuotaTable, RiskQuotaTable> getRiskQuotaInfoByMer(MerchantInfoTable merInfoTable, InnerPrintLogObject ipo) throws NewPayException;
     /**
      *  单笔风控
-     * @param merchantPayOrderDTO
+     * @param merchantPayOrderApplyDTO
      * @param merchantQuotaRiskTable
      * @param ipo
      */
-    void checkSingleAmountRisk(MerchantPayOrderDTO merchantPayOrderDTO, MerchantQuotaRiskTable merchantQuotaRiskTable, InnerPrintLogObject ipo) throws NewPayException;
+    void checkSingleAmountRisk(MerchantPayOrderApplyDTO merchantPayOrderApplyDTO, MerchantQuotaRiskTable merchantQuotaRiskTable, InnerPrintLogObject ipo) throws NewPayException;
     /**
      *  执行平台风控
      * @param merchantQuotaRiskTable
      * @param merRiskQuota
      */
-    void executePlatformRisk(MerchantPayOrderDTO merchantPayOrderDTO, MerchantQuotaRiskTable merchantQuotaRiskTable, Tuple2<RiskQuotaTable, RiskQuotaTable> merRiskQuota, InnerPrintLogObject ipo) throws NewPayException;
+    void executePlatformRisk(MerchantPayOrderApplyDTO merchantPayOrderApplyDTO, MerchantQuotaRiskTable merchantQuotaRiskTable, Tuple2<RiskQuotaTable, RiskQuotaTable> merRiskQuota, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      *  获取通道信息
@@ -110,21 +122,21 @@ public interface NewPayOrderService extends CommonSerivceInterface {
 
     /**
      * 执行通道风控
-     * @param merchantPayOrderDTO
+     * @param merchantPayOrderApplyDTO
      * @param channelInfoTable
      * @param channelRiskQuota
      * @param ipo
      */
-    ChannelInfoTable executeChannelRisk(MerchantPayOrderDTO merchantPayOrderDTO, ChannelInfoTable channelInfoTable, Tuple2<RiskQuotaTable, RiskQuotaTable> channelRiskQuota, InnerPrintLogObject ipo) throws NewPayException;
+    ChannelInfoTable executeChannelRisk(MerchantPayOrderApplyDTO merchantPayOrderApplyDTO, ChannelInfoTable channelInfoTable, Tuple2<RiskQuotaTable, RiskQuotaTable> channelRiskQuota, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      * 获取商户可用支付的所有通道
-     * @param merchantPayOrderDTO
+     * @param merchantPayOrderApplyDTO
      * @param channelHistoryTable
      * @param ipo
      * @return
      */
-    List<ChannelInfoTable> getAllUsableChannel(MerchantPayOrderDTO merchantPayOrderDTO, ChannelHistoryTable channelHistoryTable, InnerPrintLogObject ipo) throws NewPayException;
+    List<ChannelInfoTable> getAllUsableChannel(MerchantPayOrderApplyDTO merchantPayOrderApplyDTO, ChannelHistoryTable channelHistoryTable, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      *  获取一个可行性的通道
@@ -132,14 +144,55 @@ public interface NewPayOrderService extends CommonSerivceInterface {
      * @param ipo
      * @return
      */
-    ChannelInfoTable getFeasibleChannel(MerchantPayOrderDTO merchantPayOrderDTO,List<ChannelInfoTable> channelInfoTableList, InnerPrintLogObject ipo) throws NewPayException;
+    ChannelInfoTable getFeasibleChannel(MerchantPayOrderApplyDTO merchantPayOrderApplyDTO, List<ChannelInfoTable> channelInfoTableList, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      * 保存订单信息
-     * @param merchantPayOrderDTO
+     * @param merchantPayOrderApplyDTO
      * @param channelInfoTable
      * @param ipo
      * @return
      */
-    PayOrderInfoTable savePayOrderInfo(MerchantInfoTable merInfoTable,MerchantPayOrderDTO merchantPayOrderDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo) throws NewPayException;
+    PayOrderInfoTable savePayOrderInfo(MerchantInfoTable merInfoTable, MerchantPayOrderApplyDTO merchantPayOrderApplyDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *  更新订单结果
+     * @param crossResponseMsgDTO
+     * @param crossResponseMsg
+     * @param payOrderInfoTable
+     */
+    PayOrderInfoTable updateByPayOrderInfo(CrossResponseMsgDTO crossResponseMsgDTO, String crossResponseMsg, PayOrderInfoTable payOrderInfoTable,InnerPrintLogObject ipo) throws NewPayException;
+    /**
+     *  生成历史通道信息
+     * @param channelHistoryTable
+     * @param payOrderInfoTable
+     * @return
+     */
+    ChannelHistoryTable updateByChannelHistoryInfo(ChannelHistoryTable channelHistoryTable,PayOrderInfoTable payOrderInfoTable);
+
+    /**
+     *  商户和通道使用汇总情况
+     * @param payOrderInfoTable
+     * @param merRiskQuota
+     * @param channelRiskQuota
+     * @return
+     */
+    Set<RiskQuotaTable> updateByRiskQuotaInfo(PayOrderInfoTable payOrderInfoTable, Tuple2<RiskQuotaTable, RiskQuotaTable> merRiskQuota, Tuple2<RiskQuotaTable, RiskQuotaTable> channelRiskQuota);
+
+    /**
+     *
+     * @param payOrderInfoTable
+     * @param cht
+     * @param rqtSet
+     * @param ipo
+     */
+    void batchUpdatePayOderCorrelationInfo(PayOrderInfoTable payOrderInfoTable, ChannelHistoryTable cht, Set<RiskQuotaTable> rqtSet, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param platformOrderId
+     * @param ipo
+     * @return
+     */
+    PayOrderInfoTable getPayOrderInfoByPlatformOrderId(String platformOrderId, InnerPrintLogObject ipo) throws NewPayException;
 }

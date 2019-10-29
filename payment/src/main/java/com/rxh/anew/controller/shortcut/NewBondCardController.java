@@ -71,7 +71,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             //获取必要参数
             Map<String, ParamRule> paramRuleMap = newBondCardService.getParamMapByB4();
             //创建日志打印对象
-            ipo = new InnerPrintLogObject(mbcaDTO.getMerId(),mbcaDTO.getMerOrderId(),bussType);
+            ipo = new InnerPrintLogObject(mbcaDTO.getMerId(),mbcaDTO.getTerminalMerId(),bussType);
             //参数校验
             this.verify(paramRuleMap,mbcaDTO,MerchantBondCardApplyDTO.class,ipo);
             //获取商户信息
@@ -95,7 +95,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             sotTable.setPlatformOrderId(merchantCardTable.getPlatformOrderId());
             //封装请求cross必要参数
             requestCrossMsgDTO = newBondCardService.getRequestCrossMsgDTO(new Tuple5(registerInfoTable,registerCollectTable,channelInfoTable,channelExtraInfoTable,merchantCardTable));
-            //发生cross请求
+            //请求cross请求
             String crossResponseMsg = newBondCardService.doPostJson(requestCrossMsgDTO,channelExtraInfoTable,ipo);
             //将请求结果转为对象
             crossResponseMsgDTO = newBondCardService.jsonToPojo(crossResponseMsg,ipo);
@@ -150,7 +150,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             //获取必要参数
             Map<String, ParamRule> paramRuleMap = newBondCardService.getParamMapByB5();
             //创建日志打印对象
-            ipo = new InnerPrintLogObject(mrgbcDTO.getMerId(),mrgbcDTO.getMerOrderId(),bussType);
+            ipo = new InnerPrintLogObject(mrgbcDTO.getMerId(),mrgbcDTO.getTerminalMerId(),bussType);
             //参数校验
             this.verify(paramRuleMap,mrgbcDTO,MerchantReGetBondCodeDTO.class,ipo);
             //获取商户信息
@@ -174,7 +174,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             sotTable.setPlatformOrderId(merchantCardTable.getPlatformOrderId());
             //封装请求cross必要参数
             requestCrossMsgDTO = newBondCardService.getRequestCrossMsgDTO(new Tuple5(registerInfoTable,registerCollectTable,channelInfoTable,channelExtraInfoTable,merchantCardTable));
-            //发生cross请求
+            //请求cross请求
             String crossResponseMsg = newBondCardService.doPostJson(requestCrossMsgDTO,channelExtraInfoTable,ipo);
             //将请求结果转为对象
             crossResponseMsgDTO = newBondCardService.jsonToPojo(crossResponseMsg,ipo);
@@ -230,7 +230,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             //获取必要参数
             Map<String, ParamRule> paramRuleMap = newBondCardService.getParamMapByB6();
             //创建日志打印对象
-            ipo = new InnerPrintLogObject(mcbcDTO.getMerId(),mcbcDTO.getMerOrderId(),bussType);
+            ipo = new InnerPrintLogObject(mcbcDTO.getMerId(),mcbcDTO.getTerminalMerId(),bussType);
             //参数校验
             this.verify(paramRuleMap,mcbcDTO,MerchantConfirmBondCardDTO.class,ipo);
             //获取商户信息
@@ -254,7 +254,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             sotTable.setPlatformOrderId(merchantCardTable.getPlatformOrderId());
             //封装请求cross必要参数
             requestCrossMsgDTO = newBondCardService.getRequestCrossMsgDTO(new Tuple5(registerInfoTable,registerCollectTable,channelInfoTable,channelExtraInfoTable,merchantCardTable));
-            //发生cross请求
+            //请求cross请求
             String crossResponseMsg = newBondCardService.doPostJson(requestCrossMsgDTO,channelExtraInfoTable,ipo);
             //将请求结果转为对象
             crossResponseMsgDTO = newBondCardService.jsonToPojo(crossResponseMsg,ipo);

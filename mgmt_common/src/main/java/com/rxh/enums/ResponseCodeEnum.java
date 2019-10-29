@@ -50,6 +50,7 @@ public enum ResponseCodeEnum {
     ,RXH00042("RXH00042","payFree设置过低，导致商户费率过大")
     ,RXH00043("RXH00043","payFree设置过低，导致通道费率过大")
     ,RXH00044("RXH00044","内部费率设置错误")
+    ,RXH99998("RXH99998","系统内部错误，数据缺失，请重新发起收单申请")
     ,RXH99999("RXH99999","其他错误")
     ;
     private String code;

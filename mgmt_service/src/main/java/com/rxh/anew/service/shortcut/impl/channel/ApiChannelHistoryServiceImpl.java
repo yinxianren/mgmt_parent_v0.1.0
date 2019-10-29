@@ -9,6 +9,8 @@ import com.rxh.service.anew.channel.ApiChannelHistoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 /**
  * Created with IntelliJ IDEA.
  * User: panda
@@ -38,4 +40,12 @@ public class ApiChannelHistoryServiceImpl implements ApiChannelHistoryService, N
         if(isNull(ch)) return false;
         return channelHistoryDbService.save(ch);
     }
+
+    @Override
+    public boolean saveOrUpdateBatch(Collection<ChannelHistoryTable> entityList) {
+        if(isHasNotElement(entityList)) return false;
+        return channelHistoryDbService.saveOrUpdateBatch(entityList);
+    }
+
+
 }

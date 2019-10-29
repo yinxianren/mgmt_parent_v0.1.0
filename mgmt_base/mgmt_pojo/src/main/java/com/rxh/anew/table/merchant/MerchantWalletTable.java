@@ -4,20 +4,22 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.math.BigDecimal;
 
 /**
- * @Description  
+ * @Description
  * @Author  monkey
  * @Date 2019-10-22 
  */
 
 @TableName ( "2_merchant_wallet_table" )
-@Data
+@Getter
 public class MerchantWalletTable  implements Serializable {
-	@TableId(type= IdType.AUTO)
+	@TableId(type= IdType.INPUT)
 	private Long id;//表主键
 	private String merchantId;//商户号
 	private BigDecimal totalAmount;//订单总金额
@@ -34,4 +36,78 @@ public class MerchantWalletTable  implements Serializable {
 	private Date createTime;//创建时间
 	private Date updateTime;//更新时间
 
+	public MerchantWalletTable setId(Long id) {
+		this.id = id;
+		return this;
+	}
+
+	public MerchantWalletTable setMerchantId(String merchantId) {
+		this.merchantId = merchantId;
+		return this;
+	}
+
+	public MerchantWalletTable setTotalAmount(BigDecimal totalAmount) {
+		this.totalAmount = totalAmount;
+		return this;
+	}
+
+	public MerchantWalletTable setIncomeAmount(BigDecimal incomeAmount) {
+		this.incomeAmount = incomeAmount;
+		return this;
+	}
+
+	public MerchantWalletTable setOutAmount(BigDecimal outAmount) {
+		this.outAmount = outAmount;
+		return this;
+	}
+
+	public MerchantWalletTable setTotalFee(BigDecimal totalFee) {
+		this.totalFee = totalFee;
+		return this;
+	}
+
+	public MerchantWalletTable setFeeProfit(BigDecimal feeProfit) {
+		this.feeProfit = feeProfit;
+		return this;
+	}
+
+	public MerchantWalletTable setTotalMargin(BigDecimal totalMargin) {
+		this.totalMargin = totalMargin;
+		return this;
+	}
+
+	public MerchantWalletTable setTotalBalance(BigDecimal totalBalance) {
+		this.totalBalance = totalBalance;
+		return this;
+	}
+
+	public MerchantWalletTable setTotalAvailableAmount(BigDecimal totalAvailableAmount) {
+		this.totalAvailableAmount = totalAvailableAmount;
+		return this;
+	}
+
+	public MerchantWalletTable setTotalUnavailableAmount(BigDecimal totalUnavailableAmount) {
+		this.totalUnavailableAmount = totalUnavailableAmount;
+		return this;
+	}
+
+	public MerchantWalletTable setTotalFreezeAmount(BigDecimal totalFreezeAmount) {
+		this.totalFreezeAmount = totalFreezeAmount;
+		return this;
+	}
+
+	public MerchantWalletTable setStatus(Integer status) {
+		this.status = status;
+		return this;
+	}
+
+	public MerchantWalletTable setCreateTime(Date createTime) {
+		this.createTime = createTime;
+		return this;
+	}
+
+	public MerchantWalletTable setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+		return this;
+	}
 }
