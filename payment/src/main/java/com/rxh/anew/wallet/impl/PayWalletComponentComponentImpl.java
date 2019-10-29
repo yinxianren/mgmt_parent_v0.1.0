@@ -6,10 +6,12 @@ import com.rxh.anew.table.business.PayOrderInfoTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.merchant.MerchantRateTable;
 import com.rxh.anew.table.merchant.MerchantWalletTable;
+import com.rxh.anew.table.merchant.MerchantsDetailsTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.wallet.PayWalletComponent;
 import com.rxh.cache.redis.MerchantSettingCache;
 import com.rxh.payInterface.NewPayAssert;
+import com.rxh.tuple.Tuple2;
 import lombok.AllArgsConstructor;
 import org.apache.activemq.command.ActiveMQObjectMessage;
 import org.springframework.stereotype.Component;
@@ -38,24 +40,19 @@ public class PayWalletComponentComponentImpl implements PayWalletComponent, NewP
             //获取商户信息
             MerchantInfoTable mit = payWalletService.getMerInfo(ipo);
             //获取商户产品费率
-            MerchantRateTable mrt = payWalletService.getMerRate(poi.getProductId(),ipo);
+            MerchantRateTable mrt = payWalletService.getMerRate(poi,ipo);
             //获取商户钱包
             MerchantWalletTable mwt = payWalletService.getMerWallet(ipo);
-            //更新商户钱包
-            mwt = payWalletService.updateMerWallet(mwt,poi,mrt);
-            //保存商户钱包明细
+            //更新商户钱包 ,保存商户钱包明细
+            Tuple2<MerchantWalletTable, MerchantsDetailsTable>  merWalletTuple = payWalletService.updateMerWallet(mwt,poi,mrt);
 
-            //更新终端商户钱包
+            //更新终端商户钱包 保存终端商户钱包明细
 
-            //保存终端商户钱包明细
+            //更新平台钱包 保存平台钱包明细
 
-            //更新平台钱包
 
-            //保存平台钱包明细
+            //更新代理商钱包 保存代理商钱包明细
 
-            //更新代理商钱包
-
-            //保存代理商钱包明细
 
         }catch (Exception e){
 

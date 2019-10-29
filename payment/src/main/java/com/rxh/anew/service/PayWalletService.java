@@ -19,11 +19,11 @@ public interface PayWalletService {
 
     /**
      *
-     * @param productId
+     * @param poi
      * @param ipo
      * @return
      */
-    MerchantRateTable getMerRate(String productId, InnerPrintLogObject ipo) throws NewPayException;
+    MerchantRateTable getMerRate(PayOrderInfoTable poi, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      *

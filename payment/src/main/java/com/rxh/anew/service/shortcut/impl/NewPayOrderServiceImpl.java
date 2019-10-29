@@ -600,6 +600,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
 
             merchantRateTable = commonRPCComponent.apiMerchantRateService.getOne(new MerchantRateTable()
                     .setMerchantId(merchantPayOrderApplyDTO.getMerId())
+                    .setChannelId(channelInfoTable.getChannelId())
                     .setProductId(merchantPayOrderApplyDTO.getProductType())
                     .setStatus(StatusEnum._0.getStatus()));
         }catch (Exception e){
