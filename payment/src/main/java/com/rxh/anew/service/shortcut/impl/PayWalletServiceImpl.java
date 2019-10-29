@@ -9,6 +9,8 @@ import com.rxh.anew.table.merchant.MerchantRateTable;
 import com.rxh.anew.table.merchant.MerchantWalletTable;
 import com.rxh.anew.table.merchant.MerchantsDetailsTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
+import com.rxh.anew.table.terminal.TerminalMerchantsDetailsTable;
+import com.rxh.anew.table.terminal.TerminalMerchantsWalletTable;
 import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.enums.StatusEnum;
 import com.rxh.exception.NewPayException;
@@ -101,7 +103,6 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
 
     @Override
     public Tuple2<MerchantWalletTable, MerchantsDetailsTable> updateMerWallet(MerchantWalletTable mwt, PayOrderInfoTable poi, MerchantRateTable mrt) {
-
         //订单金额
         BigDecimal amount = poi.getAmount();
         //总订单金额
@@ -126,12 +127,17 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         //................
         //总可用余额
         BigDecimal totalBalance =( null == mwt.getTotalBalance() ? inAmount : mwt.getTotalBalance().add(inAmount) );
-       //判断结算周期
+       //总不可用余额
         BigDecimal totalUnavailableAmount = ( null == mwt.getTotalUnavailableAmount() ? new BigDecimal(0) : mwt.getTotalUnavailableAmount() );
-       if( !mrt.getSettleCycle().equalsIgnoreCase("d0")  || !mrt.getSettleCycle().equalsIgnoreCase("t0")){
-           totalUnavailableAmount = totalUnavailableAmount.add(inAmount);
-       }
-       //商户钱包
+        //总可用余额
+        BigDecimal totalAvailableAmount = ( null== mwt.getTotalAvailableAmount() ?  new BigDecimal(0) : mwt.getTotalAvailableAmount() );
+        //判断结算周期
+        if( !mrt.getSettleCycle().equalsIgnoreCase("d0")  || !mrt.getSettleCycle().equalsIgnoreCase("t0")){
+            totalUnavailableAmount = totalUnavailableAmount.add(inAmount);
+        }else{
+            totalAvailableAmount = totalAvailableAmount.add(inAmount);
+        }
+        //商户钱包
         mwt.setId(  null == mwt.getId() ? System.currentTimeMillis() : mrt.getId() )
                 .setMerchantId( poi.getMerchantId())
                 .setTotalAmount(totalAmount)//总订单金额
@@ -141,19 +147,118 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
                 .setFeeProfit(feeProfit) //手续费利润总和
                 .setTotalMargin(mwt.getTotalMargin()) //保证金尚未考虑
                 .setTotalBalance(totalBalance)
-                .setTotalAvailableAmount( mwt.getTotalAvailableAmount() )
+                .setTotalAvailableAmount( totalAvailableAmount )
                 .setTotalUnavailableAmount(totalUnavailableAmount)
                 .setTotalFreezeAmount(mwt.getTotalFreezeAmount())
                 .setStatus(StatusEnum._0.getStatus())
                 .setCreateTime( null == mwt.getCreateTime() ? new Date() : mwt.getCreateTime())
                 .setUpdateTime(new Date());
+        //创建商户钱包明细
+        MerchantsDetailsTable mdt = new MerchantsDetailsTable()
+                .setId(System.currentTimeMillis())
+                .setMerchantId(poi.getMerchantId())
+                .setProductId(poi.getProductId())
+                .setMerOrderId(poi.getMerOrderId())
+                .setPlatformOrderId(poi.getPlatformOrderId())
+                .setAmount(poi.getAmount())
+                .setInAmount(inAmount)
+                .setOutAmount(new BigDecimal(0))
+                .setRateFee(poi.getPayFee())
+                .setFee(totalSingleFee)
+                .setFeeProfit(merSingleFeeProfit)
+                .setTotalBalance(totalBalance)
+                .setTimestamp(System.currentTimeMillis())
+                .setStatus(poi.getStatus())
+                .setCreateTime(new Date())
+                .setUpdateTime(new Date());
+        return new Tuple2<>(mwt,mdt);
+    }
 
-       //创建商户钱包明细
+    @Override
+    public TerminalMerchantsWalletTable getTerMerWallet(InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="getTerMerWallet(InnerPrintLogObject ipo)";
+        TerminalMerchantsWalletTable tmw = null;
+        try{
+            tmw = commonRPCComponent.apiTerminalMerchantsWalletService.getOne(new TerminalMerchantsWalletTable()
+                    .setMerchantId(ipo.getMerId())
+                    .setTerminalMerId(ipo.getTerMerId())
+                    .setStatus(StatusEnum._0.getStatus()));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：查询终端商户钱包信息发生异常,异常信息：%s",
+                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg()) );
+        }
 
+        return null == tmw ? new TerminalMerchantsWalletTable() : tmw ;
+    }
 
-
-
-        return null;
+    @Override
+    public Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> updateTerMerWallet(TerminalMerchantsWalletTable tmw, PayOrderInfoTable poi, MerchantRateTable mrt){
+        //订单金额
+        BigDecimal amount = poi.getAmount();
+        //订单总金额
+        BigDecimal totalAmount = (null == tmw.getTotalAmount() ? amount : tmw.getTotalAmount().add(amount) );
+        //手续费率
+        BigDecimal payFee = poi.getPayFee();
+        //手续费
+        BigDecimal terMerFee = amount.multiply(payFee).setScale(2, BigDecimal.ROUND_UP );
+        //总手续费
+        BigDecimal totalTerMerFee = ( null == tmw.getTotalFee() ?  terMerFee : tmw.getTotalFee().add(terMerFee));
+        //入账金额
+        BigDecimal inAmount = amount.subtract(terMerFee);
+        //入账总金额
+        BigDecimal TotalIncomeAmount = ( null == tmw.getIncomeAmount() ? inAmount :
+                tmw.getIncomeAmount().add(inAmount) );
+        //总余额
+        BigDecimal totalBalance = (null == tmw.getTotalBalance() ? inAmount : tmw.getTotalBalance().add(inAmount) );
+        //总不可用余额
+        BigDecimal totalUnavailableAmount = ( null == tmw.getTotalUnavailableAmount() ? new BigDecimal(0) : tmw.getTotalUnavailableAmount() );
+        //总可用余额
+        BigDecimal totalAvailableAmount = ( null== tmw.getTotalAvailableAmount() ?  new BigDecimal(0) : tmw.getTotalAvailableAmount() );
+        //判断结算周期
+        if( !mrt.getSettleCycle().equalsIgnoreCase("d0")  || !mrt.getSettleCycle().equalsIgnoreCase("t0")){
+            totalUnavailableAmount = totalUnavailableAmount.add(inAmount);
+        }else{
+            totalAvailableAmount = totalAvailableAmount.add(inAmount);
+        }
+        //钱包
+        tmw.setId( null == tmw.getId() ? System.currentTimeMillis() : tmw.getId())
+                .setMerchantId(poi.getMerchantId())
+                .setTerminalMerId(poi.getTerminalMerId())
+                .setTotalAmount(totalAmount) //总订单金额
+                .setIncomeAmount(TotalIncomeAmount)   //入账总金额
+                .setOutAmount(tmw.getOutAmount())//总出帐金额
+                .setTotalBalance(totalBalance)//总余额
+                .setTotalAvailableAmount(totalAvailableAmount)
+                .setTotalUnavailableAmount(totalUnavailableAmount)
+                .setTotalFee(totalTerMerFee)
+                .setTotalMargin(tmw.getTotalMargin())//保证金尚未考虑
+                .setTotalFreezeAmount(tmw.getTotalFreezeAmount())
+                .setStatus(StatusEnum._0.getStatus())
+                .setCreateTime( null == tmw.getCreateTime() ? new Date() : tmw.getCreateTime() )
+                .setUpdateTime(new Date());
+        //钱包明细
+        TerminalMerchantsDetailsTable tmd = new TerminalMerchantsDetailsTable()
+                .setId(System.currentTimeMillis())
+                .setMerchantId(poi.getMerchantId())
+                .setTerminalMerId(poi.getTerminalMerId())
+                .setProductId(poi.getProductId())
+                .setMerOrderId(poi.getMerOrderId())
+                .setPlatformOrderId(poi.getPlatformOrderId())
+                .setAmount(poi.getAmount())
+                .setInAmount(inAmount)
+                .setOutAmount(new BigDecimal(0))
+                .setRateFee(payFee)
+                .setFee(terMerFee)
+                .setTotalBalance(totalBalance)
+                .setTimestamp(System.currentTimeMillis())
+                .setStatus(poi.getStatus())
+                .setCreateTime(new Date())
+                .setUpdateTime(new Date());
+        return new Tuple2<>(tmw,tmd);
     }
 
 

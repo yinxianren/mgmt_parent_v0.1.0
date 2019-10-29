@@ -6,6 +6,8 @@ import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.merchant.MerchantRateTable;
 import com.rxh.anew.table.merchant.MerchantWalletTable;
 import com.rxh.anew.table.merchant.MerchantsDetailsTable;
+import com.rxh.anew.table.terminal.TerminalMerchantsDetailsTable;
+import com.rxh.anew.table.terminal.TerminalMerchantsWalletTable;
 import com.rxh.exception.NewPayException;
 import com.rxh.tuple.Tuple2;
 
@@ -40,4 +42,19 @@ public interface PayWalletService {
      * @return
      */
     Tuple2<MerchantWalletTable, MerchantsDetailsTable> updateMerWallet(MerchantWalletTable mwt, PayOrderInfoTable poi, MerchantRateTable mrt);
+
+    /**
+     *
+     * @param ipo
+     * @return
+     */
+    TerminalMerchantsWalletTable getTerMerWallet(InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param tmw
+     * @param poi
+     * @return
+     */
+    Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> updateTerMerWallet(TerminalMerchantsWalletTable tmw, PayOrderInfoTable poi, MerchantRateTable mrt);
 }

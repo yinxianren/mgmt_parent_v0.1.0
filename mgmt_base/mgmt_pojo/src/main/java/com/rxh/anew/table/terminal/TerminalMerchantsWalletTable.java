@@ -4,20 +4,22 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.math.BigDecimal;
 
 /**
- * @Description  
+ * @Description
  * @Author  monkey
  * @Date 2019-10-22 
  */
 
 @TableName ( "4_terminal_merchants_wallet_table" )
-@Data
+@Getter
 public class TerminalMerchantsWalletTable  implements Serializable {
-	@TableId(type= IdType.AUTO)
+	@TableId(type= IdType.INPUT)
 	private Long id;//表主键
 	private String merchantId;//商户号
 	private String terminalMerId;//终端商户号
@@ -34,4 +36,78 @@ public class TerminalMerchantsWalletTable  implements Serializable {
 	private Date createTime;//创建时间
 	private Date updateTime;//更新时间
 
+	public TerminalMerchantsWalletTable setId(Long id) {
+		this.id = id;
+		return this;
+	}
+
+	public TerminalMerchantsWalletTable setMerchantId(String merchantId) {
+		this.merchantId = merchantId;
+		return this;
+	}
+
+	public TerminalMerchantsWalletTable setTerminalMerId(String terminalMerId) {
+		this.terminalMerId = terminalMerId;
+		return this;
+	}
+
+	public TerminalMerchantsWalletTable setTotalAmount(BigDecimal totalAmount) {
+		this.totalAmount = totalAmount;
+		return this;
+	}
+
+	public TerminalMerchantsWalletTable setIncomeAmount(BigDecimal incomeAmount) {
+		this.incomeAmount = incomeAmount;
+		return this;
+	}
+
+	public TerminalMerchantsWalletTable setOutAmount(BigDecimal outAmount) {
+		this.outAmount = outAmount;
+		return this;
+	}
+
+	public TerminalMerchantsWalletTable setTotalBalance(BigDecimal totalBalance) {
+		this.totalBalance = totalBalance;
+		return this;
+	}
+
+	public TerminalMerchantsWalletTable setTotalAvailableAmount(BigDecimal totalAvailableAmount) {
+		this.totalAvailableAmount = totalAvailableAmount;
+		return this;
+	}
+
+	public TerminalMerchantsWalletTable setTotalUnavailableAmount(BigDecimal totalUnavailableAmount) {
+		this.totalUnavailableAmount = totalUnavailableAmount;
+		return this;
+	}
+
+	public TerminalMerchantsWalletTable setTotalFee(BigDecimal totalFee) {
+		this.totalFee = totalFee;
+		return this;
+	}
+
+	public TerminalMerchantsWalletTable setTotalMargin(BigDecimal totalMargin) {
+		this.totalMargin = totalMargin;
+		return this;
+	}
+
+	public TerminalMerchantsWalletTable setTotalFreezeAmount(BigDecimal totalFreezeAmount) {
+		this.totalFreezeAmount = totalFreezeAmount;
+		return this;
+	}
+
+	public TerminalMerchantsWalletTable setStatus(Integer status) {
+		this.status = status;
+		return this;
+	}
+
+	public TerminalMerchantsWalletTable setCreateTime(Date createTime) {
+		this.createTime = createTime;
+		return this;
+	}
+
+	public TerminalMerchantsWalletTable setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+		return this;
+	}
 }

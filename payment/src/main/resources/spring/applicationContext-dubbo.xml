@@ -26,6 +26,10 @@
     <dubbo:reference interface="com.rxh.service.anew.transaction.ApiPayOrderBusinessTransactionService" id="apiPayOrderBusinessTransactionService"/>
     <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantsDetailsService"      id="apiMerchantsDetailsService"/>
     <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantWalletService"        id="apiMerchantWalletService"/>
+    <dubbo:reference interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsWalletService"       id="apiTerminalMerchantsWalletService"/>
+    <dubbo:reference interface=" com.rxh.service.anew.terminal.ApiTerminalMerchantsDetailsService"     id="apiTerminalMerchantsDetailsService"/>
+
+
     <!--  *****************************************************************************************************************  -->
     <!--四方支付服务接口  -->
     <dubbo:reference interface="com.rxh.service.square.RiskQuotaDataService" id="riskQuotaDataService"/>

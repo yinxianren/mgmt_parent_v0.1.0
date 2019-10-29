@@ -14,6 +14,8 @@ import com.rxh.service.anew.merchant.*;
 import com.rxh.service.anew.system.ApiMerchantSettingService;
 import com.rxh.service.anew.system.ApiRiskQuotaService;
 import com.rxh.service.anew.system.ApiSystemOrderTrackService;
+import com.rxh.service.anew.terminal.ApiTerminalMerchantsDetailsService;
+import com.rxh.service.anew.terminal.ApiTerminalMerchantsWalletService;
 import com.rxh.service.anew.transaction.ApiPayOrderBusinessTransactionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -48,4 +50,6 @@ public  class CommonRPCComponent {
     public final ApiPayOrderBusinessTransactionService apiPayOrderBusinessTransactionService;
     public final ApiMerchantWalletService     apiMerchantWalletService;
     public final ApiMerchantsDetailsService   apiMerchantsDetailsService;
+    public final ApiTerminalMerchantsWalletService apiTerminalMerchantsWalletService;
+    public final ApiTerminalMerchantsDetailsService apiTerminalMerchantsDetailsService;
 }

@@ -8,6 +8,8 @@ import com.rxh.anew.table.merchant.MerchantRateTable;
 import com.rxh.anew.table.merchant.MerchantWalletTable;
 import com.rxh.anew.table.merchant.MerchantsDetailsTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
+import com.rxh.anew.table.terminal.TerminalMerchantsDetailsTable;
+import com.rxh.anew.table.terminal.TerminalMerchantsWalletTable;
 import com.rxh.anew.wallet.PayWalletComponent;
 import com.rxh.cache.redis.MerchantSettingCache;
 import com.rxh.payInterface.NewPayAssert;
@@ -45,10 +47,13 @@ public class PayWalletComponentComponentImpl implements PayWalletComponent, NewP
             MerchantWalletTable mwt = payWalletService.getMerWallet(ipo);
             //更新商户钱包 ,保存商户钱包明细
             Tuple2<MerchantWalletTable, MerchantsDetailsTable>  merWalletTuple = payWalletService.updateMerWallet(mwt,poi,mrt);
-
+            //获取终端商户钱包
+            TerminalMerchantsWalletTable tmw = payWalletService.getTerMerWallet(ipo);
             //更新终端商户钱包 保存终端商户钱包明细
+            Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> terMerWalletTuple = payWalletService.updateTerMerWallet(tmw,poi,mrt);
+            //获取通道钱包
 
-            //更新平台钱包 保存平台钱包明细
+            //更新通道钱包 保存通道钱包明细
 
 
             //更新代理商钱包 保存代理商钱包明细
