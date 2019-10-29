@@ -1,4 +1,4 @@
-package com.rxh.controller;
+package com.rxh.controller.anew.merchant;
 
 import com.rxh.cache.RedisCacheCommonCompoment;
 import com.rxh.pojo.Result;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/merchantQuotaRisk")
-public class MerchantQuotaRiskController {
+public class AnewMerchantQuotaRiskController {
 
     @Autowired
     private MerchantQuotaRiskService merchantQuotaRiskService;

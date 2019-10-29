@@ -62,10 +62,10 @@
                                 <label class="col-lg-2 control-label"><span class="text-danger">*</span>商户号：</label>
                                 <div class="col-lg-1">
                                     <input class="form-control b-r-sm"
-                                           name="merId"
+                                           name="merchantId"
                                            type="text"
-                                           ng-model="merchantInfo.merId"
-                                           ng-blur="merIdBlur($event, merchantInfo.merId)"
+                                           ng-model="merchantInfo.merchantId"
+                                           ng-blur="merIdBlur($event, merchantInfo.merchantId)"
                                            readonly
                                            required>
                                 </div>
@@ -131,7 +131,7 @@
                                             name="type"
                                             ng-model="merchantInfo.type"
                                             ng-blur="typeBlur($event, merchantInfo.type)"
-                                            ng-options="+(x.firstValue) as x.name for x in merchantType"
+                                            ng-options="(x.firstValue) as x.name for x in merchantType"
                                             required>
                                     </select>
                                 </div>
@@ -139,7 +139,7 @@
                             <div class="form-group">
                                 <label class="col-lg-2 control-label">代理商：</label>
                                 <div class="col-lg-2">
-                                    <select class="form-control b-r-sm" ng-model="merchantInfo.parentId">
+                                    <select class="form-control b-r-sm" ng-model="merchantInfo.agentMerchantId">
                                         <option ng-repeat="x in agentMerchants" value="{{x.agentMerchantId}}">{{x.agentMerchantName}}</option>
                                     </select>
                                 </div>
@@ -193,10 +193,10 @@
                                                    nv-file-select=""
                                                    uploader="uploader"
                                                    multiple
-                                                   ng-disabled="merchantInfo.merId == null"
-                                                   name="identityUrl"
-                                                   ng-model="merchantInfo.identityUrl"
-                                                   ng-blur="identityUrlBlur($event, merchantInfo.identityUrl)"
+                                                   ng-disabled="merchantInfo.merchantId == null"
+                                                   name="identityPath"
+                                                   ng-model="merchantInfo.identityPath"
+                                                   ng-blur="identityUrlBlur($event, merchantInfo.identityPath)"
                                                    accept="image/*"
                                                    required>
                                             上传证件
@@ -247,7 +247,7 @@
                                 <div class="col-lg-3">
                                     <div class="input-group m-b">
                                     <input type="text"
-                                           name="agreementStarttime"
+                                           name="agreementStartTime"
                                            class="form-control"
                                            ng-readonly="false"
                                            ng-click="openDatepicker1()"
@@ -258,8 +258,8 @@
                                            close-text="关闭"
                                            clear-text="清空"
                                            current-text="今天"
-                                           ng-model="merchantInfo.agreementStarttime"
-                                           ng-blur="agreementStarttimeBlur($event, merchantInfo.agreementStarttime)"
+                                           ng-model="merchantInfo.agreementStartTime"
+                                           ng-blur="agreementStartTimeBlur($event, merchantInfo.agreementStartTime)"
                                            required
                                            >
                                         <span class="input-group-btn">
@@ -276,7 +276,7 @@
                                 <div class="col-lg-3">
                                     <div class="input-group m-b">
                                     <input type="text"
-                                           name="agreementEndtime"
+                                           name="agreementEndTime"
                                            class="form-control"
                                            ng-readonly="false"
                                            ng-click="openDatepicker2()"
@@ -287,8 +287,8 @@
                                            close-text="关闭"
                                            clear-text="清空"
                                            current-text="今天"
-                                           ng-model="merchantInfo.agreementEndtime"
-                                           ng-blur="agreementEndtimeBlur($event, merchantInfo.agreementEndtime)"
+                                           ng-model="merchantInfo.agreementEndTime"
+                                           ng-blur="agreementEndTimeBlur($event, merchantInfo.agreementEndTime)"
                                             required
                                     >
                                         <span class="input-group-btn">
@@ -332,10 +332,10 @@
                                     <label class="col-lg-2 control-label"><span class="text-danger">*</span>商户号：</label>
                                     <div class="col-lg-1">
                                         <input class="form-control b-r-sm"
-                                               name="merId"
+                                               name="merchantId"
                                                type="text"
-                                               ng-model="merchantInfo.merId"
-                                               ng-blur="merIdBlur($event, merchantInfo.merId)"
+                                               ng-model="merchantInfo.merchantId"
+                                               ng-blur="merIdBlur($event, merchantInfo.merchantId)"
                                                readonly
                                                required>
                                     </div>
@@ -383,7 +383,7 @@
                                                 name="type"
                                                 ng-model="merchantInfo.type"
                                                 ng-blur="typeBlur($event, merchantInfo.type)"
-                                                ng-options="+(x.firstValue) as x.name for x in merchantType"
+                                                ng-options="(x.firstValue) as x.name for x in merchantType"
                                                 readonly
                                                 required>
                                         </select>
@@ -393,9 +393,9 @@
                                     <label class="col-lg-2 control-label">代理商：</label>
                                     <div class="col-lg-2">
                                         <select class="form-control b-r-sm"
-                                                name="parentId"
-                                                ng-model="merchantInfo.parentId"
-                                                ng-options="+(x.agentMerchantId) as x.agentMerchantName for x in agentMerchants"
+                                                name="agentMerchantId"
+                                                ng-model="merchantInfo.agentMerchantId"
+                                                ng-options="(x.agentMerchantId) as x.agentMerchantName for x in agentMerchants"
                                                 readonly
                                         >
                                         </select>
@@ -495,7 +495,7 @@
                                     <div class="col-lg-3">
                                         <div class="input-group m-b">
                                             <input type="text"
-                                                   name="agreementStarttime"
+                                                   name="agreementStartTime"
                                                    class="form-control"
                                                    ng-readonly="true"
                                                    uib-datepicker-popup="{{format}}"
@@ -505,8 +505,8 @@
                                                    close-text="关闭"
                                                    clear-text="清空"
                                                    current-text="今天"
-                                                   ng-model="merchantInfo.agreementStarttime"
-                                                   ng-blur="agreementStarttimeBlur($event, merchantInfo.agreementStarttime)"
+                                                   ng-model="merchantInfo.agreementStartTime"
+                                                   ng-blur="agreementStartTimeBlur($event, merchantInfo.agreementStartTime)"
                                                    required
                                             >
                                             <span class="input-group-btn">
@@ -522,7 +522,7 @@
                                     <div class="col-lg-3">
                                         <div class="input-group m-b">
                                             <input type="text"
-                                                   name="agreementEndtime"
+                                                   name="agreementEndTime"
                                                    class="form-control"
                                                    ng-readonly="true"
                                                    uib-datepicker-popup="{{format}}"
@@ -532,8 +532,8 @@
                                                    close-text="关闭"
                                                    clear-text="清空"
                                                    current-text="今天"
-                                                   ng-model="merchantInfo.agreementEndtime"
-                                                   ng-blur="agreementEndtimeBlur($event, merchantInfo.agreementEndtime)"
+                                                   ng-model="merchantInfo.agreementEndTime"
+                                                   ng-blur="agreementEndTimeBlur($event, merchantInfo.agreementEndTime)"
                                                    required
                                             >
                                             <span class="input-group-btn">

@@ -5,9 +5,9 @@ import com.rxh.vo.ResponseVO;
 
 import java.util.List;
 
-public interface AnewMerchantService {
+public interface AnewMerchantInfoService {
 
-    ResponseVO getMerchant(MerchantInfoTable merchantInfoTable);
+    ResponseVO getMerchants(MerchantInfoTable merchantInfoTable);
 
     ResponseVO delByIds(List<String> ids);
 

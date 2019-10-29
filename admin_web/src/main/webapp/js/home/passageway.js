@@ -209,13 +209,11 @@ function OrganizationAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, t
     };
     $scope.orgtoggle = function (value) {
         var index = orgpayids.indexOf(value);
-        console.log(orgpayids)
         if (index > -1) {
             orgpayids.splice(index, 1);
         } else {
             orgpayids.push(value);
         }
-        console.log(orgpayids)
     };
     $scope.addOrganization = function () {
         var orgpayids=[];

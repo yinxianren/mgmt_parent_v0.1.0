@@ -41,8 +41,8 @@
                                                 name="agentIdentityType"
                                                 ng-model="searchInfo.type">
                                             <option value=""></option>
-                                            <option value="0">A类</option>
-                                            <option value="1">B类</option>
+                                            <option value="00">公司商户</option>
+                                            <option value="01">个体商户</option>
                                         </select>
                                     </div>
                                 </div>
@@ -59,8 +59,8 @@
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
                                         <span class="input-group-addon">商户号：</span>
-                                        <input class="form-control b-r-sm" type="text" ng-model="searchInfo.merId"
-                                               uib-typeahead="x.merId as x.merId + '(' + x.merchantName + ')' for x in merchantList | filter: {merId : $viewValue}"
+                                        <input class="form-control b-r-sm" type="text" ng-model="searchInfo.merchantId"
+                                               uib-typeahead="x.merchantId as x.merchantId + '(' + x.merchantName + ')' for x in merchantList | filter: {merchantId : $viewValue}"
                                                typeahead-min-length="0">
                                     </div>
                                 </div>
@@ -85,10 +85,10 @@
                                 <tr ng-repeat="row in $data">
                                     <td class="text-center" style="line-height: 2"
                                         data-title="''">
-                                        <input type="checkbox" id="constantCheckBoxID" ng-model="selected[row.merId]"  />
+                                        <input type="checkbox" id="constantCheckBoxID" ng-model="selected[row.id]"  />
                                     </td>
                                     <td class="text-center" data-title="'商户号'">
-                                        {{row.merId}}
+                                        {{row.merchantId}}
                                     </td>
                                     <td class="text-center" data-title="'商户名称'">
                                         {{row.merchantName}}
@@ -97,11 +97,11 @@
                                         {{row.merchantShortName}}
                                     </td>
                                     <td class="text-center" data-title="'商户类型'" >
-                                        <div ng-show="row.type == 0 ">
-                                            A类
+                                        <div ng-show="row.type == 00 ">
+                                            公司商户
                                         </div>
-                                        <div ng-show=" row.type == 1 ">
-                                            B类
+                                        <div ng-show=" row.type == 01 ">
+                                            个体商户
                                         </div>
                                     </td>
                                     <td class="text-center" data-title="'审核状态'" >
@@ -130,10 +130,10 @@
                                         {{row.email}}
                                     </td>--%>
                                     <td class="text-center" data-title="'合同开始时间'">
-                                        {{row.agreementStarttime | date:'yyyy-MM-dd'}}
+                                        {{row.agreementStartTime | date:'yyyy-MM-dd'}}
                                     </td>
                                     <td class="text-center" data-title="'合同终止时间'">
-                                        {{row.agreementEndtime | date:'yyyy-MM-dd'}}
+                                        {{row.agreementEndTime | date:'yyyy-MM-dd'}}
                                     </td>
                                     <td class="text-center" data-title="'创建时间'">
                                         {{row.createTime | date:'yyyy-MM-dd HH:mm:ss'}}

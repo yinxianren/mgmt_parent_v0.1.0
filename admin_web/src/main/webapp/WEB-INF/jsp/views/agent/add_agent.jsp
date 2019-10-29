@@ -87,7 +87,7 @@
                     >
                 </div>
             </div>
-            <div class="form-group  m-t">
+            <%--<div class="form-group  m-t">
                 <label class="col-sm-3 control-label p-w-xs label-name-left">商户登录名：</label>
                 <div class="col-sm-9">
                     <input class="form-control b-r-sm"
@@ -106,7 +106,7 @@
                            ng-model="agentMerchantInfo.password"
                     >
                 </div>
-            </div>
+            </div>--%>
 
             <div class="form-group">
                 <label class="col-sm-3 control-label p-w-xs label-name-left"><span class="text-danger">*</span>证件类型：</label>
@@ -157,9 +157,9 @@
                                    uploader="uploader"
                                    multiple
                                    ng-disabled="agentMerchantInfo.agentMerchantId == null"
-                                   name="agentIdentityUrl"
-                                   ng-model="agentMerchantInfo.agentIdentityUrl"
-                                   ng-blur="agentIdentityUrlBlur($event, agentMerchantInfo.agentIdentityUrl)"
+                                   name="agentIdentityPath"
+                                   ng-model="agentMerchantInfo.agentIdentityPath"
+                                   ng-blur="agentIdentityUrlBlur($event, agentMerchantInfo.agentIdentityPath)"
                                    accept="image/*"
                                    required>
                             上传证件
@@ -172,11 +172,11 @@
                         class="text-danger">*</span>电话：</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control input-sm"
-                           name="agentPhone"
+                           name="phone"
                            maxlength="50"
                            oninput="inputRegex(this, /[^*()+\-\d]/g)"
-                           ng-model="agentMerchantInfo.agentPhone"
-                           ng-blur="agentPhoneBlur($event, agentMerchantInfo.agentPhone)"
+                           ng-model="agentMerchantInfo.phone"
+                           ng-blur="agentPhoneBlur($event, agentMerchantInfo.phone)"
                            required>
                 </div>
             </div>
@@ -185,10 +185,10 @@
                 <div class="col-sm-9">
                     <input type="text"
                            class="form-control input-sm"
-                           name="agentEmail"
+                           name="email"
                            maxlength="50"
-                           ng-model="agentMerchantInfo.agentEmail"
-                           ng-blur="agentEmailBlur($event, agentMerchantInfo.agentEmail)"
+                           ng-model="agentMerchantInfo.email"
+                           ng-blur="agentEmailBlur($event, agentMerchantInfo.email)"
                            required>
                 </div>
             </div>
@@ -197,11 +197,11 @@
                         class="text-danger">*</span>QQ：</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control input-sm"
-                           name="agentQq"
+                           name="qq"
                            maxlength="50"
                            oninput="inputRegex(this, /[^*()+\-\d]/g)"
-                           ng-model="agentMerchantInfo.agentQq"
-                           ng-blur="agentQqBlur($event, agentMerchantInfo.agentQq)"
+                           ng-model="agentMerchantInfo.qq"
+                           ng-blur="agentQqBlur($event, agentMerchantInfo.qq)"
                            required>
                 </div>
             </div>
@@ -323,10 +323,10 @@
                             class="text-danger">*</span>电话：</label>
                     <div class="col-sm-9">
                         <input type="text" class="form-control input-sm"
-                               name="agentMerchantInfo.agentPhone"
+                               name="agentMerchantInfo.phone"
                                maxlength="50"
                                oninput="inputRegex(this, /[^*()+\-\d]/g)"
-                               ng-model="agentMerchantInfo.agentPhone"
+                               ng-model="agentMerchantInfo.phone"
                                readonly
                                required>
                     </div>
@@ -336,9 +336,9 @@
                     <div class="col-sm-9">
                         <input type="text"
                                class="form-control input-sm"
-                               name="agentEmail"
+                               name="email"
                                maxlength="50"
-                               ng-model="agentMerchantInfo.agentEmail"
+                               ng-model="agentMerchantInfo.email"
                                readonly
                                required>
                     </div>
@@ -348,10 +348,10 @@
                             class="text-danger">*</span>QQ：</label>
                     <div class="col-sm-9">
                         <input type="text" class="form-control input-sm"
-                               name="agentQq"
+                               name="qq"
                                maxlength="50"
                                oninput="inputRegex(this, /[^*()+\-\d]/g)"
-                               ng-model="agentMerchantInfo.agentQq"
+                               ng-model="agentMerchantInfo.qq"
                                readonly
                                required>
                     </div>
@@ -359,11 +359,11 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label p-w-xs label-name-left"><span class="text-danger">*</span>审核状态：</label>
                     <div class="col-sm-9">
-                        <input type="radio" name="statusName" value="0" ng-model="agentMerchantInfo.agentStatus"
+                        <input type="radio" name="status" value="0" ng-model="agentMerchantInfo.status"
                                ng-checked="agentStatusCheckqy"/>启用
-                        <input type="radio" name="statusName" value="1" ng-model="agentMerchantInfo.agentStatus"
+                        <input type="radio" name="status" value="1" ng-model="agentMerchantInfo.status"
                                ng-checked="agentStatusCheckjy"/>禁用
-                        <input type="radio" name="statusName" value="2" ng-model="agentMerchantInfo.agentStatus"
+                        <input type="radio" name="status" value="2" ng-model="agentMerchantInfo.status"
                                ng-checked="agentStatusCheckwsh"/>未审核
                     </div>
                 </div>

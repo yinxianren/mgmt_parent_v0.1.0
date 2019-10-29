@@ -166,7 +166,7 @@ function merchantListCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$st
 
     // 初始化数据
     httpSvc.getData('post', '/merchantInfo/getAllMerchantInfo',{}).then(function (value) {
-        if(value.code == 1) { // 成功
+        if(value.code == 0) { // 成功
             $scope.merchantInfoTable = new NgTableParams({}, {
                 dataset: value.data
             });
@@ -184,8 +184,7 @@ function merchantListCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$st
         $scope.agentMerchantList = [];
         angular.element('.ibox-content').addClass('sk-loading');
         httpSvc.getData('post', '/merchantInfo/getAllMerchantInfo',searchInfo).then(function (value) {
-            if(value.code == 1) { // 成功
-                console.log(value.data)
+            if(value.code == 0) { // 成功
                 $scope.merchantInfoTable.settings({
                     dataset: value.data
                 });
@@ -199,7 +198,7 @@ function merchantListCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$st
         $scope.agentMerchantList = [];
         var searchInfo = angular.copy($scope.searchInfo);
         httpSvc.getData('post', '/merchantInfo/getMerchantInfoListByMerchantInfo',searchInfo).then(function (value) {
-            if(value.code == 1){ // 成功
+            if(value.code == 0){ // 成功
                 $scope.merchantInfoTable.settings({
                     dataset: value.data
                 });
@@ -250,7 +249,7 @@ function merchantListCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$st
         });
         modalInstance.result.then(function () {
             httpSvc.getData('post', '/merchantInfo/batchDel', ids).then(function (value) {
-                if (value.code == 1) {
+                if (value.code == 0) {
                     toaster.pop({
                         type: 'success',
                         title: '代理商删除',
@@ -297,19 +296,18 @@ function merchantAddCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
     if($scope.goType == 0){
         $scope.merchantInfo = getMerchantInfo();
         httpSvc.getData('get', '/merchantInfo/getMerchantIdIncre').then(function (value) {
-            $scope.merchantInfo.merId = value;
+            $scope.merchantInfo.merchantId = value;
             angular.element('.ibox-content').removeClass('sk-loading');
         });
         $scope.certificateImgUrl = [];
     }else{
 
         $scope.merchantInfo = angular.copy($stateParams.merchantInfo);
-        console.log($scope.merchantInfo );
 
 
-        if ($scope.merchantInfo.identityUrl != null && $scope.merchantInfo.identityUrl.trim() !== '') {
-            $scope.certificateImgUrl = $scope.merchantInfo.identityUrl.split(',');
-            certificateImgUrl = angular.copy(certificateImgUrl);
+        if ($scope.merchantInfo.identityPath != null && $scope.merchantInfo.identityPath.trim() !== '') {
+            $scope.certificateImgUrl = $scope.merchantInfo.identityPath.split(',');
+            $scope.certificateImgUrl = angular.copy($scope.certificateImgUrl);
         } else {
             $scope.certificateImgUrl = [];
         }
@@ -334,11 +332,11 @@ function merchantAddCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
     }
     function getMerchantInfo() {
         var merchantInfo = {
-            merId: '',
+            merchantId: '',
             merchantName: '',
             merchantShortName: '',
             type: '',
-            parentId: '',
+            agentMerchantId: '',
             secretKey: '',
             identityType: '',
             identityNum: '',
@@ -348,8 +346,8 @@ function merchantAddCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
             email: '',
             emailStatus: '',
             qq: '',
-            agreementStarttime: '',
-            agreementEndtime: '',
+            agreementStartTime: '',
+            agreementEndTime: '',
             status: 0 //商户状态(新增的时候默认给启用)，2：未审核 0：启用 1:禁用
         };
         return merchantInfo;
@@ -367,12 +365,12 @@ function merchantAddCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
         startingDay: 1,
         minDate: new Date()
     };
-    $scope.$watch('merchantInfo.agreementStarttime', function (newVal) {
+    $scope.$watch('merchantInfo.agreementStartTime', function (newVal) {
         if (newVal !== undefined && newVal !== null) {
             $scope.dateOptions2.minDate = newVal;
         }
     });
-    $scope.$watch('merchantInfo.agreementEndtime', function (newVal) {
+    $scope.$watch('merchantInfo.agreementEndTime', function (newVal) {
         if (newVal !== undefined && newVal !== null) {
             $scope.dateOptions1.maxDate = newVal;
         } else {
@@ -398,14 +396,14 @@ function merchantAddCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
         url: '/agentMerchantInfo/uploadAgentIdentityUrl'
     });
     $scope.uploader.onBeforeUploadItem = function (item) {
-        item.formData.push({agentMerchantId: $scope.merchantInfo.merId});
+        item.formData.push({agentMerchantId: $scope.merchantInfo.merchantId});
     };
     $scope.uploader.onAfterAddingAll = function () {
         $scope.uploader.uploadAll();
     };
     $scope.uploader.onSuccessItem = function (item, response, status, headers) {
         $scope.certificateImgUrl.push(response);
-        $scope.merchantInfo.identityUrl = $scope.certificateImgUrl.toString();
+        $scope.merchantInfo.identityPath = $scope.certificateImgUrl.toString();
     };
     $scope.uploader.onCompleteAll = function () {
         $scope.uploader.clearQueue();
@@ -414,9 +412,9 @@ function merchantAddCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
 
     // 审核确定
     $scope.confirmStatus = function (merchantInfo) {
-        merchantInfo.identityUrl = $scope.certificateImgUrl.toString();
+        merchantInfo.identityPath = $scope.certificateImgUrl.toString();
         httpSvc.getData('post', '/merchantInfo/updateMerchantInfo', merchantInfo).then(function (value) {
-            if (value.code == 1) {
+            if (value.code == 0) {
                 toaster.pop({
                     type: 'success',
                     title: '商户',
@@ -437,11 +435,10 @@ function merchantAddCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
      * 确定
      */
     $scope.confirm = function (merchantInfo) {
-        merchantInfo.identityUrl = $scope.certificateImgUrl.toString();
-        console.log(merchantInfo);
+        merchantInfo.identityPath = $scope.certificateImgUrl.toString();
         if ($scope.goType === 0) {// type:0 新增
             httpSvc.getData('post', '/merchantInfo/addMerchantInfo', merchantInfo).then(function (value) {
-                if (value.code == 1) {
+                if (value.code == 0) {
                     toaster.pop({
                         type: 'success',
                         title: '商户',
@@ -459,7 +456,7 @@ function merchantAddCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
         }
         if($scope.goType === 1){ //type:1 修改 typpe:2 审核
             httpSvc.getData('post', '/merchantInfo/updateMerchantInfo', merchantInfo).then(function (value) {
-                if (value.code == 1) {
+                if (value.code == 0) {
                     toaster.pop({
                         type: 'success',
                         title: '代理商',
@@ -482,24 +479,24 @@ function merchantAddCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
     };
     // 验证输入框的输入数据
     $scope.merIdBlur = $scope.merchantNameBlur = $scope.typeBlur =  $scope.identityTypeBlur  = $scope.phoneBlur = $scope.emailBlur = $scope.identityNumBlur
-        =  $scope.qqBlur  = $scope.identityUrlBlur =  $scope.agreementStarttimeBlur = $scope.agreementEndtimeBlur = $scope.secretKeyBlur  =  function ($event, name) {
+        =  $scope.qqBlur  = $scope.identityUrlBlur =  $scope.agreementStartTimeBlur = $scope.agreementEndTimeBlur = $scope.secretKeyBlur  =  function ($event, name) {
         verification(name,$event.target);
     };
     // 表单校验
     $timeout(function () {
         $scope.checkDisabled = function (myForm) {
-            return myForm.merId.$error.required || myForm.merchantName.$error.required || myForm.type.$error.required
+            return myForm.merchantId.$error.required || myForm.merchantName.$error.required || myForm.type.$error.required
                 ||myForm.identityType.$error.required || myForm.phone.$error.required || myForm.email.$error.required
-                || myForm.qq.$error.required || myForm.identityNum.$error.required || myForm.identityUrl.$error.required || myForm.agreementStarttime.$error.required
-                || myForm.agreementEndtime.$error.required || myForm.secretKey.$error.required;
+                || myForm.qq.$error.required || myForm.identityNum.$error.required || myForm.agreementStartTime.$error.required
+                || myForm.agreementEndTime.$error.required || myForm.secretKey.$error.required;
                 // || myForm.agreementStarttime.$error.required || myForm.agreementEndtime.$error.required;
         };
     });
     //
     $scope.getRandomSecretkey = function () {
         httpSvc.getData('post', '/merchantInfo/getRandomSecretkey').then(function (value) {
-            if(value.code == 1){
-                $scope.merchantInfo.secretKey = value.msg;
+            if(value.code == 0){
+                $scope.merchantInfo.secretKey = value.data;
             }
         });
     }
@@ -513,11 +510,11 @@ function merchantAccountCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
     $scope.merchantAccount = {};
     $scope.merchantAccount = getMerchantAccount(merchantInfo);
     // var params = {"merId":$scope.merchantAccount.merId};
-    httpSvc.getData('post', '/merchantAcount/search',{"merId":$scope.merchantAccount.merId}).then(function (value) {
-        if(value.code == 1 ){
+    httpSvc.getData('post', '/merchantAcount/search',{"merchantId":$scope.merchantAccount.merchantId}).then(function (value) {
+        if(value.code == 0 ){
             $scope.merchantAccount = value.data;
-            if ($scope.merchantAccount.identityUrl1 != null && $scope.merchantAccount.identityUrl1.trim() !== '') {
-                $scope.certificateImgUrl = $scope.merchantAccount.identityUrl1.split(',');
+            if ($scope.merchantAccount.identityPath != null && $scope.merchantAccount.identityPath.trim() !== '') {
+                $scope.certificateImgUrl = $scope.merchantAccount.identityPath.split(',');
                 // certificateImgUrl = angular.copy(certificateImgUrl);
             }
         }
@@ -525,7 +522,7 @@ function merchantAccountCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
     });
     function getMerchantAccount(merchantInfo) {
         var merchantAccount = {
-            merId: merchantInfo.merId,
+            merchantId: merchantInfo.merchantId,
             benefitName: '',
             bankName: '',
             bankcardNum: '',
@@ -543,9 +540,9 @@ function merchantAccountCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
      * 确定
      */
     $scope.confirm = function (merchantAccount) {
-        merchantAccount.identityUrl1 = $scope.certificateImgUrl.toString();
+        merchantAccount.identityPath = $scope.certificateImgUrl.toString();
         httpSvc.getData('post', '/merchantAcount/update', merchantAccount).then(function (value) {
-            if (value.code == 1) {
+            if (value.code == 0) {
                 toaster.pop({
                     type: 'success',
                     title: '结算账户',
@@ -575,7 +572,7 @@ function merchantAccountCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
         $scope.checkDisabled = function (myForm) {
             return myForm.merId.$error.required || myForm.benefitName.$error.required || myForm.bankName.$error.required
                 || myForm.bankcardNum.$error.required || myForm.bankBranchName.$error.required || myForm.bankBranchNum.$error.required
-                ||  myForm.identityType.$error.required || myForm.identityNum.$error.required || myForm.identityUrl1.$error.required;
+                ||  myForm.identityType.$error.required || myForm.identityNum.$error.required || myForm.identityPath.$error.required;
         };
     });
 
@@ -584,14 +581,14 @@ function merchantAccountCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
         url: '/agentMerchantInfo/uploadAgentIdentityUrl'
     });
     $scope.uploader.onBeforeUploadItem = function (item) {
-        item.formData.push({agentMerchantId: $scope.merchantAccount.merId});
+        item.formData.push({agentMerchantId: $scope.merchantAccount.merchantId});
     };
     $scope.uploader.onAfterAddingAll = function () {
         $scope.uploader.uploadAll();
     };
     $scope.uploader.onSuccessItem = function (item, response, status, headers) {
         $scope.certificateImgUrl.push(response);
-        $scope.merchantAccount.identityUrl1 = $scope.certificateImgUrl.toString();
+        $scope.merchantAccount.identityPath = $scope.certificateImgUrl.toString();
     };
     $scope.uploader.onCompleteAll = function () {
         $scope.uploader.clearQueue();
@@ -603,10 +600,11 @@ function merchantSettingCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
     $scope.goType = parseInt(goType);
     $scope.merchantSetting = {};
     $scope.merchantSetting = getMerchantSetting(merchantInfo);
+    $scope.merchantId = merchantInfo.merchantId;
     function getMerchantSetting(merchantInfo) {
         var merchantSetting = {
             id: '',
-            merId: merchantInfo.merId,
+            merchantId: merchantInfo.merchantId,
             organizationId: '',
             channelId:'',
             channelLevel: '',
@@ -624,7 +622,6 @@ function merchantSettingCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
             return false;
         }
         var checkab = selected.indexOf(value) > -1;
-        console.log(checkab);
         return checkab;
     };
 
@@ -646,13 +643,17 @@ function merchantSettingCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
     };
     $scope.orgtoggle = function (value) {
         var index = orgpayids.indexOf(value);
-        console.log(orgpayids)
         if (index > -1) {
             orgpayids.splice(index, 1);
         } else {
             orgpayids.push(value);
         }
-        console.log(orgpayids)
+
+        // httpSvc.getData('get', '/merchantSetting/getChannels',{
+        //     organizationIds:orgpayids
+        // }).then(function (value) {
+        //     $scope.channels = value.data;
+        // });
     };
 
 
@@ -663,18 +664,25 @@ function merchantSettingCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
        $scope.payType=value.payType;
        var organizations = value.organizations;
        $scope.organizations= [];
-        for (var i = 0; i <  organizations.length; i++) {
+       for (var i = 0; i <  organizations.length; i++) {
+           var item = {};
+           item['organizationId'] = organizations[i].organizationId;
+           item['organizationName'] = organizations[i].organizationName;
+           $scope.organizations.push(item) ;
+       }
+       var channels=value.channels;
+        $scope.channels= [];
+        for (var i = 0; i <  channels.length; i++) {
             var item = {};
-            item['organizationId'] = organizations[i].organizationId + "";
-            item['organizationName'] = organizations[i].organizationName;
-            $scope.organizations.push(item) ;
-            console.log($scope.organizations);
+            item['organizationId'] = channels[i].organizationId;
+            item['channelName'] = channels[i].channelName;
+            item['channelId'] = channels[i].channelId;
+            $scope.channels.push(item) ;
         }
-       $scope.channels=value.channels;
         angular.element('.ibox-content').removeClass('sk-loading');
     // 初始化对象信息
-    httpSvc.getData('post', '/merchantSetting/search',{"merId":$scope.merchantSetting.merId}).then(function (value1) {
-        if(value1.code == 1 ){
+    httpSvc.getData('post', '/merchantSetting/search',{"merchantId":$scope.merchantSetting.merchantId}).then(function (value1) {
+        if(value1.code == 0 ){
             $scope.merchantSetting = value1.data;
             // 初始化属性 机构
             if ($scope.merchantSetting.organizationId === undefined) {
@@ -701,12 +709,6 @@ function merchantSettingCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
                 $scope.merchantPayTypes = $scope.merchantSetting.payType.split(',');
             }
 
-            // console.log($scope.merchantOrganizations);
-            // console.log($scope.merchantPayTypes);
-            // console.log($scope.merchantChannels);
-            // console.log($scope.merchantPayTypes);
-            // console.log($scope.merchantChannels);
-            // console.log($scope.merchantSetting);
              payids=angular.copy($scope.merchantPayTypes);
              channleids=angular.copy($scope.merchantChannels);
              orgpayids=angular.copy($scope.merchantOrganizations);
@@ -726,17 +728,13 @@ function merchantSettingCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
         var channels=channleids.join(',');
         var organizations=orgpayids.join(',');
 
-        // console.log(types);
-        // console.log(channels);
-        // console.log(organizations);
-
-
         merchantInfo.payType=types;
         merchantInfo.channelId=channels;
         merchantInfo.organizationId=organizations;
+        merchantInfo.mercahntId=$scope.merchantId;
 
         httpSvc.getData('post', '/merchantSetting/update', merchantInfo).then(function (value) {
-            if (value.code == 1) {
+            if (value.code == 0) {
                 toaster.pop({
                     type: 'success',
                     title: '商户配置',
@@ -764,7 +762,7 @@ function merchantSettingCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
     };
     $timeout(function () {
         $scope.checkDisabled = function (myForm) {
-            return myForm.merId.$error.required || myForm.benefitName.$error.required || myForm.bankName.$error.required
+            return myForm.merchantId.$error.required || myForm.benefitName.$error.required || myForm.bankName.$error.required
                 || myForm.bankcardNum.$error.required || myForm.bankBranchName.$error.required || myForm.bankBranchNum.$error.required ||  myForm.identityType.$error.required;
         };
     });
@@ -778,7 +776,7 @@ function merchantQuotaRiskCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
     function getMerchantSetting(merchantInfo) {
         var merchantSetting = {
             id: '',
-            merId: merchantInfo.merId,
+            merchantId: merchantInfo.merchantId,
             organizationId: '',
             channelId: '',
             channelLevel: '',
@@ -787,7 +785,6 @@ function merchantQuotaRiskCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
         return merchantSetting;
     }
 
-    console.log($scope.merchantSetting.merId);
     httpSvc.getData('post', '/merchantInfo/init').then(function (value) {
        $scope.merchantType=value.merchantType;
        $scope.channelLevel=value.channelLevel;
@@ -796,11 +793,10 @@ function merchantQuotaRiskCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
         angular.element('.ibox-content').removeClass('sk-loading');
 
     // 初始化对象信息
-    httpSvc.getData('post', '/merchantQuotaRisk/search',{"merId":$scope.merchantSetting.merId}).then(function (value1) {
+    httpSvc.getData('post', '/merchantQuotaRisk/search',{"merchantId":$scope.merchantSetting.merchantId}).then(function (value1) {
 
-        if(value1.code == 1 ){
+        if(value1.code == 0 ){
             $scope.merchantQuotaRisk = value1.data;
-            console.log($scope.merchantQuotaRisk)
         }
         angular.element('.ibox-content').removeClass('sk-loading');
     });
@@ -811,7 +807,7 @@ function merchantQuotaRiskCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
      */
     $scope.confirm = function (merchantInfo) {
         httpSvc.getData('post', '/merchantQuotaRisk/update', merchantInfo).then(function (value) {
-            if (value.code == 1) {
+            if (value.code == 0) {
                 toaster.pop({
                     type: 'success',
                     title: '商户配置',
@@ -839,7 +835,7 @@ function merchantQuotaRiskCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
     };
     $timeout(function () {
         $scope.checkDisabled = function (myForm) {
-            return myForm.merId.$error.required || myForm.benefitName.$error.required || myForm.bankName.$error.required
+            return myForm.merchantId.$error.required || myForm.benefitName.$error.required || myForm.bankName.$error.required
                 || myForm.bankcardNum.$error.required || myForm.bankBranchName.$error.required || myForm.bankBranchNum.$error.required ||  myForm.identityType.$error.required;
         };
     });
@@ -855,7 +851,7 @@ function merchantSquareRateCtrl($scope, $uibModal, toaster, NgTableParams, httpS
     function getMerchantSetting(merchantInfo) {
         var merchantSetting = {
             id: '',
-            merId: merchantInfo.merId,
+            merchantId: merchantInfo.merchantId,
             organizationId: '',
             channelId: '',
             channelLevel: '',
@@ -864,7 +860,6 @@ function merchantSquareRateCtrl($scope, $uibModal, toaster, NgTableParams, httpS
         return merchantSetting;
     }
 
-    console.log($scope.merchantSetting.merId);
     httpSvc.getData('post', '/merchantInfo/init').then(function (value) {
        $scope.merchantType=value.merchantType;
        $scope.channelLevel=value.channelLevel;
@@ -875,10 +870,9 @@ function merchantSquareRateCtrl($scope, $uibModal, toaster, NgTableParams, httpS
         angular.element('.ibox-content').removeClass('sk-loading');
 
     // 初始化对象信息
-    httpSvc.getData('post', '/merchantSquareRate/search',{"merId":$scope.merchantSetting.merId}).then(function (value1) {
+    httpSvc.getData('post', '/merchantSquareRate/search',{"merchantId":$scope.merchantSetting.merchantId}).then(function (value1) {
 
-            $scope.merchantSquareRates = value1;
-            console.log($scope.merchantSquareRates)
+            $scope.merchantSquareRates = value1.data;
         angular.element('.ibox-content').removeClass('sk-loading');
     });
     });
@@ -931,7 +925,6 @@ function merchantSquareRateCtrl($scope, $uibModal, toaster, NgTableParams, httpS
     };
     // 验证输入框的输入数据
     $scope.singleFeeBlur =$scope.rateFeeBlur= $scope.bondRateBlur =$scope.settlecycleBlur =$scope.bondCycleBlur =  function ($event, name) {
-        console.log(name);
         verification(name,$event.target);
     };
     $timeout(function () {
@@ -977,7 +970,7 @@ function merchantSquareRateCtrl($scope, $uibModal, toaster, NgTableParams, httpS
 // 商户用户管理
 function merchantUserMgmtCtrl($scope, $state, $stateParams, $uibModal, toaster, NgTableParams, httpSvc) {
     if ($stateParams.merchantInfo !== null) {
-        var id=$stateParams.merchantInfo.merId;
+        var id=$stateParams.merchantInfo.merchantId;
         $scope.delDisabled = true;
         $scope.selected = {};
         $scope.statusChange = function (row) {
@@ -1001,13 +994,13 @@ function merchantUserMgmtCtrl($scope, $state, $stateParams, $uibModal, toaster, 
                 }
             })
         };
-        httpSvc.getData('post', '/merchant/getMerchantUserByMerchantId',{"merId":id}).then(function (value) {
+        httpSvc.getData('post', '/merchant/getMerchantUserByMerchantId',{"merchantId":id}).then(function (value) {
             $scope.merchantUserTable = new NgTableParams({}, {
                 dataset: value
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
-        httpSvc.getData('post', '/merchant/getMerchantRoleByMerchantId', {"merId":id}).then(function (value) {
+        httpSvc.getData('post', '/merchant/getMerchantRoleByMerchantId', {"merchantId":id}).then(function (value) {
             $scope.merchantRole = value;
         });
         $scope.showModal = function (user, type) {
@@ -1071,7 +1064,7 @@ function merchantUserMgmtCtrl($scope, $state, $stateParams, $uibModal, toaster, 
 
         function tableReload() {
             angular.element('.ibox-content').addClass('sk-loading');
-            httpSvc.getData('post', '/merchant/getMerchantUserByMerchantId', {"merId":id}).then(function (value) {
+            httpSvc.getData('post', '/merchant/getMerchantUserByMerchantId', {"merchantId":id}).then(function (value) {
                 $scope.merchantUserTable.settings({
                     dataset: value
                 });
@@ -1086,7 +1079,6 @@ function merchantUserMgmtCtrl($scope, $state, $stateParams, $uibModal, toaster, 
 
 // 商户用户管理弹窗
 function merchantUserModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, userInfo, merchantId, merchantRole) {
-    console.log(userInfo);
     if (type !== 0) {
         $scope.userInfo = angular.copy(userInfo);
     }

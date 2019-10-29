@@ -12,4 +12,5 @@ public interface AnewChannelService {
     ResponseVO saveOrUpdate(ChannelInfoTable channelInfoTable);
 
     ResponseVO delByIds(List<String> ids);
+
 }

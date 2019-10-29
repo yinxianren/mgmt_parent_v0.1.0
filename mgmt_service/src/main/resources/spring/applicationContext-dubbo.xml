@@ -33,7 +33,7 @@
     <dubbo:service interface="com.rxh.service.anew.system.ApiRiskQuotaService"            ref="apiRiskQuotaServiceImpl"/>
     <dubbo:service interface="com.rxh.service.anew.channel.ApiProductTypeSettingService"  ref="apiProductTypeSettingServiceImpl" timeout="30000" />
     <dubbo:service interface="com.rxh.service.anew.system.ApiOrganizationInfoService"     ref="apiOrganizationInfoServiceImpl"   timeout="300000" />
-
+    <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantInfoService"     ref="apiAgentMerchantInfoServiceImpl" />
 
 
 

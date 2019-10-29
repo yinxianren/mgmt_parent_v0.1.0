@@ -33,24 +33,26 @@ public class ApiMerchantInfoServiceImpl implements ApiMerchantInfoService, NewPa
     }
 
     @Override
-    public List<MerchantInfoTable> getMerchant(MerchantInfoTable merchantInfoTable) {
+    public List<MerchantInfoTable> getMerchants(MerchantInfoTable merchantInfoTable) {
         if (isNull(merchantInfoTable)) return merchantInfoDbService.list();
         LambdaQueryWrapper<MerchantInfoTable>  lambdaQueryWrapper=new QueryWrapper<MerchantInfoTable>().lambda();
         if( !isBlank(merchantInfoTable.getMerchantId()) ) lambdaQueryWrapper.eq(MerchantInfoTable::getMerchantId,merchantInfoTable.getMerchantId());
-        if( !isBlank(merchantInfoTable.getMerchantId()) ) lambdaQueryWrapper.eq(MerchantInfoTable::getMerchantId,merchantInfoTable.getMerchantId());
-        if( !isBlank(merchantInfoTable.getMerchantId()) ) lambdaQueryWrapper.eq(MerchantInfoTable::getMerchantId,merchantInfoTable.getMerchantId());
-        if( !isBlank(merchantInfoTable.getMerchantId()) ) lambdaQueryWrapper.eq(MerchantInfoTable::getMerchantId,merchantInfoTable.getMerchantId());
-        return null;
+        if( !isNull(merchantInfoTable.getStatus()) ) lambdaQueryWrapper.eq(MerchantInfoTable::getStatus,merchantInfoTable.getStatus());
+        if( !isBlank(merchantInfoTable.getType()) ) lambdaQueryWrapper.eq(MerchantInfoTable::getType,merchantInfoTable.getType());
+        if( !isNull(merchantInfoTable.getId()) ) lambdaQueryWrapper.eq(MerchantInfoTable::getId,merchantInfoTable.getId());
+        return merchantInfoDbService.list(lambdaQueryWrapper);
     }
 
     @Override
     public Boolean saveOrUpdate(MerchantInfoTable merchantInfoTable) {
-        return null;
+        if (isNull(merchantInfoTable)) return false;
+        return merchantInfoDbService.saveOrUpdate(merchantInfoTable);
     }
 
     @Override
     public Boolean delByIds(List<String> ids) {
-        return null;
+        if (isHasNotElement(ids)) return false;
+        return merchantInfoDbService.removeByIds(ids);
     }
 
 

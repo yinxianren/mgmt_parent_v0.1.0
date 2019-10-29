@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -18,7 +19,7 @@ import java.util.Date;
 
 @TableName("5_merchant_setting_table")
 @Getter
-public class MerchantSettingTable {
+public class MerchantSettingTable implements Serializable {
     @TableId(type= IdType.AUTO)
     private Long id  ;//表主键
     private String  merchantId ;//商户号

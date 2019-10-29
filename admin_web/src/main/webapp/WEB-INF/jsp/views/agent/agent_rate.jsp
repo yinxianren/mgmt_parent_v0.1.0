@@ -69,7 +69,7 @@
                     <label class="col-sm-2 control-label p-w-xs"><span class="text-danger">*</span>代理商：</label>
                     <div class="col-sm-10">
                         <input class="form-control b-r-sm"
-                               name="merId"
+                               name="agentMerchantId"
                                type="text"
                                ng-model="agentMerchantSetting.agentMerchantId"
                                ng-blur="merIdBlur($event, agentMerchantSetting.agentMerchantId)"
@@ -80,7 +80,7 @@
                 <table>
                     <tr>
                         <th class="text-center rate-tr-width" style="min-width: 80px!important;">状态</th>
-                        <th class="text-center rate-tr-width" style="min-width: 100px">支付方式</th>
+                        <th class="text-center rate-tr-width" style="min-width: 100px">支付产品</th>
                         <th class="text-center rate-tr-width" style="min-width: 100px">单笔手续费(元)</th>
                         <th class="text-center rate-tr-width">交易费率(%)</th>
                         <th class="text-center rate-tr-width">保证金比例(%)</th>
@@ -96,7 +96,7 @@
                             </select>
                         </td>
                         <td class="text-center " style="min-width: 100px"  >
-                            {{row.payType | getValueByList : payType : 'firstValue' : 'name'  }}
+                            {{row.productId | getValueByList : agentRate : 'firstValue' : 'name'  }}
                         </td>
                         <td class="text-center col-lg-2" style="min-width: 100px" >
                             <input type="number"
@@ -115,23 +115,23 @@
                         </td>
                         <td class="text-center col-lg-2" >
                             <input type="text" class="form-control"
-                                   name="bondRate{{$index}}"
+                                   name="marginRatio{{$index}}"
                                    ng-blur="bondRateBlur($event, 'bondRate'+$index)"
-                                   ng-model="row.bondRate"
+                                   ng-model="row.marginRatio"
                                    required>
                         </td>
                         <td class="text-center col-lg-2"  >
                             <input type="text" class="form-control"
-                                   name="settlecycle{{$index}}"
-                                   ng-blur="settlecycleBlur($event, 'settlecycle'+$index)"
-                                   ng-model="row.settlecycle"
+                                   name="settleCycle{{$index}}"
+                                   ng-blur="settlecycleBlur($event, 'settleCycle'+$index)"
+                                   ng-model="row.settleCycle"
                                    required>
                         </td>
                         <td class="text-center col-lg-2"  >
                             <input type="text" class="form-control"
-                                   name="bondCycle{{$index}}"
+                                   name="marginCycle{{$index}}"
                                    ng-blur="bondCycleBlur($event, 'bondCycle'+$index)"
-                                   ng-model="row.bondCycle"
+                                   ng-model="row.marginCycle"
                                    required>
                         </td>
                     </tr>

@@ -8,6 +8,7 @@ import com.rxh.enums.StatusEnum;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.service.anew.channel.ApiChannelInfoService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -67,5 +68,14 @@ public class ApiChannelInfoServiceImpl implements ApiChannelInfoService , NewPay
     public Boolean delByIds(List<String> ids) {
         if (isHasNotElement(ids)) return false;
         return channelInfoDbService.removeByIds(ids);
+    }
+
+    @Override
+    public List<ChannelInfoTable> getChannels(List<String> orgIds) {
+        if (isHasNotElement(orgIds)) return null;
+        LambdaQueryWrapper<ChannelInfoTable> queryWrapper = new QueryWrapper<ChannelInfoTable>().lambda();
+        queryWrapper.in(ChannelInfoTable::getOrganizationId,orgIds);
+        queryWrapper.eq(ChannelInfoTable::getStatus,1);
+        return channelInfoDbService.list(queryWrapper);
     }
 }

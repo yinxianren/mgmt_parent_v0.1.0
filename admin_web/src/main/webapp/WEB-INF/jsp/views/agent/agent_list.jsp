@@ -28,8 +28,8 @@
                                     <div class="input-group">
                                         <span class="input-group-addon">审核状态：</span>
                                         <select class="form-control b-r-sm"
-                                                name="agentIdentityType"
-                                                ng-model="searchInfo.agentStatus">
+                                                name="status"
+                                                ng-model="searchInfo.status">
                                             <option value=""></option>
                                             <option value="0">启用</option>
                                             <option value="1">禁用</option>
@@ -77,7 +77,7 @@
                                 <tr ng-repeat="row in $data">
                                     <td class="text-center" style="line-height: 2"
                                         data-title="''">
-                                        <input type="checkbox" id="constantCheckBoxID" ng-model="selected[row.agentMerchantId]"  />
+                                        <input type="checkbox" id="constantCheckBoxID" ng-model="selected[row.id]"  />
                                     </td>
                                     <td class="text-center" data-title="'代理商编号'">
                                         {{row.agentMerchantId}}
@@ -86,13 +86,13 @@
                                         {{row.agentMerchantName}}
                                     </td>
                                     <td class="text-center" data-title="'审核状态'" >
-                                        <div ng-show="row.agentStatus == 0 ">
+                                        <div ng-show="row.status == 0 ">
                                             启用
                                         </div>
-                                        <div ng-show=" row.agentStatus == 1 ">
+                                        <div ng-show=" row.status == 1 ">
                                             禁用
                                         </div>
-                                        <div ng-show=" row.agentStatus == 2 ">
+                                        <div ng-show=" row.status == 2 ">
                                             未审核
                                         </div>
                                     </td>
@@ -111,10 +111,10 @@
                                         <%--{{row.agentIdentityNum}}--%>
                                     <%--</td>--%>
                                     <td class="text-center" data-title="'电话'">
-                                        {{row.agentPhone}}
+                                        {{row.phone}}
                                     </td>
                                     <td class="text-center" data-title="'邮箱'">
-                                        {{row.agentEmail}}
+                                        {{row.email}}
                                     </td>
                                     <%--<td class="text-center" data-title="'QQ'">--%>
                                         <%--{{row.agentQq}}--%>

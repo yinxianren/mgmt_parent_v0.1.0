@@ -1,6 +1,8 @@
-package com.rxh.controller;
+package com.rxh.controller.anew.agent;
 
+import com.rxh.anew.table.agent.AgentMerchantInfoTable;
 import com.rxh.pojo.Result;
+import com.rxh.service.AnewAgentMerchantService;
 import com.rxh.service.ConstantService;
 import com.rxh.service.square.AgentMerchantInfoService;
 import com.rxh.spring.annotation.SystemLogInfo;
@@ -9,6 +11,7 @@ import com.rxh.square.vo.VoAgentMerchantInfo;
 import com.rxh.util.UserInfoUtils;
 import com.rxh.utils.GlobalConfiguration;
 import com.rxh.utils.SystemConstant;
+import com.rxh.vo.ResponseVO;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
@@ -32,7 +35,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/agentMerchantInfo")
-public class AgentMerchantInfoController {
+public class AnewAgentMerchantInfoController {
 
     @Resource
     private AgentMerchantInfoService agentMerchantInfoService;
@@ -42,8 +45,8 @@ public class AgentMerchantInfoController {
 
     @Autowired
     private  ConstantService constantService;
-    @Resource
-    private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private AnewAgentMerchantService anewAgentMerchantService;
 
     @RequestMapping(value = "/uploadAgentIdentityUrl")
     @ResponseBody
@@ -70,9 +73,8 @@ public class AgentMerchantInfoController {
     @SystemLogInfo(description = "代理商列表查询")
     @RequestMapping(value = "/getAllByVoAgentMerchantInfo")
     @ResponseBody
-    public List<AgentMerchantInfo> getAllByVoAgentMerchantInfo(@RequestBody VoAgentMerchantInfo voAgentMerchantInfo) {
-        List<AgentMerchantInfo> agentMerchantInfos = agentMerchantInfoService.getAllByVoAgentMerchantInfo(voAgentMerchantInfo);
-        return agentMerchantInfos;
+    public ResponseVO getAllByVoAgentMerchantInfo(@RequestBody AgentMerchantInfoTable agentMerchantInfoTable) {
+        return anewAgentMerchantService.list(agentMerchantInfoTable);
     }
 
     @SystemLogInfo(description = "代理商删除")
@@ -90,38 +92,29 @@ public class AgentMerchantInfoController {
     @SystemLogInfo(description = "代理商更新")
     @RequestMapping(value = "/updateAgentMerchantInfo")
     @ResponseBody
-    public String updateAgentMerchantInfo(@RequestBody AgentMerchantInfo agentMerchantInfo){
-        int num = agentMerchantInfoService.update(agentMerchantInfo);
-        if(num>0){
-            return SystemConstant.SUCCESS;
-        }else {
-            return SystemConstant.FAIL;
-        }
+    public ResponseVO updateAgentMerchantInfo(@RequestBody AgentMerchantInfoTable agentMerchantInfo){
+       return anewAgentMerchantService.update(agentMerchantInfo);
     }
     @SystemLogInfo(description = "代理商新增")
     @RequestMapping(value = "/addAgentMerchantInfo")
     @ResponseBody
-    public String addAgentMerchantInfo(@RequestBody AgentMerchantInfo agentMerchantInfo){
-        String encode = passwordEncoder.encode(agentMerchantInfo.getPassword());
-        agentMerchantInfo.setPassword(encode);
-        int num = agentMerchantInfoService.insertAgentMerchantInfo(agentMerchantInfo, UserInfoUtils.getName());
-        if(num>0){
-            return SystemConstant.SUCCESS;
-        }else {
-            return SystemConstant.FAIL;
-        }
+    public ResponseVO addAgentMerchantInfo(@RequestBody AgentMerchantInfoTable agentMerchantInfo){
+        agentMerchantInfo.setCreateTime(new Date());
+        agentMerchantInfo.setUpdateTime(new Date());
+        agentMerchantInfo.setAgentMerchantId("A"+System.currentTimeMillis());
+       return anewAgentMerchantService.save(agentMerchantInfo);
     }
 
     /**
      * 批量删除
-     * @param idArray
+     * @param ids
      * @return
      */
     @SystemLogInfo(description = "代理商删除")
     @RequestMapping("/batchDel")
     @ResponseBody
-    public Result batchDel(@RequestBody List<String> idArray) {
-        return agentMerchantInfoService.deleteByIdArray(idArray);
+    public ResponseVO batchDel(@RequestBody List<String> ids) {
+        return anewAgentMerchantService.delByIds(ids);
     }
 
     @ResponseBody
