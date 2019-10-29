@@ -9,7 +9,7 @@ public interface ApiMerchantInfoService {
 
     MerchantInfoTable  getOne(MerchantInfoTable merchantInfoTable);
 
-    List<MerchantInfoTable> getMerchant(MerchantInfoTable merchantInfoTable);
+    List<MerchantInfoTable> getMerchants(MerchantInfoTable merchantInfoTable);
 
     Boolean saveOrUpdate(MerchantInfoTable merchantInfoTable);
 

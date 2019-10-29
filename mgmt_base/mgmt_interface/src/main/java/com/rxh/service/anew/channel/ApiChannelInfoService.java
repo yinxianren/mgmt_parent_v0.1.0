@@ -16,4 +16,6 @@ public interface ApiChannelInfoService {
     Boolean savaOrUpdate(ChannelInfoTable cit);
 
     Boolean delByIds(List<String> ids);
+
+    List<ChannelInfoTable> getChannels(List<String> orgIds);
 }

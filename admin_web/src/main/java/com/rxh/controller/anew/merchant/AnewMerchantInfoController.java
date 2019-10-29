@@ -1,22 +1,21 @@
 package com.rxh.controller.anew.merchant;
 
+import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.cache.RedisCacheCommonCompoment;
 import com.rxh.pojo.Result;
-import com.rxh.service.ConstantService;
+import com.rxh.service.*;
 import com.rxh.service.square.*;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.square.pojo.MerchantInfo;
 import com.rxh.util.UserInfoUtils;
 import com.rxh.utils.SystemConstant;
+import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @RestController
 @RequestMapping("/merchantInfo")
@@ -30,89 +29,59 @@ public class AnewMerchantInfoController {
     @Autowired
     AgentMerchantInfoService agentMerchantInfoService;
     @Resource
-    private ChannelWalletService channelWalletService;
-    @Resource
-    private OrganizationService organizationService;
-    @Resource
     private MerchantWalletService merchantWalletService;
-    @Resource
-    private   BCryptPasswordEncoder passwordEncoder;
     @Autowired
-    private RedisCacheCommonCompoment redisCacheCommonCompoment;
+    private AnewMerchantInfoService anewMerchantInfoService;
+    @Autowired
+    private AnewAgentMerchantService anewAgentMerchantService;
+    @Autowired
+    private AnewChannelService anewChannelService;
+    @Autowired
+    private OrganizationInfoService organizationInfoService;
 
     @SystemLogInfo(description = "商户查询")
     @ResponseBody
     @RequestMapping("/getOne")
-    public MerchantInfo getOne(MerchantInfo merchantInfo){
-        //modify by gjm 添加redis  at 20190808 start
-        MerchantInfo merchantInf = redisCacheCommonCompoment.merchantInfoCache.getOne(merchantInfo.getMerId());
-        if(null == merchantInf){
-            merchantInf = merchantInfoService.getMerchantById(merchantInfo.getMerId());
-        }
-        //modify by gjm 添加redis  at 20190808 end
-        return merchantInf;
+    public ResponseVO getOne(MerchantInfoTable merchantInfo){
+        return anewMerchantInfoService.getMerchants(merchantInfo);
     }
 
 
 
     @SystemLogInfo(description = "商户新增")
     @RequestMapping("/addMerchantInfo")
-    public Result insert(@RequestBody  MerchantInfo record){
-        String passWord = record.getPassword();
-        String encode = passwordEncoder.encode(passWord);
-        record.setPassword(encode);
-        return merchantInfoService.insert(record, UserInfoUtils.getName());
+    public ResponseVO insert(@RequestBody  MerchantInfoTable record){
+        record.setCreateTime(new Date());
+        record.setUpdateTime(new Date());
+        record.setMerchantId("M"+System.currentTimeMillis());
+        return anewMerchantInfoService.saveOrUpdate(record);
     }
     @SystemLogInfo(description = "商户删除")
     @RequestMapping("/batchDel")
-    public Result delete(@RequestBody List<String> ids){
-        String[] strArr=new String[ids.size()];
-        for(int i=0;i<ids.size();i++){
-            strArr[i]=ids.get(i);
-        }
-        return merchantInfoService.deleteByPrimaryKey(strArr);
+    public ResponseVO delete(@RequestBody List<String> ids){
+        return anewMerchantInfoService.delByIds(ids);
     }
     @SystemLogInfo(description = "商户更新")
     @RequestMapping("/updateMerchantInfo")
-    public Result update(@RequestBody MerchantInfo record){
-        return merchantInfoService.update(record,UserInfoUtils.getName());
+    public ResponseVO update(@RequestBody MerchantInfoTable record){
+        record.setUpdateTime(new Date());
+        return anewMerchantInfoService.saveOrUpdate(record);
     }
     @SystemLogInfo(description = "商户查询")
     @RequestMapping("/getAllMerchantInfo")
-    Result getAll(){
-        //modify by gjm 添加redis  at 20190808 start
-        Result<List> result = new Result<>();
-        List<MerchantInfo> merchantInfoList = redisCacheCommonCompoment.merchantInfoCache.getAll();
-        if(null == merchantInfoList || merchantInfoList.isEmpty()){
-            result = merchantInfoService.getAll();
-        }else{
-            result.setCode(Result.SUCCESS);
-            result.setMsg("查询成功");
-            result.setData(merchantInfoList);
-        }
-        //modify by gjm 添加redis  at 20190808 end
-        return result;
+    ResponseVO getAll(){
+        return anewMerchantInfoService.getMerchants(null);
     }
+
     @SystemLogInfo(description = "商户查询")
     @RequestMapping("/getMerchantInfoListByMerchantInfo")
-    Result search(@RequestBody MerchantInfo merchantInfo){
-        //modify by gjm 添加redis  at 20190808 start
-        Result<List> result = new Result<>();
-        List<MerchantInfo> merchantInfoList = null;
-        if(null == merchantInfoList || merchantInfoList.isEmpty()){
-            result = merchantInfoService.search(merchantInfo);
-        }else{
-            result.setCode(Result.SUCCESS);
-            result.setMsg("查询成功");
-            result.setData(merchantInfoList);
-        }
-        //modify by gjm 添加redis  at 20190808 end
-        return result;
+    ResponseVO search(@RequestBody MerchantInfoTable merchantInfo){
+        return anewMerchantInfoService.getMerchants(merchantInfo);
     }
 
     @RequestMapping("/getRandomSecretkey")
     @ResponseBody
-    public Result getRandomSecretkey(){
+    public ResponseVO getRandomSecretkey(){
         String val = "";
         Random random = new Random();
         //length为几位密码
@@ -127,7 +96,10 @@ public class AnewMerchantInfoController {
                 val += String.valueOf(random.nextInt(10));
             }
         }
-        return new Result(Result.SUCCESS,val);
+        ResponseVO responseVO = new ResponseVO();
+        responseVO.setCode(0);
+        responseVO.setData(val);
+        return responseVO;
     }
 
     @RequestMapping("/init")
@@ -137,10 +109,10 @@ public class AnewMerchantInfoController {
         init.put("identityType", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.IDENTITYTYPE));
         init.put("payType", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
         init.put("status", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.availableStatus));
-        init.put("merchants", merchantInfoService.getIdsAndName());
-        init.put("agentMerchants", agentMerchantInfoService.getAllIdAndName());
-        init.put("organizations",organizationService .getIdsAndName());
-        init.put("channels", channelWalletService.getIdsAndName());
+        init.put("merchants", anewMerchantInfoService.getMerchants(null).getData());
+        init.put("agentMerchants", anewAgentMerchantService.list(null).getData());
+        init.put("organizations",organizationInfoService.getAll(null).getData());
+        init.put("channels", anewChannelService.getAll(null).getData());
         return init;
     }
     /**

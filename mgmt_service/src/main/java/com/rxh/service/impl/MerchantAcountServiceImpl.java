@@ -61,6 +61,7 @@ public class MerchantAcountServiceImpl implements MerchantAcountService {
             merchantAcount.setMerId(merId);
         }
         if(merchantAcount!=null){
+            merchantAcount.setMerId(merId);
             result.setCode(Result.SUCCESS);
             result.setMsg("获取结算账户成功");
             result.setData(merchantAcount);

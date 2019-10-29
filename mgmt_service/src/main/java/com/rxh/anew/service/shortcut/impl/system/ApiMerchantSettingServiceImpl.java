@@ -3,10 +3,12 @@ package com.rxh.anew.service.shortcut.impl.system;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.rxh.anew.service.db.system.MerchantSettingDbService;
+import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.enums.StatusEnum;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.service.anew.system.ApiMerchantSettingService;
+import com.rxh.utils.QueryWrapperUntil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +38,12 @@ public class ApiMerchantSettingServiceImpl implements ApiMerchantSettingService,
 
         if( !isBlank(mst.getMerchantId()) ) lambdaQueryWrapper.eq(MerchantSettingTable::getMerchantId,mst.getMerchantId());
         return merchantSettingDbService.list(lambdaQueryWrapper);
+    }
+
+    @Override
+    public Boolean batchSaveOrUpdate(List<MerchantSettingTable> merchantSettingTables) {
+        if (isHasNotElement(merchantSettingTables)) return false;
+        return merchantSettingDbService.saveOrUpdateBatch(merchantSettingTables);
     }
 
 

@@ -39,7 +39,8 @@ public class MerchantInfoTable  implements Serializable {
 	private Integer status;//0：启用 ,1:禁用，2：未审核
 	private Date createTime;//创建时间
 	private Date updateTime;//更新时间
-
+	private Date agreementStartTime;//合同开始时间
+	private Date agreementEndTime;//
 	public MerchantInfoTable setId(Long id) {
 		this.id = id;
 		return this;
@@ -138,5 +139,13 @@ public class MerchantInfoTable  implements Serializable {
 	public MerchantInfoTable setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 		return this;
+	}
+
+	public void setAgreementStartTime(Date agreementStartTime) {
+		this.agreementStartTime = agreementStartTime;
+	}
+
+	public void setAgreementEndTime(Date agreementendTime) {
+		this.agreementEndTime = agreementendTime;
 	}
 }

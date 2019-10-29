@@ -54,10 +54,10 @@
                     <label class="col-sm-2 control-label p-w-xs"><span class="text-danger">*</span>商户：</label>
                     <div class="col-sm-10">
                         <input class="form-control b-r-sm"
-                               name="merId"
+                               name="merchantId"
                                type="text"
-                               ng-model="merchantSetting.merId"
-                               ng-blur="merIdBlur($event, merchantSetting.merId)"
+                               ng-model="merchantId"
+                               ng-blur="merIdBlur($event, merchantId)"
                                readonly
                                required>
                     </div>
@@ -76,8 +76,8 @@
                         <div class="col-sm-3 p-w-xs" ng-repeat="x in organizations">
                             <div class="checkbox no-margins">
                                 <input id="{{x.organizationId}}" type="checkbox" name="currency"
-                                       ng-checked="exists(x.organizationId,merchantOrganizations)"
-                                       ng-click="orgtoggle(x.organizationId, merchantOrganizations)"
+                                       ng-checked="exists(x.organizationId,organizationIds)"
+                                       ng-click="orgtoggle(x.organizationId, organizationIds)"
                                        required>
                                 <label for="{{x.organizationId}}" class="no-padding">{{x.organizationName}}</label>
                             </div>
@@ -95,8 +95,8 @@
                         <div class="col-sm-3 p-w-xs" ng-repeat="x in channels">
                             <div class="checkbox no-margins">
                                 <input id="{{x.channelId}}" type="checkbox" name="currency"
-                                       ng-checked="exists(x.channelId, merchantChannels)"
-                                       ng-click="channletoggle(x.channelId, merchantChannels)"
+                                       ng-checked="exists(x.channelId, merchantSetting)"
+                                       ng-click="channletoggle(x.channelId, merchantSetting)"
                                        required>
                                 <label for="{{x.channelId}}" class="no-padding">{{x.channelName}}</label>
                             </div>
@@ -117,7 +117,7 @@
                         </div>
                     </div>
                 </div>--%>
-                <div class="form-group">
+                <%--<div class="form-group">
                     <label class="col-sm-2 control-label p-w-xs"><span class="text-danger">*</span>通道等级：</label>
                     <div class="col-sm-10">
                         <select class="form-control b-r-sm"
@@ -128,7 +128,7 @@
                                 required>
                         </select>
                     </div>
-                </div>
+                </div>--%>
             </div>
         </form>
         <div class="row">

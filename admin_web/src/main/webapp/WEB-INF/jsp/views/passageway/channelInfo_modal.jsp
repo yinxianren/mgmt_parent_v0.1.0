@@ -12,14 +12,14 @@
             <uib-tab index="0" classes="m-b">
                 <uib-tab-heading><i class="fa fa-user"></i>&nbsp;基本信息</uib-tab-heading>
                 <%--{{myForm.$error}}--%>
-                <%--<div class="form-group m-t">--%>
-                    <%--<label class="col-sm-3 control-label p-w-xs"><span class="text-danger">*</span>通道名称：</label>--%>
-                    <%--<div class="col-sm-9">--%>
-                        <%--<input class="form-control b-r-sm" name="channelName" type="text" placeholder="必填"--%>
-                               <%--ng-model="ChannelInfo.channelName" ng-blur="nameBlur($event, ChannelInfo.channelName)"--%>
-                               <%--required>--%>
-                    <%--</div>--%>
-                <%--</div>--%>
+               <div class="form-group m-t">
+                    <label class="col-sm-3 control-label p-w-xs label-name-left"><span class="text-danger">*</span>通道名称：</label>
+                    <div class="col-sm-9">
+                        <input class="form-control b-r-sm" name="channelName" type="text" placeholder="必填"
+                               ng-model="ChannelInfo.channelName" ng-blur="nameBlur($event, ChannelInfo.channelName)"
+                               required>
+                    </div>
+                </div>
                 <div class="form-group m-t">
                     <label class="col-sm-3 control-label p-w-xs label-name-left"><span class="text-danger">*</span>通道等级：</label>
                     <div class="col-sm-9">

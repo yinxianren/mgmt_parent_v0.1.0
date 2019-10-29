@@ -58,5 +58,7 @@
     <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelExtraInfoService" id="apiChannelExtraInfoService" />
     <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelInfoService" id="apiChannelInfoService" />
     <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantInfoService" id="apiMerchantInfoService" />
-
+    <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantInfoService" id="apiAgentMerchantInfoService" />
+    <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantSettingService" id="apiAgentMerchantSettingService" />
+    <dubbo:reference interface="com.rxh.service.anew.system.ApiMerchantSettingService" id="apiMerchantSettingService" />
 </beans>

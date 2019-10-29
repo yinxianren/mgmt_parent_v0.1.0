@@ -3,7 +3,7 @@ function agentListCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc, $stat
     $scope.selected = {};
     $scope.searchInfo = {};
     $scope.agentMerchantList = [];
-
+    $scope.certificateImgUrl = [];
     //新增
     $scope.showModal = $scope.edit = function (goType, agentMerchantInfo) {
         if (goType == 3) { // 用户
@@ -83,6 +83,7 @@ function agentListCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc, $stat
         $scope.agentMerchantList = [];
         angular.element('.ibox-content').addClass('sk-loading');
         httpSvc.getData('post', '/agentMerchantInfo/getAllByVoAgentMerchantInfo', searchInfo).then(function (data) {
+            data =data.data;
             $scope.AgentMerchantInfoTable.settings({
                 dataset: data
             });
@@ -100,6 +101,7 @@ function agentListCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc, $stat
 
     // 初始化
     httpSvc.getData('post', '/agentMerchantInfo/getAllByVoAgentMerchantInfo', {}).then(function (data) {
+        data =data.data;
         $scope.AgentMerchantInfoTable = new NgTableParams({}, {
             dataset: data
         });
@@ -119,6 +121,8 @@ function agentListCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc, $stat
         var searchInfo = angular.copy($scope.searchInfo);
         // tableReload(searchInfo);
         httpSvc.getData('post', '/agentMerchantInfo/getAllByVoAgentMerchantInfo', searchInfo).then(function (data) {
+            data =data.data;
+            $scope.certificateImgUrl = data.agentIdentityPath;
             $scope.AgentMerchantInfoTable.settings({
                 dataset: data
             });
@@ -169,7 +173,7 @@ function agentListCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc, $stat
         });
         modalInstance.result.then(function () {
             httpSvc.getData('post', '/agentMerchantInfo/batchDel', ids).then(function (value) {
-                if (value.code == 1) {
+                if (value.code == 0) {
                     toaster.pop({
                         type: 'success',
                         title: '代理商删除',
@@ -212,20 +216,14 @@ function agentRateCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$filte
         return agentMerchantSetting;
     }
 
-    console.log($scope.agentMerchantSetting.agentMerchantId);
-    httpSvc.getData('post', '/merchantInfo/init').then(function (value) {
-        $scope.merchantType=value.merchantType;
-        $scope.channelLevel=value.channelLevel;
-        $scope.agentMerchants=value.agentMerchants;
+    httpSvc.getData('post', '/agentMerchantSetting/init').then(function (value) {
+        $scope.agentRate=value.agentRate;
         $scope.status=value.status;
-        $scope.payType=value.payType;
-        $scope.channels=value.channels;
         angular.element('.ibox-content').removeClass('sk-loading');
 
         // 初始化对象信息
         httpSvc.getData('post', '/agentMerchantSetting/search',{"agentMerchantId":$scope.agentMerchantSetting.agentMerchantId}).then(function (value1) {
-            $scope.agentMerchantSettings = value1;
-            console.log($scope.agentMerchantSettings)
+            $scope.agentMerchantSettings = value1.data;
             angular.element('.ibox-content').removeClass('sk-loading');
         });
     });
@@ -253,7 +251,7 @@ function agentRateCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$filte
             merchantSquareRates
         ).then(function (value) {
 
-            if (value.code == 1) {
+            if (value.code == 0) {
                 toaster.pop({
                     type: 'success',
                     title: '代理商配置',
@@ -280,7 +278,7 @@ function agentRateCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$filte
     };
     $timeout(function () {
         $scope.checkRateDisabled = function (myForm,merchantSquareRates) {
-            if(merchantSquareRates.length == 0){
+            if(merchantSquareRates == null || merchantSquareRates.length == 0){
                 return;
             }
             if(merchantSquareRates[0].status == 0 && merchantSquareRates[1].status == 0 && merchantSquareRates[2].status == 0) {// 启用
@@ -321,7 +319,6 @@ function agentRateCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$filte
 function addAgentCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc, $filter, goType, agentMerchantInfo, FileUploader, $timeout, $uibModalInstance) {
     $scope.goType = parseInt(goType);
     $scope.agentMerchantInfo = {};
-    var certificateImgUrl = [];
     if ($scope.goType == 0) {
         $scope.agentMerchantInfo = getAgentMerchantInfo();
         httpSvc.getData('get', '/agentMerchantInfo/getAgentMerchantIdIncre').then(function (value) {
@@ -331,9 +328,9 @@ function addAgentCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc, $filte
         $scope.certificateImgUrl = [];
     } else {
         $scope.agentMerchantInfo = angular.copy(agentMerchantInfo);
-        if ($scope.agentMerchantInfo.agentIdentityUrl != null && $scope.agentMerchantInfo.agentIdentityUrl.trim() !== '') {
-            $scope.certificateImgUrl = $scope.agentMerchantInfo.agentIdentityUrl.split(',');
-            certificateImgUrl = angular.copy(certificateImgUrl);
+        if ($scope.agentMerchantInfo.agentIdentityPath != null && $scope.agentMerchantInfo.agentIdentityPath.trim() !== '') {
+            $scope.agentIdentityPath = $scope.agentMerchantInfo.agentIdentityPath.split(',');
+            $scope.certificateImgUrl = angular.copy($scope.agentIdentityPath );
         } else {
             $scope.certificateImgUrl = [];
         }
@@ -347,17 +344,17 @@ function addAgentCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc, $filte
         }
         // 审核状态默认给通过0：通过，1:未通过
         if ($scope.goType == 2) {
-            if ($scope.agentMerchantInfo.agentStatus == 0) {
+            if ($scope.agentMerchantInfo.status == 0) {
                 $scope.agentStatusCheckqy = true;
                 $scope.agentStatusCheckjy = false;
                 $scope.agentStatusCheckwsh = false;
             }
-            if ($scope.agentMerchantInfo.agentStatus == 1) {
+            if ($scope.agentMerchantInfo.status == 1) {
                 $scope.agentStatusCheckqy = false;
                 $scope.agentStatusCheckjy = true;
                 $scope.agentStatusCheckwsh = false;
             }
-            if ($scope.agentMerchantInfo.agentStatus == 2) {
+            if ($scope.agentMerchantInfo.status == 2) {
                 $scope.agentStatusCheckqy = false;
                 $scope.agentStatusCheckjy = false;
                 $scope.agentStatusCheckwsh = true;
@@ -373,12 +370,12 @@ function addAgentCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc, $filte
             agentIdentityType: '',
             agentIdentityNum: '',
             agentIdentityUrl: '',
-            agentPhone: '',
-            agentPhoneStatus: '',
-            agentEmail: '',
-            agentEmailStatus: '',
+            phone: '',
+            phoneStatus: '',
+            email: '',
+            emailStatus: '',
             agentQq: '',
-            agentStatus: 2,
+            status: 2,
             agentMerchantSetting: {
                 singleFee: '',
                 rateFee: '',
@@ -407,10 +404,10 @@ function addAgentCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc, $filte
 
     // 审核确定
     $scope.confirmStatus = function (agentMerchantInfo) {
-        agentMerchantInfo.agentIdentityUrl = $scope.certificateImgUrl.toString();
+        agentMerchantInfo.agentIdentityPath = $scope.certificateImgUrl.toString();
         var params = angular.copy(agentMerchantInfo);
         httpSvc.getData('post', '/agentMerchantInfo/updateAgentMerchantInfo', params).then(function (value) {
-            if (value) {
+            if (value.code==0) {
                 toaster.pop({
                     type: 'success',
                     title: '代理商',
@@ -431,12 +428,11 @@ function addAgentCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc, $filte
      * 确定
      */
     $scope.confirm = function (agentMerchantInfo) {
-        agentMerchantInfo.agentIdentityUrl = $scope.certificateImgUrl.toString();
-        console.log(agentMerchantInfo);
+        agentMerchantInfo.agentIdentityPath = $scope.certificateImgUrl.toString();
         if ($scope.goType === 0) {// type:0 新增
             var params = angular.copy(agentMerchantInfo);
             httpSvc.getData('post', '/agentMerchantInfo/addAgentMerchantInfo', params).then(function (value) {
-                if (value) {
+                if (value.code==0) {
                     toaster.pop({
                         type: 'success',
                         title: '代理商',
@@ -455,7 +451,7 @@ function addAgentCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc, $filte
         if ($scope.goType === 1) { //type:1 修改 typpe:2 审核
             var params = angular.copy(agentMerchantInfo);
             httpSvc.getData('post', '/agentMerchantInfo/updateAgentMerchantInfo', params).then(function (value) {
-                if (value) {
+                if (value.code == 0) {
                     toaster.pop({
                         type: 'success',
                         title: '代理商',
@@ -489,7 +485,7 @@ function addAgentCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc, $filte
     $timeout(function () {
         $scope.nextDisabled = function (myForm) {
             return myForm.agentMerchantId.$error.required || myForm.agentMerchantName.$error.required || myForm.agentIdentityNum.$error.required || myForm.agentIdentityType.$error.required
-                || myForm.agentPhone.$error.required || myForm.agentEmail.$error.required || myForm.agentQq.$error.required || myForm.agentIdentityUrl.$error.required;
+                || myForm.phone.$error.required || myForm.email.$error.required || myForm.qq.$error.required;
         };
     });
 
@@ -505,7 +501,7 @@ function addAgentCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc, $filte
     };
     $scope.uploader.onSuccessItem = function (item, response, status, headers) {
         $scope.certificateImgUrl.push(response);
-        $scope.agentMerchantInfo.agentIdentityUrl = $scope.certificateImgUrl.toString();
+        $scope.agentMerchantInfo.agentIdentityPath = $scope.certificateImgUrl.toString();
     };
     $scope.uploader.onCompleteAll = function () {
         $scope.uploader.clearQueue();
@@ -514,12 +510,9 @@ function addAgentCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc, $filte
 
 // 商户用户管理
 function agentUserMgmtCtrl($scope, $state, $stateParams, $uibModal, toaster, NgTableParams, httpSvc) {
-    // console.log(1111111)
     if ($stateParams.merchantInfo !== null) {
         var id = $stateParams.merchantInfo.agentMerchantId;
 
-        console.log(id);
-        console.log($stateParams.merchantInfo);
         $scope.delDisabled = true;
         $scope.selected = {};
         $scope.statusChange = function (row) {
@@ -543,7 +536,6 @@ function agentUserMgmtCtrl($scope, $state, $stateParams, $uibModal, toaster, NgT
                 }
             })
         };
-        // console.log(id);
         httpSvc.getData('post', '/agent/getMerchantUserByMerchantId', {"belongto": id}).then(function (value) {
             $scope.merchantUserTable = new NgTableParams({}, {
                 dataset: value
@@ -629,7 +621,6 @@ function agentUserMgmtCtrl($scope, $state, $stateParams, $uibModal, toaster, NgT
 
 // 商户用户管理弹窗
 function agentUserModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, userInfo, merchantId, merchantRole) {
-    console.log(userInfo);
     if (type !== 0) {
         $scope.userInfo = angular.copy(userInfo);
     }

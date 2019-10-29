@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.Getter;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,8 +33,8 @@ public class AgentMerchantInfoTable implements Serializable {
     private Integer emailStatus;//0：已经认证(新增时候默认未认证) ,1:未认证
     private String qq ;//qq
     private Integer status ;//商户审核状态 0：启用 ,1:禁用，2：未审核
-    private String createTime ;//创建时间
-    private String updateTime ;//更新时间
+    private Date createTime ;//创建时间
+    private Date updateTime ;//更新时间
 
     public AgentMerchantInfoTable setId(Long id) {
         this.id = id;
@@ -100,12 +101,12 @@ public class AgentMerchantInfoTable implements Serializable {
         return this;
     }
 
-    public AgentMerchantInfoTable setCreateTime(String createTime) {
+    public AgentMerchantInfoTable setCreateTime(Date createTime) {
         this.createTime = createTime;
         return this;
     }
 
-    public AgentMerchantInfoTable setUpdateTime(String updateTime) {
+    public AgentMerchantInfoTable setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
         return this;
     }

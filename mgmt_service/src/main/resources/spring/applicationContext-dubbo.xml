@@ -40,6 +40,8 @@
     <dubbo:service interface=" com.rxh.service.anew.terminal.ApiTerminalMerchantsDetailsService"     ref="apiTerminalMerchantsDetailsServiceImpl"/>
 
 
+
+
     <!--  **********************************************************************************************************************   -->
     <!--<dubbo:protocol name="dubbo" host="${dubbo.protocol.host}" port="${dubbo.protocol.port}" payload="1073741824"/>-->
     <!--四方支付服务接口-->
