@@ -43,12 +43,11 @@ public class ApiChannelInfoServiceImpl implements ApiChannelInfoService , NewPay
         LambdaQueryWrapper<ChannelInfoTable>  lambdaQueryWrapper = new QueryWrapper<ChannelInfoTable>()
                 .lambda().eq(ChannelInfoTable::getStatus, StatusEnum._0.getStatus());//默认只取可用通道
         if( !isBlank(cit.getChannelId()) ) lambdaQueryWrapper.eq(ChannelInfoTable::getChannelId,cit.getChannelId());
-
         return channelInfoDbService.getOne(lambdaQueryWrapper);
     }
 
     @Override
-    public List<ChannelInfoTable> getChannel(ChannelInfoTable cit) {
+    public List<ChannelInfoTable> getList(ChannelInfoTable cit) {
         if(isNull(cit)) return channelInfoDbService.list();
         LambdaQueryWrapper<ChannelInfoTable>  lambdaQueryWrapper = new QueryWrapper<ChannelInfoTable>().lambda();
         if( !isBlank(cit.getChannelId()) ) lambdaQueryWrapper.eq(ChannelInfoTable::getChannelId,cit.getChannelId());
@@ -59,7 +58,7 @@ public class ApiChannelInfoServiceImpl implements ApiChannelInfoService , NewPay
     }
 
     @Override
-    public Boolean savaOrUpdate(ChannelInfoTable cit) {
+    public Boolean saveOrUpdate(ChannelInfoTable cit) {
         if (isNull(cit)) return false;
         return channelInfoDbService.saveOrUpdate(cit);
     }
@@ -73,9 +72,9 @@ public class ApiChannelInfoServiceImpl implements ApiChannelInfoService , NewPay
     @Override
     public List<ChannelInfoTable> getChannels(List<String> orgIds) {
         if (isHasNotElement(orgIds)) return null;
-        LambdaQueryWrapper<ChannelInfoTable> queryWrapper = new QueryWrapper<ChannelInfoTable>().lambda();
+        LambdaQueryWrapper<ChannelInfoTable> queryWrapper = new QueryWrapper<ChannelInfoTable>().lambda()
+                .eq(ChannelInfoTable::getStatus, StatusEnum._0.getStatus());//默认只取可用通道;
         queryWrapper.in(ChannelInfoTable::getOrganizationId,orgIds);
-        queryWrapper.eq(ChannelInfoTable::getStatus,1);
         return channelInfoDbService.list(queryWrapper);
     }
 }

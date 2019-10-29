@@ -2,6 +2,8 @@ package com.rxh.anew.service;
 
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.table.business.PayOrderInfoTable;
+import com.rxh.anew.table.channel.ChannelInfoTable;
+import com.rxh.anew.table.channel.ChannelWalletTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.merchant.MerchantRateTable;
 import com.rxh.anew.table.merchant.MerchantWalletTable;
@@ -57,4 +59,20 @@ public interface PayWalletService {
      * @return
      */
     Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> updateTerMerWallet(TerminalMerchantsWalletTable tmw, PayOrderInfoTable poi, MerchantRateTable mrt);
+
+    /**
+     *
+     * @param channelId
+     * @param ipo
+     * @return
+     */
+    ChannelWalletTable getChanWallet(String channelId, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param channelId
+     * @param ipo
+     * @return
+     */
+    ChannelInfoTable getChannelInfo(String channelId, InnerPrintLogObject ipo);
 }

@@ -11,9 +11,9 @@ public interface ApiChannelInfoService {
 
     ChannelInfoTable getOne(ChannelInfoTable cit);
 
-    List<ChannelInfoTable> getChannel(ChannelInfoTable cit);
+    List<ChannelInfoTable> getList(ChannelInfoTable cit);
 
-    Boolean savaOrUpdate(ChannelInfoTable cit);
+    Boolean saveOrUpdate(ChannelInfoTable cit);
 
     Boolean delByIds(List<String> ids);
 

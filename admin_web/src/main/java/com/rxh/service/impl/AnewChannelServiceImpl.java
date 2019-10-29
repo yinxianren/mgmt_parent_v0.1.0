@@ -18,7 +18,7 @@ public class AnewChannelServiceImpl implements AnewChannelService {
 
     @Override
     public ResponseVO getAll(ChannelInfoTable channelInfoTable) {
-        List<ChannelInfoTable> list = apiChannelInfoService.getChannel(channelInfoTable);
+        List<ChannelInfoTable> list = apiChannelInfoService.getList(channelInfoTable);
         ResponseVO responseVO = new ResponseVO();
         responseVO.setCode((int)SystemConstant.BANK_STATUS_SUCCESS);
         responseVO.setData(list);
@@ -27,7 +27,7 @@ public class AnewChannelServiceImpl implements AnewChannelService {
 
     @Override
     public ResponseVO saveOrUpdate(ChannelInfoTable channelInfoTable) {
-        Boolean b = apiChannelInfoService.savaOrUpdate(channelInfoTable);
+        Boolean b = apiChannelInfoService.saveOrUpdate(channelInfoTable);
         ResponseVO responseVO = new ResponseVO();
         if (b){
             responseVO.setCode((int)SystemConstant.BANK_STATUS_SUCCESS);

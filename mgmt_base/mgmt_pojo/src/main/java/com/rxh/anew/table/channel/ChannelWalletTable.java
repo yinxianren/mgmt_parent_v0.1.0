@@ -1,21 +1,26 @@
 package com.rxh.anew.table.channel;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.math.BigDecimal;
 
 /**
- * @Description  
+ * @Description
  * @Author  monkey
  * @Date 2019-10-29 
  */
 
 @TableName ( "5_channel_wallet_table" )
-@Data
+@Getter
 public class ChannelWalletTable  implements Serializable {
-   
+	@TableId(type= IdType.INPUT)
 	private Long id;//表主键
 	private String channelId;//通道id
 	private String organizationId;//机构ID
@@ -34,4 +39,88 @@ public class ChannelWalletTable  implements Serializable {
 	private Date createTime;//创建时间
 	private Date updateTime;//更新时间
 
+	public ChannelWalletTable setId(Long id) {
+		this.id = id;
+		return this;
+	}
+
+	public ChannelWalletTable setChannelId(String channelId) {
+		this.channelId = channelId;
+		return this;
+	}
+
+	public ChannelWalletTable setOrganizationId(String organizationId) {
+		this.organizationId = organizationId;
+		return this;
+	}
+
+	public ChannelWalletTable setProductId(String productId) {
+		this.productId = productId;
+		return this;
+	}
+
+	public ChannelWalletTable setTotalAmount(BigDecimal totalAmount) {
+		this.totalAmount = totalAmount;
+		return this;
+	}
+
+	public ChannelWalletTable setIncomeAmount(BigDecimal incomeAmount) {
+		this.incomeAmount = incomeAmount;
+		return this;
+	}
+
+	public ChannelWalletTable setOutAmount(BigDecimal outAmount) {
+		this.outAmount = outAmount;
+		return this;
+	}
+
+	public ChannelWalletTable setTotalFee(BigDecimal totalFee) {
+		this.totalFee = totalFee;
+		return this;
+	}
+
+	public ChannelWalletTable setFeeProfit(BigDecimal feeProfit) {
+		this.feeProfit = feeProfit;
+		return this;
+	}
+
+	public ChannelWalletTable setTotalBalance(BigDecimal totalBalance) {
+		this.totalBalance = totalBalance;
+		return this;
+	}
+
+	public ChannelWalletTable setTotalAvailableAmount(BigDecimal totalAvailableAmount) {
+		this.totalAvailableAmount = totalAvailableAmount;
+		return this;
+	}
+
+	public ChannelWalletTable setTotalUnavailableAmount(BigDecimal totalUnavailableAmount) {
+		this.totalUnavailableAmount = totalUnavailableAmount;
+		return this;
+	}
+
+	public ChannelWalletTable setTotalMargin(BigDecimal totalMargin) {
+		this.totalMargin = totalMargin;
+		return this;
+	}
+
+	public ChannelWalletTable setTotalFreezeAmount(BigDecimal totalFreezeAmount) {
+		this.totalFreezeAmount = totalFreezeAmount;
+		return this;
+	}
+
+	public ChannelWalletTable setStatus(Integer status) {
+		this.status = status;
+		return this;
+	}
+
+	public ChannelWalletTable setCreateTime(Date createTime) {
+		this.createTime = createTime;
+		return this;
+	}
+
+	public ChannelWalletTable setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+		return this;
+	}
 }

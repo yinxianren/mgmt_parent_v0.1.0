@@ -4,6 +4,8 @@ import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.service.CommonServiceAbstract;
 import com.rxh.anew.service.PayWalletService;
 import com.rxh.anew.table.business.PayOrderInfoTable;
+import com.rxh.anew.table.channel.ChannelInfoTable;
+import com.rxh.anew.table.channel.ChannelWalletTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.merchant.MerchantRateTable;
 import com.rxh.anew.table.merchant.MerchantWalletTable;
@@ -259,6 +261,37 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
                 .setCreateTime(new Date())
                 .setUpdateTime(new Date());
         return new Tuple2<>(tmw,tmd);
+    }
+
+    @Override
+    public ChannelWalletTable getChanWallet(String channelId,InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="getChanWallet(String channelId, PayOrderInfoTable poi)";
+        ChannelWalletTable cwt = null;
+        try{
+            cwt = commonRPCComponent.apiChannelWalletService.getOne(new ChannelWalletTable().setChannelId(channelId));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：查询通道钱包信息发生异常,异常信息：%s",
+                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg()) );
+        }
+
+        return null==cwt ? new ChannelWalletTable() : cwt ;
+    }
+
+    @Override
+    public ChannelInfoTable getChannelInfo(String channelId, InnerPrintLogObject ipo) {
+        final String localPoint=" getChannelInfo(String channelId, InnerPrintLogObject ipo)";
+        ChannelInfoTable cit = null;
+        try{
+            cit = commonRPCComponent.apiChannelInfoService.getOne(new ChannelInfoTable().setChannelId(channelId));
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+        return null;
     }
 
 

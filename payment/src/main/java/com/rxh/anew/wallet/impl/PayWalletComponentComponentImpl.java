@@ -3,6 +3,9 @@ package com.rxh.anew.wallet.impl;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.service.PayWalletService;
 import com.rxh.anew.table.business.PayOrderInfoTable;
+import com.rxh.anew.table.channel.ChannelDetailsTable;
+import com.rxh.anew.table.channel.ChannelInfoTable;
+import com.rxh.anew.table.channel.ChannelWalletTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.merchant.MerchantRateTable;
 import com.rxh.anew.table.merchant.MerchantWalletTable;
@@ -51,10 +54,12 @@ public class PayWalletComponentComponentImpl implements PayWalletComponent, NewP
             TerminalMerchantsWalletTable tmw = payWalletService.getTerMerWallet(ipo);
             //更新终端商户钱包 保存终端商户钱包明细
             Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> terMerWalletTuple = payWalletService.updateTerMerWallet(tmw,poi,mrt);
+            //获取通道配置
+            ChannelInfoTable  cit = payWalletService.getChannelInfo(poi.getChannelId(),ipo);
             //获取通道钱包
-
+            ChannelWalletTable cwt = payWalletService.getChanWallet(poi.getChannelId(),ipo);
             //更新通道钱包 保存通道钱包明细
-
+            Tuple2<ChannelWalletTable, ChannelDetailsTable> chanWalletTuple = payWalletService.udateChannelWallet();
 
             //更新代理商钱包 保存代理商钱包明细
 

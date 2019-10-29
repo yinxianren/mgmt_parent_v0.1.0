@@ -1,21 +1,24 @@
 package com.rxh.anew.table.channel;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
+import lombok.Getter;
+
 import java.io.Serializable;
-import java.util.Date;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
- * @Description  
+ * @Description
  * @Author  monkey
  * @Date 2019-10-29 
  */
 
 @TableName ( "5_channel_details_table" )
-@Data
+@Getter
 public class ChannelDetailsTable  implements Serializable {
-   
+	@TableId(type= IdType.INPUT)
 	private Long id;//表主键
 	private String channelId;//通道id
 	private String organizationId;//机构ID
@@ -34,4 +37,88 @@ public class ChannelDetailsTable  implements Serializable {
 	private Date createTime;//创建时间
 	private Date updateTime;//更新时间
 
+	public ChannelDetailsTable setId(Long id) {
+		this.id = id;
+		return this;
+	}
+
+	public ChannelDetailsTable setChannelId(String channelId) {
+		this.channelId = channelId;
+		return this;
+	}
+
+	public ChannelDetailsTable setOrganizationId(String organizationId) {
+		this.organizationId = organizationId;
+		return this;
+	}
+
+	public ChannelDetailsTable setProductId(String productId) {
+		this.productId = productId;
+		return this;
+	}
+
+	public ChannelDetailsTable setMerOrderId(String merOrderId) {
+		this.merOrderId = merOrderId;
+		return this;
+	}
+
+	public ChannelDetailsTable setPlatformOrderId(String platformOrderId) {
+		this.platformOrderId = platformOrderId;
+		return this;
+	}
+
+	public ChannelDetailsTable setAmount(BigDecimal amount) {
+		this.amount = amount;
+		return this;
+	}
+
+	public ChannelDetailsTable setInAmount(BigDecimal inAmount) {
+		this.inAmount = inAmount;
+		return this;
+	}
+
+	public ChannelDetailsTable setOutAmount(BigDecimal outAmount) {
+		this.outAmount = outAmount;
+		return this;
+	}
+
+	public ChannelDetailsTable setRateFee(BigDecimal rateFee) {
+		this.rateFee = rateFee;
+		return this;
+	}
+
+	public ChannelDetailsTable setFee(BigDecimal fee) {
+		this.fee = fee;
+		return this;
+	}
+
+	public ChannelDetailsTable setFeeProfit(BigDecimal feeProfit) {
+		this.feeProfit = feeProfit;
+		return this;
+	}
+
+	public ChannelDetailsTable setTotalBalance(BigDecimal totalBalance) {
+		this.totalBalance = totalBalance;
+		return this;
+	}
+
+	public ChannelDetailsTable setTimestamp(Long timestamp) {
+		this.timestamp = timestamp;
+		return this;
+	}
+
+	public ChannelDetailsTable setStatus(Integer status) {
+		this.status = status;
+		return this;
+	}
+
+	public ChannelDetailsTable setCreateTime(Date createTime) {
+		this.createTime = createTime;
+		return this;
+	}
+
+	public ChannelDetailsTable setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+		return this;
+	}
 }
