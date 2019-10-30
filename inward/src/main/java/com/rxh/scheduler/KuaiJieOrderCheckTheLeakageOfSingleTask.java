@@ -1,6 +1,7 @@
 package com.rxh.scheduler;
 
 
+import com.alibaba.fastjson.JSON;
 import com.rxh.activeMQ.TransOrderMQ;
 import com.rxh.exception.PayException;
 import com.rxh.payInterface.PayAssert;
@@ -65,15 +66,17 @@ public class KuaiJieOrderCheckTheLeakageOfSingleTask implements PayAssert, PayUt
         transOrder.setBeginTime(beginTime);
         transOrder.setEndTime(endTime);
         List<TransOrder> transOrderList=transOrderService.getTransOrderByWhereCondition(transOrder);
-        logger.info("【执行快捷定时器查询是否漏单！】,代付漏单");
+        logger.info("【执行快捷定时器查询是否漏单！】,代付漏单查询到{}条数据；",transOrderList.size());
         //处理代付订单
         if(null != transOrderList ){
             for(TransOrder  t : transOrderList){
                 AbstractPayService.pool.execute(()->{
                     try{
-                       this.handleTransOrder(t);
+                        logger.info("【执行快捷定时器查询是否漏单！】,代付漏单查对象：{}", JSON.toJSONString(t));
+                        this.handleTransOrder(t);
                     }catch (Exception e){
-                        logger.warn(e.getMessage());
+//                        logger.warn(e.getMessage());
+                        e.printStackTrace();
                     }
                 });
             }
@@ -85,13 +88,16 @@ public class KuaiJieOrderCheckTheLeakageOfSingleTask implements PayAssert, PayUt
         payOrder.setBeginTime(beginTime);
         payOrder.setEndTime(endTime);
         List<PayOrder> payOrderList=payOrderService.getPayOrderByWhereCondition(payOrder);
+        logger.info("【执行快捷定时器查询是否漏单！】,收单漏单查询到{}条数据；",payOrderList.size());
         if(null != payOrderList){
             for (PayOrder p: payOrderList) {
                 AbstractPayService.pool.execute(()->{
                     try{
+                        logger.info("【执行快捷定时器查询是否漏单！】,收单漏单查对象：{}", JSON.toJSONString(p));
                         this.handlePayOrder(p);
                     }catch (Exception e){
-                        logger.warn(e.getMessage());
+//                        logger.warn(e.getMessage());
+                        e.printStackTrace();
                     }
                 });
             }
@@ -186,14 +192,15 @@ public class KuaiJieOrderCheckTheLeakageOfSingleTask implements PayAssert, PayUt
         isNull(merchantInfo,format("【快捷支付定时任务---代付订单处理】订单号:%s,商户号：%s,获取用户信息为null!",transId,merId));
         //获取收款订单号
         PayOrder  payOrder=new PayOrder();
-        payOrder.setMerOrderId(t.getOriginalMerOrderId());
+        String[] originalMerOrderIds = t.getOriginalMerOrderId().split("\\|");
+        payOrder.setMerOrderIdList(Arrays.asList(originalMerOrderIds));
         payOrder.setTerminalMerId(t.getTerminalMerId());
         payOrder.setMerId(t.getMerId());
         List<PayOrder> payOrderList=payOrderService.getPayOrderByWhereCondition(payOrder);
-        isNull(payOrderList,format("【快捷支付定时任务---代付订单处理】订单号:%s,商户号：%s,获取收单订单信息为null!",transId,merId));
-        payOrder=payOrderList.get(0);
-        isNull(payOrder,format("【快捷支付定时任务---代付订单处理】订单号:%s,商户号：%s,获取收单订单信息为null!",transId,merId));
-        OrderObjectToMQ orderObjectToMQ=getOrderObjectToMQ( t,  channelInfo, merchantInfo, payOrder);
+        isNotElement(payOrderList,format("【快捷支付定时任务---代付订单处理】订单号:%s,商户号：%s,获取收单订单信息为null!",transId,merId));
+        state(!(originalMerOrderIds.length != payOrderList.size()),
+                format("【快捷支付定时任务---代付订单处理】订单号:%s,商户号：%s,多订单号有不匹配订单!",transId,merId)  );
+        OrderObjectToMQ orderObjectToMQ=getOrderObjectToMQ( t,  channelInfo, merchantInfo, originalMerOrderIds);
         isNull(payOrder,format("【快捷支付定时任务---代付订单处理】订单号:%s,商户号：%s,封装OrderObjectToMQ对象为null!",transId,merId));
         //发送到mq
         transOrderMQ.sendObjectMessageToTransOderMQ(orderObjectToMQ);
@@ -203,15 +210,17 @@ public class KuaiJieOrderCheckTheLeakageOfSingleTask implements PayAssert, PayUt
     }
 
 
+
+
     /**
      *
      * @param transOrder
      * @param channelInfo
      * @param merchantInfo
-     * @param payOrder
+     * @param originalMerOrderIds
      * @return
      */
-    private OrderObjectToMQ getOrderObjectToMQ(TransOrder transOrder, ChannelInfo channelInfo,MerchantInfo merchantInfo,PayOrder payOrder){
+    private OrderObjectToMQ getOrderObjectToMQ(TransOrder transOrder, ChannelInfo channelInfo,MerchantInfo merchantInfo,String[] originalMerOrderIds){
         String merId=transOrder.getMerId();
         String merOrderId=transOrder.getMerOrderId();
         String channelId=channelInfo.getChannelId();
@@ -224,7 +233,7 @@ public class KuaiJieOrderCheckTheLeakageOfSingleTask implements PayAssert, PayUt
         String channelTransCode=channelInfo.getChannelTransCode();
         String terminalMerId=transOrder.getTerminalMerId();
         String parentId=merchantInfo.getParentId();
-        String payId=payOrder.getPayId();
+        String[] payIds=originalMerOrderIds;
 
         return new OrderObjectToMQ()
                 .lsetMerId(merId)
@@ -240,7 +249,8 @@ public class KuaiJieOrderCheckTheLeakageOfSingleTask implements PayAssert, PayUt
                 .lsetTerminalMerId(terminalMerId)
                 .lsetParentId(parentId)
                 .lsetOrderStatus(30)
-                .lsetPayId(payId)
+                .lsetPayIds(payIds)
+                .lsetPayId(null)
                 ;
     }
 

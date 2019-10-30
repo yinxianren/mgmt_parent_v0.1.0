@@ -194,7 +194,7 @@ public class ChannelWalletComponet extends AbstractWalletComponent {
         String merId=orderObjectToMQ.getMerId();
         String payType=orderObjectToMQ.getChannelType().toString();
         //获取支付订单
-        PayOrder payOrder= paymentRecordSquareService.getPayOrderById(orderObjectToMQ.getPayId());
+        PayOrder payOrder= paymentRecordSquareService.getPayOrderById(orderObjectToMQ.getPayIds()[0]);
         //获取通道钱包
         ChannelWallet channelWallet=paymentRecordSquareService.getChannelWallet(payOrder.getChannelId());
         //获取通道信息

@@ -6,16 +6,16 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class MerchantBasicInformationRegistrationDTO implements Serializable {
+public class MerBasicInfoRegDTO implements Serializable {
     private String  charset;//	字符编码	固定UTF-8
     private String  signType;//	签名类型	固定为MD5
     private String  productType;//	产品类型
     private String  merId;//	商户号	我司分配给接入方的唯一编码
     private String  merOrderId;//	商户订单号	每次发起请求，要求唯一
-    private String  merchantType;//	商户类型	00公司商户，01个体商户
-    private String  terminalMerId;//	子商户id	商户系统中商户的编码，要求唯一
-    private String  terminalMerName;//	子商户名称	商户系统中商户的名称
-    private String  userShortName;//	商户简称
+    private String  merType;//	商户类型	00公司商户，01个体商户
+    private String  terMerId;//	子商户id	商户系统中商户的编码，要求唯一
+    private String  terMerName;//	子商户名称	商户系统中商户的名称
+    private String  terMerShortName;//	商户简称
     private String  category;//	经营类目	参考3.3
     private String  identityType;//	证件类型	1身份证、2护照、3港澳回乡证、4台胞证、5军官证、
     private String  identityNum;//	证件号码

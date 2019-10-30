@@ -3,14 +3,17 @@ package com.rxh.anew.service.shortcut.impl;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.service.CommonServiceAbstract;
 import com.rxh.anew.service.PayWalletService;
+import com.rxh.anew.table.agent.AgentMerchantSettingTable;
+import com.rxh.anew.table.agent.AgentMerchantWalletTable;
+import com.rxh.anew.table.agent.AgentMerchantsDetailsTable;
 import com.rxh.anew.table.business.PayOrderInfoTable;
+import com.rxh.anew.table.channel.ChannelDetailsTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.channel.ChannelWalletTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.merchant.MerchantRateTable;
 import com.rxh.anew.table.merchant.MerchantWalletTable;
 import com.rxh.anew.table.merchant.MerchantsDetailsTable;
-import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.terminal.TerminalMerchantsDetailsTable;
 import com.rxh.anew.table.terminal.TerminalMerchantsWalletTable;
 import com.rxh.enums.ResponseCodeEnum;
@@ -102,6 +105,106 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         }
         return  null == mwt ? new MerchantWalletTable() : mwt ;
     }
+    @Override
+    public ChannelWalletTable getChanWallet(String channelId,InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="getChanWallet(String channelId, PayOrderInfoTable poi)";
+        ChannelWalletTable cwt = null;
+        try{
+            cwt = commonRPCComponent.apiChannelWalletService.getOne(new ChannelWalletTable().setChannelId(channelId));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：查询通道钱包信息发生异常,异常信息：%s",
+                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg()) );
+        }
+
+        return null==cwt ? new ChannelWalletTable() : cwt ;
+    }
+
+    @Override
+    public ChannelInfoTable getChannelInfo(String channelId, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint=" getChannelInfo(String channelId, InnerPrintLogObject ipo)";
+        ChannelInfoTable cit = null;
+        try{
+            cit = commonRPCComponent.apiChannelInfoService.getOne(new ChannelInfoTable().setChannelId(channelId));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：查询通道信息发生异常,异常信息：%s",
+                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg()) );
+        }
+        isNull(cit,
+                ResponseCodeEnum.RXH00022.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,错误根源：通道id（%s）不存在，或者通道被禁用",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00022.getMsg(),localPoint,channelId),
+                format(" %s",ResponseCodeEnum.RXH00022.getMsg()));
+        return cit;
+    }
+
+
+    @Override
+    public AgentMerchantSettingTable getAgentMerSet(String agentMerchantId, String  productId,InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="getAgentMerSet(String agentMerchantId, InnerPrintLogObject ipo)";
+        AgentMerchantSettingTable ams = null;
+        try{
+            ams = commonRPCComponent.apiAgentMerchantSettingService.getOne(new AgentMerchantSettingTable()
+                    .setAgentMerchantId(agentMerchantId)
+                    .setProductId(productId)
+                    .setStatus(StatusEnum._0.getStatus()));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：查询代理设置信息发生异常,异常信息：%s",
+                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg()) );
+        }
+        return ams;
+    }
+
+    @Override
+    public AgentMerchantWalletTable getAgentMerWallet(String agentMerchantId, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="getAgentMerWallet(String agentMerchantId, InnerPrintLogObject ipo)";
+        AgentMerchantWalletTable amw = null ;
+        try{
+            amw = commonRPCComponent.apiAgentMerchantWalletService.getOne(new AgentMerchantWalletTable().setAgentMerchantId(agentMerchantId));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：查询代理钱包信息发生异常,异常信息：%s",
+                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg()) );
+        }
+        return null == amw ? new AgentMerchantWalletTable() : amw ;
+    }
+
+
+
+    @Override
+    public TerminalMerchantsWalletTable getTerMerWallet(InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="getTerMerWallet(InnerPrintLogObject ipo)";
+        TerminalMerchantsWalletTable tmw = null;
+        try{
+            tmw = commonRPCComponent.apiTerminalMerchantsWalletService.getOne(new TerminalMerchantsWalletTable()
+                    .setMerchantId(ipo.getMerId())
+                    .setTerminalMerId(ipo.getTerMerId())
+                    .setStatus(StatusEnum._0.getStatus()));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：查询终端商户钱包信息发生异常,异常信息：%s",
+                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg()) );
+        }
+
+        return null == tmw ? new TerminalMerchantsWalletTable() : tmw ;
+    }
 
     @Override
     public Tuple2<MerchantWalletTable, MerchantsDetailsTable> updateMerWallet(MerchantWalletTable mwt, PayOrderInfoTable poi, MerchantRateTable mrt) {
@@ -109,7 +212,7 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         BigDecimal amount = poi.getAmount();
         //总订单金额
         BigDecimal totalAmount = ( null == mwt.getTotalAmount() ?  amount :  mwt.getTotalAmount().add(amount) );
-        BigDecimal rateFee = (null == mrt.getRateFee() ? new BigDecimal(0) : mrt.getRateFee() );
+        BigDecimal rateFee = (null == mrt.getRateFee() ? new BigDecimal(0) : mrt.getRateFee().divide(new BigDecimal(100)) );
         BigDecimal singleFee = (null == mrt.getSingleFee() ? new BigDecimal(0) : mrt.getSingleFee() );
         //单笔总费用
         BigDecimal totalSingleFee = ( totalAmount.multiply(rateFee).setScale(2, BigDecimal.ROUND_UP ) .add(singleFee)) ;
@@ -129,7 +232,7 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         //................
         //总可用余额
         BigDecimal totalBalance =( null == mwt.getTotalBalance() ? inAmount : mwt.getTotalBalance().add(inAmount) );
-       //总不可用余额
+        //总不可用余额
         BigDecimal totalUnavailableAmount = ( null == mwt.getTotalUnavailableAmount() ? new BigDecimal(0) : mwt.getTotalUnavailableAmount() );
         //总可用余额
         BigDecimal totalAvailableAmount = ( null== mwt.getTotalAvailableAmount() ?  new BigDecimal(0) : mwt.getTotalAvailableAmount() );
@@ -170,32 +273,13 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
                 .setFeeProfit(merSingleFeeProfit)
                 .setTotalBalance(totalBalance)
                 .setTimestamp(System.currentTimeMillis())
-                .setStatus(poi.getStatus())
+                .setStatus(StatusEnum._0.getStatus())
                 .setCreateTime(new Date())
                 .setUpdateTime(new Date());
         return new Tuple2<>(mwt,mdt);
     }
 
-    @Override
-    public TerminalMerchantsWalletTable getTerMerWallet(InnerPrintLogObject ipo) throws NewPayException {
-        final String localPoint="getTerMerWallet(InnerPrintLogObject ipo)";
-        TerminalMerchantsWalletTable tmw = null;
-        try{
-            tmw = commonRPCComponent.apiTerminalMerchantsWalletService.getOne(new TerminalMerchantsWalletTable()
-                    .setMerchantId(ipo.getMerId())
-                    .setTerminalMerId(ipo.getTerMerId())
-                    .setStatus(StatusEnum._0.getStatus()));
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new NewPayException(
-                    ResponseCodeEnum.RXH99999.getCode(),
-                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：查询终端商户钱包信息发生异常,异常信息：%s",
-                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
-                    format(" %s", ResponseCodeEnum.RXH99999.getMsg()) );
-        }
 
-        return null == tmw ? new TerminalMerchantsWalletTable() : tmw ;
-    }
 
     @Override
     public Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> updateTerMerWallet(TerminalMerchantsWalletTable tmw, PayOrderInfoTable poi, MerchantRateTable mrt){
@@ -204,7 +288,7 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         //订单总金额
         BigDecimal totalAmount = (null == tmw.getTotalAmount() ? amount : tmw.getTotalAmount().add(amount) );
         //手续费率
-        BigDecimal payFee = poi.getPayFee();
+        BigDecimal payFee = poi.getPayFee().divide(new BigDecimal(100));
         //手续费
         BigDecimal terMerFee = amount.multiply(payFee).setScale(2, BigDecimal.ROUND_UP );
         //总手续费
@@ -257,42 +341,152 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
                 .setFee(terMerFee)
                 .setTotalBalance(totalBalance)
                 .setTimestamp(System.currentTimeMillis())
-                .setStatus(poi.getStatus())
+                .setStatus(StatusEnum._0.getStatus())
                 .setCreateTime(new Date())
                 .setUpdateTime(new Date());
         return new Tuple2<>(tmw,tmd);
     }
 
-    @Override
-    public ChannelWalletTable getChanWallet(String channelId,InnerPrintLogObject ipo) throws NewPayException {
-        final String localPoint="getChanWallet(String channelId, PayOrderInfoTable poi)";
-        ChannelWalletTable cwt = null;
-        try{
-            cwt = commonRPCComponent.apiChannelWalletService.getOne(new ChannelWalletTable().setChannelId(channelId));
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new NewPayException(
-                    ResponseCodeEnum.RXH99999.getCode(),
-                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：查询通道钱包信息发生异常,异常信息：%s",
-                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
-                    format(" %s", ResponseCodeEnum.RXH99999.getMsg()) );
-        }
-
-        return null==cwt ? new ChannelWalletTable() : cwt ;
-    }
 
     @Override
-    public ChannelInfoTable getChannelInfo(String channelId, InnerPrintLogObject ipo) {
-        final String localPoint=" getChannelInfo(String channelId, InnerPrintLogObject ipo)";
-        ChannelInfoTable cit = null;
-        try{
-            cit = commonRPCComponent.apiChannelInfoService.getOne(new ChannelInfoTable().setChannelId(channelId));
-        }catch (Exception e){
-            e.printStackTrace();
-
+    public Tuple2<ChannelWalletTable, ChannelDetailsTable> updateChannelWallet(ChannelWalletTable cwt, ChannelInfoTable cit, PayOrderInfoTable poi,MerchantRateTable mrt) {
+        //订单金额
+        BigDecimal amount = poi.getAmount();
+        //通道费率
+        BigDecimal chanRateFee = cit.getChannelRateFee().divide(new BigDecimal(100));
+        BigDecimal singleFee = cit.getChannelSingleFee();
+        //通道费用
+        BigDecimal chanFee = amount.multiply(chanRateFee).setScale(2,BigDecimal.ROUND_UP);
+        chanFee = chanFee.add(singleFee);
+        //入账金额
+        BigDecimal inAmount = amount.subtract(amount);
+        //总入帐金额
+        BigDecimal totalInAmount = ( null == cwt.getIncomeAmount() ? inAmount : cwt.getIncomeAmount().add(inAmount) );
+        //总订单金额
+        BigDecimal totalAmount = ( null == cwt.getTotalAmount() ? amount : cwt.getTotalAmount().add(amount) );
+        //总手续费
+        BigDecimal totalFee = ( null == cwt.getTotalFee() ? chanFee : cwt.getTotalFee().add(chanFee) );
+        //计算商户费用
+        BigDecimal merRateFee = (null == mrt.getRateFee() ? new BigDecimal(0) : mrt.getRateFee().divide(new BigDecimal(100)) );
+        BigDecimal merSingleFee = (null == mrt.getSingleFee() ? new BigDecimal(0) : mrt.getSingleFee() );
+        BigDecimal merFee = ( totalAmount.multiply(merRateFee).setScale(2, BigDecimal.ROUND_UP ) .add(merSingleFee)) ;
+        //通道利润 = 商户的费用 - 通道费用
+        BigDecimal chanProfit = merFee.subtract(chanFee);
+        //总余额
+        BigDecimal totalBalance = (null == cwt.getTotalBalance() ? inAmount : cwt.getTotalBalance().add(inAmount));
+        //总不可用余额
+        BigDecimal totalUnavailableAmount = ( null == cwt.getTotalUnavailableAmount() ? new BigDecimal(0) : cwt.getTotalUnavailableAmount() );
+        //总可用余额
+        BigDecimal totalAvailableAmount = ( null== cwt.getTotalAvailableAmount() ?  new BigDecimal(0) : cwt.getTotalAvailableAmount() );
+        //判断结算周期
+        if( !cit.getSettleCycle().equalsIgnoreCase("d0")  || !cit.getSettleCycle().equalsIgnoreCase("t0")){
+            totalUnavailableAmount = totalUnavailableAmount.add(inAmount);
+        }else{
+            totalAvailableAmount = totalAvailableAmount.add(inAmount);
         }
-        return null;
+        //通道钱包
+        cwt.setId( null == cwt.getId() ? System.currentTimeMillis() : cwt.getId())
+                .setChannelId( null == cwt.getChannelId() ? poi.getChannelId() : cwt.getChannelId())
+                .setOrganizationId( null == cwt.getOrganizationId() ? cit.getOrganizationId() : cwt.getOrganizationId())
+                .setProductId( null == cwt.getProductId() ? poi.getProductId() : cwt.getProductId())
+                .setTotalAmount(totalAmount)
+                .setIncomeAmount(totalInAmount)
+                .setOutAmount(cwt.getOutAmount())
+                .setTotalFee(totalFee)
+                .setFeeProfit(chanProfit)
+                .setTotalBalance(totalBalance)
+                .setTotalAvailableAmount(totalAvailableAmount)
+                .setTotalUnavailableAmount(totalUnavailableAmount)
+                .setTotalMargin(cwt.getTotalMargin())
+                .setTotalFreezeAmount(cwt.getTotalFreezeAmount())
+                .setStatus(StatusEnum._0.getStatus())
+                .setCreateTime(  null == cwt.getCreateTime() ? new Date() : cwt.getCreateTime())
+                .setUpdateTime(new Date());
+        //通道钱包明细
+        ChannelDetailsTable cdt = new ChannelDetailsTable()
+                .setId(System.currentTimeMillis())
+                .setChannelId(poi.getChannelId())
+                .setOrganizationId(cit.getOrganizationId())
+                .setProductId(poi.getProductId())
+                .setMerOrderId(poi.getMerOrderId())
+                .setPlatformOrderId(poi.getPlatformOrderId())
+                .setAmount(poi.getAmount())
+                .setInAmount(inAmount)
+                .setOutAmount(new BigDecimal(0))
+                .setRateFee(cit.getChannelRateFee())
+                .setFee(chanFee)
+                .setFeeProfit(chanProfit)
+                .setTotalBalance(totalBalance)
+                .setTimestamp(System.currentTimeMillis())
+                .setStatus(StatusEnum._0.getStatus())
+                .setCreateTime(new Date())
+                .setUpdateTime(new Date());
+        return  new Tuple2<>(cwt,cdt);
     }
 
+
+    @Override
+    public Tuple2<AgentMerchantWalletTable, AgentMerchantsDetailsTable> updateAgentMerWallet(AgentMerchantWalletTable amw, AgentMerchantSettingTable ams, PayOrderInfoTable poi) {
+        //订单金额
+        BigDecimal amount = poi.getAmount();
+        //总订单金额
+        BigDecimal totalAmount = ( null == amw.getTotalAmount() ? amount : amw.getTotalAmount().add(amount) );
+        BigDecimal payFee = poi.getPayFee().divide(new BigDecimal(100));
+        //订单入账总金额
+        BigDecimal inAmount = amount.multiply(payFee).setScale(2,BigDecimal.ROUND_UP);
+        BigDecimal incomeAmount = ( null == amw.getIncomeAmount() ? inAmount : amw.getIncomeAmount().add(inAmount) );
+        //代理费率
+        BigDecimal rateFee = ( null == ams.getRateFee() ? new BigDecimal(0) :  ams.getRateFee().divide(new BigDecimal(100)) );
+        BigDecimal singleFee = ams.getSingleFee();
+        //代理商手续费
+        BigDecimal agentMerFee = amount.multiply(rateFee).setScale(2,BigDecimal.ROUND_UP);
+        agentMerFee = agentMerFee.add(singleFee);
+        //代理商总手续费入账
+        BigDecimal totalFee = ( null == amw.getTotalFee() ? agentMerFee : amw.getTotalFee().add(agentMerFee) );
+        //代理商总余额
+        BigDecimal totalBalance = ( null == amw.getTotalAmount() ? agentMerFee : amw.getTotalAmount().add(agentMerFee) );
+        //总不可用余额
+        BigDecimal totalUnavailableAmount = ( null == amw.getTotalUnavailableAmount() ? new BigDecimal(0) : amw.getTotalUnavailableAmount() );
+        //总可用余额
+        BigDecimal totalAvailableAmount = ( null== amw.getTotalAvailableAmount() ?  new BigDecimal(0) : amw.getTotalAvailableAmount() );
+        //判断结算周期
+        if( !ams.getSettleCycle().equalsIgnoreCase("d0")  || !ams.getSettleCycle().equalsIgnoreCase("t0")){
+            totalUnavailableAmount = totalUnavailableAmount.add(agentMerFee);
+        }else{
+            totalAvailableAmount = totalAvailableAmount.add(agentMerFee);
+        }
+
+        amw.setId( null == amw.getId() ? System.currentTimeMillis() : amw.getId())
+        .setAgentMerchantId( null ==  amw.getAgentMerchantId() ?  ams.getAgentMerchantId() : amw.getAgentMerchantId() )
+        .setTotalAmount(totalAmount)
+        .setIncomeAmount(incomeAmount)//总入账金额,这里存放的是终端商户入账的金额
+        .setOutAmount(amw.getOutAmount())//手续费出帐金额
+        .setTotalBalance(totalBalance) //代理商总余额
+        .setTotalAvailableAmount(totalAvailableAmount)
+        .setTotalUnavailableAmount(totalUnavailableAmount)
+        .setTotalFee(totalFee)
+        .setTotalFreezeAmount(amw.getTotalFreezeAmount())
+        .setStatus(StatusEnum._0.getStatus())
+        .setCreateTime( null == amw.getCreateTime() ? new Date() : amw.getCreateTime() )
+        .setUpdateTime(new Date());
+
+        AgentMerchantsDetailsTable amd = new AgentMerchantsDetailsTable()
+        .setId(System.currentTimeMillis())
+        .setAgentMerchantId(ams.getAgentMerchantId())
+        .setMerOrderId(poi.getMerOrderId())
+        .setPlatformOrderId(poi.getPlatformOrderId())
+        .setProductId(poi.getProductId())
+        .setAmount(poi.getAmount())
+        .setInAmount(incomeAmount)
+        .setOutAmount(new BigDecimal(0))
+        .setRateFee(ams.getRateFee())
+        .setFee(agentMerFee)
+        .setTotalBalance(totalBalance)
+        .setTimestamp(System.currentTimeMillis())
+        .setStatus(StatusEnum._0.getStatus())
+        .setCreateTime(new Date())
+        .setUpdateTime(new Date());
+        return new Tuple2<>(amw,amd);
+    }
 
 }

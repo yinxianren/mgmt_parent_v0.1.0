@@ -10,7 +10,7 @@ import lombok.Data;
  * Description:
  */
 @Data
-public class MerchantPayOrderConfirmDTO {
+public class MerPayOrderConfirmDTO {
     private String charset;//	字符集编码	固定UTF-8	否	5
     private String signType	;//签名类型	固定为MD5	否	3
     private String merId;//	商户号	我司分配给接入方的唯一编码	否	32

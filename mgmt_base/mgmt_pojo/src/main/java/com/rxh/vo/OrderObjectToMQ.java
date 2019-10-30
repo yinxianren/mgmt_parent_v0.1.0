@@ -32,8 +32,21 @@ public class OrderObjectToMQ implements Serializable {
 
     //平台订单信息
     private String payId;
+    private String[] payIds;
     private String transId;
 
+    public String[] getPayIds() {
+        return payIds;
+    }
+
+    public void setPayIds(String[] payIds) {
+        this.payIds = payIds;
+    }
+
+    public OrderObjectToMQ lsetPayIds(String[] payIds) {
+        this.setPayIds(payIds);
+        return this;
+    }
 
     public String getTransId() {
         return transId;

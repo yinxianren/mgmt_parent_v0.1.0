@@ -57,7 +57,7 @@ public class NewBondCardController extends NewAbstractCommonController {
         final String bussType = "【绑卡申请接口】";
         String errorMsg = null,errorCode = null,printErrorMsg,respResult=null;
         SystemOrderTrackTable sotTable = null;
-        MerchantBondCardApplyDTO mbcaDTO=null;
+        MerBondCardApplyDTO mbcaDTO=null;
         MerchantInfoTable merInfoTable = null;
         RequestCrossMsgDTO requestCrossMsgDTO = null;
         CrossResponseMsgDTO crossResponseMsgDTO = null;
@@ -66,14 +66,14 @@ public class NewBondCardController extends NewAbstractCommonController {
             //解析 以及 获取SystemOrderTrackTable对象
             sotTable = this.getSystemOrderTrackTable(request,param,bussType);
             //类型转换
-            mbcaDTO = JSON.parse(sotTable.getRequestMsg(),MerchantBondCardApplyDTO.class);
+            mbcaDTO = JSON.parse(sotTable.getRequestMsg(), MerBondCardApplyDTO.class);
             sotTable.setMerId(mbcaDTO.getMerId()).setMerOrderId(mbcaDTO.getMerOrderId()).setReturnUrl(mbcaDTO.getReturnUrl()).setNoticeUrl(mbcaDTO.getNoticeUrl());
             //获取必要参数
             Map<String, ParamRule> paramRuleMap = newBondCardService.getParamMapByB4();
             //创建日志打印对象
             ipo = new InnerPrintLogObject(mbcaDTO.getMerId(),mbcaDTO.getTerminalMerId(),bussType);
             //参数校验
-            this.verify(paramRuleMap,mbcaDTO,MerchantBondCardApplyDTO.class,ipo);
+            this.verify(paramRuleMap,mbcaDTO, MerBondCardApplyDTO.class,ipo);
             //获取商户信息
             merInfoTable = newBondCardService.getOneMerInfo(ipo);
             //验证签名
@@ -136,7 +136,7 @@ public class NewBondCardController extends NewAbstractCommonController {
         final String bussType = "【重新获取绑卡验证码】";
         String errorMsg = null,errorCode = null,printErrorMsg,respResult=null;
         SystemOrderTrackTable sotTable = null;
-        MerchantReGetBondCodeDTO mrgbcDTO=null;
+        MerReGetBondCodeDTO mrgbcDTO=null;
         MerchantInfoTable merInfoTable = null;
         RequestCrossMsgDTO requestCrossMsgDTO = null;
         CrossResponseMsgDTO crossResponseMsgDTO = null;
@@ -145,14 +145,14 @@ public class NewBondCardController extends NewAbstractCommonController {
             //解析 以及 获取SystemOrderTrackTable对象
             sotTable = this.getSystemOrderTrackTable(request,param,bussType);
             //类型转换
-            mrgbcDTO = JSON.parse(sotTable.getRequestMsg(),MerchantReGetBondCodeDTO.class);
+            mrgbcDTO = JSON.parse(sotTable.getRequestMsg(), MerReGetBondCodeDTO.class);
             sotTable.setMerId(mrgbcDTO.getMerId()).setMerOrderId(mrgbcDTO.getMerOrderId()).setReturnUrl(mrgbcDTO.getReturnUrl()).setNoticeUrl(mrgbcDTO.getNoticeUrl());
             //获取必要参数
             Map<String, ParamRule> paramRuleMap = newBondCardService.getParamMapByB5();
             //创建日志打印对象
             ipo = new InnerPrintLogObject(mrgbcDTO.getMerId(),mrgbcDTO.getTerminalMerId(),bussType);
             //参数校验
-            this.verify(paramRuleMap,mrgbcDTO,MerchantReGetBondCodeDTO.class,ipo);
+            this.verify(paramRuleMap,mrgbcDTO, MerReGetBondCodeDTO.class,ipo);
             //获取商户信息
             merInfoTable = newBondCardService.getOneMerInfo(ipo);
             //验证签名
@@ -216,7 +216,7 @@ public class NewBondCardController extends NewAbstractCommonController {
         final String bussType = "【确定绑定银行卡】";
         String errorMsg = null,errorCode = null,printErrorMsg,respResult=null;
         SystemOrderTrackTable sotTable = null;
-        MerchantConfirmBondCardDTO mcbcDTO=null;
+        MerConfirmBondCardDTO mcbcDTO=null;
         MerchantInfoTable merInfoTable = null;
         RequestCrossMsgDTO requestCrossMsgDTO = null;
         CrossResponseMsgDTO crossResponseMsgDTO = null;
@@ -225,14 +225,14 @@ public class NewBondCardController extends NewAbstractCommonController {
             //解析 以及 获取SystemOrderTrackTable对象
             sotTable = this.getSystemOrderTrackTable(request,param,bussType);
             //类型转换
-            mcbcDTO = JSON.parse(sotTable.getRequestMsg(),MerchantConfirmBondCardDTO.class);
+            mcbcDTO = JSON.parse(sotTable.getRequestMsg(), MerConfirmBondCardDTO.class);
             sotTable.setMerId(mcbcDTO.getMerId()).setMerOrderId(mcbcDTO.getMerOrderId()).setReturnUrl(mcbcDTO.getReturnUrl()).setNoticeUrl(mcbcDTO.getNoticeUrl());
             //获取必要参数
             Map<String, ParamRule> paramRuleMap = newBondCardService.getParamMapByB6();
             //创建日志打印对象
             ipo = new InnerPrintLogObject(mcbcDTO.getMerId(),mcbcDTO.getTerminalMerId(),bussType);
             //参数校验
-            this.verify(paramRuleMap,mcbcDTO,MerchantConfirmBondCardDTO.class,ipo);
+            this.verify(paramRuleMap,mcbcDTO, MerConfirmBondCardDTO.class,ipo);
             //获取商户信息
             merInfoTable = newBondCardService.getOneMerInfo(ipo);
             //验证签名

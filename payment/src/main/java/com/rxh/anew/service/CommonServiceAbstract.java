@@ -195,6 +195,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
             Field[] fields = responseEntity.getClass().getDeclaredFields();
             PayTreeMap<String,Object> map = new PayTreeMap<>();
             for (Field field : fields) {
+                field.setAccessible(true);
                 String fieldName = field.getName();
                 Object object = field.get(responseEntity);
                 if(null != object) map.lput(fieldName,object);

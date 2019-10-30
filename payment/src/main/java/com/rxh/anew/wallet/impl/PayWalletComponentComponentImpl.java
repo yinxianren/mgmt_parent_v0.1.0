@@ -1,7 +1,12 @@
 package com.rxh.anew.wallet.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.rxh.anew.CommonRPCComponent;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.service.PayWalletService;
+import com.rxh.anew.table.agent.AgentMerchantSettingTable;
+import com.rxh.anew.table.agent.AgentMerchantWalletTable;
+import com.rxh.anew.table.agent.AgentMerchantsDetailsTable;
 import com.rxh.anew.table.business.PayOrderInfoTable;
 import com.rxh.anew.table.channel.ChannelDetailsTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
@@ -10,16 +15,20 @@ import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.merchant.MerchantRateTable;
 import com.rxh.anew.table.merchant.MerchantWalletTable;
 import com.rxh.anew.table.merchant.MerchantsDetailsTable;
-import com.rxh.anew.table.system.MerchantSettingTable;
+import com.rxh.anew.table.system.SystemOrderTrackTable;
 import com.rxh.anew.table.terminal.TerminalMerchantsDetailsTable;
 import com.rxh.anew.table.terminal.TerminalMerchantsWalletTable;
 import com.rxh.anew.wallet.PayWalletComponent;
-import com.rxh.cache.redis.MerchantSettingCache;
+import com.rxh.enums.StatusEnum;
+import com.rxh.exception.NewPayException;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.tuple.Tuple2;
+import com.rxh.utils.JsonUtils;
 import lombok.AllArgsConstructor;
 import org.apache.activemq.command.ActiveMQObjectMessage;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,13 +42,15 @@ import org.springframework.stereotype.Component;
 public class PayWalletComponentComponentImpl implements PayWalletComponent, NewPayAssert {
 
     private final PayWalletService payWalletService;
+    private final CommonRPCComponent commonRPCComponent;
 
     @Override
     public void payOrderWallet( ActiveMQObjectMessage objectMessage) {
-        final String bussType = "收单业务钱包更新";
+        final String bussType = "MQ队列--->收单业务钱包更新";
         InnerPrintLogObject ipo;
+        PayOrderInfoTable poi = null;
         try {
-            PayOrderInfoTable poi = (PayOrderInfoTable) objectMessage.getObject();
+            poi = (PayOrderInfoTable) objectMessage.getObject();
             //创建日志打印对象
             ipo = new InnerPrintLogObject(poi.getMerchantId(), poi.getTerminalMerId(),bussType);
             //获取商户信息
@@ -54,18 +65,44 @@ public class PayWalletComponentComponentImpl implements PayWalletComponent, NewP
             TerminalMerchantsWalletTable tmw = payWalletService.getTerMerWallet(ipo);
             //更新终端商户钱包 保存终端商户钱包明细
             Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> terMerWalletTuple = payWalletService.updateTerMerWallet(tmw,poi,mrt);
-            //获取通道配置
+            //获取通道信息
             ChannelInfoTable  cit = payWalletService.getChannelInfo(poi.getChannelId(),ipo);
             //获取通道钱包
             ChannelWalletTable cwt = payWalletService.getChanWallet(poi.getChannelId(),ipo);
             //更新通道钱包 保存通道钱包明细
-            Tuple2<ChannelWalletTable, ChannelDetailsTable> chanWalletTuple = payWalletService.udateChannelWallet();
-
+            Tuple2<ChannelWalletTable, ChannelDetailsTable> chanWalletTuple = payWalletService.updateChannelWallet(cwt,cit,poi,mrt);
+            //获取代理商设置
+            AgentMerchantSettingTable ams = payWalletService.getAgentMerSet(mit.getAgentMerchantId(),poi.getProductId(),ipo);
+            //获取代理商钱包
+            AgentMerchantWalletTable amw = payWalletService.getAgentMerWallet(mit.getAgentMerchantId(),ipo);
             //更新代理商钱包 保存代理商钱包明细
-
-
+            Tuple2<AgentMerchantWalletTable, AgentMerchantsDetailsTable> agentMerWalletTuple = payWalletService.updateAgentMerWallet(amw,ams,poi);
+            //更新订单状态，从队列处理中该为成功
+            poi = poi.setStatus(StatusEnum._0.getStatus());
+            //执行事务处理
+            commonRPCComponent.apiPayOrderBusinessTransactionService.updateOrSavePayOrderBussInfo(merWalletTuple,terMerWalletTuple,chanWalletTuple,agentMerWalletTuple,poi);
         }catch (Exception e){
-
+            e.printStackTrace();
+            if(isNull(poi)){
+                poi = poi.setStatus(StatusEnum._8.getStatus());
+                commonRPCComponent.apiPayOrderInfoService.updateByPrimaryKey(poi);
+                commonRPCComponent.apiSystemOrderTrackService.save( new SystemOrderTrackTable()
+                        .setRequestPath(bussType)
+                        .setPlatformPrintLog( e instanceof NewPayException ? ((NewPayException)e).getInnerPrintMsg() : e.getMessage())
+                        .setId(null)
+                        .setMerId(poi.getMerchantId())
+                        .setMerOrderId(poi.getMerOrderId())
+                        .setPlatformOrderId(poi.getPlatformOrderId())
+                        .setAmount(poi.getAmount())
+                        .setReturnUrl(null)
+                        .setNoticeUrl(null)
+                        .setTradeCode(StatusEnum._8.getStatus())
+                        .setRequestMsg(StatusEnum._8.getRemark())
+                        .setReferPath(" public void payOrderWallet( ActiveMQObjectMessage objectMessage) ")
+                        .setResponseResult(JSON.toJSONString(poi))
+                        .setTradeTime(new Date())
+                        .setCreateTime(new Date()));
+            }
         }
     }
 

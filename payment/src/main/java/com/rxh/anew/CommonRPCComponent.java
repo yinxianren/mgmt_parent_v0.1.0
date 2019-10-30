@@ -2,6 +2,8 @@ package com.rxh.anew;
 
 import com.rxh.service.anew.agent.ApiAgentMerchantInfoService;
 import com.rxh.service.anew.agent.ApiAgentMerchantSettingService;
+import com.rxh.service.anew.agent.ApiAgentMerchantWalletService;
+import com.rxh.service.anew.agent.ApiAgentMerchantsDetailsService;
 import com.rxh.service.anew.business.ApiMerchantCardService;
 import com.rxh.service.anew.business.ApiPayOrderInfoService;
 import com.rxh.service.anew.business.ApiRegisterCollectService;
@@ -47,8 +49,10 @@ public  class CommonRPCComponent {
     public final ApiPayOrderBusinessTransactionService apiPayOrderBusinessTransactionService;
     public final ApiMerchantWalletService     apiMerchantWalletService;
     public final ApiMerchantsDetailsService   apiMerchantsDetailsService;
-    public final ApiTerminalMerchantsWalletService apiTerminalMerchantsWalletService;
+    public final ApiTerminalMerchantsWalletService  apiTerminalMerchantsWalletService;
     public final ApiTerminalMerchantsDetailsService apiTerminalMerchantsDetailsService;
     public final ApiChannelDetailsService     apiChannelDetailsService;
     public final ApiChannelWalletService      apiChannelWalletService;
+    public final ApiAgentMerchantWalletService   apiAgentMerchantWalletService;
+    public final ApiAgentMerchantsDetailsService apiAgentMerchantsDetailsService;
 }

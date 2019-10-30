@@ -12,7 +12,7 @@ import java.io.Serializable;
  * Description:
  */
 @Data
-public class MerchantConfirmBondCardDTO implements Serializable {
+public class MerConfirmBondCardDTO implements Serializable {
     private String charset;//	字符集编码	固定UTF-8
     private String signType;//	签名类型	固定为MD5
     private String merId;//	商户号	我司分配给接入方的唯一编码

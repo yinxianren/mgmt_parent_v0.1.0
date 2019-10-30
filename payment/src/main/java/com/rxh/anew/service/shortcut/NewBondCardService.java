@@ -1,9 +1,9 @@
 package com.rxh.anew.service.shortcut;
 
 import com.rxh.anew.dto.CrossResponseMsgDTO;
-import com.rxh.anew.dto.MerchantBondCardApplyDTO;
-import com.rxh.anew.dto.MerchantConfirmBondCardDTO;
-import com.rxh.anew.dto.MerchantReGetBondCodeDTO;
+import com.rxh.anew.dto.MerBondCardApplyDTO;
+import com.rxh.anew.dto.MerConfirmBondCardDTO;
+import com.rxh.anew.dto.MerReGetBondCodeDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonSerivceInterface;
@@ -56,7 +56,7 @@ public interface NewBondCardService extends CommonSerivceInterface {
      * @param ipo
      * @return
      */
-    MerchantCardTable saveCardInfoByB4(MerchantBondCardApplyDTO mbcaDTO, ChannelInfoTable channelInfoTable, RegisterCollectTable registerCollectTable, InnerPrintLogObject ipo) throws NewPayException;
+    MerchantCardTable saveCardInfoByB4(MerBondCardApplyDTO mbcaDTO, ChannelInfoTable channelInfoTable, RegisterCollectTable registerCollectTable, InnerPrintLogObject ipo) throws NewPayException;
     /**
      *
      * @param merchantCardTable
@@ -64,7 +64,7 @@ public interface NewBondCardService extends CommonSerivceInterface {
      * @param ipo
      * @return
      */
-    MerchantCardTable saveCardInfoByB5(MerchantCardTable merchantCardTable, MerchantReGetBondCodeDTO mrgbcDTO, InnerPrintLogObject ipo) throws NewPayException;
+    MerchantCardTable saveCardInfoByB5(MerchantCardTable merchantCardTable, MerReGetBondCodeDTO mrgbcDTO, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      *
@@ -73,7 +73,7 @@ public interface NewBondCardService extends CommonSerivceInterface {
      * @param ipo
      * @return
      */
-    MerchantCardTable saveCardInfoByB6(MerchantCardTable merchantCardTable, MerchantConfirmBondCardDTO mcbcDTO, InnerPrintLogObject ipo) throws NewPayException;
+    MerchantCardTable saveCardInfoByB6(MerchantCardTable merchantCardTable, MerConfirmBondCardDTO mcbcDTO, InnerPrintLogObject ipo) throws NewPayException;
     /**
      *  更新绑卡申请记录
      * @param crossResponseMsgDTO

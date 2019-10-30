@@ -1,7 +1,11 @@
 package com.rxh.anew.service;
 
 import com.rxh.anew.inner.InnerPrintLogObject;
+import com.rxh.anew.table.agent.AgentMerchantSettingTable;
+import com.rxh.anew.table.agent.AgentMerchantWalletTable;
+import com.rxh.anew.table.agent.AgentMerchantsDetailsTable;
 import com.rxh.anew.table.business.PayOrderInfoTable;
+import com.rxh.anew.table.channel.ChannelDetailsTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.channel.ChannelWalletTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
@@ -74,5 +78,39 @@ public interface PayWalletService {
      * @param ipo
      * @return
      */
-    ChannelInfoTable getChannelInfo(String channelId, InnerPrintLogObject ipo);
+    ChannelInfoTable getChannelInfo(String channelId, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param cwt
+     * @param cit
+     * @param poi
+     * @return
+     */
+    Tuple2<ChannelWalletTable, ChannelDetailsTable> updateChannelWallet(ChannelWalletTable cwt, ChannelInfoTable cit, PayOrderInfoTable poi,MerchantRateTable mrt);
+
+    /**
+     *
+     * @param agentMerchantId
+     * @param ipo
+     * @return
+     */
+    AgentMerchantSettingTable getAgentMerSet(String agentMerchantId, String  productId,InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param agentMerchantId
+     * @param ipo
+     * @return
+     */
+    AgentMerchantWalletTable getAgentMerWallet(String agentMerchantId, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param amw
+     * @param ams
+     * @param poi
+     * @return
+     */
+    Tuple2<AgentMerchantWalletTable, AgentMerchantsDetailsTable> updateAgentMerWallet(AgentMerchantWalletTable amw, AgentMerchantSettingTable ams, PayOrderInfoTable poi);
 }

@@ -834,6 +834,13 @@
           #{item,jdbcType=INTEGER}
         </foreach>
       </if>
+      <if test="merOrderIdList != null" >
+        AND  merOrderId  in
+        <foreach collection="merOrderIdList" item="item" separator="," open="(" close=")">
+          #{item,jdbcType=INTEGER}
+        </foreach>
+      </if>
+
       <if test="beginTime != null" >
         AND  trade_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
       </if>

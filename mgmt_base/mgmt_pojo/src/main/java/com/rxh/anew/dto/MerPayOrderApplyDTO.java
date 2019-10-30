@@ -12,7 +12,7 @@ import java.io.Serializable;
  * Description:
  */
 @Data
-public class MerchantPayOrderApplyDTO implements Serializable {
+public class MerPayOrderApplyDTO implements Serializable {
     private String  charset;//	字符集编码	固定UTF-8
     private String  signType;//	签名类型	固定为MD5
     private String  productType	;//产品类型

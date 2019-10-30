@@ -4,11 +4,8 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
-
-
     <!--配置扫描器，扫描所有带有@Service注解的类-->
     <context:component-scan base-package="com.rxh.service.impl,com.rxh.anew.service"/>
-
     <!-- 发布Dubbo服务 -->
     <dubbo:application name="mgmt_service" logger="slf4j"/>
     <!-- 注册中心地址 -->
@@ -39,8 +36,9 @@
     <dubbo:service interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsWalletService"      ref="apiTerminalMerchantsWalletServiceImpl"/>
     <dubbo:service interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsDetailsService"     ref="apiTerminalMerchantsDetailsServiceImpl"/>
     <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelDetailsService"      ref="apiChannelDetailsServiceImpl"/>
-    <dubbo:service interface=" com.rxh.service.anew.channel.ApiChannelWalletService"      ref="apiChannelWalletServiceImpl"/>
-
+    <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelWalletService"      ref="apiChannelWalletServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantsDetailsService"      ref="apiAgentMerchantsDetailsServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantWalletService"      ref="apiAgentMerchantWalletServiceImpl"/>
 
 
 

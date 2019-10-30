@@ -128,7 +128,7 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
 //    }
 
     @Override
-    public MerchantCardTable saveCardInfoByB4(MerchantBondCardApplyDTO mbcaDTO, ChannelInfoTable channelInfoTable, RegisterCollectTable registerCollectTable, InnerPrintLogObject ipo) throws NewPayException {
+    public MerchantCardTable saveCardInfoByB4(MerBondCardApplyDTO mbcaDTO, ChannelInfoTable channelInfoTable, RegisterCollectTable registerCollectTable, InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="saveCardInfoByB4";
         MerchantCardTable  merchantCardTable = new MerchantCardTable()
                 .setChannelId(channelInfoTable.getChannelId())
@@ -166,7 +166,7 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
     }
 
     @Override
-    public MerchantCardTable saveCardInfoByB5(MerchantCardTable merchantCardTable, MerchantReGetBondCodeDTO mrgbcDTO, InnerPrintLogObject ipo) throws NewPayException {
+    public MerchantCardTable saveCardInfoByB5(MerchantCardTable merchantCardTable, MerReGetBondCodeDTO mrgbcDTO, InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="saveCardInfoByB5";
         merchantCardTable
                 .setId(System.currentTimeMillis())
@@ -200,7 +200,7 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
     }
 
     @Override
-    public MerchantCardTable saveCardInfoByB6(MerchantCardTable merchantCardTable, MerchantConfirmBondCardDTO mcbcDTO, InnerPrintLogObject ipo) throws NewPayException {
+    public MerchantCardTable saveCardInfoByB6(MerchantCardTable merchantCardTable, MerConfirmBondCardDTO mcbcDTO, InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="saveCardInfoByB6";
         merchantCardTable
                 .setId(System.currentTimeMillis())

@@ -1,8 +1,8 @@
 package com.rxh.anew.service.shortcut.impl;
 
 import com.rxh.anew.dto.CrossResponseMsgDTO;
-import com.rxh.anew.dto.MerchantBankCardBindingDTO;
-import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
+import com.rxh.anew.dto.MerBankCardBindDTO;
+import com.rxh.anew.dto.MerBasicInfoRegDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
@@ -98,7 +98,7 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
     }
 
     @Override
-    public Tuple2<RegisterInfoTable,RegisterCollectTable> saveByRegister(MerchantBasicInformationRegistrationDTO mbirDTO, ChannelInfoTable channelInfoTable,InnerPrintLogObject ipo) {
+    public Tuple2<RegisterInfoTable,RegisterCollectTable> saveByRegister(MerBasicInfoRegDTO mbirDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo) {
         final String localPoint="saveByRegister";
         RegisterInfoTable registerInfoTable = null;
         RegisterCollectTable registerCollectTable = null;
@@ -106,7 +106,7 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
             registerInfoTable = commonRPCComponent.apiRegisterInfoService.getOne(
                     new RegisterInfoTable()
                             .setMerchantId(mbirDTO.getMerId())
-                            .setTerminalMerId(mbirDTO.getTerminalMerId())
+                            .setTerminalMerId(mbirDTO.getTerMerId())
                             .setUserName(mbirDTO.getCardHolderName())
                             .setIdentityType(new Integer(mbirDTO.getIdentityType()))
                             .setIdentityNum(mbirDTO.getIdentityNum())
@@ -118,14 +118,14 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
                         .setCreateTime(new Date());
             }
             registerInfoTable.setMerchantId(mbirDTO.getMerId())
-                    .setTerminalMerId(mbirDTO.getTerminalMerId())
-                    .setTerminalMerName(mbirDTO.getTerminalMerName())
+                    .setTerminalMerId(mbirDTO.getTerMerId())
+                    .setTerminalMerName(mbirDTO.getTerMerName())
                     .setUserName(mbirDTO.getCardHolderName())
-                    .setUserShortName(mbirDTO.getUserShortName())
+                    .setUserShortName(mbirDTO.getTerMerShortName())
                     .setIdentityType(new Integer(mbirDTO.getIdentityType()))
                     .setIdentityNum(mbirDTO.getIdentityNum())
                     .setPhone(mbirDTO.getPhone())
-                    .setMerchantType(mbirDTO.getMerchantType())
+                    .setMerchantType(mbirDTO.getMerType())
                     .setProvince(mbirDTO.getProvince())
                     .setCity(mbirDTO.getCity())
                     .setAddress(mbirDTO.getAddress())
@@ -139,7 +139,7 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
                     .setRitId(registerInfoTable.getId())
                     .setOrganizationId(channelInfoTable.getOrganizationId())
                     .setMerchantId(mbirDTO.getMerId())
-                    .setTerminalMerId(mbirDTO.getTerminalMerId())
+                    .setTerminalMerId(mbirDTO.getTerMerId())
                     .setMerOrderId(mbirDTO.getMerOrderId())
                     .setCategory(mbirDTO.getCategory())
                     .setMiMerCertPic1(mbirDTO.getMiMerCertPic1())
@@ -245,7 +245,16 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
         rct.setPlatformOrderId(platformOrderId);
         rct.setBussType(busiType);
         rct.setStatus(StatusEnum._0.getStatus());
-        rct = commonRPCComponent.apiRegisterCollectService.getOne(rct);
+        try {
+            rct = commonRPCComponent.apiRegisterCollectService.getOne(rct);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置B2：%s,异常根源：查询平台订单是否存在发生异常,异常信息：%s", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }
         isNull(rct,
                 ResponseCodeEnum.RXH00025.getCode(),
                 format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00025.getMsg(),localPoint),
@@ -254,7 +263,7 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
     }
 
     @Override
-    public Tuple2<RegisterInfoTable,RegisterCollectTable> saveOnRegisterInfo(RegisterCollectTable registerCollectTable, MerchantBankCardBindingDTO mbcbDTO, InnerPrintLogObject ipo) throws NewPayException {
+    public synchronized Tuple2<RegisterInfoTable,RegisterCollectTable> saveOnRegisterInfo(RegisterCollectTable registerCollectTable, MerBankCardBindDTO mbcbDTO, InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="saveOnRegisterInfo";
         RegisterInfoTable registerInfoTable = null;
         try{
@@ -327,10 +336,10 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
                 put("productType", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 64));//产品类型
                 put("merId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));//商户号
                 put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 64));// 商户订单号
-                put("merchantType", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 2));//商户类型 商户类型	00公司商户，01个体商户
-                put("terminalMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id
-                put("terminalMerName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));//终端客户名称
-                put("userShortName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));//  商户简称
+                put("merType", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 2));//商户类型 商户类型	00公司商户，01个体商户
+                put("terMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id
+                put("terMerName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));//终端客户名称
+                put("terMerShortName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));//  商户简称
                 put("category", new ParamRule(ParamTypeEnum.STRING.getType(), 3,16));// 经营项目
                 put("identityType", new ParamRule(ParamTypeEnum.STRING.getType(), 1, 1));//  证件类型 证件类型	1身份证、2护照、3港澳回乡证、4台胞证、5军官证
                 put("identityNum", new ParamRule(ParamTypeEnum.STRING.getType(), 12, 32));//证件号码

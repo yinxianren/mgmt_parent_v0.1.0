@@ -2,8 +2,8 @@ package com.rxh.anew.service.shortcut;
 
 
 import com.rxh.anew.dto.CrossResponseMsgDTO;
-import com.rxh.anew.dto.MerchantBankCardBindingDTO;
-import com.rxh.anew.dto.MerchantBasicInformationRegistrationDTO;
+import com.rxh.anew.dto.MerBankCardBindDTO;
+import com.rxh.anew.dto.MerBasicInfoRegDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonSerivceInterface;
@@ -95,7 +95,7 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      * @param mbirDTO
      * @param channelInfoTable
      */
-    Tuple2<RegisterInfoTable,RegisterCollectTable> saveByRegister(MerchantBasicInformationRegistrationDTO mbirDTO, ChannelInfoTable channelInfoTable,InnerPrintLogObject ipo);
+    Tuple2<RegisterInfoTable,RegisterCollectTable> saveByRegister(MerBasicInfoRegDTO mbirDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo);
 
     /**
      * 更新进件新
@@ -127,7 +127,7 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      * @param ipo
      * @return
      */
-    Tuple2<RegisterInfoTable,RegisterCollectTable> saveOnRegisterInfo(RegisterCollectTable registerCollectTable, MerchantBankCardBindingDTO mbcbDTO, InnerPrintLogObject ipo) throws NewPayException;
+    Tuple2<RegisterInfoTable,RegisterCollectTable> saveOnRegisterInfo(RegisterCollectTable registerCollectTable, MerBankCardBindDTO mbcbDTO, InnerPrintLogObject ipo) throws NewPayException;
 
 
 

@@ -73,6 +73,16 @@ public class PayOrder implements Serializable {
 
     private List<Integer> orderStatusList;
 
+    private List<String> merOrderIdList;
+
+    public List<String> getMerOrderIdList() {
+        return merOrderIdList;
+    }
+
+    public void setMerOrderIdList(List<String> merOrderIdList) {
+        this.merOrderIdList = merOrderIdList;
+    }
+
     public List<Integer> getOrderStatusList() {
         return orderStatusList;
     }
