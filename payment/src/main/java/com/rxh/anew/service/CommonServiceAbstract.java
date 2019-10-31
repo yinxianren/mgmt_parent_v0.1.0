@@ -71,7 +71,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
 
 
 
-    public String doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelExtraInfoTable extraInfoTable, InnerPrintLogObject ipo) {
+    public String doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelExtraInfoTable extraInfoTable, InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelExtraInfoTable extraInfoTable, InnerPrintLogObject ipo)";
         String result = null;
         try {
@@ -83,9 +83,8 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
                     format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：请求cross工程失败,异常信息：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint,e.getMessage()),
                     format(" %s",ResponseCodeEnum.RXH99999.getMsg())
             );
-        }finally {
-            return result;
         }
+        return result;
     }
 
 
@@ -107,7 +106,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
     }
 
 
-    public CrossResponseMsgDTO jsonToPojo(String crossResponseMsg, InnerPrintLogObject ipo) {
+    public CrossResponseMsgDTO jsonToPojo(String crossResponseMsg, InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="jsonToPojo";
         CrossResponseMsgDTO crossResponseMsgDTO = null;
         try {
@@ -116,17 +115,27 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
             e.printStackTrace();
             throw new NewPayException(
                     ResponseCodeEnum.RXH99999.getCode(),
-                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：将cross返回结果转BankResult对象发生异常，异常信息：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint,e.getMessage()),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：将cross返回结果转CrossResponseMsgDTO对象发生异常，异常信息：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint,e.getMessage()),
                     format(" %s",ResponseCodeEnum.RXH99999.getMsg())
             );
-        }finally {
-            return crossResponseMsgDTO;
         }
+        isNull(crossResponseMsgDTO,
+                ResponseCodeEnum.RXH99997.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,错误根源：将cross返回结果转CrossResponseMsgDTO对象为null ",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99997.getMsg(),localPoint),
+                format(" %s",ResponseCodeEnum.RXH99997.getMsg()));
+        return crossResponseMsgDTO;
     }
 
 
     public boolean saveSysLog(SystemOrderTrackTable systemOrderTrackTable){
-        return commonRPCComponent.apiSystemOrderTrackService.save(systemOrderTrackTable);
+        boolean how=false;
+        try{
+            how =  commonRPCComponent.apiSystemOrderTrackService.save(systemOrderTrackTable);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return how;
     }
 
     public ChannelInfoTable getChannelInfoByChannelId(String channelId, InnerPrintLogObject ipo) throws NewPayException {

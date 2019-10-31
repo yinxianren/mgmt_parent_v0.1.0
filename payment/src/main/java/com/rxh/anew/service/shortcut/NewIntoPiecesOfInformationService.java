@@ -56,23 +56,23 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      * @param ipo
      * @return
      */
-    Tuple2<ProductSettingTable,Set<ChannelInfoTable>> filtrationChannelInfoByProductType(List<ChannelInfoTable> list, String productType, InnerPrintLogObject ipo) throws NewPayException;
+    Tuple2<List<ProductSettingTable>,Set<ChannelInfoTable>> filtrationChannelInfoByProductType(List<ChannelInfoTable> list, String productType, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      *  获取子商户成功进件的所有记录
      * @param ipo
      * @return
      */
-    List<RegisterCollectTable> getRegisterCollectOnSuccess(InnerPrintLogObject ipo);
+    List<RegisterCollectTable> getRegisterCollectOnSuccess(InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      *  过滤出已经成功进件的通道
-     * @param tuple2
+     * @param channelInfoTableSet
      * @param registerCollectTableList
      * @param ipo
      * @return
      */
-    LinkedList<ChannelInfoTable> filtrationChannelInfoBySuccessRegisterCollect(Tuple2<ProductSettingTable,Set<ChannelInfoTable>> tuple2, List<RegisterCollectTable> registerCollectTableList, InnerPrintLogObject ipo) throws NewPayException;
+    LinkedList<ChannelInfoTable> filtrationChannelInfoBySuccessRegisterCollect(Set<ChannelInfoTable> channelInfoTableSet, List<RegisterCollectTable> registerCollectTableList, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      * 获取星级最高的通道，如果相同，取最后一个
@@ -95,7 +95,7 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      * @param mbirDTO
      * @param channelInfoTable
      */
-    Tuple2<RegisterInfoTable,RegisterCollectTable> saveByRegister(MerBasicInfoRegDTO mbirDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo);
+    Tuple2<RegisterInfoTable,RegisterCollectTable> saveByRegister(MerBasicInfoRegDTO mbirDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      * 更新进件新
@@ -103,7 +103,7 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
      * @param registerCollectTable
      * @return
      */
-    RegisterCollectTable updateByRegisterCollectTable(CrossResponseMsgDTO crossResponseMsgDTO, String crossResponseMsg, RegisterCollectTable registerCollectTable, InnerPrintLogObject ipo);
+    RegisterCollectTable updateByRegisterCollectTable(CrossResponseMsgDTO crossResponseMsgDTO, String crossResponseMsg, RegisterCollectTable registerCollectTable, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      *  判断多重订单

@@ -1,6 +1,7 @@
 package com.rxh.anew.table.system;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -8,7 +9,9 @@ import lombok.Getter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 
 @TableName("5_product_type_setting_table")
 @Getter
@@ -22,6 +25,14 @@ public class ProductSettingTable implements Serializable {
      private Integer status;// '状态 0：启用 ,1:禁用
      private Date createTime;//'创建时间
      private Date updateTime;//'更新时间
+     //
+     @TableField(exist=false) //冗余字段，查询使用
+     private Collection<String>  organizationIds;
+
+     public ProductSettingTable setOrganizationIds(Collection<String> organizationIds) {
+          this.organizationIds = organizationIds;
+          return this;
+     }
 
      public ProductSettingTable setId(Long id) {
           this.id = id;

@@ -3,7 +3,7 @@
 <mapper namespace="com.rxh.mapper.anew.business.AnewRegisterInfoMapper" >
 
     <insert id="replaceSave"  parameterType="com.rxh.anew.table.business.RegisterInfoTable" >
-        replace into b1_merchant_into_info_main value (
+        replace into 6_register_info_table value (
         #{id},
         #{merchantId},
         #{terminalMerId},
