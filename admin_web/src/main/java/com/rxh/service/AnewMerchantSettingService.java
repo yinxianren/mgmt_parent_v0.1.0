@@ -4,6 +4,7 @@ import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.vo.ResponseVO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AnewMerchantSettingService {
 
@@ -11,7 +12,7 @@ public interface AnewMerchantSettingService {
 
     ResponseVO batchSave(List<MerchantSettingTable> settingTables);
 
-    ResponseVO batchUpdate(MerchantSettingTable settingTables);
+    ResponseVO batchUpdate(Map<String,Object> map);
 
     ResponseVO getChannels(String organizationIds);
 }

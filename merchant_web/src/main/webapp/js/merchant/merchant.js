@@ -882,20 +882,21 @@ function merchantSquareRateCtrl($scope, $uibModal, toaster, NgTableParams, httpS
     }
 
     console.log($scope.merchantSetting.merId);
-    httpSvc.getData('post', '/merchantInfo/init').then(function (value) {
+    httpSvc.getData('post', '/merchantSquareRate/init').then(function (value) {
        $scope.merchantType=value.merchantType;
        $scope.channelLevel=value.channelLevel;
        $scope.agentMerchants=value.agentMerchants;
        $scope.status=value.status;
        $scope.payType=value.payType;
        $scope.channels=value.channels;
+       $scope.products=value.products;
         angular.element('.ibox-content').removeClass('sk-loading');
 
     // 初始化对象信息
     httpSvc.getData('post', '/merchantSquareRate/search',{"merId":$scope.merchantSetting.merId}).then(function (value1) {
 
 
-            $scope.merchantSquareRates = value1;
+            $scope.merchantSquareRates = value1.data;
             console.log($scope.merchantSquareRates);
 
         angular.element('.ibox-content').removeClass('sk-loading');

@@ -61,4 +61,5 @@
     <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantInfoService" id="apiAgentMerchantInfoService" />
     <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantSettingService" id="apiAgentMerchantSettingService" />
     <dubbo:reference interface="com.rxh.service.anew.system.ApiMerchantSettingService" id="apiMerchantSettingService" />
+    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantRateService"  id="apiMerchantRateService" />
 </beans>

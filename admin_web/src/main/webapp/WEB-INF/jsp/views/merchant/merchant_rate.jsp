@@ -80,7 +80,7 @@
                 <table>
                     <tr>
                         <th class="text-center rate-tr-width" style="min-width: 80px!important;">状态</th>
-                        <th class="text-center rate-tr-width" style="min-width: 100px">支付方式</th>
+                        <th class="text-center rate-tr-width" style="min-width: 100px">支付产品</th>
                         <th class="text-center rate-tr-width" style="min-width: 100px">单笔手续费(元)</th>
                         <th class="text-center rate-tr-width">交易费率(%)</th>
                         <th class="text-center rate-tr-width">保证金比例(%)</th>
@@ -95,7 +95,7 @@
                             </select>
                         </td>
                         <td class="text-center " style="min-width: 100px"  >
-                            {{row.payType | getValueByList : payType : 'firstValue' : 'name'  }}
+                            {{row.payType | getValueByList : productTypes : 'firstValue' : 'name'  }}
                         </td>
                         <td class="text-center col-lg-2" style="min-width: 100px" >
                             <input type="number"

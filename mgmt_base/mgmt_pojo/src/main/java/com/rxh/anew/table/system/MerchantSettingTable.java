@@ -1,6 +1,7 @@
 package com.rxh.anew.table.system;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -8,6 +9,7 @@ import lombok.Getter;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,6 +31,8 @@ public class MerchantSettingTable implements Serializable {
     private Integer status;//状态 0：启用1:禁用
     private Date createTime ;//创建时间
     private Date updateTime ;//更新时间
+    @TableField(exist = false)
+    private List<String> channelIds;
 
 
     public MerchantSettingTable setId(Long id) {
@@ -69,5 +73,9 @@ public class MerchantSettingTable implements Serializable {
     public MerchantSettingTable setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
         return  this;
+    }
+
+    public void setChannelIds(List<String> channelIds) {
+        this.channelIds = channelIds;
     }
 }

@@ -46,5 +46,13 @@ public class ApiMerchantSettingServiceImpl implements ApiMerchantSettingService,
         return merchantSettingDbService.saveOrUpdateBatch(merchantSettingTables);
     }
 
+    @Override
+    public Boolean remove(MerchantSettingTable mst) {
+        if (isNull(mst)) return false;
+        LambdaQueryWrapper<MerchantSettingTable> queryWrapper = new QueryWrapper<MerchantSettingTable>().lambda();
+        queryWrapper.eq(MerchantSettingTable::getMerchantId,mst.getMerchantId());
+        return merchantSettingDbService.remove(queryWrapper);
+    }
+
 
 }

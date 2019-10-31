@@ -2,6 +2,8 @@ package com.rxh.service.anew.merchant;
 
 import com.rxh.anew.table.merchant.MerchantRateTable;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: panda
@@ -14,5 +16,9 @@ public interface ApiMerchantRateService {
     MerchantRateTable getOne(MerchantRateTable mr);
 
     boolean save(MerchantRateTable mr);
+
+    Boolean batchSaveOrUpdate(List<MerchantRateTable> rateTables);
+
+    List<MerchantRateTable> getList(MerchantRateTable mer);
 
 }
