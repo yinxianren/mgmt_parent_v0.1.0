@@ -309,17 +309,43 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
         }
         isNull(rct,
                 ResponseCodeEnum.RXH00025.getCode(),
-                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00025.getMsg(),localPoint),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00025.getMsg(),localPoint),
                 format(" %s",ResponseCodeEnum.RXH00025.getMsg()));
-
-
-
-//        isTrue(rct.getStatus().equals(StatusEnum._0.getStatus()),
-//                ResponseCodeEnum.RXH00045.getCode(),
-//                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",
-//                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00045.getMsg(),localPoint),
-//                format(" %s",ResponseCodeEnum.RXH00045.getMsg()));
         return rct;
+    }
+
+    @Override
+    public void checkRepetitionOperation(RegisterCollectTable rct,String busiType,InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="saveOnRegisterInfo";
+        RegisterCollectTable  rct2= null;
+        try {
+            rct2 = commonRPCComponent.apiRegisterCollectService.getOne(new RegisterCollectTable()
+                    .setMerchantId(ipo.getMerId())
+                    .setTerminalMerId(ipo.getTerMerId())
+                    .setBussType(busiType)
+                    .setStatus(StatusEnum._0.getStatus())
+
+                    .setChannelId(rct.getChannelId())
+                    .setBankCardNum(rct.getBankCardNum())
+                    .setBankCardPhone(rct.getBankCardPhone())
+            );
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：查询平台订单是否有重复操作发生异常,异常信息：%s",
+                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }
+
+        isNotNull(rct2,
+                ResponseCodeEnum.RXH00045.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00045.getMsg(),localPoint),
+                format(" %s",ResponseCodeEnum.RXH00045.getMsg()));
+
     }
 
     @Override

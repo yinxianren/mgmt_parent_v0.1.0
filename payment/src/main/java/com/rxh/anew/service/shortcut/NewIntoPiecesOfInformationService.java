@@ -121,6 +121,12 @@ public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterfa
     RegisterCollectTable getRegisterCollectTable(String platformOrderId,String busiType, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
+     *
+     * @param rct
+     * @param ipo
+     */
+    void checkRepetitionOperation(RegisterCollectTable rct,String busiType,InnerPrintLogObject ipo) throws NewPayException;
+    /**
      *  更新b2z值
      * @param registerCollectTable
      * @param mbcbDTO

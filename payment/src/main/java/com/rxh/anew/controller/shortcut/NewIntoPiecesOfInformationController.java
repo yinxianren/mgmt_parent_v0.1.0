@@ -168,6 +168,8 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             Map<String, ParamRule> paramRuleMap =newIntoPiecesOfInformationService.getParamMapByB2();
             //判断平台订单号是否存在
             registerCollectTable = newIntoPiecesOfInformationService.getRegisterCollectTable(mbcbDTO.getPlatformOrderId(), BusinessTypeEnum.b1.getBusiType(),ipo);
+            //验证是否重复操作
+            newIntoPiecesOfInformationService.checkRepetitionOperation(registerCollectTable,BusinessTypeEnum.b2.getBusiType(),ipo);
             sotTable.setMerId(mbcbDTO.getMerId()).setMerOrderId(registerCollectTable.getMerOrderId());
             //参数校验
             this.verify(paramRuleMap,mbcbDTO,MerBankCardBindDTO.class,ipo);
@@ -248,6 +250,8 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //判断订单是否存在
             registerCollectTable = newIntoPiecesOfInformationService.getRegisterCollectTable(msDTO.getPlatformOrderId(), BusinessTypeEnum.b2.getBusiType(),ipo);
             sotTable.setMerId(msDTO.getMerId()).setMerOrderId(registerCollectTable.getMerOrderId());
+            //验证是否重复操作
+            newIntoPiecesOfInformationService.checkRepetitionOperation(registerCollectTable,BusinessTypeEnum.b3.getBusiType(),ipo);
             //参数校验
             this.verify(paramRuleMap,msDTO,MerServiceFulfillDTO.class,ipo);
             //验证签名
