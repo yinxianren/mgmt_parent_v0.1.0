@@ -41,7 +41,7 @@ public class AnewMerchantSettingController {
     }
 
     @RequestMapping("/update")
-    public ResponseVO update(@RequestBody MerchantSettingTable merchantSetting){
+    public ResponseVO update(@RequestBody Map<String,Object> merchantSetting){
         return anewMerchantSettingService.batchUpdate(merchantSetting);
     }
 

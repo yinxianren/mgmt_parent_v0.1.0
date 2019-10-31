@@ -11,4 +11,6 @@ public interface ApiMerchantSettingService {
 
     Boolean batchSaveOrUpdate(List<MerchantSettingTable> merchantSettingTables);
 
+    Boolean remove(MerchantSettingTable mst);
+
 }

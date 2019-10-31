@@ -7,7 +7,10 @@ import com.rxh.anew.table.merchant.MerchantRateTable;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.service.anew.merchant.ApiMerchantRateService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,5 +41,19 @@ public class ApiMerchantRateServiceImpl implements ApiMerchantRateService, NewPa
     public boolean save(MerchantRateTable mr) {
         if(isNull(mr)) return false;
         return merchantRateDBService.save(mr);
+    }
+
+    @Override
+    public Boolean batchSaveOrUpdate(List<MerchantRateTable> rateTables) {
+        if(isHasNotElement(rateTables)) return false;
+        return merchantRateDBService.saveOrUpdateBatch(rateTables);
+    }
+
+    @Override
+    public List<MerchantRateTable> getList(MerchantRateTable mer) {
+        if (isNull(mer)) return merchantRateDBService.list();
+        LambdaQueryWrapper<MerchantRateTable> queryWrapper = new QueryWrapper<MerchantRateTable>().lambda();
+        if (StringUtils.isNotEmpty(mer.getMerchantId())) queryWrapper.eq(MerchantRateTable::getMerchantId,mer.getMerchantId());
+        return merchantRateDBService.list(queryWrapper);
     }
 }

@@ -616,9 +616,8 @@ function merchantSettingCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
     var channleids=[];
     var orgpayids=[];
     // CheckBox选择框
-    // CheckBox选择框
     $scope.exists = function (value, selected) {
-        if (value === undefined || selected === undefined) {
+        if (value === null || selected === null || value === undefined || selected === undefined) {
             return false;
         }
         var checkab = selected.indexOf(value) > -1;
@@ -633,6 +632,77 @@ function merchantSettingCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
             payids.push(value);
         }
     };
+    var channelAll= [];
+    httpSvc.getData('post', '/merchantSetting/init').then(function (value) {
+       $scope.merchantType=value.merchantType;
+       $scope.channelLevel=value.channelLevel;
+       $scope.agentMerchants=value.agentMerchants;
+       $scope.payType=value.payType;
+       var organizations = value.organizations;
+       $scope.organizationAlls= [];
+       for (var i = 0; i <  organizations.length; i++) {
+           var item = {};
+           item['organizationId'] = organizations[i].organizationId;
+           item['organizationName'] = organizations[i].organizationName;
+           $scope.organizationAlls.push(item) ;
+       }
+       var channelAlls=value.channels;
+        $scope.channelAll = value.channels;
+        for (var i = 0; i <  channelAlls.length; i++) {
+            var item = {};
+            item['organizationId'] = channelAlls[i].organizationId;
+            item['channelName'] = channelAlls[i].channelName;
+            item['channelId'] = channelAlls[i].channelId;
+            item['productId'] = channelAlls[i].productId;
+            channelAll[i] = (item) ;
+        }
+        angular.element('.ibox-content').removeClass('sk-loading');
+    });
+    // 初始化对象信息
+    httpSvc.getData('post', '/merchantSetting/search',{"merchantId":$scope.merchantSetting.merchantId}).then(function (value1) {
+        if(value1.code == 0 ){
+            $scope.merchantSetting = value1.data;
+            var merchantSettings = value1.data;
+            // 初始化属性 机构
+            if ($scope.merchantSetting === null) {
+                $scope.merchantOrganizations = [];
+                $scope.channels = [];
+            } else {
+                var channels ="";
+                var merchantOrganizations="";
+                for (var i = 0; i <  merchantSettings.length; i++) {
+                    merchantOrganizations += merchantSettings[i].organizationId+",";
+                    channels += merchantSettings[i].channelId+",";
+                }
+                $scope.merchantOrganizations = merchantOrganizations.split(',');
+                $scope.channels = channels.split(',');
+                // if($scope.merchantSetting.organizationId.indexOf(",")){
+                // $scope.merchantOrganizations= $scope.merchantSetting.organizationId.split(',');
+                // }else {
+                //     $scope.merchantOrganizations[0]=$scope.merchantSetting.organizationId;
+                // }
+            }
+
+          /*  // 初始化属性 通道
+            if ($scope.merchantSetting.channelId === undefined) {
+                $scope.merchantChannels = [];
+            } else {
+                $scope.merchantChannels = $scope.merchantSetting.channelId.split(',');
+            }
+
+            // 初始化属性 支付方式
+            if ($scope.merchantSetting.payType === undefined) {
+                $scope.merchantPayTypes = [];
+            } else {
+                $scope.merchantPayTypes = $scope.merchantSetting.payType.split(',');
+            }*/
+
+              // payids=angular.copy($scope.merchantPayTypes);
+             channleids=angular.copy($scope.channels)
+             orgpayids=angular.copy($scope.merchantOrganizations);
+        }
+        angular.element('.ibox-content').removeClass('sk-loading');
+    });
     $scope.channletoggle = function (value) {
         var index = channleids.indexOf(value);
         if (index > -1) {
@@ -648,7 +718,16 @@ function merchantSettingCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
         } else {
             orgpayids.push(value);
         }
-
+        /*$scope.channels = [];
+        for (var i = 0; i <  channelAll.length; i++) {
+            var index = orgpayids.indexOf(channelAll[i].organizationId);
+            if (index > -1) {
+                var item = {};
+                item['channelName'] = channelAll[i].channelName;
+                item['channelId'] = channelAll[i].channelId;
+                $scope.channels.push(item) ;
+            }
+        }*/
         // httpSvc.getData('get', '/merchantSetting/getChannels',{
         //     organizationIds:orgpayids
         // }).then(function (value) {
@@ -656,84 +735,31 @@ function merchantSettingCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
         // });
     };
 
-
-    httpSvc.getData('post', '/merchantSetting/init').then(function (value) {
-       $scope.merchantType=value.merchantType;
-       $scope.channelLevel=value.channelLevel;
-       $scope.agentMerchants=value.agentMerchants;
-       $scope.payType=value.payType;
-       var organizations = value.organizations;
-       $scope.organizations= [];
-       for (var i = 0; i <  organizations.length; i++) {
-           var item = {};
-           item['organizationId'] = organizations[i].organizationId;
-           item['organizationName'] = organizations[i].organizationName;
-           $scope.organizations.push(item) ;
-       }
-       var channels=value.channels;
-        $scope.channels= [];
-        for (var i = 0; i <  channels.length; i++) {
-            var item = {};
-            item['organizationId'] = channels[i].organizationId;
-            item['channelName'] = channels[i].channelName;
-            item['channelId'] = channels[i].channelId;
-            $scope.channels.push(item) ;
-        }
-        angular.element('.ibox-content').removeClass('sk-loading');
-    // 初始化对象信息
-    httpSvc.getData('post', '/merchantSetting/search',{"merchantId":$scope.merchantSetting.merchantId}).then(function (value1) {
-        if(value1.code == 0 ){
-            $scope.merchantSetting = value1.data;
-            // 初始化属性 机构
-            if ($scope.merchantSetting.organizationId === undefined) {
-                $scope.merchantOrganizations = [];
-            } else {
-                // if($scope.merchantSetting.organizationId.indexOf(",")){
-                $scope.merchantOrganizations= $scope.merchantSetting.organizationId.split(',');
-                // }else {
-                //     $scope.merchantOrganizations[0]=$scope.merchantSetting.organizationId;
-                // }
-            }
-
-            // 初始化属性 通道
-            if ($scope.merchantSetting.channelId === undefined) {
-                $scope.merchantChannels = [];
-            } else {
-                $scope.merchantChannels = $scope.merchantSetting.channelId.split(',');
-            }
-
-            // 初始化属性 支付方式
-            if ($scope.merchantSetting.payType === undefined) {
-                $scope.merchantPayTypes = [];
-            } else {
-                $scope.merchantPayTypes = $scope.merchantSetting.payType.split(',');
-            }
-
-             payids=angular.copy($scope.merchantPayTypes);
-             channleids=angular.copy($scope.merchantChannels);
-             orgpayids=angular.copy($scope.merchantOrganizations);
-        }
-        angular.element('.ibox-content').removeClass('sk-loading');
-    });
-    });
-
-
     /**
      * 确定
      */
 
     $scope.confirm = function (merchantInfo) {
 
-        var types=payids.join(',');
         var channels=channleids.join(',');
-        var organizations=orgpayids.join(',');
+        $scope.channelIds = [];
+        for (var i = 0; i <  channelAll.length; i++) {
+            var index = channels.indexOf(channelAll[i].channelId);
+            if (index > -1) {
+                var item = {};
+                item = channelAll[i];
+                $scope.channelIds.push(item) ;
+            }
+        }
+        /*$scope.merchantInfo.payType=types;
+        $scope.merchantInfo.channelId=$scope.channelIds;
+        $scope.merchantInfo.organizationId=organizations;
+        $scope.merchantInfo.mercahntId=$scope.merchantId;*/
 
-        merchantInfo.payType=types;
-        merchantInfo.channelId=channels;
-        merchantInfo.organizationId=organizations;
-        merchantInfo.mercahntId=$scope.merchantId;
-
-        httpSvc.getData('post', '/merchantSetting/update', merchantInfo).then(function (value) {
+        httpSvc.getData('post', '/merchantSetting/update', {
+            channelId:$scope.channelIds,
+            merchantId:$scope.merchantId
+        }).then(function (value) {
             if (value.code == 0) {
                 toaster.pop({
                     type: 'success',
@@ -860,13 +886,13 @@ function merchantSquareRateCtrl($scope, $uibModal, toaster, NgTableParams, httpS
         return merchantSetting;
     }
 
-    httpSvc.getData('post', '/merchantInfo/init').then(function (value) {
+    httpSvc.getData('post', '/merchantSquareRate/init').then(function (value) {
        $scope.merchantType=value.merchantType;
        $scope.channelLevel=value.channelLevel;
        $scope.agentMerchants=value.agentMerchants;
        $scope.status=value.status;
        $scope.payType=value.payType;
-       $scope.channels=value.channels;
+       $scope.productTypes=value.productTypes;
         angular.element('.ibox-content').removeClass('sk-loading');
 
     // 初始化对象信息

@@ -73,11 +73,11 @@
                                 <%--required--%>
                         <%-->--%>
                         <%--</select>--%>
-                        <div class="col-sm-3 p-w-xs" ng-repeat="x in organizations">
+                        <div class="col-sm-3 p-w-xs" ng-repeat="x in organizationAlls">
                             <div class="checkbox no-margins">
                                 <input id="{{x.organizationId}}" type="checkbox" name="currency"
-                                       ng-checked="exists(x.organizationId,organizationIds)"
-                                       ng-click="orgtoggle(x.organizationId, organizationIds)"
+                                       ng-checked="exists(x.organizationId,merchantOrganizations)"
+                                       ng-click="orgtoggle(x.organizationId, merchantOrganizations)"
                                        required>
                                 <label for="{{x.organizationId}}" class="no-padding">{{x.organizationName}}</label>
                             </div>
@@ -92,11 +92,11 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label p-w-xs"><span class="text-danger">*</span>支付通道：</label>
                     <div class="col-sm-10">
-                        <div class="col-sm-3 p-w-xs" ng-repeat="x in channels">
+                        <div class="col-sm-3 p-w-xs" ng-repeat="x in channelAll">
                             <div class="checkbox no-margins">
                                 <input id="{{x.channelId}}" type="checkbox" name="currency"
-                                       ng-checked="exists(x.channelId, merchantSetting)"
-                                       ng-click="channletoggle(x.channelId, merchantSetting)"
+                                       ng-checked="exists(x.channelId, channels)"
+                                       ng-click="channletoggle(x.channelId, channels)"
                                        required>
                                 <label for="{{x.channelId}}" class="no-padding">{{x.channelName}}</label>
                             </div>
