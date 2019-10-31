@@ -16,8 +16,8 @@ public class MerBankCardBindDTO implements Serializable {
     private String charset	;//参数字符集编码
     private String signType;//	签名类型
     private String merId;//	商户号
+    private String terMerId;//	子商户id
     private String platformOrderId;//平台流水号
-    private String terminalMerId;//	子商户id
     private String bankAccountProp;//	账户属性
     private String identityType;//	证件类型
     private String identityNum;//	证件号码

@@ -47,9 +47,20 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
 
     public List<MerchantSettingTable> getMerchantSetting(InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="getMerchantSetting";
-        List<MerchantSettingTable> list = commonRPCComponent.apiMerchantSettingService.getList(
-                new MerchantSettingTable().setMerchantId(ipo.getMerId())
-        );
+        List<MerchantSettingTable> list =null;
+        try {
+           list = commonRPCComponent.apiMerchantSettingService.getList(
+                    new MerchantSettingTable().setMerchantId(ipo.getMerId())
+            );
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：获取商户通道配置信息发生异常,异常信息：%s",
+                            ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint,e.getMessage()),
+                    format(" %s",ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }
         isHasNotElement(list,
                 ResponseCodeEnum.RXH00019.getCode(),
                 format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00019.getMsg(),localPoint),
@@ -60,9 +71,18 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
 
     public MerchantInfoTable getOneMerInfo(InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="getOneMerInfo";
-        MerchantInfoTable merchantInfoTable = new MerchantInfoTable();
-        merchantInfoTable.setMerchantId(ipo.getMerId());
-        merchantInfoTable = commonRPCComponent.apiMerchantInfoService.getOne(merchantInfoTable);
+        MerchantInfoTable merchantInfoTable =  null;
+        try {
+            merchantInfoTable = commonRPCComponent.apiMerchantInfoService.getOne(new MerchantInfoTable().setMerchantId(ipo.getMerId()));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：获取商户信息发生异常,异常信息：%s",
+                            ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint,e.getMessage()),
+                    format(" %s",ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }
         isNull(merchantInfoTable,
                 ResponseCodeEnum.RXH00017.getCode(),
                 format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00017.getMsg(),localPoint),

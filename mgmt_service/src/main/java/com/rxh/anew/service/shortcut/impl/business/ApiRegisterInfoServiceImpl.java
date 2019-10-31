@@ -29,9 +29,10 @@ public class ApiRegisterInfoServiceImpl implements ApiRegisterInfoService, NewPa
         if(isNull(rit)) return null;
         LambdaQueryWrapper<RegisterInfoTable> lambdaQueryWrapper = new QueryWrapper<RegisterInfoTable>()
                 .lambda().eq(RegisterInfoTable::getStatus, StatusEnum._0.getStatus());
+        if( !isNull(rit.getId())) lambdaQueryWrapper.eq(RegisterInfoTable::getId,rit.getId());
         if( !isBlank(rit.getMerchantId()) ) lambdaQueryWrapper.eq(RegisterInfoTable::getMerchantId,rit.getMerchantId());
         if( !isBlank(rit.getTerminalMerId()) ) lambdaQueryWrapper.eq(RegisterInfoTable::getTerminalMerId,rit.getTerminalMerId());
-        if( isNull(rit.getIdentityType()) ) lambdaQueryWrapper.eq(RegisterInfoTable::getIdentityType,rit.getIdentityType());
+        if( !isNull(rit.getIdentityType()) ) lambdaQueryWrapper.eq(RegisterInfoTable::getIdentityType,rit.getIdentityType());
         if( !isBlank(rit.getUserName()) ) lambdaQueryWrapper.eq(RegisterInfoTable::getUserName,rit.getUserName());
         if( !isBlank(rit.getIdentityNum()) ) lambdaQueryWrapper.eq(RegisterInfoTable::getIdentityNum,rit.getIdentityNum());
         return registerInfoDBService.getOne(lambdaQueryWrapper);
