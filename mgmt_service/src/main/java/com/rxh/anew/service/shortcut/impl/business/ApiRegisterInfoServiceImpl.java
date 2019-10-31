@@ -44,4 +44,24 @@ public class ApiRegisterInfoServiceImpl implements ApiRegisterInfoService, NewPa
     }
 
 
+
+    @Override
+    public boolean save(RegisterInfoTable rit) {
+        if(isNull(rit)) return false;
+        return registerInfoDBService.save(rit);
+    }
+
+    @Override
+    public boolean updateByKey(RegisterInfoTable rit) {
+        if(isNull(rit)) return false;
+        return registerInfoDBService.updateById(rit);
+    }
+
+    @Override
+    public boolean saveOrUpdate(RegisterInfoTable rit) {
+        if(isNull(rit)) return false;
+        return registerInfoDBService.saveOrUpdate(rit);
+    }
+
+
 }

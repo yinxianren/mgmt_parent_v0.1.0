@@ -15,6 +15,8 @@ import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
+import com.rxh.enums.BusinessTypeEnum;
+import com.rxh.enums.BussTypeEnum;
 import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.enums.StatusEnum;
 import com.rxh.exception.NewPayException;
@@ -62,6 +64,8 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
         RequestCrossMsgDTO  requestCrossMsgDTO = null;
         CrossResponseMsgDTO crossResponseMsgDTO = null;
         InnerPrintLogObject ipo = null ;
+        Tuple2<RegisterInfoTable,RegisterCollectTable> tuple = null;
+        String crossResponseMsg = null;
         try{
             //解析 以及 获取SystemOrderTrackTable对象
             sotTable = this.getSystemOrderTrackTable(request,param,bussType);
@@ -95,12 +99,12 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //获取进件附属通道
             ChannelExtraInfoTable extraInfoTable = newIntoPiecesOfInformationService.getAddCusChannelExtraInfo(channelInfoTable,ipo);
             //保存进件信息
-            Tuple2<RegisterInfoTable,RegisterCollectTable> tuple = newIntoPiecesOfInformationService.saveByRegister(mbirDTO,channelInfoTable,ipo);
+            tuple = newIntoPiecesOfInformationService.saveByRegister(mbirDTO,channelInfoTable,ipo);
             sotTable.setPlatformOrderId(tuple._2.getPlatformOrderId());
             //封装请求cross必要参数
             requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,extraInfoTable,tuple._,tuple._2));
             //请求cross请求
-            String crossResponseMsg = newIntoPiecesOfInformationService.doPostJson(requestCrossMsgDTO,extraInfoTable,ipo);
+            crossResponseMsg = newIntoPiecesOfInformationService.doPostJson(requestCrossMsgDTO,extraInfoTable,ipo);
             //将请求结果转为对象
             crossResponseMsgDTO = newIntoPiecesOfInformationService.jsonToPojo(crossResponseMsg,ipo);
             //更新进件信息
@@ -121,6 +125,8 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
                 printErrorMsg = isBlank(e.getMessage()) ? e.getClass().getName() : (e.getMessage().length()>=512 ? e.getMessage().substring(0,526) : e.getMessage());
                 errorCode = ResponseCodeEnum.RXH99999.getCode();
             }
+            if(!isNull(tuple))
+                newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsg,tuple._2,ipo);
             respResult = newIntoPiecesOfInformationService.responseMsg(null != mbirDTO ? mbirDTO.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,errorCode,errorMsg,ipo);
             sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
         }finally {
@@ -130,18 +136,18 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
         }
     }
 
-//    /**
-//     * 银行卡登记接口
-//     * @param request
-//     * @param param
-//     * @return
-//     */
+    /**
+     * 银行卡登记接口
+     * @param request
+     * @param param
+     * @return
+     */
 //    @PostMapping(value="/bankCardBind", produces = "text/html;charset=UTF-8")
 //    public String bankCardBinding(HttpServletRequest request, @RequestBody(required = false) String param){
 //        final String bussType = "【银行卡登记接口】";
 //        String errorMsg = null,errorCode = null,printErrorMsg,respResult=null;
 //        SystemOrderTrackTable sotTable = null;
-//        MerchantBankCardBindingDTO mbcbDTO = null;
+//        MerBankCardBindDTO mbcbDTO = null;
 //        MerchantInfoTable merInfoTable = null;
 //        RequestCrossMsgDTO  requestCrossMsgDTO = null;
 //        CrossResponseMsgDTO crossResponseMsgDTO = null;
@@ -150,8 +156,8 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
 //            //解析 以及 获取SystemOrderTrackTable对象
 //            sotTable = this.getSystemOrderTrackTable(request,param,bussType);
 //            //类型转换
-//            mbcbDTO = JSON.parse(sotTable.getRequestMsg(),MerchantBankCardBindingDTO.class);
-//            //判断订单是否存在
+//            mbcbDTO = JSON.parse(sotTable.getRequestMsg(),MerBankCardBindDTO.class);
+//            //判断平台订单号是否存在
 //            RegisterCollectTable registerCollectTable = newIntoPiecesOfInformationService.getRegisterCollectTable(mbcbDTO.getPlatformOrderId(), BusinessTypeEnum.b1.getBusiType(),ipo);
 //            sotTable.setMerId(mbcbDTO.getMerId()).setMerOrderId(registerCollectTable.getMerOrderId());
 //            //获取必要参数
@@ -159,7 +165,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
 //            //创建日志打印对象
 //            ipo = new InnerPrintLogObject(mbcbDTO.getMerId(),mbcbDTO.getTerminalMerId(),bussType);
 //            //参数校验
-//            this.verify(paramRuleMap,mbcbDTO,MerchantBankCardBindingDTO.class,ipo);
+//            this.verify(paramRuleMap,mbcbDTO,MerBankCardBindDTO.class,ipo);
 //            //获取商户信息
 //            merInfoTable = newIntoPiecesOfInformationService.getOneMerInfo(ipo);
 //            //验证签名
@@ -180,7 +186,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
 //            //更新进件信息
 //            newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsg,tuple2._2,ipo);
 //            //封装放回结果
-//            respResult = newIntoPiecesOfInformationService.responseMsg(mbcbDTO.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,null,null,ipo);
+//            respResult = newIntoPiecesOfInformationService.responseMsg(registerCollectTable.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,null,null,ipo);
 //            sotTable.setPlatformPrintLog(StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode())).setTradeCode( crossResponseMsgDTO.getCrossStatusCode() );
 //        }catch (Exception e){
 //            if(e instanceof NewPayException){

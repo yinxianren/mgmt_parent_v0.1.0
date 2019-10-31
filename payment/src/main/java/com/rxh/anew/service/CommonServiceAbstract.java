@@ -25,6 +25,7 @@ import com.rxh.utils.PayTreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -75,7 +76,21 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
         final String localPoint="doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelExtraInfoTable extraInfoTable, InnerPrintLogObject ipo)";
         String result = null;
         try {
-            result = HttpClientUtils.doPostJson(HttpClientUtils.getHttpsClient(), extraInfoTable.getRequestUrl(), JsonUtils.objectToJsonNonNull(requestCrossMsgDTO));
+
+//            result = HttpClientUtils.doPostJson(HttpClientUtils.getHttpsClient(), extraInfoTable.getRequestUrl(), JsonUtils.objectToJsonNonNull(requestCrossMsgDTO));
+
+            //测试模块
+
+            {
+                CrossResponseMsgDTO crm = new CrossResponseMsgDTO();
+                crm.setCrossStatusCode(StatusEnum._0.getStatus());
+                crm.setCrossResponseMsg(StatusEnum._0.getRemark());
+                crm.setChannelOrderId("ORDER_ID-"+System.currentTimeMillis());
+                crm.setChannelStatusCode("S0000000");
+                crm.setChannelResponseTime(new Date());
+                crm.setChannelResponseMsg(StatusEnum._0.getRemark());
+                result = JSON.toJSONString(crm);
+            }
         }catch (Exception e){
             e.printStackTrace();
             throw new NewPayException(
@@ -88,7 +103,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
     }
 
 
-    public  String doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo){
+    public  String doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo)";
         String result = null;
         try {
@@ -100,9 +115,8 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
                     format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：请求cross工程失败,异常信息：%s",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint,e.getMessage()),
                     format(" %s",ResponseCodeEnum.RXH99999.getMsg())
             );
-        }finally {
-            return result;
         }
+        return result;
     }
 
 
@@ -187,7 +201,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
 
 
 
-    public String responseMsg(String merOrderId,MerchantInfoTable merInfoTable, RequestCrossMsgDTO  requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO,String errorCode,String errorMsg,InnerPrintLogObject ipo) throws NewPayException {
+    public String responseMsg(String merOrderId,MerchantInfoTable merInfoTable, RequestCrossMsgDTO  requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO,String errorCode,String errorMsg,InnerPrintLogObject ipo) throws NewPayException, IllegalAccessException {
         final String localPoint="responseMsg";
         String responseMsg = null;
         try {
@@ -221,9 +235,9 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
                 );
             } else
                 throw  e;
-        }finally {
-            return  null == responseMsg ? "系统内部错误！" : responseMsg;
         }
+
+        return responseMsg;
     }
 
 

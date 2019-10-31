@@ -39,7 +39,7 @@ public interface CommonSerivceInterface {
      * @param tuple
      * @return
      */
-    RequestCrossMsgDTO getRequestCrossMsgDTO(Tuple2 tuple);
+    RequestCrossMsgDTO getRequestCrossMsgDTO(Tuple2 tuple)throws NewPayException;
 
     /**
      * 封装响应结果
@@ -50,7 +50,7 @@ public interface CommonSerivceInterface {
      * @param errorMsg
      * @return
      */
-    String responseMsg(String merOrderId,MerchantInfoTable merInfoTable, RequestCrossMsgDTO  requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO,String errorCode,String errorMsg,InnerPrintLogObject ipo) throws NewPayException;
+    String responseMsg(String merOrderId,MerchantInfoTable merInfoTable, RequestCrossMsgDTO  requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO,String errorCode,String errorMsg,InnerPrintLogObject ipo)  throws NewPayException, IllegalAccessException ;
 
     /**
      *   请求cross
@@ -59,7 +59,7 @@ public interface CommonSerivceInterface {
      * @param ipo
      * @return
      */
-    String doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelExtraInfoTable extraInfoTable, InnerPrintLogObject ipo);
+    String doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelExtraInfoTable extraInfoTable, InnerPrintLogObject ipo)throws NewPayException;
 
     /**
      *   请求cross
@@ -68,14 +68,14 @@ public interface CommonSerivceInterface {
      * @param ipo
      * @return
      */
-    String doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo);
+    String doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo)throws NewPayException;
     /**
      *  将结果转对象
      * @param crossResponseMsg
      * @param ipo
      * @return
      */
-    CrossResponseMsgDTO jsonToPojo(String crossResponseMsg, InnerPrintLogObject ipo);
+    CrossResponseMsgDTO jsonToPojo(String crossResponseMsg, InnerPrintLogObject ipo)throws NewPayException;
 
     /**
      *

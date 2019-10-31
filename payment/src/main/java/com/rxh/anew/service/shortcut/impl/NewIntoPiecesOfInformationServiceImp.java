@@ -129,11 +129,12 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
                             .setIdentityType(new Integer(mbirDTO.getIdentityType()))
                             .setIdentityNum(mbirDTO.getIdentityNum())
             );
-
+//            boolean isSave =false;
             if (null == registerInfoTable){
                 registerInfoTable = new RegisterInfoTable()
                         .setId(System.currentTimeMillis())
                         .setCreateTime(new Date());
+//                isSave =true;
             }
             registerInfoTable.setMerchantId(mbirDTO.getMerId())
                     .setTerminalMerId(mbirDTO.getTerMerId())
@@ -147,6 +148,7 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
                     .setProvince(mbirDTO.getProvince())
                     .setCity(mbirDTO.getCity())
                     .setAddress(mbirDTO.getAddress())
+                    .setStatus(StatusEnum._0.getStatus())
                     .setUpdateTime(new Date());
 
             registerCollectTable = new RegisterCollectTable()
@@ -176,7 +178,7 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
                     .setBussType(BusinessTypeEnum.b1.getBusiType()) //基础信息登记
                     .setUpdateTime(new Date());
             //保持或更新
-            commonRPCComponent.apiRegisterInfoService.replaceSave(registerInfoTable);
+            commonRPCComponent.apiRegisterInfoService.saveOrUpdate(registerInfoTable);
             commonRPCComponent.apiRegisterCollectService.save(registerCollectTable);
         }catch (Exception e){
             e.printStackTrace();
