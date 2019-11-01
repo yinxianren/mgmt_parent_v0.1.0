@@ -12,6 +12,7 @@ import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.exception.NewPayException;
 
+import java.util.List;
 import java.util.Map;
 
 public interface NewBondCardService extends CommonSerivceInterface {
@@ -91,6 +92,45 @@ public interface NewBondCardService extends CommonSerivceInterface {
      */
     RegisterCollectTable getRegisterInfoTableByPlatformOrderId(String platformOrderId, InnerPrintLogObject ipo) throws NewPayException;
 
+    /**
+     *
+     * @param mbcaDTO
+     * @param ipo
+     * @return
+     */
+    List<RegisterCollectTable> getRegCollectBySuccess(MerBondCardApplyDTO mbcaDTO, InnerPrintLogObject ipo) throws NewPayException;
 
+    /**
+     *
+     * @param registerCollectTableList
+     * @param ipo
+     * @return
+     */
+    ChannelInfoTable getChannelInfoByRegCollect(List<RegisterCollectTable> registerCollectTableList, InnerPrintLogObject ipo) throws NewPayException;
 
+    /**
+     *
+     * @param registerCollectTableList
+     * @param channelId
+     * @param ipo
+     * @return
+     */
+    RegisterCollectTable filterRegCollectByChannelId(List<RegisterCollectTable> registerCollectTableList, String channelId, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param mbcaDTO
+     * @param ipo
+     * @return
+     */
+    List<MerchantCardTable> getMerCartInfoBySuccess(MerBondCardApplyDTO mbcaDTO, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param registerCollectTableList
+     * @param merchantCardTableList
+     * @param ipo
+     * @return
+     */
+    List<RegisterCollectTable> filterRegCollectByBondCardSuccess(List<RegisterCollectTable> registerCollectTableList, List<MerchantCardTable> merchantCardTableList, InnerPrintLogObject ipo) throws NewPayException;
 }

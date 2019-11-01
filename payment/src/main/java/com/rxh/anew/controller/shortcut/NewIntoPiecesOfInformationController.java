@@ -160,6 +160,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             sotTable = this.getSystemOrderTrackTable(request,param,bussType);
             //类型转换
             mbcbDTO = JSON.parse(sotTable.getRequestMsg(),MerBankCardBindDTO.class);
+            sotTable.setMerId(mbcbDTO.getMerId()).setMerOrderId(registerCollectTable.getMerOrderId());
             //创建日志打印对象
             ipo = new InnerPrintLogObject(mbcbDTO.getMerId(),mbcbDTO.getTerMerId(),bussType);
             //获取商户信息
@@ -170,7 +171,6 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             registerCollectTable = newIntoPiecesOfInformationService.getRegisterCollectTable(mbcbDTO.getPlatformOrderId(), BusinessTypeEnum.b1.getBusiType(),ipo);
             //验证是否重复操作
             newIntoPiecesOfInformationService.checkRepetitionOperation(registerCollectTable,BusinessTypeEnum.b2.getBusiType(),ipo);
-            sotTable.setMerId(mbcbDTO.getMerId()).setMerOrderId(registerCollectTable.getMerOrderId());
             //参数校验
             this.verify(paramRuleMap,mbcbDTO,MerBankCardBindDTO.class,ipo);
             //验证签名
@@ -241,6 +241,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             sotTable = this.getSystemOrderTrackTable(request,param,bussType);
             //类型转换
             msDTO = JSON.parse(sotTable.getRequestMsg(),MerServiceFulfillDTO.class);
+            sotTable.setMerId(msDTO.getMerId()).setMerOrderId(registerCollectTable.getMerOrderId());
             //创建日志打印对象
             ipo = new InnerPrintLogObject(msDTO.getMerId(),msDTO.getTerMerId(),bussType);
             //获取商户信息
@@ -249,7 +250,6 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             Map<String, ParamRule> paramRuleMap =newIntoPiecesOfInformationService.getParamMapByB3();
             //判断订单是否存在
             registerCollectTable = newIntoPiecesOfInformationService.getRegisterCollectTable(msDTO.getPlatformOrderId(), BusinessTypeEnum.b2.getBusiType(),ipo);
-            sotTable.setMerId(msDTO.getMerId()).setMerOrderId(registerCollectTable.getMerOrderId());
             //验证是否重复操作
             newIntoPiecesOfInformationService.checkRepetitionOperation(registerCollectTable,BusinessTypeEnum.b3.getBusiType(),ipo);
             //参数校验

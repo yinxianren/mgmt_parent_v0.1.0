@@ -20,10 +20,8 @@ import com.rxh.tuple.Tuple5;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -139,7 +137,7 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
                 .setPlatformOrderId("RXH" + new Random(System.currentTimeMillis()).nextInt(1000000) + "-B4" + System.currentTimeMillis())
                 .setMerchantId(mbcaDTO.getMerId())
                 .setMerOrderId(mbcaDTO.getMerOrderId())
-                .setTerminalMerId(mbcaDTO.getTerminalMerId())
+                .setTerminalMerId(mbcaDTO.getTerMerId())
                 .setCardHolderName(mbcaDTO.getCardHolderName())
                 .setIdentityType(Integer.valueOf(mbcaDTO.getIdentityType()))
                 .setIdentityNum(mbcaDTO.getIdentityNum())
@@ -171,8 +169,7 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
         merchantCardTable
                 .setId(System.currentTimeMillis())
                 .setPlatformOrderId("RXH" + new Random(System.currentTimeMillis()).nextInt(1000000) + "-B5" + System.currentTimeMillis())
-                .setMerOrderId(mrgbcDTO.getMerOrderId())
-                .setTerminalMerId(mrgbcDTO.getTerminalMerId())
+                .setTerminalMerId(mrgbcDTO.getTerMerId())
                 .setCardHolderName(mrgbcDTO.getCardHolderName())
                 .setIdentityType(Integer.valueOf(mrgbcDTO.getIdentityType()))
                 .setIdentityNum(mrgbcDTO.getIdentityNum())
@@ -205,8 +202,7 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
         merchantCardTable
                 .setId(System.currentTimeMillis())
                 .setPlatformOrderId("RXH" + new Random(System.currentTimeMillis()).nextInt(1000000) + "-B5" + System.currentTimeMillis())
-                .setMerOrderId(mcbcDTO.getMerOrderId())
-                .setTerminalMerId(mcbcDTO.getTerminalMerId())
+                .setTerminalMerId(mcbcDTO.getTerMerId())
                 .setCardHolderName(mcbcDTO.getCardHolderName())
                 .setIdentityType(Integer.valueOf(mcbcDTO.getIdentityType()))
                 .setIdentityNum(mcbcDTO.getIdentityNum())
@@ -241,8 +237,8 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
     public void updateByBondCardInfo(CrossResponseMsgDTO crossResponseMsgDTO, String crossResponseMsg, MerchantCardTable merchantCardTable, InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="updateByBondCardInfo";
         merchantCardTable.setCrossRespResult(crossResponseMsg)
-                .setChannelRespResult(crossResponseMsgDTO.getChannelResponseMsg())
-                .setStatus( crossResponseMsgDTO.getCrossStatusCode());
+                .setChannelRespResult( null == crossResponseMsgDTO ? null  : crossResponseMsgDTO.getChannelResponseMsg() )
+                .setStatus( null == crossResponseMsgDTO ? StatusEnum._1.getStatus() : crossResponseMsgDTO.getCrossStatusCode() );
         try {
             commonRPCComponent.apiMerchantCardService.updateById(merchantCardTable);
         }catch (Exception e){
@@ -277,10 +273,126 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
         }
         isNull(registerCollectTable,
                 ResponseCodeEnum.RXH00032.getCode(),
-                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00032.getMsg(),localPoint),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;"
+                        ,ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00032.getMsg(),localPoint),
                 format(" %s",ResponseCodeEnum.RXH00032.getMsg()));
 
         return registerCollectTable;
+    }
+
+    @Override
+    public List<RegisterCollectTable> getRegCollectBySuccess(MerBondCardApplyDTO mbcaDTO, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="getRegCollectBySuccess";
+        List<RegisterCollectTable>  list;
+        try{
+            list = commonRPCComponent.apiRegisterCollectService.getList(new RegisterCollectTable()
+                    .setTerminalMerId(mbcaDTO.getTerMerId())
+                    .setMerchantId(mbcaDTO.getMerId())
+                    .setBussType(BusinessTypeEnum.b3.getBusiType())
+                    .setStatus(StatusEnum._0.getStatus()));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：获取所有进件成功信息，发生异常,异常信息：%s",
+                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }
+        isHasNotElement(list,
+                ResponseCodeEnum.RXH00030.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00030.getMsg(),localPoint),
+                format(" %s",ResponseCodeEnum.RXH00030.getMsg()));
+        return list;
+    }
+
+    @Override
+    public ChannelInfoTable getChannelInfoByRegCollect(List<RegisterCollectTable> registerCollectTableList, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="getChannelInfoByRegCollect";
+        Set<String> channelIdSet = registerCollectTableList.stream().map(RegisterCollectTable::getChannelId).collect(Collectors.toSet());
+        List<ChannelInfoTable> channelInfoTableList;
+        try{
+            channelInfoTableList  = commonRPCComponent.apiChannelInfoService.batchGetByChannelId(channelIdSet);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：获取进件成功的所有通道时，发生异常,异常信息：%s",
+                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }
+        isHasNotElement(channelInfoTableList,
+                ResponseCodeEnum.RXH00022.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;发错误根源：根据进件成功信息，获取通道信息时，没有找到对应的通道",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00022.getMsg(),localPoint),
+                format(" %s",ResponseCodeEnum.RXH00022.getMsg()));
+
+        ChannelInfoTable channelInfoTable =  channelInfoTableList.stream().reduce((_1,_2)-> _1.getChannelLevel().compareTo( _2.getChannelLevel()) > 0 ? _1 :_2 ).orElseGet(null);
+
+        isNull(channelInfoTable,
+                ResponseCodeEnum.RXH99999.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;发错误根源：获取高等级通道时，筛选过程中得到null值",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint),
+                format(" %s",ResponseCodeEnum.RXH99999.getMsg()));
+        return channelInfoTable;
+    }
+
+    @Override
+    public RegisterCollectTable filterRegCollectByChannelId(List<RegisterCollectTable> registerCollectTableList, String channelId, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="filterRegCollectByChannelId";
+        RegisterCollectTable registerCollectTable=  registerCollectTableList.stream()
+                .filter(t -> t.getChannelId().equalsIgnoreCase(channelId)).findAny().orElse(null);
+        isNull(registerCollectTable,
+                ResponseCodeEnum.RXH99999.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;发错误根源：根据通道ID筛选进件附属表信息时，得到null对象",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH99999.getMsg(),localPoint),
+                format(" %s",ResponseCodeEnum.RXH99999.getMsg()));
+        return registerCollectTable;
+    }
+
+    @Override
+    public List<MerchantCardTable> getMerCartInfoBySuccess(MerBondCardApplyDTO mbcaDTO, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="getMerCartInfoBySuccess";
+        List<MerchantCardTable>  list=null;
+        try{
+            list = commonRPCComponent.apiMerchantCardService.getList(new MerchantCardTable()
+                    .setMerchantId(ipo.getMerId())
+                    .setTerminalMerId(ipo.getTerMerId())
+                    .setBankCardNum(mbcaDTO.getBankCardNum())
+                    .setBussType(BusinessTypeEnum.b6.getBusiType())
+                    .setStatus(StatusEnum._0.getStatus()));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：获取成功绑卡信息时，发生异常,异常信息：%s",
+                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }
+        return list;
+    }
+
+    @Override
+    public List<RegisterCollectTable> filterRegCollectByBondCardSuccess(List<RegisterCollectTable> registerCollectTableList, List<MerchantCardTable> merchantCardTableList, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="filterRegCollectByBondCardSuccess";
+        LinkedList<RegisterCollectTable>  linkedList = new LinkedList<>(registerCollectTableList);
+        registerCollectTableList.forEach( rc ->{
+            merchantCardTableList.forEach( mc->{
+                      if(        mc.getOrganizationId().equalsIgnoreCase(rc.getOrganizationId())
+                              && mc.getBankCardNum().equalsIgnoreCase(rc.getBankCardNum())){
+                          linkedList.remove(rc);
+                      }
+            });
+        });
+        isHasNotElement(linkedList,
+                ResponseCodeEnum.RXH00023.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;发错误根源：过滤掉已经成功绑卡的通道，已经无其他通道可以绑卡",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00023.getMsg(),localPoint),
+                format(" %s",ResponseCodeEnum.RXH00023.getMsg()));
+        return linkedList;
     }
 
 
@@ -304,7 +416,6 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
                 put("signType", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 3));//签名类型	固定为MD5
                 put("merId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));//商户号
                 put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 商户订单号
-                put("platformOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 平台流水号
                 put("cardHolderName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));// 持卡人姓名
                 put("identityType", new ParamRule(ParamTypeEnum.STRING.getType(), 1, 1));//证件类型	1身份证、2护照、3港澳回乡证、4台胞证、5军官证、	否	1
                 put("identityNum", new ParamRule(ParamTypeEnum.STRING.getType(), 12, 32));//证件号码		否	32
@@ -312,10 +423,10 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
                 put("bankCardType", new ParamRule(ParamTypeEnum.STRING.getType(), 1, 1));//卡号类型	1借记卡  2信用卡	否	1
                 put("bankCardNum", new ParamRule(ParamTypeEnum.STRING.getType(), 12, 32));//银行卡号		否	32
                 put("bankCardPhone", new ParamRule(ParamTypeEnum.PHONE.getType(), 11, 11));//银行卡手机号		否	11
-                put("terminalMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id	商户系统中商户的编码，要求唯一	否	64
-                put("terminalMerName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));//子商户名称	商户系统中商户的名称	否	32
-                put("returnUrl", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 128));//签名字符串
-                put("noticeUrl", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 128));//签名字符串
+                put("terMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id	商户系统中商户的编码，要求唯一	否	64
+                put("terMerName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));//子商户名称	商户系统中商户的名称	否	32
+                put("returnUrl", new ParamRule(ParamTypeEnum.URL.getType(), 16, 128));//签名字符串
+                put("noticeUrl", new ParamRule(ParamTypeEnum.URL.getType(), 16, 128));//签名字符串
                 put("signMsg", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 256));//签名字符串
             }
         };
@@ -328,7 +439,6 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
                 put("charset", new ParamRule(ParamTypeEnum.STRING.getType(), 5, 5));//参数字符集编码 固定UTF-8
                 put("signType", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 3));//签名类型	固定为MD5
                 put("merId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));//商户号
-                put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 商户订单号
                 put("platformOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 平台流水号
                 put("cardHolderName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));// 持卡人姓名
                 put("identityType", new ParamRule(ParamTypeEnum.STRING.getType(), 1, 1));//证件类型	1身份证、2护照、3港澳回乡证、4台胞证、5军官证、	否	1
@@ -339,8 +449,8 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
                 put("bankCardPhone", new ParamRule(ParamTypeEnum.PHONE.getType(), 11, 11));//银行卡手机号		否	11
                 put("terminalMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id	商户系统中商户的编码，要求唯一	否	64
                 put("terminalMerName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));//子商户名称	商户系统中商户的名称	否	32
-                put("returnUrl", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 128));//签名字符串
-                put("noticeUrl", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 128));//签名字符串
+                put("returnUrl", new ParamRule(ParamTypeEnum.URL.getType(), 16, 128));//签名字符串
+                put("noticeUrl", new ParamRule(ParamTypeEnum.URL.getType(), 16, 128));//签名字符串
                 put("signMsg", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 256));//签名字符串
             }
         };
@@ -353,7 +463,6 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
                 put("charset", new ParamRule(ParamTypeEnum.STRING.getType(), 5, 5));//参数字符集编码 固定UTF-8
                 put("signType", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 3));//签名类型	固定为MD5
                 put("merId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));//商户号
-                put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 商户订单号
                 put("platformOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 平台流水号
                 put("cardHolderName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));// 持卡人姓名
                 put("identityType", new ParamRule(ParamTypeEnum.STRING.getType(), 1, 1));//证件类型	1身份证、2护照、3港澳回乡证、4台胞证、5军官证、	否	1
@@ -362,10 +471,10 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
                 put("bankCardType", new ParamRule(ParamTypeEnum.STRING.getType(), 1, 1));//卡号类型	1借记卡  2信用卡	否	1
                 put("bankCardNum", new ParamRule(ParamTypeEnum.STRING.getType(), 12, 32));//银行卡号		否	32
                 put("bankCardPhone", new ParamRule(ParamTypeEnum.PHONE.getType(), 11, 11));//银行卡手机号		否	11
-                put("terminalMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id	商户系统中商户的编码，要求唯一	否	64
-                put("terminalMerName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));//子商户名称	商户系统中商户的名称	否	32
-                put("returnUrl", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 128));//返回地址
-                put("noticeUrl", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 128));//通知地址
+                put("terMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id	商户系统中商户的编码，要求唯一	否	64
+                put("terMerName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));//子商户名称	商户系统中商户的名称	否	32
+                put("returnUrl", new ParamRule(ParamTypeEnum.URL.getType(), 16, 128));//返回地址
+                put("noticeUrl", new ParamRule(ParamTypeEnum.URL.getType(), 16, 128));//通知地址
                 put("signMsg", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 256));//签名字符串
                 put("smsCode", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 6));//短信验证码
                 put("payFee", new ParamRule(ParamTypeEnum.AMOUNT.getType(), 3, 6));//代付手续费

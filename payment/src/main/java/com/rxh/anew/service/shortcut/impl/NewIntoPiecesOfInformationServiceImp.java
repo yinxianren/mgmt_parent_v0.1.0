@@ -57,13 +57,14 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
         return  list;
     }
 
+
     @Override
     public LinkedList<ChannelInfoTable> filtrationChannelInfoBySuccessRegisterCollect(Set<ChannelInfoTable> channelInfoTableSet, List<RegisterCollectTable> registerCollectTableList, InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="filtrationChannelInfoBySuccessRegisterCollect";
         LinkedList<ChannelInfoTable>  channelInfoTableLinkedList = new LinkedList<>(channelInfoTableSet);
         channelInfoTableSet.forEach(channel->{
             registerCollectTableList.forEach(regCollect->{
-                if(channel.getChannelId().equalsIgnoreCase(regCollect.getChannelId()))
+                if(channel.getOrganizationId().equalsIgnoreCase(regCollect.getOrganizationId()))
                     channelInfoTableLinkedList.remove(channel);
             });
         });
