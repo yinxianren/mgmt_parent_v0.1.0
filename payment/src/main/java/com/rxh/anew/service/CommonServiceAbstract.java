@@ -127,7 +127,18 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
         final String localPoint="doPostJson(RequestCrossMsgDTO requestCrossMsgDTO, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo)";
         String result = null;
         try {
-            result = HttpClientUtils.doPostJson(HttpClientUtils.getHttpsClient(), channelInfoTable.getRequestUrl(), JsonUtils.objectToJsonNonNull(requestCrossMsgDTO));
+//            result = HttpClientUtils.doPostJson(HttpClientUtils.getHttpsClient(), channelInfoTable.getRequestUrl(), JsonUtils.objectToJsonNonNull(requestCrossMsgDTO));
+            //测试模块
+            {
+                CrossResponseMsgDTO crm = new CrossResponseMsgDTO();
+                crm.setCrossStatusCode(StatusEnum._0.getStatus());
+                crm.setCrossResponseMsg(StatusEnum._0.getRemark());
+                crm.setChannelOrderId("ORDER_ID-"+System.currentTimeMillis());
+                crm.setChannelStatusCode("S0000000");
+                crm.setChannelResponseTime(new Date());
+                crm.setChannelResponseMsg(StatusEnum._0.getRemark());
+                result = JSON.toJSONString(crm);
+            }
         }catch (Exception e){
             e.printStackTrace();
             throw new NewPayException(

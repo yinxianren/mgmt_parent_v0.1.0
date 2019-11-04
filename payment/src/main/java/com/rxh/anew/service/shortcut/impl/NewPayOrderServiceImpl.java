@@ -1219,7 +1219,8 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
             agentSingleFree = (null == agentSingleFree ? new BigDecimal(0) : agentSingleFree );
             agentMerFree = amount.multiply(agentMerRate.divide(new BigDecimal(100))).add(agentSingleFree).setScale(2, BigDecimal.ROUND_UP);
 
-            state( (merAddChanFree.add(agentMerFree)).compareTo(terFee) == 1,
+            BigDecimal threeTotalFee = merAddChanFree.add(agentMerFree);
+            state( threeTotalFee.compareTo(terFee) == 1,
                     ResponseCodeEnum.RXH00044.getCode(),
                     format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;错误问题：通道费用（%s）+商户费用(%s)+代理商费用（%s）>终端费用（%s）",
                             ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00044.getMsg(),localPoint,
@@ -1232,7 +1233,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
         BigDecimal platformIncome = merFree.subtract(channelFeeAmount).subtract(agentMerFree);
         state( platformIncome.compareTo(new BigDecimal(0)) == -1,
                 ResponseCodeEnum.RXH00044.getCode(),
-                format("%s-->商户号：%s；终端号：%s；错误信息: %s ； 平台利润为负（%s）=商户费用（%s）-通道费用（%s）-代理商费用（%s）",
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s; 平台利润为负（%s）=商户费用（%s）-通道费用（%s）-代理商费用（%s）",
                         ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00044.getMsg(),localPoint,
                         platformIncome, merFree,channelFeeAmount,agentMerFree),
                 format(" %s",ResponseCodeEnum.RXH00044.getMsg()));
