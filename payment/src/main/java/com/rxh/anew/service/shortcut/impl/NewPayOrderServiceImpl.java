@@ -94,8 +94,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
                 put("charset", new ParamRule(ParamTypeEnum.STRING.getType(), 5, 5));//参数字符集编码 固定UTF-8
                 put("signType", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 3));//签名类型	固定为MD5
                 put("merId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));//商户号
-                put("terminalMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id	商户系统中商户的编码，要求唯一	否	64
-                put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 商户订单号
+                put("terMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id	商户系统中商户的编码，要求唯一	否	64
                 put("platformOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 平台流水号
                 put("signMsg", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 256));//签名字符串
             }
@@ -109,8 +108,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
                 put("charset", new ParamRule(ParamTypeEnum.STRING.getType(), 5, 5));//参数字符集编码 固定UTF-8
                 put("signType", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 3));//签名类型	固定为MD5
                 put("merId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));//商户号
-                put("terminalMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id	商户系统中商户的编码，要求唯一	否	64
-                put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 商户订单号
+                put("terMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id	商户系统中商户的编码，要求唯一	否	64
                 put("smsCode", new ParamRule(ParamTypeEnum.STRING.getType(), 4, 16));// 短信验证码
                 put("platformOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 平台流水号
                 put("signMsg", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 256));//签名字符串
@@ -1104,6 +1102,35 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
                 format(" %s",ResponseCodeEnum.RXH99996.getMsg()));
         return null;
     }
+
+    @Override
+    public PayOrderInfoTable updateByPayOrderInfoByBefore(PayOrderInfoTable payOrderInfoTable, String busiType, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="updateByPayOrderInfoByBefore";
+        payOrderInfoTable.setBussType(busiType)
+                .setStatus(StatusEnum._3.getStatus());
+        try {
+            commonRPCComponent.apiPayOrderInfoService.updateByPrimaryKey(payOrderInfoTable);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：申请支付时，更新订单时发生异常,异常信息：%s",
+                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }
+        return  payOrderInfoTable;
+    }
+
+    @Override
+    public MerPayOrderApplyDTO getMerPayOrderApplyDTO(PayOrderInfoTable payOrderInfoTable) {
+        MerPayOrderApplyDTO mpoa= new MerPayOrderApplyDTO();
+        mpoa.setProductType(payOrderInfoTable.getProductId());
+        mpoa.setTerMerId(payOrderInfoTable.getTerminalMerId());
+        mpoa.setMerId(payOrderInfoTable.getMerchantId());
+        return mpoa;
+    }
+
     @Override
     public PayOrderInfoTable savePayOrder(MerchantInfoTable merInfoTable, MerPayOrderApplyDTO merPayOrderApplyDTO, ChannelInfoTable channelInfoTable, RegisterCollectTable registerCollectTable, MerchantCardTable merchantCardTable, InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="savePayOrder";

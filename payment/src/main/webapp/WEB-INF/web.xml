@@ -14,7 +14,6 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath:/spring/applicationContext-*.xml</param-value>
     </context-param>
-    
     <!--解决post乱码-->
     <filter>
         <filter-name>CharacterEncodingFilter</filter-name>

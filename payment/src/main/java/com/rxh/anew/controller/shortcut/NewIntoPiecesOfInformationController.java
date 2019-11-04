@@ -81,7 +81,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //获取必要参数
             Map<String, ParamRule> paramRuleMap =newIntoPiecesOfInformationService.getParamMapByB1();
             //参数校验
-            this.verify(paramRuleMap,mbirDTO, MerBasicInfoRegDTO.class,ipo);
+            this.verify(paramRuleMap,mbirDTO,ipo);
             //验证签名
             md5Component.checkMd5(sotTable.getRequestMsg(),merInfoTable.getSecretKey(),ipo);
             //查看是否重复订单
@@ -175,7 +175,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //验证是否重复操作
             newIntoPiecesOfInformationService.checkRepetitionOperation(registerCollectTable,BusinessTypeEnum.b2.getBusiType(),ipo);
             //参数校验
-            this.verify(paramRuleMap,mbcbDTO,MerBankCardBindDTO.class,ipo);
+            this.verify(paramRuleMap,mbcbDTO,ipo);
             //验证签名
             md5Component.checkMd5(sotTable.getRequestMsg(),merInfoTable.getSecretKey(),ipo);
             //更新RegisterCollectTable并保存
@@ -257,7 +257,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //验证是否重复操作
             newIntoPiecesOfInformationService.checkRepetitionOperation(registerCollectTable,BusinessTypeEnum.b3.getBusiType(),ipo);
             //参数校验
-            this.verify(paramRuleMap,msDTO,MerServiceFulfillDTO.class,ipo);
+            this.verify(paramRuleMap,msDTO,ipo);
             //验证签名
             md5Component.checkMd5(sotTable.getRequestMsg(),merInfoTable.getSecretKey(),ipo);
             //更新进件附属表信息

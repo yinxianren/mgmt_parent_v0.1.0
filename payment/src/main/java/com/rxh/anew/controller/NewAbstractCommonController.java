@@ -72,18 +72,17 @@ public abstract class NewAbstractCommonController implements NewPayAssert, PayUt
      *   验证必要参数
      * @param mustParamMap
      * @param obj
-     * @param clazz
      * @param ipo
      * @throws Exception
      */
-    protected  void verify(Map<String, ParamRule> mustParamMap, Object obj, Class clazz, InnerPrintLogObject ipo) throws Exception {
+    protected  void verify(Map<String, ParamRule> mustParamMap, Object obj, InnerPrintLogObject ipo) throws Exception {
         Set<String> mustParamList = mustParamMap.keySet();
-        Field[] fields = clazz.getDeclaredFields();
+        Field[] fields = obj.getClass().getDeclaredFields();
         for(int i=0; i<fields.length;i++){
             fields[i].setAccessible(true);
             String fieldName = fields[i].getName();
             if(mustParamList.contains(fieldName)){
-                Class clz =  fields[i].getType();//获取参数类型
+//                Class clz =  fields[i].getType();//获取参数类型
                 String value = (String) fields[i].get(obj);//获取参数值
                 isBlank(value,//为空则是缺少必要值
                         ResponseCodeEnum.RXH00014.getCode(),

@@ -6,21 +6,18 @@
     <!-- 创建ActiveMQ连接 -->
     <bean id="jmsFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
         <property name="brokerURL" value="${activeMq.brokerURL}"/>
-        <!--<property name="trustedPackages">
-            <list>
-                <value>com.rxh.pojo.payment.MerchantNotify</value>
-            </list>
-        </property>-->
         <!-- 信任所有ObjectMessage通知类型 -->
         <property name="trustAllPackages" value="true"/>
     </bean>
+
     <!-- 订阅 -->
     <bean id="activeMQTopic" class="org.apache.activemq.command.ActiveMQTopic">
         <constructor-arg value="cacheRefreshActiveMQ"/>
     </bean>
+
     <!-- 点对点 -->
     <bean id="activeMQQueue" class="org.apache.activemq.command.ActiveMQQueue">
-        <constructor-arg value="merchantNotify,orderNotify,getOrdeyNotify,transWallet,queryPayOrder,queryTransOrder,payOderMsg,transOderMsg"/>
+        <constructor-arg value="payOderMsg,transOderMsg"/>
     </bean>
 
     <!-- 点对点消息发布模板 -->
@@ -45,20 +42,10 @@
         <property name="deliveryMode" value="2"/>
     </bean>
 
-    <!-- 订阅消息发布模板 -->
-    <!--<bean id="topicJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
-        <property name="connectionFactory" ref="jmsFactory"/>
-        <property name="defaultDestination" ref="activeMQTopic"/>
-    </bean>-->
-
-    <!-- 消息监听对象 -->
-    <bean id="messageListener" class="com.rxh.activeMQ.ConsumerMessageListener" init-method="initAllCache"/>
-
     <!-- 使用Spring监听订阅消息 -->
     <bean id="topicListener" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
         <property name="connectionFactory" ref="jmsFactory"/>
         <property name="destination" ref="activeMQTopic"/>
-        <property name="messageListener" ref="messageListener"/>
         <property name="pubSubDomain" value="true"/>
     </bean>
 
@@ -66,6 +53,5 @@
     <bean id="queueListener" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
         <property name="connectionFactory" ref="jmsFactory"/>
         <property name="destination" ref="activeMQQueue"/>
-        <property name="messageListener" ref="messageListener"/>
     </bean>
 </beans>

@@ -305,4 +305,20 @@ public interface NewPayOrderService extends CommonSerivceInterface {
      * @return
      */
     OrganizationInfoTable getOrganizationInfo(String organizationId, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param payOrderInfoTable
+     * @param busiType
+     * @param ipo
+     * @return
+     */
+    PayOrderInfoTable updateByPayOrderInfoByBefore(PayOrderInfoTable payOrderInfoTable, String busiType, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param payOrderInfoTable
+     * @return
+     */
+    MerPayOrderApplyDTO getMerPayOrderApplyDTO(PayOrderInfoTable payOrderInfoTable);
 }

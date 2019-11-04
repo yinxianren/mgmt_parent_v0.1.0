@@ -1,9 +1,6 @@
 package com.rxh.anew;
 
 import com.rxh.tuple.Tuple2;
-import org.apache.poi.ss.formula.functions.T;
-import redis.clients.jedis.Tuple;
-import sun.misc.Cleaner;
 
 import java.util.Map;
 import java.util.Set;

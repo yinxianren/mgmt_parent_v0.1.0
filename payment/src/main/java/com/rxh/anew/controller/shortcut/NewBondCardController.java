@@ -80,7 +80,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             //获取必要参数
             Map<String, ParamRule> paramRuleMap = newBondCardService.getParamMapByB4();
             //参数校验
-            this.verify(paramRuleMap,mbcaDTO, MerBondCardApplyDTO.class,ipo);
+            this.verify(paramRuleMap,mbcaDTO,ipo);
             //验证签名
             md5Component.checkMd5(sotTable.getRequestMsg(),merInfoTable.getSecretKey(),ipo);
             //查看是否重复订单
@@ -169,7 +169,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             //获取必要参数
             Map<String, ParamRule> paramRuleMap = newBondCardService.getParamMapByB5();
             //参数校验
-            this.verify(paramRuleMap,mrgbcDTO, MerReGetBondCodeDTO.class,ipo);
+            this.verify(paramRuleMap,mrgbcDTO,ipo);
             //验证签名
             md5Component.checkMd5(sotTable.getRequestMsg(),merInfoTable.getSecretKey(),ipo);
             //根据平台订单号获取B4操作记录
@@ -257,7 +257,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             //获取必要参数
             Map<String, ParamRule> paramRuleMap = newBondCardService.getParamMapByB6();
             //参数校验
-            this.verify(paramRuleMap,mcbcDTO, MerConfirmBondCardDTO.class,ipo);
+            this.verify(paramRuleMap,mcbcDTO, ipo);
             //验证签名
             md5Component.checkMd5(sotTable.getRequestMsg(),merInfoTable.getSecretKey(),ipo);
             //获取进件成功的附属表

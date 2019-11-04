@@ -2,24 +2,20 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:cache="http://www.springframework.org/schema/cache" xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!-- 注解扫描非Controller注解 -->
-    <context:component-scan base-package="com.rxh">
+    <context:component-scan base-package="com.rxh.anew">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
     <context:annotation-config/>
-
-    <!-- 缓存注解驱动 -->
-<!--    <cache:annotation-driven/>-->
-<!--    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">-->
-<!--        <property name="cacheManager" ref="ehCacheManagerFactoryBean"/>-->
-<!--    </bean>-->
-<!--    <bean id="ehCacheManagerFactoryBean" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">-->
-<!--        <property name="configLocation" value="classpath:/ehcache/ehcache.xml"/>-->
-<!--    </bean>-->
 
     <!-- 全局配置信息对象 -->
     <bean id="globalConfiguration" class="com.rxh.utils.GlobalConfiguration">
@@ -28,15 +24,14 @@
     </bean>
 
     <!-- RSA加密 -->
-    <bean id="rsaUtils" class="com.rxh.utils.RSAUtils">
+    <bean id="rsaUtils" class="com.rxh.anew.tools.RSAUtils">
         <constructor-arg name="publicKeyPath" value="${rsa.key.path.public}"/>
         <constructor-arg name="privateKeyPath" value="${rsa.key.path.private}"/>
         <constructor-arg name="globalConfiguration" ref="globalConfiguration"/>
     </bean>
 
     <!-- 可通过SpringContextUtil获取Spring容器中的任何bean -->
-    <bean id="springContextUtil" class="com.rxh.utils.SpringContextUtil" scope="singleton" />
-
+    <bean id="springContextUtil" class="com.rxh.anew.tools.SpringContextUtil" scope="singleton" />
 
     <!-- 多语言资源获取 -->
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
@@ -48,16 +43,7 @@
                 <value>i18.error</value>
             </list>
         </property>
-        <!-- 刷新资源文件周期 -->
-        <!--<property name="cacheSeconds" value="3600"/>-->
     </bean>
-
-    <!--<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-        <property name="corePoolSize" value="8" />
-        <property name="keepAliveSeconds" value="120" />
-        <property name="maxPoolSize" value="32" />
-        <property name="queueCapacity" value="64" />
-    </bean>-->
 
     <!-- 对@Aspectj注解支持 -->
     <aop:aspectj-autoproxy proxy-target-class="true"/>
