@@ -21,6 +21,7 @@ import com.rxh.enums.StatusEnum;
 import com.rxh.exception.NewPayException;
 import com.rxh.tuple.Tuple5;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +39,7 @@ import java.util.Map;
  * Time: 下午9:51
  * Description:
  */
+@Slf4j
 @AllArgsConstructor
 @RestController
 @RequestMapping("/shortcut")
@@ -109,7 +111,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             //更新进件信息
             newBondCardService.updateByBondCardInfo(crossResponseMsgDTO,crossResponseMsg,merchantCardTable,ipo);
             //封装放回结果
-            respResult = newBondCardService.responseMsg(mbcaDTO.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,null,null,ipo);
+            respResult = newBondCardService.responseMsg(mbcaDTO.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,null,null,ipo);
             sotTable.setPlatformPrintLog(  null == crossResponseMsgDTO ? crossResponseMsg : StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()))
                     .setTradeCode( null == crossResponseMsgDTO ? StatusEnum._1.getStatus(): crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
@@ -118,6 +120,7 @@ public class NewBondCardController extends NewAbstractCommonController {
                 errorMsg = npe.getResponseMsg();
                 printErrorMsg = npe.getInnerPrintMsg();
                 errorCode = npe.getCode();
+                log.info(printErrorMsg);
             }else{
                 e.printStackTrace();
                 errorMsg = ResponseCodeEnum.RXH99999.getMsg();
@@ -126,7 +129,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             }
             if( !isNull(merchantCardTable) )
                 newBondCardService.updateByBondCardInfo(crossResponseMsgDTO,crossResponseMsg,merchantCardTable,ipo);
-            respResult = newBondCardService.responseMsg(null != mbcaDTO ? mbcaDTO.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,errorCode,errorMsg,ipo);
+            respResult = newBondCardService.responseMsg(null != mbcaDTO ? mbcaDTO.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,errorCode,errorMsg,ipo);
             sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
         }finally {
             sotTable.setResponseResult(respResult).setCreateTime(new Date());
@@ -192,7 +195,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             //更新进件信息
             newBondCardService.updateByBondCardInfo(crossResponseMsgDTO,crossResponseMsg,merchantCardTable,ipo);
             //封装放回结果
-            respResult = newBondCardService.responseMsg(merchantCardTable.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,null,null,ipo);
+            respResult = newBondCardService.responseMsg(merchantCardTable.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,null,null,ipo);
             sotTable.setPlatformPrintLog(  null == crossResponseMsgDTO ? crossResponseMsg : StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()))
                     .setTradeCode( null == crossResponseMsgDTO ? StatusEnum._1.getStatus(): crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
@@ -201,6 +204,7 @@ public class NewBondCardController extends NewAbstractCommonController {
                 errorMsg = npe.getResponseMsg();
                 printErrorMsg = npe.getInnerPrintMsg();
                 errorCode = npe.getCode();
+                log.info(printErrorMsg);
             }else{
                 e.printStackTrace();
                 errorMsg = ResponseCodeEnum.RXH99999.getMsg();
@@ -209,7 +213,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             }
             if( !isNull(merchantCardTable) &&  merchantCardTable.getBussType().equalsIgnoreCase(BusinessTypeEnum.b5.getBusiType()))
                 newBondCardService.updateByBondCardInfo(crossResponseMsgDTO,crossResponseMsg,merchantCardTable,ipo);
-            respResult = newBondCardService.responseMsg(null != merchantCardTable ? merchantCardTable.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,errorCode,errorMsg,ipo);
+            respResult = newBondCardService.responseMsg(null != merchantCardTable ? merchantCardTable.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,errorCode,errorMsg,ipo);
             sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
         }finally {
             sotTable.setResponseResult(respResult).setCreateTime(new Date());
@@ -276,7 +280,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             //更新进件信息
             newBondCardService.updateByBondCardInfo(crossResponseMsgDTO,crossResponseMsg,merchantCardTable,ipo);
             //封装放回结果
-            respResult = newBondCardService.responseMsg(merchantCardTable.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,null,null,ipo);
+            respResult = newBondCardService.responseMsg(merchantCardTable.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,null,null,ipo);
             sotTable.setPlatformPrintLog(  null == crossResponseMsgDTO ? crossResponseMsg : StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()))
                     .setTradeCode( null == crossResponseMsgDTO ? StatusEnum._1.getStatus(): crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
@@ -285,6 +289,7 @@ public class NewBondCardController extends NewAbstractCommonController {
                 errorMsg = npe.getResponseMsg();
                 printErrorMsg = npe.getInnerPrintMsg();
                 errorCode = npe.getCode();
+                log.info(printErrorMsg);
             }else{
                 e.printStackTrace();
                 errorMsg = ResponseCodeEnum.RXH99999.getMsg();
@@ -293,7 +298,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             }
             if( !isNull(merchantCardTable) &&  merchantCardTable.getBussType().equalsIgnoreCase(BusinessTypeEnum.b6.getBusiType()))
                 newBondCardService.updateByBondCardInfo(crossResponseMsgDTO,crossResponseMsg,merchantCardTable,ipo);
-            respResult = newBondCardService.responseMsg(null != merchantCardTable ? merchantCardTable.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,errorCode,errorMsg,ipo);
+            respResult = newBondCardService.responseMsg(null != merchantCardTable ? merchantCardTable.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,errorCode,errorMsg,ipo);
             sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
         }finally {
             sotTable.setResponseResult(respResult).setCreateTime(new Date());

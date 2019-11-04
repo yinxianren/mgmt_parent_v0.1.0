@@ -36,9 +36,12 @@
     <dubbo:service interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsWalletService"      ref="apiTerminalMerchantsWalletServiceImpl"/>
     <dubbo:service interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsDetailsService"     ref="apiTerminalMerchantsDetailsServiceImpl"/>
     <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelDetailsService"      ref="apiChannelDetailsServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelWalletService"      ref="apiChannelWalletServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelWalletService"       ref="apiChannelWalletServiceImpl"/>
     <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantsDetailsService"      ref="apiAgentMerchantsDetailsServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantWalletService"      ref="apiAgentMerchantWalletServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantWalletService"        ref="apiAgentMerchantWalletServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.anew.system.ApiBankRateService"        ref="apiBankRateServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.anew.system.ApiBankCodeService"        ref="apiBankCodeServiceImpl"/>
+
 
 
 

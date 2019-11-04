@@ -1,5 +1,7 @@
 package com.rxh.anew.table.system;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import java.io.Serializable;
@@ -14,7 +16,7 @@ import java.util.Date;
 @TableName ( "1_bank_code_table" )
 @Data
 public class BankCodeTable  implements Serializable {
-   
+	@TableId(type= IdType.AUTO)
 	private Long id;//表主键
 	private String bankCode;//银行编码
 	private String bankShortName;//银行名简称

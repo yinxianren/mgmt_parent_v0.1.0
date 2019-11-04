@@ -12,6 +12,8 @@ import com.rxh.anew.table.channel.ChannelHistoryTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.merchant.MerchantQuotaRiskTable;
+import com.rxh.anew.table.system.MerchantSettingTable;
+import com.rxh.anew.table.system.OrganizationInfoTable;
 import com.rxh.anew.table.system.RiskQuotaTable;
 import com.rxh.exception.NewPayException;
 import com.rxh.tuple.Tuple2;
@@ -195,4 +197,112 @@ public interface NewPayOrderService extends CommonSerivceInterface {
      * @return
      */
     PayOrderInfoTable getPayOrderInfoByPlatformOrderId(String platformOrderId, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param merchantCardTableList
+     * @param merPayOrderApplyDTO
+     * @param ipo
+     * @return
+     */
+    List<MerchantCardTable> filterMerCardByPaymentMsg(List<MerchantCardTable> merchantCardTableList, MerPayOrderApplyDTO merPayOrderApplyDTO, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param registerCollectTableList
+     * @param merchantCardTableList
+     * @param ipo
+     * @return
+     */
+    List<RegisterCollectTable> filterRegCollectInfoByMerCard(List<RegisterCollectTable> registerCollectTableList, List<MerchantCardTable> merchantCardTableList, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param registerCollectTableList
+     * @param merPayOrderApplyDTO
+     * @param ipo
+     * @return
+     */
+    List<ChannelInfoTable> getAllUsableChannelList(List<RegisterCollectTable> registerCollectTableList, MerPayOrderApplyDTO merPayOrderApplyDTO, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param channelInfoTable
+     * @param registerCollectTableList
+     * @param ipo
+     * @return
+     */
+    RegisterCollectTable finallyFilterRegCollect(ChannelInfoTable channelInfoTable, List<RegisterCollectTable> registerCollectTableList, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param merchantCardTableList
+     * @param merPayOrderApplyDTO
+     * @param ipo
+     * @return
+     */
+    MerchantCardTable finallyFilterMerCard(List<MerchantCardTable> merchantCardTableList, MerPayOrderApplyDTO merPayOrderApplyDTO, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param channelInfoTable
+     * @param ipo
+     * @return
+     */
+    RegisterCollectTable getSuccessRegInfoByChanInfo(ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param channelInfoTable
+     * @param registerCollectTable
+     * @param ipo
+     * @return
+     */
+    MerchantCardTable getMerCardByChanAndReg(ChannelInfoTable channelInfoTable, RegisterCollectTable registerCollectTable, MerPayOrderApplyDTO merPayOrderApplyDTO, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param registerCollectTableList
+     * @param merchantSettingTableList
+     * @param ipo
+     * @return
+     */
+    List<RegisterCollectTable> filterRegCollectByMerSet(List<RegisterCollectTable> registerCollectTableList, List<MerchantSettingTable> merchantSettingTableList, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param channelInfoTableList
+     * @param channelInfoTable
+     * @param ipo
+     * @return
+     */
+    List<ChannelInfoTable> subtractUnableChanInfo(List<ChannelInfoTable> channelInfoTableList, ChannelInfoTable channelInfoTable, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param channelInfoTable
+     * @param merchantSettingTableList
+     * @return
+     */
+    ChannelInfoTable judgeThisChannelUsable(ChannelInfoTable channelInfoTable, List<MerchantSettingTable> merchantSettingTableList);
+
+    /**
+     *
+     * @param merInfoTable
+     * @param merPayOrderApplyDTO
+     * @param channelInfoTable
+     * @param registerCollectTable
+     * @param merchantCardTable
+     * @param ipo
+     * @return
+     */
+    PayOrderInfoTable savePayOrder(MerchantInfoTable merInfoTable, MerPayOrderApplyDTO merPayOrderApplyDTO, ChannelInfoTable channelInfoTable, RegisterCollectTable registerCollectTable, MerchantCardTable merchantCardTable, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param organizationId
+     * @param ipo
+     * @return
+     */
+    OrganizationInfoTable getOrganizationInfo(String organizationId, InnerPrintLogObject ipo) throws NewPayException;
 }

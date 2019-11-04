@@ -7,7 +7,6 @@ import com.rxh.payInterface.NewPayAssert;
 import com.rxh.service.OrganizationInfoService;
 import com.rxh.service.anew.channel.ApiProductTypeSettingService;
 import com.rxh.service.anew.system.ApiOrganizationInfoService;
-import com.rxh.square.pojo.OrganizationInfo;
 import com.rxh.vo.ResponseVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +60,7 @@ public class OrganizationInfoServiceImpl implements OrganizationInfoService, New
 
     @Override
     public ResponseVO savaOrUpdate(OrganizationInfoTable organizationInfo) {
-        Boolean b = apiOrganizationInfoService.savaOrUpdate(organizationInfo);
+        Boolean b = apiOrganizationInfoService.saveOrUpdate(organizationInfo);
         ProductSettingTable table = new ProductSettingTable();
         table.setOrganizationId(organizationInfo.getOrganizationId());
         List<ProductSettingTable> list = apiProductTypeSettingService.list(table);

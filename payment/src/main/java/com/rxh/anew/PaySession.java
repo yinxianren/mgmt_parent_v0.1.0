@@ -46,7 +46,7 @@ public class PaySession {
         long t1 = System.currentTimeMillis();
         for(String key : keySet){
             Tuple2<Long,Object> tuple2 = session.get(key);
-            long t2 = t1 - tuple2._;
+            long t2 = t1 - tuple2._1;
             if( t2 >= t0 ){
                 session.remove(key);
             }

@@ -23,6 +23,7 @@ import com.rxh.exception.NewPayException;
 import com.rxh.tuple.Tuple2;
 import com.rxh.tuple.Tuple4;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +39,7 @@ import java.util.*;
  * Time: 下午2:40
  * Description:
  */
+@Slf4j
 @AllArgsConstructor
 @RestController
 @RequestMapping("/shortcut")
@@ -102,7 +104,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             tuple = newIntoPiecesOfInformationService.saveByRegister(mbirDTO,channelInfoTable,ipo);
             sotTable.setPlatformOrderId(tuple._2.getPlatformOrderId());
             //封装请求cross必要参数
-            requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,extraInfoTable,tuple._,tuple._2));
+            requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,extraInfoTable,tuple._1,tuple._2));
             //请求cross请求
             crossResponseMsg = newIntoPiecesOfInformationService.doPostJson(requestCrossMsgDTO,extraInfoTable,ipo);
             //将请求结果转为对象
@@ -110,7 +112,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //更新进件信息
             newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsg,tuple._2,ipo);
             //封装放回结果
-            respResult = newIntoPiecesOfInformationService.responseMsg(mbirDTO.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,null,null,ipo);
+            respResult = newIntoPiecesOfInformationService.responseMsg(mbirDTO.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,null,null,ipo);
             sotTable.setPlatformPrintLog(  null == crossResponseMsgDTO ? crossResponseMsg : StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()))
                     .setTradeCode( null == crossResponseMsgDTO ? StatusEnum._1.getStatus(): crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
@@ -119,6 +121,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
                 errorMsg = npe.getResponseMsg();
                 printErrorMsg = npe.getInnerPrintMsg();
                 errorCode = npe.getCode();
+                log.info(printErrorMsg);
             }else{
                 e.printStackTrace();
                 errorMsg = ResponseCodeEnum.RXH99999.getMsg();
@@ -127,7 +130,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             }
             if(!isNull(tuple))
                 newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsg,tuple._2,ipo);
-            respResult = newIntoPiecesOfInformationService.responseMsg(null != mbirDTO ? mbirDTO.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,errorCode,errorMsg,ipo);
+            respResult = newIntoPiecesOfInformationService.responseMsg(null != mbirDTO ? mbirDTO.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,errorCode,errorMsg,ipo);
             sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
         }finally {
             sotTable.setResponseResult(respResult).setCreateTime(new Date());
@@ -183,7 +186,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //获取附属通道信息
             ChannelExtraInfoTable channelExtraInfoTable =  newIntoPiecesOfInformationService.getChannelExtraInfoByOrgId(channelInfoTable.getOrganizationId(), BussTypeEnum.ADDCUS.getBussType(),ipo);
             //封装请求cross必要参数
-            requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,channelExtraInfoTable,tuple2._,tuple2._2));
+            requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,channelExtraInfoTable,tuple2._1,tuple2._2));
             //请求cross请求
             crossResponseMsg = newIntoPiecesOfInformationService.doPostJson(requestCrossMsgDTO,channelExtraInfoTable,ipo);
             //将请求结果转为对象
@@ -191,7 +194,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //更新进件信息
             newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsg,tuple2._2,ipo);
             //封装放回结果
-            respResult = newIntoPiecesOfInformationService.responseMsg(registerCollectTable.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,null,null,ipo);
+            respResult = newIntoPiecesOfInformationService.responseMsg(registerCollectTable.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,null,null,ipo);
             sotTable.setPlatformPrintLog(  null == crossResponseMsgDTO ? crossResponseMsg : StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()))
                     .setTradeCode( null == crossResponseMsgDTO ? StatusEnum._1.getStatus(): crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
@@ -200,6 +203,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
                 errorMsg = npe.getResponseMsg();
                 printErrorMsg = npe.getInnerPrintMsg();
                 errorCode = npe.getCode();
+                log.info(printErrorMsg);
             }else{
                 e.printStackTrace();
                 errorMsg = ResponseCodeEnum.RXH99999.getMsg();
@@ -208,7 +212,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             }
             if(!isNull(tuple2) && tuple2._2.getBussType().equalsIgnoreCase(BusinessTypeEnum.b2.getBusiType()))
                 newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsg,tuple2._2,ipo);
-            respResult = newIntoPiecesOfInformationService.responseMsg(null != registerCollectTable ? registerCollectTable.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,errorCode,errorMsg,ipo);
+            respResult = newIntoPiecesOfInformationService.responseMsg(null != registerCollectTable ? registerCollectTable.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,errorCode,errorMsg,ipo);
             sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
         }finally {
             sotTable.setResponseResult(respResult).setCreateTime(new Date());
@@ -274,7 +278,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             //更新进件信息
             newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsg,registerCollectTable,ipo);
             //封装放回结果
-            respResult = newIntoPiecesOfInformationService.responseMsg(registerCollectTable.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,null,null,ipo);
+            respResult = newIntoPiecesOfInformationService.responseMsg(registerCollectTable.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,null,null,ipo);
             sotTable.setPlatformPrintLog(  null == crossResponseMsgDTO ? crossResponseMsg : StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()))
                     .setTradeCode( null == crossResponseMsgDTO ? StatusEnum._1.getStatus(): crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
@@ -283,6 +287,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
                 errorMsg = npe.getResponseMsg();
                 printErrorMsg = npe.getInnerPrintMsg();
                 errorCode = npe.getCode();
+                log.info(printErrorMsg);
             }else{
                 e.printStackTrace();
                 errorMsg = ResponseCodeEnum.RXH99999.getMsg();
@@ -291,7 +296,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             }
             if(!isNull(registerCollectTable) && registerCollectTable.getBussType().equalsIgnoreCase(BusinessTypeEnum.b3.getBusiType()))
                 newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsg,registerCollectTable,ipo);
-            respResult = newIntoPiecesOfInformationService.responseMsg(null != registerCollectTable ? registerCollectTable.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,errorCode,errorMsg,ipo);
+            respResult = newIntoPiecesOfInformationService.responseMsg(null != registerCollectTable ? registerCollectTable.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,errorCode,errorMsg,ipo);
             sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
         }finally {
             sotTable.setResponseResult(respResult).setCreateTime(new Date());

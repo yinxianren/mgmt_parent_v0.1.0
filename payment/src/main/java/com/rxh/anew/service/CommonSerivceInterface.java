@@ -50,7 +50,15 @@ public interface CommonSerivceInterface {
      * @param errorMsg
      * @return
      */
-    String responseMsg(String merOrderId,MerchantInfoTable merInfoTable, RequestCrossMsgDTO  requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO,String errorCode,String errorMsg,InnerPrintLogObject ipo)  throws NewPayException, IllegalAccessException ;
+    String responseMsg(
+            String merOrderId,
+            MerchantInfoTable merInfoTable,
+            RequestCrossMsgDTO  requestCrossMsgDTO,
+            CrossResponseMsgDTO crossResponseMsgDTO,
+            String  amount,
+            String errorCode,
+            String errorMsg,
+            InnerPrintLogObject ipo)  throws NewPayException, IllegalAccessException ;
 
     /**
      *   请求cross

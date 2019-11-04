@@ -10,9 +10,7 @@ import com.rxh.service.anew.business.ApiRegisterCollectService;
 import com.rxh.service.anew.business.ApiRegisterInfoService;
 import com.rxh.service.anew.channel.*;
 import com.rxh.service.anew.merchant.*;
-import com.rxh.service.anew.system.ApiMerchantSettingService;
-import com.rxh.service.anew.system.ApiRiskQuotaService;
-import com.rxh.service.anew.system.ApiSystemOrderTrackService;
+import com.rxh.service.anew.system.*;
 import com.rxh.service.anew.terminal.ApiTerminalMerchantsDetailsService;
 import com.rxh.service.anew.terminal.ApiTerminalMerchantsWalletService;
 import com.rxh.service.anew.transaction.ApiPayOrderBusinessTransactionService;
@@ -55,4 +53,7 @@ public  class CommonRPCComponent {
     public final ApiChannelWalletService      apiChannelWalletService;
     public final ApiAgentMerchantWalletService   apiAgentMerchantWalletService;
     public final ApiAgentMerchantsDetailsService apiAgentMerchantsDetailsService;
+    public final ApiOrganizationInfoService    apiOrganizationInfoService;
+    public final ApiBankRateService apiBankRateService;
+    public final ApiBankCodeService apiBankCodeService;
 }

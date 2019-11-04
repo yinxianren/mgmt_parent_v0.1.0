@@ -6,10 +6,12 @@ import java.util.List;
 
 public interface ApiOrganizationInfoService {
 
-    public List<OrganizationInfoTable> getAll(OrganizationInfoTable organizationInfoTable);
+     List<OrganizationInfoTable> getAll(OrganizationInfoTable organizationInfoTable);
 
-    public Boolean savaOrUpdate(OrganizationInfoTable organizationInfoTable);
+     OrganizationInfoTable getOne(OrganizationInfoTable organizationInfoTable);
 
-    public Boolean remove(List<String> ids);
+     Boolean saveOrUpdate(OrganizationInfoTable organizationInfoTable);
+
+     Boolean remove(List<String> ids);
 
 }

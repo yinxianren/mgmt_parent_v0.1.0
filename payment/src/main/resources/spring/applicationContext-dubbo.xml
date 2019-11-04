@@ -32,8 +32,9 @@
     <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelWalletService"          id="apiChannelWalletService"/>
     <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantsDetailsService"    id="apiAgentMerchantsDetailsService"/>
     <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantWalletService"      id="apiAgentMerchantWalletService"/>
-
-
+    <dubbo:reference interface="com.rxh.service.anew.system.ApiBankRateService"                id="apiBankRateService"/>
+    <dubbo:reference interface="com.rxh.service.anew.system.ApiBankCodeService"                id="apiBankCodeService"/>
+    <dubbo:reference interface="com.rxh.service.anew.system.ApiOrganizationInfoService"        id="apiOrganizationInfoService"/>
 
     <!--  *****************************************************************************************************************  -->
     <!--四方支付服务接口  -->

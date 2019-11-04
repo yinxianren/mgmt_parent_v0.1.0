@@ -31,8 +31,8 @@ public class MerPayOrderApplyDTO implements Serializable {
     private String  validDate;//	有效期	信用卡必填，格式：MMYY
     private String  securityCode;//	安全码	信用卡必填，信用卡背面三位安全码
     private String  payFee;//	扣款手续费
-    private String  terminalMerId;//	子商户id
-    private String  terminalMerName;//	子商户名称	商户系统中商户的名称
+    private String  terMerId;//	子商户id
+    private String  terMerName;//	子商户名称	商户系统中商户的名称
     private String  province;//	省份	以地区对照表省市码为准，参照3.2地区对照表
     private String   city;//	城市	以地区对照表省市码为准，参照3.2地区对照表
     private String   returnUrl;//	返回地址

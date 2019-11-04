@@ -1,6 +1,7 @@
 package com.rxh.anew.table.channel;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -8,6 +9,7 @@ import lombok.Getter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
 
 @Getter
@@ -36,6 +38,14 @@ public class ChannelInfoTable implements Serializable {
     private Integer status;//状态 0：启用 ,1:禁用,
     private Date createTime ;//创建时间,
     private Date updateTime ;//更新时间,
+
+    @TableField(exist = false)
+    private Collection<String>  organizationIds;
+
+    public ChannelInfoTable setOrganizationIds(Collection<String> organizationIds) {
+        this.organizationIds = organizationIds;
+        return this;
+    }
 
     public ChannelInfoTable setId(Long id) {
         this.id = id;

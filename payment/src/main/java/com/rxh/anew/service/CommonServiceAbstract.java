@@ -221,7 +221,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
 
 
 
-    public String responseMsg(String merOrderId,MerchantInfoTable merInfoTable, RequestCrossMsgDTO  requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO,String errorCode,String errorMsg,InnerPrintLogObject ipo) throws NewPayException, IllegalAccessException {
+    public String responseMsg(String merOrderId,MerchantInfoTable merInfoTable, RequestCrossMsgDTO  requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO,String  amount,String errorCode,String errorMsg,InnerPrintLogObject ipo) throws NewPayException, IllegalAccessException {
         final String localPoint="responseMsg";
         String responseMsg = null;
         try {
@@ -231,6 +231,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
                     .setMsg( null != crossResponseMsgDTO ? StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()) : StatusEnum._1.getRemark())
                     .setMerOrderId( null != merOrderId ? merOrderId : null )
                     .setPlatformOrderId( null != requestCrossMsgDTO ? requestCrossMsgDTO.getRegisterCollectTable().getPlatformOrderId() : null)
+                    .setAmount(amount)
                     .setErrorCode(errorCode)
                     .setErrorMsg(errorMsg)
                     ;

@@ -403,7 +403,7 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
                 .setMerchantCardTable(tuple5._5)
                 .setChannelInfoTable(tuple5._3)
                 .setChannelExtraInfoTable(tuple5._4)
-                .setRegisterInfoTable(tuple5._)
+                .setRegisterInfoTable(tuple5._1)
                 .setRegisterCollectTable(tuple5._2);
     }
 

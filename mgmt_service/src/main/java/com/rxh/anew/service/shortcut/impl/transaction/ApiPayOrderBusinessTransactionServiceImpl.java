@@ -75,16 +75,16 @@ public class ApiPayOrderBusinessTransactionServiceImpl implements ApiPayOrderBus
             Tuple2<AgentMerchantWalletTable, AgentMerchantsDetailsTable> agentMerWalletTuple,
             PayOrderInfoTable poi) {
         //商户
-        merchantWalletDBService.saveOrUpdate(merWalletTuple._);
+        merchantWalletDBService.saveOrUpdate(merWalletTuple._1);
         merchantsDetailsDBService.save(merWalletTuple._2);
         //终端商户
-        terminalMerchantsWalletDBservice.saveOrUpdate(terMerWalletTuple._);
+        terminalMerchantsWalletDBservice.saveOrUpdate(terMerWalletTuple._1);
         terminalMerchantsDetailsDBService.save(terMerWalletTuple._2);
         //通道
-        channelWalletDbService.saveOrUpdate(chanWalletTuple._);
+        channelWalletDbService.saveOrUpdate(chanWalletTuple._1);
         channelDetailsDbService.save(chanWalletTuple._2);
         //终端商户
-        agentMerchantWalletDBService.saveOrUpdate(agentMerWalletTuple._);
+        agentMerchantWalletDBService.saveOrUpdate(agentMerWalletTuple._1);
         agentMerchantsDetailsDBService.save(agentMerWalletTuple._2);
         //更新订单
         payOrderInfoDBService.updateById(poi);

@@ -18,9 +18,15 @@ public class ResponseEntity  implements Serializable {
     private String platformOrderId;
     private Integer status;
     private String msg;
+    private String amount;
     private String signMsg;
     private String errorCode;
     private String errorMsg;
+
+    public ResponseEntity setAmount(String amount) {
+        this.amount = amount;
+        return this;
+    }
 
     public ResponseEntity setPlatformOrderId(String platformOrderId) {
         this.platformOrderId = platformOrderId;

@@ -37,6 +37,8 @@ public class PayOrderInfoTable implements Serializable {
     private Integer   deviceType;// 交易设备类型(1-电脑;2-手机;3-其他) 字符串类型,
     private String   macAddr;// MAC地址,
     private String  channelId;// 通道id,
+    private String  regPlatformOrderId;//进件B3的平台id  reg_platform_order_id
+    private String  cardPlatformOrderId;//办卡B6的平台id card_platform_order_id
     private String  bussType;//'b7:支付申请,b8:支付验证码,b9:确认交易
     private String  productId;// 产品类型ID,
     private BigDecimal productFee ;// 产品费率,
@@ -60,6 +62,16 @@ public class PayOrderInfoTable implements Serializable {
     private Date createTime;// 创建时间,
     private Date updateTime;// 更新时间,
 
+
+    public PayOrderInfoTable setRegPlatformOrderId(String regPlatformOrderId) {
+        this.regPlatformOrderId = regPlatformOrderId;
+        return this;
+    }
+
+    public PayOrderInfoTable setCardPlatformOrderId(String cardPlatformOrderId) {
+        this.cardPlatformOrderId = cardPlatformOrderId;
+        return this;
+    }
 
     public PayOrderInfoTable setId(Long id) {
         this.id = id;

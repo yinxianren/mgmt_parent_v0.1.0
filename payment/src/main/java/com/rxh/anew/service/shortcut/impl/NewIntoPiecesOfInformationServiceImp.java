@@ -196,7 +196,7 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
     public RequestCrossMsgDTO getRequestCrossMsgDTO(Tuple2 tuple) {
         Tuple4<ChannelInfoTable,ChannelExtraInfoTable, RegisterInfoTable,RegisterCollectTable> tuple4 = (Tuple4<ChannelInfoTable, ChannelExtraInfoTable,  RegisterInfoTable,RegisterCollectTable>) tuple;
         return new RequestCrossMsgDTO()
-                .setChannelInfoTable(tuple4._)
+                .setChannelInfoTable(tuple4._1)
                 .setChannelExtraInfoTable(tuple4._2)
                 .setRegisterInfoTable(tuple4._3)
                 .setRegisterCollectTable(tuple4._4);
