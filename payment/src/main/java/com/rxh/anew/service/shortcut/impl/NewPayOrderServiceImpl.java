@@ -743,20 +743,17 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
         final String localPoint="updateByPayOrderInfo";
         payOrderInfoTable.setCrossRespResult(crossResponseMsg)
                 .setChannelRespResult(crossResponseMsgDTO.getChannelResponseMsg())
-                .setStatus(StatusEnum._7.getStatus());
-        if( !crossResponseMsgDTO.getCrossStatusCode().equals(StatusEnum._0.getStatus()) ) { //非成功情况下
-            payOrderInfoTable.setStatus(crossResponseMsgDTO.getCrossStatusCode());
-            try {
-                commonRPCComponent.apiPayOrderInfoService.updateByPrimaryKey(payOrderInfoTable);
-            }catch (Exception e){
-                e.printStackTrace();
-                throw new NewPayException(
-                        ResponseCodeEnum.RXH99999.getCode(),
-                        format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：申请支付时，更新订单时发生异常,异常信息：%s",
-                                ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
-                        format(" %s", ResponseCodeEnum.RXH99999.getMsg())
-                );
-            }
+                .setStatus(crossResponseMsgDTO.getCrossStatusCode());
+        try {
+            commonRPCComponent.apiPayOrderInfoService.updateByPrimaryKey(payOrderInfoTable);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：申请支付时，更新订单时发生异常,异常信息：%s",
+                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
+            );
         }
         return  payOrderInfoTable;
     }
@@ -863,7 +860,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
     }
 
     @Override
-    public PayOrderInfoTable getPayOrderInfoByPlatformOrderId(String platformOrderId, InnerPrintLogObject ipo) throws NewPayException {
+    public PayOrderInfoTable getPayOrderInfoByPlatformOrderId(String platformOrderId, String bussType,InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="getPayOrderInfoByPlatformOrderId";
         PayOrderInfoTable payOrderInfoTable=null;
         try{
@@ -871,7 +868,8 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
                     .setPlatformOrderId(platformOrderId)
                     .setMerchantId(ipo.getMerId())
                     .setTerminalMerId(ipo.getTerMerId())
-                    .setStatus(StatusEnum._4.getStatus())
+                    .setBussType(bussType)
+                    .setStatus(StatusEnum._0.getStatus())
             );
         }catch (Exception e){
             e.printStackTrace();
@@ -1258,7 +1256,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
                 .setAgentRate(agentMerchantSettingTable.getRateFee())                       .setAgentFee(agentMerFree)
                 .setMerRate( merchantRateTable.getRateFee())                                .setMerFee(merFree)
                 .setPlatformIncome(platformIncome)                                          .setSettleCycle(merchantRateTable.getSettleCycle())
-                .setSettleStatus(1)                                                         .setStatus(StatusEnum._3.getStatus())
+                .setSettleStatus(1)                                                         .setStatus(StatusEnum._2.getStatus())
                 .setChannelRespResult(null)                                                 .setCrossRespResult(null)
                 .setCreateTime(new Date())                                                  .setUpdateTime(new Date());
 

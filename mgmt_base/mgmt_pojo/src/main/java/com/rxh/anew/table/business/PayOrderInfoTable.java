@@ -22,6 +22,7 @@ public class PayOrderInfoTable implements Serializable {
     @TableId(type= IdType.INPUT)
     private Long id ;// 表主键,
     private String platformOrderId;// 平台订单号,
+    private String channelOrderId;//通道订单号
     private String merchantId;// 商户号,
     private String terminalMerId;// 终端号,
     private String merOrderId;// 商户订单号,
@@ -62,6 +63,10 @@ public class PayOrderInfoTable implements Serializable {
     private Date createTime;// 创建时间,
     private Date updateTime;// 更新时间,
 
+    public PayOrderInfoTable setChannelOrderId(String channelOrderId) {
+        this.channelOrderId = channelOrderId;
+        return this;
+    }
 
     public PayOrderInfoTable setRegPlatformOrderId(String regPlatformOrderId) {
         this.regPlatformOrderId = regPlatformOrderId;

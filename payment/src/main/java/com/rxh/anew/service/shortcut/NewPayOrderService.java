@@ -196,7 +196,7 @@ public interface NewPayOrderService extends CommonSerivceInterface {
      * @param ipo
      * @return
      */
-    PayOrderInfoTable getPayOrderInfoByPlatformOrderId(String platformOrderId, InnerPrintLogObject ipo) throws NewPayException;
+    PayOrderInfoTable getPayOrderInfoByPlatformOrderId(String platformOrderId,String bussType, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      *

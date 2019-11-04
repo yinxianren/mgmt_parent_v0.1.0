@@ -2,10 +2,12 @@ package com.rxh.anew.controller.shortcut;
 
 import com.alibaba.dubbo.common.json.JSON;
 import com.rxh.activeMQ.TransOrderMQ;
+import com.rxh.anew.PaySession;
 import com.rxh.anew.component.Md5Component;
 import com.rxh.anew.controller.NewAbstractCommonController;
 import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.MerPayOrderApplyDTO;
+import com.rxh.anew.dto.MerPayOrderConfirmDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
@@ -21,6 +23,7 @@ import com.rxh.anew.table.system.MerchantSettingTable;
 import com.rxh.anew.table.system.OrganizationInfoTable;
 import com.rxh.anew.table.system.RiskQuotaTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
+import com.rxh.enums.BusinessTypeEnum;
 import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.enums.StatusEnum;
 import com.rxh.exception.NewPayException;
@@ -37,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -208,7 +212,89 @@ public class NewPayOrderByEasyPlugController extends NewAbstractCommonController
             return null == respResult ? "系统内部错误！" : respResult;
         }
     }
+
+
+
+
+    /**
+     * 支付短信验证码获取
+     * @param request
+     * @param param
+     * @return
+     */
+    @PostMapping(value = "/getPayCode", produces = "text/html;charset=UTF-8")
+    public String getPayCode(HttpServletRequest request, @RequestBody(required = false) String param){
+        final String bussType = "【支付短信验证码获取】";
+        String errorMsg = null,errorCode = null,printErrorMsg,respResult=null;
+        SystemOrderTrackTable sotTable = null;
+        MerPayOrderConfirmDTO merPayOrderConfirmDTO = null;
+        MerchantInfoTable merInfoTable = null;
+        RequestCrossMsgDTO requestCrossMsgDTO = null;
+        CrossResponseMsgDTO crossResponseMsgDTO = null;
+        InnerPrintLogObject ipo = null ;
+        PayOrderInfoTable payOrderInfoTable = null;
+        try{
+            //解析 以及 获取SystemOrderTrackTable对象
+            sotTable = this.getSystemOrderTrackTable(request,param,bussType);
+            //类型转换
+            merPayOrderConfirmDTO = JSON.parse(sotTable.getRequestMsg(), MerPayOrderConfirmDTO.class);
+            sotTable.setMerId(merPayOrderConfirmDTO.getMerId()).setPlatformOrderId(merPayOrderConfirmDTO.getPlatformOrderId());
+            //创建日志打印对象
+            ipo = new InnerPrintLogObject(merPayOrderConfirmDTO.getMerId(), merPayOrderConfirmDTO.getTerminalMerId(),bussType);
+            //获取商户信息
+            merInfoTable = newPayOrderService.getOneMerInfo(ipo);
+            //获取必要参数
+            Map<String, ParamRule> paramRuleMap = newPayOrderService.getParamMapByB8();
+            //参数校验
+            this.verify(paramRuleMap, merPayOrderConfirmDTO, MerPayOrderApplyDTO.class,ipo);
+            //验证签名
+            md5Component.checkMd5(sotTable.getRequestMsg(),merInfoTable.getSecretKey(),ipo);
+            //判断平台订单号是否存在
+            payOrderInfoTable = newPayOrderService.getPayOrderInfoByPlatformOrderId(merPayOrderConfirmDTO.getPlatformOrderId(), BusinessTypeEnum.b7.getBusiType(),ipo);
+            //获取进件信息
+            RegisterCollectTable registerCollectTable = newPayOrderService.getRegCollectInfo(payOrderInfoTable.getRegPlatformOrderId(),BusinessTypeEnum.b3.getBusiType(),ipo);
+            //获取绑卡信息
+            MerchantCardTable merchantCardTable =newPayOrderService.getMerchantCardInfoByPlatformOrderId(payOrderInfoTable.getCardPlatformOrderId(),BusinessTypeEnum.b6.getBusiType(),ipo);
+            //获取通道信息
+            ChannelInfoTable channelInfoTable = newPayOrderService.getChannelInfoByChannelId(payOrderInfoTable.getChannelId(),ipo);
+            //封装请求cross必要参数  channelInfoTable
+            requestCrossMsgDTO = newPayOrderService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,payOrderInfoTable,registerCollectTable,merchantCardTable));
+            //请求cross请求
+            String crossResponseMsg = newPayOrderService.doPostJson(requestCrossMsgDTO,channelInfoTable,ipo);
+            //将请求结果转为对象
+            crossResponseMsgDTO = newPayOrderService.jsonToPojo(crossResponseMsg,ipo);
+            //更新订单信息
+            payOrderInfoTable = newPayOrderService.updateByPayOrderInfo(crossResponseMsgDTO,crossResponseMsg,payOrderInfoTable,ipo);
+            //封装放回结果
+            respResult = newPayOrderService.responseMsg(payOrderInfoTable.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,payOrderInfoTable.getAmount().toString(),null,null,ipo);
+            sotTable.setPlatformPrintLog(StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode())).setTradeCode( crossResponseMsgDTO.getCrossStatusCode() );
+        }catch (Exception e){
+            if(e instanceof NewPayException){
+                NewPayException npe = (NewPayException) e;
+                errorMsg = npe.getResponseMsg();
+                printErrorMsg = npe.getInnerPrintMsg();
+                errorCode = npe.getCode();
+            }else{
+                e.printStackTrace();
+                errorMsg = ResponseCodeEnum.RXH99999.getMsg();
+                printErrorMsg = isBlank(e.getMessage()) ? "" : (e.getMessage().length()>=512 ? e.getMessage().substring(0,526) : e.getMessage());
+                errorCode = ResponseCodeEnum.RXH99999.getCode();
+            }
+            respResult = newPayOrderService.responseMsg(null != payOrderInfoTable ? payOrderInfoTable.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null != payOrderInfoTable ? payOrderInfoTable.getAmount().toString() : null ,errorCode,errorMsg,ipo);
+            sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
+        }finally {
+            sotTable.setResponseResult(respResult).setCreateTime(new Date());
+            newPayOrderService.saveSysLog(sotTable);
+            return null == respResult ? "系统内部错误！" : respResult;
+        }
+    }
+
+
 }
+
+
+
+
 
 
 
