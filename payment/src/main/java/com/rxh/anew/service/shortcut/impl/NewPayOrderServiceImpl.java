@@ -71,7 +71,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
                 put("bankCardType", new ParamRule(ParamTypeEnum.STRING.getType(), 1, 1));//卡号类型	1借记卡  2信用卡	否	1
                 put("bankCardNum", new ParamRule(ParamTypeEnum.STRING.getType(), 12, 32));//银行卡号		否	32
                 put("bankCardPhone", new ParamRule(ParamTypeEnum.PHONE.getType(), 11, 11));//银行卡手机号		否	11
-                put("validDate", new ParamRule(ParamTypeEnum.STRING.getType(), 4, 4));// 有效期	信用卡必填，格式：MMYY	选填	4
+//                put("validDate", new ParamRule(ParamTypeEnum.STRING.getType(), 4, 4));// 有效期	信用卡必填，格式：MMYY	选填	4
                 put("payFee", new ParamRule(ParamTypeEnum.AMOUNT.getType(), 2, 8));//扣款手续费		否	8
                 put("terMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id	商户系统中商户的编码，要求唯一	否	64
                 put("terMerName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));//子商户名称	商户系统中商户的名称	否	32
@@ -117,6 +117,43 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
         };
     }
 
+    @Override
+    public Map<String, ParamRule> getParamMapByB10() {
+        return new HashMap<String, ParamRule>() {
+            {
+                put("charset", new ParamRule(ParamTypeEnum.STRING.getType(), 5, 5));//参数字符集编码 固定UTF-8
+                put("signType", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 3));//签名类型	固定为MD5
+                put("productType", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 64));//产品类型		否	64
+                put("merId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));//商户号
+                put("terMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id	商户系统中商户的编码，要求唯一	否	64
+                put("terMerName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));//子商户名称	商户系统中商户的名称	否	32
+                put("productCategory", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));// 商品类别	参考附件：商户入住字典表	否	32
+                put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 商户订单号
+                put("currency", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 3));// 交易的币种
+                put("amount", new ParamRule(ParamTypeEnum.AMOUNT.getType(), 2, 12));// 支付金额
+                put("identityType", new ParamRule(ParamTypeEnum.STRING.getType(), 1, 1));//证件类型	1身份证、2护照、3港澳回乡证、4台胞证、5军官证、	否	1
+                put("cardHolderName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));// 持卡人姓名
+                put("identityNum", new ParamRule(ParamTypeEnum.STRING.getType(), 12, 32));//证件号码		否	32
+                put("bankCode", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 16));//银行名称	如：中国农业银行： ABC，中国工商银行： ICBC	否	16
+                put("bankCardType", new ParamRule(ParamTypeEnum.STRING.getType(), 1, 1));//卡号类型	1借记卡  2信用卡	否	1
+                put("bankCardNum", new ParamRule(ParamTypeEnum.STRING.getType(), 12, 32));//银行卡号		否	32
+                put("bankCardPhone", new ParamRule(ParamTypeEnum.PHONE.getType(), 11, 11));//银行卡手机号		否	11
+                put("payFee", new ParamRule(ParamTypeEnum.AMOUNT.getType(), 2, 8));//扣款手续费		否	8
+                put("province", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 16));// 省份
+                put("city", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 16));// 城市
+                put("returnUrl", new ParamRule(ParamTypeEnum.URL.getType(), 16, 128));//签名字符串
+                put("noticeUrl", new ParamRule(ParamTypeEnum.URL.getType(), 16, 128));//签名字符串
+                put("signMsg", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 256));//签名字符串
+            }
+        };
+    }
+             /*
+
+
+returnUrl
+noticeUrl
+signMsg
+              */
     @Override
     public void multipleOrder(String merOrderId, InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="multipleOrder";
@@ -745,7 +782,9 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
         final String localPoint="updateByPayOrderInfo";
         payOrderInfoTable.setCrossRespResult(crossResponseMsg)
                 .setChannelRespResult(crossResponseMsgDTO.getChannelResponseMsg())
+                .setChannelOrderId(crossResponseMsgDTO.getChannelOrderId())
                 .setStatus(crossResponseMsgDTO.getCrossStatusCode());
+
         try {
             commonRPCComponent.apiPayOrderInfoService.updateByPrimaryKey(payOrderInfoTable);
         }catch (Exception e){
@@ -1159,6 +1198,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
         final String localPoint="updateByPayOrderInfoByB9After";
         payOrderInfoTable.setCrossRespResult(crossResponseMsg)
                 .setChannelRespResult(crossResponseMsgDTO.getChannelResponseMsg())
+                .setChannelOrderId(crossResponseMsgDTO.getChannelOrderId())
                 .setStatus(crossResponseMsgDTO.getCrossStatusCode());
 
         if(crossResponseMsgDTO.getCrossStatusCode() == StatusEnum._0.getStatus()){
@@ -1327,7 +1367,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
         PayOrderInfoTable payOrderInfoTable = new PayOrderInfoTable();
         payOrderInfoTable
                 .setMerOrderId(merNoAuthPayOrderApplyDTO.getMerOrderId())                         .setId(System.currentTimeMillis())
-                .setPlatformOrderId("RXH" + new Random(System.currentTimeMillis()).nextInt(1000000) + "-B7" + System.currentTimeMillis())
+                .setPlatformOrderId("RXH" + new Random(System.currentTimeMillis()).nextInt(1000000) + "-B10" + System.currentTimeMillis())
                 .setMerchantId(merNoAuthPayOrderApplyDTO.getMerId())                              .setTerminalMerId(merNoAuthPayOrderApplyDTO.getTerMerId())
                 .setIdentityType( Integer.valueOf(merNoAuthPayOrderApplyDTO.getIdentityType()))   .setIdentityNum(merNoAuthPayOrderApplyDTO.getIdentityNum())
                 .setBankCode(merNoAuthPayOrderApplyDTO.getBankCode())                             .setBankCardType(Integer.valueOf(merNoAuthPayOrderApplyDTO.getBankCardType()))
@@ -1336,7 +1376,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
                 .setDeviceId(null)                                                                .setDeviceType(null)
                 .setMacAddr(null)                                                                 .setChannelId(channelInfoTable.getChannelId())
                 .setRegPlatformOrderId(registerCollectTable.getPlatformOrderId())           .setCardPlatformOrderId(merchantCardTable.getPlatformOrderId())
-                .setBussType(BusinessTypeEnum.b7.getBusiType())                             .setProductId(channelInfoTable.getProductId())
+                .setBussType(BusinessTypeEnum.b10.getBusiType())                             .setProductId(channelInfoTable.getProductId())
                 .setProductFee(channelInfoTable.getProductFee())                            .setCurrency(merNoAuthPayOrderApplyDTO.getCurrency())
                 .setAmount(amount)                                                          .setInAmount(inAmount)
                 .setTerFee(terFee)                                                          .setPayFee(new BigDecimal(merNoAuthPayOrderApplyDTO.getPayFee()))

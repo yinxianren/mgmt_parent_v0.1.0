@@ -1,6 +1,7 @@
 package com.rxh.anew.controller.shortcut;
 
 import com.alibaba.dubbo.common.json.JSON;
+import com.rxh.anew.channel.CommonChannelHandlePort;
 import com.rxh.anew.component.Md5Component;
 import com.rxh.anew.controller.NewAbstractCommonController;
 import com.rxh.anew.dto.*;
@@ -15,8 +16,10 @@ import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.merchant.MerchantQuotaRiskTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
+import com.rxh.anew.table.system.OrganizationInfoTable;
 import com.rxh.anew.table.system.RiskQuotaTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
+import com.rxh.anew.tools.SpringContextUtil;
 import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.enums.StatusEnum;
 import com.rxh.exception.NewPayException;
@@ -33,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *  快捷免验证支付
@@ -79,7 +83,7 @@ public class NewNoAuthenticationPayOrderController  extends NewAbstractCommonCon
             //获取商户信息
             merInfoTable = newPayOrderService.getOneMerInfo(ipo);
             //获取必要参数
-            Map<String, ParamRule> paramRuleMap = newPayOrderService.getParamMapByB7();
+            Map<String, ParamRule> paramRuleMap = newPayOrderService.getParamMapByB10();
             //参数校验
             this.verify(paramRuleMap, merNoAuthPayOrderApplyDTO,ipo);
             //验证签名
@@ -92,9 +96,9 @@ public class NewNoAuthenticationPayOrderController  extends NewAbstractCommonCon
             //执行单笔风控
             newPayOrderService.checkSingleAmountRisk(merNoAuthPayOrderApplyDTO.getAmount(),merchantQuotaRiskTable,ipo);
             //获取风控交易量统计数据
-            Tuple2<RiskQuotaTable,RiskQuotaTable> MerRiskQuota = newPayOrderService.getRiskQuotaInfoByMer(merInfoTable,ipo);
+            Tuple2<RiskQuotaTable,RiskQuotaTable> merRiskQuota = newPayOrderService.getRiskQuotaInfoByMer(merInfoTable,ipo);
             //执行风控控制
-            newPayOrderService.executePlatformRisk(merNoAuthPayOrderApplyDTO.getAmount(),merchantQuotaRiskTable,MerRiskQuota,ipo);
+            newPayOrderService.executePlatformRisk(merNoAuthPayOrderApplyDTO.getAmount(),merchantQuotaRiskTable,merRiskQuota,ipo);
             //2.查询通道使用记录  MerchantId  TerminalMerId ProductId
             ChannelHistoryTable channelHistoryTable = newPayOrderService.getChannelHistoryInfo(ipo,merNoAuthPayOrderApplyDTO.getMerId(),merNoAuthPayOrderApplyDTO.getTerMerId(),merNoAuthPayOrderApplyDTO.getProductType());
             //通道信息
@@ -103,6 +107,8 @@ public class NewNoAuthenticationPayOrderController  extends NewAbstractCommonCon
             RegisterCollectTable registerCollectTable = null;
             //绑卡信息
             MerchantCardTable merchantCardTable = null;
+            //获取该通道历史统计交易量
+            Tuple2<RiskQuotaTable,RiskQuotaTable> channelRiskQuota = null;
             //没有通道使用记录
             if(isNull(channelHistoryTable)){
                 //获取成功进件记录
@@ -137,7 +143,7 @@ public class NewNoAuthenticationPayOrderController  extends NewAbstractCommonCon
                 //执行通道风控
                 if(isNull(channelInfoTable)){
                     //获取该通道历史统计交易量
-                    Tuple2<RiskQuotaTable,RiskQuotaTable> channelRiskQuota = newPayOrderService.getRiskQuotaInfoByChannel(channelInfoTable,ipo);
+                    channelRiskQuota = newPayOrderService.getRiskQuotaInfoByChannel(channelInfoTable,ipo);
                     //执行通道风控
                     channelInfoTable = newPayOrderService.executeChannelRisk(channelInfoTable,channelRiskQuota,ipo,merNoAuthPayOrderApplyDTO.getAmount());
                 }
@@ -170,16 +176,35 @@ public class NewNoAuthenticationPayOrderController  extends NewAbstractCommonCon
                     merchantCardTable = newPayOrderService.getMerCardByChanAndReg(channelInfoTable, registerCollectTable,ipo,merNoAuthPayOrderApplyDTO.getBankCardNum(),merNoAuthPayOrderApplyDTO.getBankCardPhone());
                 }
             }
-
             //3.保存订单信息
             payOrderInfoTable = newPayOrderService.savePayOrderByNoAuth(merInfoTable, merNoAuthPayOrderApplyDTO,channelInfoTable,registerCollectTable,merchantCardTable,ipo);
+            //获取组织机构信息
+            OrganizationInfoTable organizationInfoTable = newPayOrderService.getOrganizationInfo(channelInfoTable.getOrganizationId(),ipo);
+            Class  clz=Class.forName(organizationInfoTable.getApplicationClassObj().trim());
+            //生成通道处理对象
+            CommonChannelHandlePort commonChannelHandlePort = (CommonChannelHandlePort) SpringContextUtil.getBean(clz);
             //封装请求cross必要参数
             requestCrossMsgDTO = newPayOrderService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,payOrderInfoTable,registerCollectTable,merchantCardTable));
             //请求cross请求
             String crossResponseMsg = newPayOrderService.doPostJson(requestCrossMsgDTO,channelInfoTable,ipo);
             //将请求结果转为对象
             crossResponseMsgDTO = newPayOrderService.jsonToPojo(crossResponseMsg,ipo);
-
+            //更新订单信息
+            payOrderInfoTable = newPayOrderService.updateByPayOrderInfoByB9After(crossResponseMsgDTO,crossResponseMsg,payOrderInfoTable,ipo);
+            //状态为成功是才执行以下操作
+            if(crossResponseMsgDTO.getCrossStatusCode().equals(StatusEnum._0.getStatus())){
+                //更新通道历史使用记录 8_channel_history_table
+                ChannelHistoryTable  cht = newPayOrderService.updateByChannelHistoryInfo(channelHistoryTable,payOrderInfoTable);
+                //更新 商户和通道使用汇总情况 8_risk_quota_table
+                Set<RiskQuotaTable> rqtSet = newPayOrderService.updateByRiskQuotaInfo(payOrderInfoTable,merRiskQuota,channelRiskQuota);
+                //执行事务更新操作
+                newPayOrderService.batchUpdatePayOderCorrelationInfo(payOrderInfoTable,cht,rqtSet,ipo);
+            }
+            //通道差异化处理
+            commonChannelHandlePort.channelDifferBusinessHandle(requestCrossMsgDTO,crossResponseMsgDTO);
+            //封装放回结果
+            respResult = newPayOrderService.responseMsg(payOrderInfoTable.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,payOrderInfoTable.getAmount().toString(),null,null,ipo);
+            sotTable.setPlatformPrintLog(StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode())).setTradeCode( crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
             if(e instanceof NewPayException){
                 NewPayException npe = (NewPayException) e;

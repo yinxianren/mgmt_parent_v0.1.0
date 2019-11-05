@@ -40,6 +40,12 @@ public interface NewPayOrderService extends CommonSerivceInterface {
      * @return
      */
     Map<String, ParamRule> getParamMapByB9();
+
+    /**
+     *
+     * @return
+     */
+    Map<String, ParamRule> getParamMapByB10();
     /**
      * 查看是否重复订单
      * @param merOrderId
@@ -356,4 +362,5 @@ public interface NewPayOrderService extends CommonSerivceInterface {
      * @return
      */
     PayOrderInfoTable savePayOrderByNoAuth(MerchantInfoTable merInfoTable, MerNoAuthPayOrderApplyDTO merNoAuthPayOrderApplyDTO, ChannelInfoTable channelInfoTable, RegisterCollectTable registerCollectTable, MerchantCardTable merchantCardTable, InnerPrintLogObject ipo) throws NewPayException;
+
 }

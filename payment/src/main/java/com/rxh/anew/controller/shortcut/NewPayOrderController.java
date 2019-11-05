@@ -98,9 +98,9 @@ public class NewPayOrderController extends NewAbstractCommonController {
             //执行单笔风控
             newPayOrderService.checkSingleAmountRisk(merPayOrderApplyDTO.getAmount(),merchantQuotaRiskTable,ipo);
             //获取风控交易量统计数据
-            Tuple2<RiskQuotaTable,RiskQuotaTable> MerRiskQuota = newPayOrderService.getRiskQuotaInfoByMer(merInfoTable,ipo);
+            Tuple2<RiskQuotaTable,RiskQuotaTable> merRiskQuota = newPayOrderService.getRiskQuotaInfoByMer(merInfoTable,ipo);
             //执行风控控制
-            newPayOrderService.executePlatformRisk(merPayOrderApplyDTO.getAmount(),merchantQuotaRiskTable,MerRiskQuota,ipo);
+            newPayOrderService.executePlatformRisk(merPayOrderApplyDTO.getAmount(),merchantQuotaRiskTable,merRiskQuota,ipo);
             //2.查询通道使用记录
             ChannelHistoryTable channelHistoryTable = newPayOrderService.getChannelHistoryInfo(ipo,merPayOrderApplyDTO.getMerId(),merPayOrderApplyDTO.getTerMerId(),merPayOrderApplyDTO.getProductType());
             //通道信息
