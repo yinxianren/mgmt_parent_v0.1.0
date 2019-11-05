@@ -380,8 +380,10 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
         timeType.add(m);
         List<RiskQuotaTable> riskQuotaTableList;
         try {
-            riskQuotaTableList = commonRPCComponent.apiRiskQuotaService.getListByTimeType(timeType, new RiskQuotaTable()
-                    .setMeridChannelid(channelInfoTable.getChannelId()).setBussType(BusinessTypeEnum.C.getBusiType()));
+            riskQuotaTableList = commonRPCComponent.apiRiskQuotaService.getListByTimeType(timeType,
+                    new RiskQuotaTable()
+                            .setMeridChannelid(channelInfoTable.getChannelId())
+                            .setBussType(BusinessTypeEnum.C.getBusiType()));
         }catch (Exception e){
             e.printStackTrace();
             throw new NewPayException(
@@ -791,7 +793,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
 
         //商户当日
         if(isNull(d_merRiskQuota)) d_merRiskQuota =  new RiskQuotaTable();
-        d_merRiskQuota.setId( isNull(d_merRiskQuota.getId()) ? System.currentTimeMillis() : d_merRiskQuota.getId() )
+        d_merRiskQuota.setId( isNull(d_merRiskQuota.getId()) ? null : d_merRiskQuota.getId() )
                 .setMeridChannelid( isBlank(d_merRiskQuota.getMeridChannelid()) ? payOrderInfoTable.getMerchantId() : d_merRiskQuota.getMeridChannelid() )
                 .setBussType(isBlank(d_merRiskQuota.getBussType()) ? BusinessTypeEnum.M.getBusiType() : d_merRiskQuota.getBussType() )
                 .setTimeType(isBlank(d_merRiskQuota.getTimeType()) ? d : d_merRiskQuota.getTimeType() )
@@ -801,7 +803,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
 
         //商户当月
         if(isNull(m_merRiskQuota)) m_merRiskQuota = new RiskQuotaTable();
-        m_merRiskQuota.setId( isNull(m_merRiskQuota.getId()) ? System.currentTimeMillis() : m_merRiskQuota.getId() )
+        m_merRiskQuota.setId( isNull(m_merRiskQuota.getId()) ?  null : m_merRiskQuota.getId() )
                 .setMeridChannelid( isBlank(m_merRiskQuota.getMeridChannelid()) ? payOrderInfoTable.getMerchantId() : m_merRiskQuota.getMeridChannelid() )
                 .setBussType(isBlank(m_merRiskQuota.getBussType()) ? BusinessTypeEnum.M.getBusiType() : m_merRiskQuota.getBussType() )
                 .setTimeType(isBlank(m_merRiskQuota.getTimeType()) ? m : m_merRiskQuota.getTimeType() )
@@ -815,7 +817,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
 
         //通道当日
         if(isNull(d_chRiskQuota)) d_chRiskQuota =  new RiskQuotaTable();
-        d_chRiskQuota.setId( isNull(d_chRiskQuota.getId()) ? System.currentTimeMillis() : d_chRiskQuota.getId() )
+        d_chRiskQuota.setId( isNull(d_chRiskQuota.getId()) ?  null : d_chRiskQuota.getId() )
                 .setMeridChannelid( isBlank(d_chRiskQuota.getMeridChannelid()) ? payOrderInfoTable.getChannelId() : d_chRiskQuota.getMeridChannelid() )
                 .setBussType(isBlank(d_chRiskQuota.getBussType()) ? BusinessTypeEnum.C.getBusiType() : d_chRiskQuota.getBussType() )
                 .setTimeType(isBlank(d_chRiskQuota.getTimeType()) ? d : d_chRiskQuota.getTimeType() )
@@ -825,7 +827,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
 
         //通道当月
         if(isNull(m_chRiskQuota)) m_chRiskQuota = new RiskQuotaTable();
-        m_chRiskQuota.setId( isNull(m_chRiskQuota.getId()) ? System.currentTimeMillis() : m_chRiskQuota.getId() )
+        m_chRiskQuota.setId( isNull(m_chRiskQuota.getId()) ?  null : m_chRiskQuota.getId() )
                 .setMeridChannelid( isBlank(m_chRiskQuota.getMeridChannelid()) ? payOrderInfoTable.getChannelId() : m_chRiskQuota.getMeridChannelid() )
                 .setBussType(isBlank(m_chRiskQuota.getBussType()) ? BusinessTypeEnum.C.getBusiType() : m_chRiskQuota.getBussType() )
                 .setTimeType(isBlank(m_chRiskQuota.getTimeType()) ? m : m_chRiskQuota.getTimeType() )
@@ -835,8 +837,8 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
 
         Set<RiskQuotaTable> set = new HashSet<>(4);
         set.add(d_merRiskQuota);
-        set.add(m_merRiskQuota);
         set.add(d_chRiskQuota);
+        set.add(m_merRiskQuota);
         set.add(m_chRiskQuota);
         return set;
     }
@@ -1100,12 +1102,20 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
                 format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,错误根源：根据机构ID(%s),获取组织信息为null",
                         ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(), ResponseCodeEnum.RXH99996.getMsg(),localPoint,organizationId),
                 format(" %s",ResponseCodeEnum.RXH99996.getMsg()));
-        return null;
+
+
+        isNull(organizationInfoTable.getApplicationClassObj(),
+                ResponseCodeEnum.RXH99996.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,错误根源：组织机构中有字段未配置：ApplicationClassObj==null",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(), ResponseCodeEnum.RXH99996.getMsg(),localPoint,organizationId),
+                format(" %s",ResponseCodeEnum.RXH99996.getMsg()));
+
+        return organizationInfoTable;
     }
 
     @Override
-    public PayOrderInfoTable updateByPayOrderInfoByBefore(PayOrderInfoTable payOrderInfoTable, String busiType, InnerPrintLogObject ipo) throws NewPayException {
-        final String localPoint="updateByPayOrderInfoByBefore";
+    public PayOrderInfoTable updateByPayOrderInfoByB9Before(PayOrderInfoTable payOrderInfoTable, String busiType, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="updateByPayOrderInfoByB9Before";
         payOrderInfoTable.setBussType(busiType)
                 .setStatus(StatusEnum._3.getStatus());
         try {
@@ -1129,6 +1139,43 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
         mpoa.setTerMerId(payOrderInfoTable.getTerminalMerId());
         mpoa.setMerId(payOrderInfoTable.getMerchantId());
         return mpoa;
+    }
+
+    @Override
+    public void checkPayOrderInfoTableByB9(PayOrderInfoTable payOrderInfoTable, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="checkPayOrderInfoTableByB9";
+        state(payOrderInfoTable.getBussType().equalsIgnoreCase(BusinessTypeEnum.b9.getBusiType()),
+                ResponseCodeEnum.RXH00032.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00032.getMsg(),localPoint),
+                format(" %s",ResponseCodeEnum.RXH00032.getMsg()));
+
+    }
+
+    @Override
+    public PayOrderInfoTable updateByPayOrderInfoByB9After(CrossResponseMsgDTO crossResponseMsgDTO, String crossResponseMsg, PayOrderInfoTable payOrderInfoTable, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="updateByPayOrderInfoByB9After";
+        payOrderInfoTable.setCrossRespResult(crossResponseMsg)
+                .setChannelRespResult(crossResponseMsgDTO.getChannelResponseMsg())
+                .setStatus(crossResponseMsgDTO.getCrossStatusCode());
+
+        if(crossResponseMsgDTO.getCrossStatusCode() == StatusEnum._0.getStatus()){
+            payOrderInfoTable.setStatus(StatusEnum._7.getStatus());
+            return payOrderInfoTable;
+        }
+
+        try {
+            commonRPCComponent.apiPayOrderInfoService.updateByPrimaryKey(payOrderInfoTable);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：申请支付时，更新订单时发生异常,异常信息：%s",
+                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }
+        return  payOrderInfoTable;
     }
 
     @Override
@@ -1164,6 +1211,18 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
                     format(" %s", ResponseCodeEnum.RXH99999.getMsg())
             );
         }
+
+
+        if(merPayOrderApplyDTO.getProductType().equalsIgnoreCase(ProductTypeEnum.RH_QUICKPAY_LARGE_REP.getProductId())
+                || merPayOrderApplyDTO.getProductType().equalsIgnoreCase(ProductTypeEnum.RH_QUICKPAY_LARGE.getProductId())){
+            isNull(bankRateTable,
+                    ResponseCodeEnum.RXH00044.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;异常根源：申请支付时，大额银行卡费率为null",
+                            ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00044.getMsg(),localPoint),
+                    format(" %s",ResponseCodeEnum.RXH00044.getMsg()));
+        }
+
+
         isNull(merchantRateTable,
                 ResponseCodeEnum.RXH00041.getCode(),
                 format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;获取产品（%s）的商户费率为null",

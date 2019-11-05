@@ -13,6 +13,7 @@ import javax.jms.MessageListener;
 
 
 public class PayMessageListener implements MessageListener {
+
     public final static String PAY_ODER_MSG = "payOderMsg";
     public final static String TRANS_ODER_MSG = "transOderMsg";
 

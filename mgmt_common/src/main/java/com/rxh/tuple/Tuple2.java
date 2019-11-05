@@ -1,5 +1,7 @@
 package com.rxh.tuple;
 
+import java.io.Serializable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: panda
@@ -7,7 +9,7 @@ package com.rxh.tuple;
  * Time: 下午9:13
  * Description:
  */
-public class Tuple2<A,B> {
+public class Tuple2<A,B> implements Serializable {
 
     public final A _1;
     public final B _2;

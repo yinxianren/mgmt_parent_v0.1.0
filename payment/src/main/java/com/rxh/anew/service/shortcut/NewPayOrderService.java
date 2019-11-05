@@ -313,7 +313,7 @@ public interface NewPayOrderService extends CommonSerivceInterface {
      * @param ipo
      * @return
      */
-    PayOrderInfoTable updateByPayOrderInfoByBefore(PayOrderInfoTable payOrderInfoTable, String busiType, InnerPrintLogObject ipo) throws NewPayException;
+    PayOrderInfoTable updateByPayOrderInfoByB9Before(PayOrderInfoTable payOrderInfoTable, String busiType, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      *
@@ -321,4 +321,21 @@ public interface NewPayOrderService extends CommonSerivceInterface {
      * @return
      */
     MerPayOrderApplyDTO getMerPayOrderApplyDTO(PayOrderInfoTable payOrderInfoTable);
+
+    /**
+     *
+     * @param payOrderInfoTable
+     * @param ipo
+     */
+    void checkPayOrderInfoTableByB9(PayOrderInfoTable payOrderInfoTable, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param crossResponseMsgDTO
+     * @param crossResponseMsg
+     * @param payOrderInfoTable
+     * @param ipo
+     * @return
+     */
+    PayOrderInfoTable updateByPayOrderInfoByB9After(CrossResponseMsgDTO crossResponseMsgDTO, String crossResponseMsg, PayOrderInfoTable payOrderInfoTable, InnerPrintLogObject ipo) throws NewPayException;
 }

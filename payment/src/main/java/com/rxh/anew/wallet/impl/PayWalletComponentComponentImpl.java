@@ -83,7 +83,7 @@ public class PayWalletComponentComponentImpl implements PayWalletComponent, NewP
             commonRPCComponent.apiPayOrderBusinessTransactionService.updateOrSavePayOrderBussInfo(merWalletTuple,terMerWalletTuple,chanWalletTuple,agentMerWalletTuple,poi);
         }catch (Exception e){
             e.printStackTrace();
-            if(isNull(poi)){
+            if( !isNull(poi) ){
                 poi = poi.setStatus(StatusEnum._8.getStatus());
                 commonRPCComponent.apiPayOrderInfoService.updateByPrimaryKey(poi);
                 commonRPCComponent.apiSystemOrderTrackService.save( new SystemOrderTrackTable()

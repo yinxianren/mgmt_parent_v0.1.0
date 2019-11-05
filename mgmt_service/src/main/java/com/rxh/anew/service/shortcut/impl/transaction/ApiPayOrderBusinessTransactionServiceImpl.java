@@ -62,9 +62,9 @@ public class ApiPayOrderBusinessTransactionServiceImpl implements ApiPayOrderBus
 
     @Override
     public void updateByPayOrderCorrelationInfo(PayOrderInfoTable pit, ChannelHistoryTable cht, Set<RiskQuotaTable> rqtSet) {
-        payOrderInfoDBService.updateById(pit);
         channelHistoryDbService.saveOrUpdate(cht);
         riskQuotaDBService.saveOrUpdateBatch(rqtSet);
+        payOrderInfoDBService.updateById(pit);
     }
 
     @Override

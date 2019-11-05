@@ -18,7 +18,7 @@ import java.util.Date;
 @TableName ( "5_channel_details_table" )
 @Getter
 public class ChannelDetailsTable  implements Serializable {
-	@TableId(type= IdType.INPUT)
+	@TableId(type= IdType.AUTO)
 	private Long id;//表主键
 	private String channelId;//通道id
 	private String organizationId;//机构ID
@@ -28,14 +28,42 @@ public class ChannelDetailsTable  implements Serializable {
 	private BigDecimal amount;//订单金额
 	private BigDecimal inAmount;//入账金额
 	private BigDecimal outAmount;//出帐金额
-	private BigDecimal rateFee;//单笔费率
-	private BigDecimal fee;//手续费
-	private BigDecimal feeProfit;//手续利润
+	private BigDecimal chRateFee;//单笔费率
+	private BigDecimal chFee;//手续费
+	private BigDecimal chFeeProfit;//手续利润
+	private BigDecimal merRateFee;
+	private BigDecimal merFee;
 	private BigDecimal totalBalance;//总余额
 	private Long timestamp;//数据插入的时间点，保证并发排序有序
 	private Integer status;//状态 0：success ,1:fail
 	private Date createTime;//创建时间
 	private Date updateTime;//更新时间
+
+
+	public ChannelDetailsTable setChRateFee(BigDecimal chRateFee) {
+		this.chRateFee = chRateFee;
+		return this;
+	}
+
+	public ChannelDetailsTable setChFee(BigDecimal chFee) {
+		this.chFee = chFee;
+		return this;
+	}
+
+	public ChannelDetailsTable setChFeeProfit(BigDecimal chFeeProfit) {
+		this.chFeeProfit = chFeeProfit;
+		return this;
+	}
+
+	public ChannelDetailsTable setMerRateFee(BigDecimal merRateFee) {
+		this.merRateFee = merRateFee;
+		return this;
+	}
+
+	public ChannelDetailsTable setMerFee(BigDecimal merFee) {
+		this.merFee = merFee;
+		return this;
+	}
 
 	public ChannelDetailsTable setId(Long id) {
 		this.id = id;
@@ -82,20 +110,7 @@ public class ChannelDetailsTable  implements Serializable {
 		return this;
 	}
 
-	public ChannelDetailsTable setRateFee(BigDecimal rateFee) {
-		this.rateFee = rateFee;
-		return this;
-	}
 
-	public ChannelDetailsTable setFee(BigDecimal fee) {
-		this.fee = fee;
-		return this;
-	}
-
-	public ChannelDetailsTable setFeeProfit(BigDecimal feeProfit) {
-		this.feeProfit = feeProfit;
-		return this;
-	}
 
 	public ChannelDetailsTable setTotalBalance(BigDecimal totalBalance) {
 		this.totalBalance = totalBalance;

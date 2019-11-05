@@ -57,7 +57,7 @@ public class ApiAgentMerchantSettingServiceImpl implements ApiAgentMerchantSetti
     public List<AgentMerchantSettingTable> list(AgentMerchantSettingTable agentMerchantSettingTable) {
         if(isNull(agentMerchantSettingTable))  return agentMerchantSettingDBService.list();
         LambdaQueryWrapper<AgentMerchantSettingTable> queryWrapper = new QueryWrapper<AgentMerchantSettingTable>().lambda();
-        if (StringUtils.isNotEmpty(agentMerchantSettingTable.getAgentMerchantId())) queryWrapper.eq(AgentMerchantSettingTable::getAgentMerchantId,agentMerchantSettingTable.getAgentMerchantId());
+        if (!isBlank(agentMerchantSettingTable.getAgentMerchantId())) queryWrapper.eq(AgentMerchantSettingTable::getAgentMerchantId,agentMerchantSettingTable.getAgentMerchantId());
         return agentMerchantSettingDBService.list(queryWrapper);
     }
 }

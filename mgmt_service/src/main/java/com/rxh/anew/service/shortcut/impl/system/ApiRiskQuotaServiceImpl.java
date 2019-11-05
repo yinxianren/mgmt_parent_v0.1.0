@@ -30,8 +30,8 @@ public class ApiRiskQuotaServiceImpl implements ApiRiskQuotaService , NewPayAsse
         if(isHasNotElement(timeTypeSet)) return null;
         LambdaQueryWrapper<RiskQuotaTable> lambdaQueryWrapper = new QueryWrapper<RiskQuotaTable>()
                 .lambda().in(RiskQuotaTable::getTimeType,timeTypeSet);
-        if( isBlank(rq.getMeridChannelid()) )  lambdaQueryWrapper.eq(RiskQuotaTable::getMeridChannelid,rq.getMeridChannelid());
-        if( isBlank(rq.getBussType()) )  lambdaQueryWrapper.eq(RiskQuotaTable::getBussType,rq.getBussType());
+        if( !isBlank(rq.getMeridChannelid()) )  lambdaQueryWrapper.eq(RiskQuotaTable::getMeridChannelid,rq.getMeridChannelid());
+        if( !isBlank(rq.getBussType()) )  lambdaQueryWrapper.eq(RiskQuotaTable::getBussType,rq.getBussType());
         return riskQuotaDBService.list(lambdaQueryWrapper);
     }
 
@@ -40,7 +40,7 @@ public class ApiRiskQuotaServiceImpl implements ApiRiskQuotaService , NewPayAsse
         if(isHasNotElement(meridChannelidSet)) return null;
         LambdaQueryWrapper<RiskQuotaTable> lambdaQueryWrapper = new QueryWrapper<RiskQuotaTable>()
                 .lambda().in(RiskQuotaTable::getMeridChannelid,meridChannelidSet);
-        if( isBlank(rq.getBussType()) )  lambdaQueryWrapper.eq(RiskQuotaTable::getBussType,rq.getBussType());
+        if( !isBlank(rq.getBussType()) )  lambdaQueryWrapper.eq(RiskQuotaTable::getBussType,rq.getBussType());
         return riskQuotaDBService.list(lambdaQueryWrapper);
     }
 

@@ -51,8 +51,8 @@ public class ApiAgentMerchantInfoServiceImpl implements ApiAgentMerchantInfoServ
         if (isNull(agentMerchantInfoTable)) return agentMerchantInfoDbService.list();
         LambdaQueryWrapper<AgentMerchantInfoTable> queryWrapper = new QueryWrapper<AgentMerchantInfoTable>().lambda();
         if (!isNull(agentMerchantInfoTable.getStatus())) queryWrapper.eq(AgentMerchantInfoTable::getStatus,agentMerchantInfoTable.getStatus());
-        if (StringUtils.isNotEmpty(agentMerchantInfoTable.getAgentMerchantId())) queryWrapper.eq(AgentMerchantInfoTable::getAgentMerchantId,agentMerchantInfoTable.getAgentMerchantId());
-        if (StringUtils.isNotEmpty(agentMerchantInfoTable.getAgentMerchantName())) queryWrapper.eq(AgentMerchantInfoTable::getAgentMerchantName,agentMerchantInfoTable.getAgentMerchantName());
+        if (!isBlank(agentMerchantInfoTable.getAgentMerchantId())) queryWrapper.eq(AgentMerchantInfoTable::getAgentMerchantId,agentMerchantInfoTable.getAgentMerchantId());
+        if (!isBlank(agentMerchantInfoTable.getAgentMerchantName())) queryWrapper.eq(AgentMerchantInfoTable::getAgentMerchantName,agentMerchantInfoTable.getAgentMerchantName());
         return agentMerchantInfoDbService.list(queryWrapper);
     }
 

@@ -32,7 +32,7 @@ public class ApiMerchantRateServiceImpl implements ApiMerchantRateService, NewPa
         if( !isBlank(mr.getMerchantId())) lambdaQueryWrapper.eq(MerchantRateTable::getMerchantId,mr.getMerchantId());
         if( !isBlank(mr.getProductId())) lambdaQueryWrapper.eq(MerchantRateTable::getProductId,mr.getProductId());
         if( !isBlank(mr.getChannelId())) lambdaQueryWrapper.eq(MerchantRateTable::getChannelId,mr.getChannelId());
-        if(!isNull(mr.getStatus())) lambdaQueryWrapper.eq(MerchantRateTable::getStatus,mr.getStatus());
+        if( !isNull(mr.getStatus())) lambdaQueryWrapper.eq(MerchantRateTable::getStatus,mr.getStatus());
         return merchantRateDBService.getOne(lambdaQueryWrapper);
     }
 
@@ -53,7 +53,7 @@ public class ApiMerchantRateServiceImpl implements ApiMerchantRateService, NewPa
     public List<MerchantRateTable> getList(MerchantRateTable mer) {
         if (isNull(mer)) return merchantRateDBService.list();
         LambdaQueryWrapper<MerchantRateTable> queryWrapper = new QueryWrapper<MerchantRateTable>().lambda();
-        if (StringUtils.isNotEmpty(mer.getMerchantId())) queryWrapper.eq(MerchantRateTable::getMerchantId,mer.getMerchantId());
+        if (!isBlank(mer.getMerchantId())) queryWrapper.eq(MerchantRateTable::getMerchantId,mer.getMerchantId());
         return merchantRateDBService.list(queryWrapper);
     }
 }

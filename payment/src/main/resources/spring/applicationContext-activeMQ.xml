@@ -9,12 +9,10 @@
         <!-- 信任所有ObjectMessage通知类型 -->
         <property name="trustAllPackages" value="true"/>
     </bean>
-
     <!-- 订阅 -->
     <bean id="activeMQTopic" class="org.apache.activemq.command.ActiveMQTopic">
         <constructor-arg value="cacheRefreshActiveMQ"/>
     </bean>
-
     <!-- 点对点 -->
     <bean id="activeMQQueue" class="org.apache.activemq.command.ActiveMQQueue">
         <constructor-arg value="payOderMsg,transOderMsg"/>
@@ -42,10 +40,14 @@
         <property name="deliveryMode" value="2"/>
     </bean>
 
+    <!-- 消息监听对象 -->
+    <bean id="messageListener" class="com.rxh.anew.mq.PayMessageListener"  />
+
     <!-- 使用Spring监听订阅消息 -->
     <bean id="topicListener" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
         <property name="connectionFactory" ref="jmsFactory"/>
         <property name="destination" ref="activeMQTopic"/>
+        <property name="messageListener" ref="messageListener"/>
         <property name="pubSubDomain" value="true"/>
     </bean>
 
@@ -53,5 +55,6 @@
     <bean id="queueListener" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
         <property name="connectionFactory" ref="jmsFactory"/>
         <property name="destination" ref="activeMQQueue"/>
+        <property name="messageListener" ref="messageListener"/>
     </bean>
 </beans>
