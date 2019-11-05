@@ -26,7 +26,9 @@ public enum BusinessTypeEnum {
     b6("b6","确认绑卡"),
     b7("b7","支付申请"),
     b8("b8","支付验证码"),
-    b9("b9","确认交易")
+    b9("b9","确认交易"),
+    b10("b10","无验证支付"),
+    b11("b11","付款")
     ;
     private String busiType;
     private String remark;

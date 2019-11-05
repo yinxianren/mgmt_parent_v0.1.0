@@ -2,6 +2,7 @@ package com.rxh.anew.service.shortcut.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.rxh.anew.dto.CrossResponseMsgDTO;
+import com.rxh.anew.dto.MerNoAuthPayOrderApplyDTO;
 import com.rxh.anew.dto.MerPayOrderApplyDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
@@ -166,14 +167,14 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
     }
 
     @Override
-    public List<RegisterCollectTable> getSuccessRegisterInfo(MerPayOrderApplyDTO merPayOrderApplyDTO, InnerPrintLogObject ipo) throws NewPayException {
+    public List<RegisterCollectTable> getSuccessRegisterInfo(InnerPrintLogObject ipo,String ...args) throws NewPayException {
         final String localPoint="getSuccessRegisterInfo";
         List<RegisterCollectTable> registerCollectTableList=null;
         try {
             registerCollectTableList = commonRPCComponent.apiRegisterCollectService.getList(new RegisterCollectTable()
-                    .setMerchantId(merPayOrderApplyDTO.getMerId())
-                    .setTerminalMerId(merPayOrderApplyDTO.getTerMerId())
-                    .setProductId(merPayOrderApplyDTO.getProductType())
+                    .setMerchantId(args[0])
+                    .setTerminalMerId(args[1])
+                    .setProductId(args[2])
                     .setBussType(BusinessTypeEnum.b3.getBusiType())
                     .setStatus(StatusEnum._0.getStatus())
             );
@@ -223,16 +224,17 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
     }
 
     @Override
-    public ChannelHistoryTable getChannelHistoryInfo(MerPayOrderApplyDTO merPayOrderApplyDTO, InnerPrintLogObject ipo) throws NewPayException {
+    public ChannelHistoryTable getChannelHistoryInfo(InnerPrintLogObject ipo,String ...args) throws NewPayException {
+
         final String localPoint="getChannelHistoryInfo";
         ChannelHistoryTable channelHistoryTable=null;
         Calendar calendar= Calendar.getInstance();
         SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
         try {
             channelHistoryTable = commonRPCComponent.apiChannelHistoryService.getOne(new ChannelHistoryTable()
-                    .setMerchantId(merPayOrderApplyDTO.getMerId())
-                    .setTerminalMerId(merPayOrderApplyDTO.getTerMerId())
-                    .setProductId(merPayOrderApplyDTO.getProductType())
+                    .setMerchantId(args[0])
+                    .setTerminalMerId(args[1])
+                    .setProductId(args[2])
                     .setCreateTime(dateFormat.format(calendar.getTime())));
         }catch (Exception e){
             e.printStackTrace();
@@ -297,9 +299,9 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
     }
 
     @Override
-    public void checkSingleAmountRisk(MerPayOrderApplyDTO merPayOrderApplyDTO, MerchantQuotaRiskTable merchantQuotaRiskTable, InnerPrintLogObject ipo) throws NewPayException {
+    public void checkSingleAmountRisk(String amountStr, MerchantQuotaRiskTable merchantQuotaRiskTable, InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="checkSingleAmountRisk";
-        BigDecimal amount = new BigDecimal(merPayOrderApplyDTO.getAmount());
+        BigDecimal amount = new BigDecimal(amountStr);
         state(amount.compareTo(merchantQuotaRiskTable.getSingleQuotaAmount())>0,
                 ResponseCodeEnum.RXH00012.getCode(),
                 format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;",ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00012.getMsg(),localPoint),
@@ -308,7 +310,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
     }
 
     @Override
-    public void executePlatformRisk(MerPayOrderApplyDTO merPayOrderApplyDTO, MerchantQuotaRiskTable merchantQuotaRiskTable, Tuple2<RiskQuotaTable, RiskQuotaTable> merRiskQuota, InnerPrintLogObject ipo) throws NewPayException {
+    public void executePlatformRisk(String amount, MerchantQuotaRiskTable merchantQuotaRiskTable, Tuple2<RiskQuotaTable, RiskQuotaTable> merRiskQuota, InnerPrintLogObject ipo) throws NewPayException {
         final String localPoint="getRiskQuotaInfo";
         //历史统计交易量
         RiskQuotaTable _dd = merRiskQuota._1;
@@ -323,7 +325,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
             //单日交易量风控判断
             BigDecimal d_Amount =  _dd.getAmount();
             d_Amount =(null == d_Amount ? new BigDecimal(0) : d_Amount );
-            d_Amount = d_Amount.add( new BigDecimal(merPayOrderApplyDTO.getAmount()) );
+            d_Amount = d_Amount.add( new BigDecimal(amount) );
             state(d_Amount.compareTo(dayQuotaAmount) > 1,
                     ResponseCodeEnum.RXH00036.getCode(),
                     format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH00036.getMsg(), localPoint),
@@ -332,7 +334,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
         if(!isNull(_mm)){
             BigDecimal m_Amount = _mm.getAmount();
             m_Amount = ( null == m_Amount ? new BigDecimal(0) : m_Amount );
-            m_Amount.add( new BigDecimal(merPayOrderApplyDTO.getAmount()) );
+            m_Amount.add( new BigDecimal(amount) );
             state(m_Amount.compareTo(monthQuotaAmount) > 1,
                     ResponseCodeEnum.RXH00037.getCode(),
                     format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH00037.getMsg(), localPoint),
@@ -403,10 +405,10 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
     }
 
     @Override
-    public ChannelInfoTable executeChannelRisk(MerPayOrderApplyDTO merPayOrderApplyDTO, ChannelInfoTable channelInfoTable, Tuple2<RiskQuotaTable, RiskQuotaTable> channelRiskQuota, InnerPrintLogObject ipo) throws NewPayException {
+    public ChannelInfoTable executeChannelRisk(ChannelInfoTable channelInfoTable, Tuple2<RiskQuotaTable, RiskQuotaTable> channelRiskQuota, InnerPrintLogObject ipo,String ...args) throws NewPayException {
         final String localPoint="executeChannelRisk";
         //单前交易金额
-        BigDecimal amount = new BigDecimal(merPayOrderApplyDTO.getAmount());
+        BigDecimal amount = new BigDecimal(args[0]);
         //通道单笔最小金额
         BigDecimal ch_mim_amount = channelInfoTable.getSingleMinAmount();
         ch_mim_amount = (null == ch_mim_amount ? new BigDecimal(0) : ch_mim_amount );
@@ -497,7 +499,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
     }
 
     @Override
-    public ChannelInfoTable getFeasibleChannel(MerPayOrderApplyDTO merPayOrderApplyDTO, List<ChannelInfoTable> channelInfoTableList, InnerPrintLogObject ipo) throws NewPayException {
+    public ChannelInfoTable getFeasibleChannel(List<ChannelInfoTable> channelInfoTableList, InnerPrintLogObject ipo,String ...args) throws NewPayException {
         final String localPoint="getFeasibleChannel";
         //获取匹配的通道历史交易
         Set<String> channelIdSet = channelInfoTableList.stream().map(t ->t.getChannelId() ).collect(Collectors.toSet());
@@ -522,7 +524,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
         final String d = dd.format(calendar.getTime());
         final String m = mm.format(calendar.getTime());
         //当前交易金额
-        BigDecimal amount = new BigDecimal(merPayOrderApplyDTO.getAmount());
+        BigDecimal amount = new BigDecimal(args[0]);
         for(ChannelInfoTable ci : channelInfoTableList){
             {
                 //单笔最小金额
@@ -889,16 +891,16 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
     }
 
     @Override
-    public List<MerchantCardTable> filterMerCardByPaymentMsg(List<MerchantCardTable> merchantCardTableList, MerPayOrderApplyDTO merPayOrderApplyDTO, InnerPrintLogObject ipo) throws NewPayException {
+    public List<MerchantCardTable> filterMerCardByPaymentMsg(List<MerchantCardTable> merchantCardTableList,InnerPrintLogObject ipo,String ...args) throws NewPayException {
         final String localPoint="filterMerCardByPaymentMsg";
         List<MerchantCardTable>  list =  merchantCardTableList.stream().filter(merCard->
-                merCard.getBankCardNum().equalsIgnoreCase(merPayOrderApplyDTO.getBankCardNum())
-                        && merCard.getBankCardPhone().equalsIgnoreCase(merPayOrderApplyDTO.getBankCardPhone()) ).collect(Collectors.toList());
+                merCard.getBankCardNum().equalsIgnoreCase(args[0])
+                        && merCard.getBankCardPhone().equalsIgnoreCase(args[1]) ).collect(Collectors.toList());
         isNull(list,
                 ResponseCodeEnum.RXH00034.getCode(),
                 format("%s-->商户号：%s；终端号：%s；银行卡号：%s,手机号：%s,错误信息: %s ；代码所在位置：%s;",
-                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),merPayOrderApplyDTO.getBankCardNum(),
-                        merPayOrderApplyDTO.getBankCardPhone(),ResponseCodeEnum.RXH00034.getMsg(),localPoint),
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),args[0],
+                        args[1],ResponseCodeEnum.RXH00034.getMsg(),localPoint),
                 format(" %s",ResponseCodeEnum.RXH00034.getMsg()));
         return list;
     }
@@ -923,14 +925,14 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
     }
 
     @Override
-    public List<ChannelInfoTable> getAllUsableChannelList(List<RegisterCollectTable> registerCollectTableList, MerPayOrderApplyDTO merPayOrderApplyDTO, InnerPrintLogObject ipo) throws NewPayException {
+    public List<ChannelInfoTable> getAllUsableChannelList(List<RegisterCollectTable> registerCollectTableList, InnerPrintLogObject ipo,String ...args) throws NewPayException {
         final String localPoint="getAllUsableChannelList";
         Set<String> organizationIdSet = registerCollectTableList.stream().map(RegisterCollectTable::getOrganizationId).collect(Collectors.toSet());
         List<ChannelInfoTable> list = null;
         try {
             list = commonRPCComponent.apiChannelInfoService.getList(new ChannelInfoTable()
                     .setOrganizationIds(organizationIdSet)
-                    .setProductId(merPayOrderApplyDTO.getProductType())
+                    .setProductId(args[0])
                     .setStatus(StatusEnum._0.getStatus()));
         }catch (Exception e){
             e.printStackTrace();
@@ -945,7 +947,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
                 ResponseCodeEnum.RXH00034.getCode(),
                 format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,错误根源：根据组织id:%s,产品类型：%s，查询结果为null",
                         ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(), ResponseCodeEnum.RXH00034.getMsg(),localPoint
-                        , JSON.toJSONString(organizationIdSet),merPayOrderApplyDTO.getProductType()),
+                        , JSON.toJSONString(organizationIdSet),args[0]),
                 format(" %s",ResponseCodeEnum.RXH00034.getMsg()));
 
         return list;
@@ -967,11 +969,11 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
     }
 
     @Override
-    public MerchantCardTable finallyFilterMerCard(List<MerchantCardTable> merchantCardTableList, MerPayOrderApplyDTO merPayOrderApplyDTO, InnerPrintLogObject ipo) throws NewPayException {
+    public MerchantCardTable finallyFilterMerCard(List<MerchantCardTable> merchantCardTableList,InnerPrintLogObject ipo,String ...args) throws NewPayException {
         final String localPoint="finallyFilterMerCard";
         MerchantCardTable merchantCardTable = merchantCardTableList.stream()
-                .filter(merCard-> merCard.getBankCardNum().equalsIgnoreCase(merPayOrderApplyDTO.getBankCardNum())
-                        && merCard.getBankCardPhone().equalsIgnoreCase(merPayOrderApplyDTO.getBankCardPhone())
+                .filter(merCard-> merCard.getBankCardNum().equalsIgnoreCase(args[0])
+                        && merCard.getBankCardPhone().equalsIgnoreCase(args[1])
                 ).findAny().orElse(null);
         isNull(merchantCardTable,
                 ResponseCodeEnum.RXH00034.getCode(),
@@ -1009,7 +1011,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
     }
 
     @Override
-    public MerchantCardTable getMerCardByChanAndReg(ChannelInfoTable channelInfoTable, RegisterCollectTable registerCollectTable, MerPayOrderApplyDTO merPayOrderApplyDTO, InnerPrintLogObject ipo) throws NewPayException {
+    public MerchantCardTable getMerCardByChanAndReg(ChannelInfoTable channelInfoTable, RegisterCollectTable registerCollectTable, InnerPrintLogObject ipo,String ...args) throws NewPayException {
         final String localPoint="getMerCardByChanAndReg";
         MerchantCardTable merchantCardTable = null;
         try{
@@ -1018,8 +1020,8 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
                     .setBussType(BusinessTypeEnum.b6.getBusiType())
                     .setOrganizationId(channelInfoTable.getOrganizationId())
                     .setProductId(channelInfoTable.getProductId())
-                    .setBankCardNum(merPayOrderApplyDTO.getBankCardNum())
-                    .setBankCardPhone(merPayOrderApplyDTO.getBankCardPhone()));
+                    .setBankCardNum(args[0])
+                    .setBankCardPhone(args[1]));
         }catch (Exception e){
             e.printStackTrace();
             throw new NewPayException(
@@ -1176,6 +1178,189 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
             );
         }
         return  payOrderInfoTable;
+    }
+
+    @Override
+    public PayOrderInfoTable savePayOrderByNoAuth(MerchantInfoTable merInfoTable, MerNoAuthPayOrderApplyDTO merNoAuthPayOrderApplyDTO, ChannelInfoTable channelInfoTable, RegisterCollectTable registerCollectTable, MerchantCardTable merchantCardTable, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="savePayOrder";
+        AgentMerchantSettingTable agentMerchantSettingTable;
+        MerchantRateTable merchantRateTable;
+        BankRateTable  bankRateTable = null;
+        try {
+            agentMerchantSettingTable = commonRPCComponent.apiAgentMerchantSettingService.getOne(new AgentMerchantSettingTable()
+                    .setAgentMerchantId(merInfoTable.getAgentMerchantId())
+                    .setProductId(merNoAuthPayOrderApplyDTO.getProductType())
+                    .setStatus(StatusEnum._0.getStatus()));
+
+            merchantRateTable = commonRPCComponent.apiMerchantRateService.getOne(new MerchantRateTable()
+                    .setMerchantId(merNoAuthPayOrderApplyDTO.getMerId())
+                    .setProductId(merNoAuthPayOrderApplyDTO.getProductType())
+                    .setStatus(StatusEnum._0.getStatus()));
+
+            if(merNoAuthPayOrderApplyDTO.getProductType().equalsIgnoreCase(ProductTypeEnum.RH_QUICKPAY_LARGE_REP.getProductId())
+                    || merNoAuthPayOrderApplyDTO.getProductType().equalsIgnoreCase(ProductTypeEnum.RH_QUICKPAY_LARGE.getProductId())){
+                bankRateTable = commonRPCComponent.apiBankRateService.getOne(new BankRateTable()
+                        .setBankCode(merNoAuthPayOrderApplyDTO.getBankCode())
+                        .setOrganizationId(channelInfoTable.getOrganizationId())
+                        .setProductId(merNoAuthPayOrderApplyDTO.getProductType()));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：申请支付时，保存订单前，查询商户代理商信息或者是查询商户费率设置信息时发生异常,异常信息：%s",
+                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }
+
+
+        if(merNoAuthPayOrderApplyDTO.getProductType().equalsIgnoreCase(ProductTypeEnum.RH_QUICKPAY_LARGE_REP.getProductId())
+                || merNoAuthPayOrderApplyDTO.getProductType().equalsIgnoreCase(ProductTypeEnum.RH_QUICKPAY_LARGE.getProductId())){
+            isNull(bankRateTable,
+                    ResponseCodeEnum.RXH00044.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;异常根源：申请支付时，大额银行卡费率为null",
+                            ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00044.getMsg(),localPoint),
+                    format(" %s",ResponseCodeEnum.RXH00044.getMsg()));
+        }
+
+
+        isNull(merchantRateTable,
+                ResponseCodeEnum.RXH00041.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;获取产品（%s）的商户费率为null",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00041.getMsg(),localPoint, merNoAuthPayOrderApplyDTO.getProductType()),
+                format(" %s",ResponseCodeEnum.RXH00041.getMsg()));
+
+        BigDecimal amount =  new BigDecimal(merNoAuthPayOrderApplyDTO.getAmount());
+        BigDecimal payFee = new BigDecimal(merNoAuthPayOrderApplyDTO.getPayFee());
+
+        //计算终端费用和入账金额
+        payFee = payFee.divide(new BigDecimal(100)); //转小数
+        BigDecimal terFee=  amount.multiply(payFee).setScale(2, BigDecimal.ROUND_UP);
+        BigDecimal inAmount = amount.subtract(terFee);
+
+
+        //商户费用
+        BigDecimal merRate = null;
+        BigDecimal merFree = null;
+        if( !isNull(bankRateTable)){
+            merRate = bankRateTable.getBankRate();
+            merRate = (null == merRate ? new BigDecimal(0) : merRate);
+            merFree =  amount.multiply(merRate.divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_UP);
+        }else{
+            merRate = merchantRateTable.getRateFee();
+            merRate = (null == merRate ? new BigDecimal(0) : merRate);
+            BigDecimal singleFree = merchantRateTable.getSingleFee();
+            singleFree = (null == singleFree ? new BigDecimal(0) : singleFree);
+            merFree = amount.multiply(merRate.divide(new BigDecimal(100))).add(singleFree).setScale(2, BigDecimal.ROUND_UP);
+
+        }
+
+        state(merFree.compareTo(terFee) == 1,
+                ResponseCodeEnum.RXH00042.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;payFree = %s,商户费率 = %s",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00042.getMsg(),localPoint,
+                        merNoAuthPayOrderApplyDTO.getPayFee(),merchantRateTable.getRateFee()),
+                format(" %s",ResponseCodeEnum.RXH00042.getMsg()));
+
+        //通道费用
+        BigDecimal channelRate = channelInfoTable.getChannelRateFee();
+        channelRate = (null == channelRate ? new BigDecimal(0) : channelRate);
+        BigDecimal channelSingleFee = channelInfoTable.getChannelSingleFee();
+        channelSingleFee = (null == channelSingleFee ? new BigDecimal(0) : channelSingleFee);
+        BigDecimal channelFeeAmount = amount.multiply(channelRate.divide(new BigDecimal(100))).add(channelSingleFee).setScale(2, BigDecimal.ROUND_UP);
+
+        state(channelFeeAmount.compareTo(terFee) == 1,
+                ResponseCodeEnum.RXH00042.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;payFree = %s,通道费率 = %s",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00042.getMsg(),localPoint,
+                        merNoAuthPayOrderApplyDTO.getPayFee(),channelInfoTable.getChannelRateFee()),
+                format(" %s",ResponseCodeEnum.RXH00042.getMsg()));
+
+
+        state(channelFeeAmount.compareTo(merFree) == 1,
+                ResponseCodeEnum.RXH00044.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;错误问题：通道费用大于平台收取商户的费用；通道费率 = %s,商户费率 = %s",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00044.getMsg(),localPoint,
+                        channelInfoTable.getChannelRateFee(),merchantRateTable.getRateFee()),
+                format(" %s",ResponseCodeEnum.RXH00044.getMsg()));
+
+        //商户费用+通道费用 不大于 终端费用
+        BigDecimal merAddChanFree = merFree.add(channelFeeAmount);
+        state(merAddChanFree.compareTo(terFee) == 1,
+                ResponseCodeEnum.RXH00044.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;错误问题：通道费用（%s）+商户费用(%s)>终端费用（%s）"
+                        ,ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00044.getMsg(),localPoint,
+                        channelFeeAmount,merFree,terFee),
+                format(" %s",ResponseCodeEnum.RXH00044.getMsg()));
+
+
+        //代理商费用
+        BigDecimal agentMerRate = null;
+        BigDecimal agentMerFree = null;
+        if(!isNull(agentMerchantSettingTable)){
+            agentMerRate = agentMerchantSettingTable.getRateFee();
+            agentMerRate = (null == agentMerRate ? new BigDecimal(0) : agentMerRate);
+            BigDecimal agentSingleFree = agentMerchantSettingTable.getSingleFee();
+            agentSingleFree = (null == agentSingleFree ? new BigDecimal(0) : agentSingleFree );
+            agentMerFree = amount.multiply(agentMerRate.divide(new BigDecimal(100))).add(agentSingleFree).setScale(2, BigDecimal.ROUND_UP);
+
+            BigDecimal threeTotalFee = merAddChanFree.add(agentMerFree);
+            state( threeTotalFee.compareTo(terFee) == 1,
+                    ResponseCodeEnum.RXH00044.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;错误问题：通道费用（%s）+商户费用(%s)+代理商费用（%s）>终端费用（%s）",
+                            ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00044.getMsg(),localPoint,
+                            channelFeeAmount,merFree,agentMerFree,terFee),
+                    format(" %s",ResponseCodeEnum.RXH00044.getMsg()));
+        }
+
+
+        //平台收入 = 商户费用-通道费用-代理商费用
+        BigDecimal platformIncome = merFree.subtract(channelFeeAmount).subtract(agentMerFree);
+        state( platformIncome.compareTo(new BigDecimal(0)) == -1,
+                ResponseCodeEnum.RXH00044.getCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s; 平台利润为负（%s）=商户费用（%s）-通道费用（%s）-代理商费用（%s）",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00044.getMsg(),localPoint,
+                        platformIncome, merFree,channelFeeAmount,agentMerFree),
+                format(" %s",ResponseCodeEnum.RXH00044.getMsg()));
+
+        PayOrderInfoTable payOrderInfoTable = new PayOrderInfoTable();
+        payOrderInfoTable
+                .setMerOrderId(merNoAuthPayOrderApplyDTO.getMerOrderId())                         .setId(System.currentTimeMillis())
+                .setPlatformOrderId("RXH" + new Random(System.currentTimeMillis()).nextInt(1000000) + "-B7" + System.currentTimeMillis())
+                .setMerchantId(merNoAuthPayOrderApplyDTO.getMerId())                              .setTerminalMerId(merNoAuthPayOrderApplyDTO.getTerMerId())
+                .setIdentityType( Integer.valueOf(merNoAuthPayOrderApplyDTO.getIdentityType()))   .setIdentityNum(merNoAuthPayOrderApplyDTO.getIdentityNum())
+                .setBankCode(merNoAuthPayOrderApplyDTO.getBankCode())                             .setBankCardType(Integer.valueOf(merNoAuthPayOrderApplyDTO.getBankCardType()))
+                .setBankCardNum(merNoAuthPayOrderApplyDTO.getBankCardNum())                       .setBankCardPhone(merNoAuthPayOrderApplyDTO.getBankCardPhone())
+                .setValidDate(merNoAuthPayOrderApplyDTO.getValidDate())                           .setSecurityCode(merNoAuthPayOrderApplyDTO.getSecurityCode())
+                .setDeviceId(null)                                                                .setDeviceType(null)
+                .setMacAddr(null)                                                                 .setChannelId(channelInfoTable.getChannelId())
+                .setRegPlatformOrderId(registerCollectTable.getPlatformOrderId())           .setCardPlatformOrderId(merchantCardTable.getPlatformOrderId())
+                .setBussType(BusinessTypeEnum.b7.getBusiType())                             .setProductId(channelInfoTable.getProductId())
+                .setProductFee(channelInfoTable.getProductFee())                            .setCurrency(merNoAuthPayOrderApplyDTO.getCurrency())
+                .setAmount(amount)                                                          .setInAmount(inAmount)
+                .setTerFee(terFee)                                                          .setPayFee(new BigDecimal(merNoAuthPayOrderApplyDTO.getPayFee()))
+                .setChannelRate(channelInfoTable.getChannelRateFee())                       .setChannelFee(channelFeeAmount)
+                .setAgentRate(agentMerchantSettingTable.getRateFee())                       .setAgentFee(agentMerFree)
+                .setMerRate( merchantRateTable.getRateFee())                                .setMerFee(merFree)
+                .setPlatformIncome(platformIncome)                                          .setSettleCycle(merchantRateTable.getSettleCycle())
+                .setSettleStatus(1)                                                         .setStatus(StatusEnum._2.getStatus())
+                .setChannelRespResult(null)                                                 .setCrossRespResult(null)
+                .setCreateTime(new Date())                                                  .setUpdateTime(new Date());
+
+        try {
+            commonRPCComponent.apiPayOrderInfoService.save(payOrderInfoTable);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：申请支付时，保存订单时发生异常,异常信息：%s",
+                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }
+
+        return payOrderInfoTable;
     }
 
     @Override

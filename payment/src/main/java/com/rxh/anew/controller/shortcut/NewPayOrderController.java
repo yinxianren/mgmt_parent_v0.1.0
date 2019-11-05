@@ -43,6 +43,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * 收单
  * Created with IntelliJ IDEA.
  * User: panda
  * Date: 2019/10/29
@@ -95,13 +96,13 @@ public class NewPayOrderController extends NewAbstractCommonController {
             //获取商户风控表
             MerchantQuotaRiskTable merchantQuotaRiskTable = newPayOrderService.getMerchantQuotaRiskByMerId(merInfoTable.getMerchantId(),ipo);
             //执行单笔风控
-            newPayOrderService.checkSingleAmountRisk(merPayOrderApplyDTO,merchantQuotaRiskTable,ipo);
+            newPayOrderService.checkSingleAmountRisk(merPayOrderApplyDTO.getAmount(),merchantQuotaRiskTable,ipo);
             //获取风控交易量统计数据
             Tuple2<RiskQuotaTable,RiskQuotaTable> MerRiskQuota = newPayOrderService.getRiskQuotaInfoByMer(merInfoTable,ipo);
             //执行风控控制
-            newPayOrderService.executePlatformRisk(merPayOrderApplyDTO,merchantQuotaRiskTable,MerRiskQuota,ipo);
+            newPayOrderService.executePlatformRisk(merPayOrderApplyDTO.getAmount(),merchantQuotaRiskTable,MerRiskQuota,ipo);
             //2.查询通道使用记录
-            ChannelHistoryTable channelHistoryTable = newPayOrderService.getChannelHistoryInfo(merPayOrderApplyDTO,ipo);
+            ChannelHistoryTable channelHistoryTable = newPayOrderService.getChannelHistoryInfo(ipo,merPayOrderApplyDTO.getMerId(),merPayOrderApplyDTO.getTerMerId(),merPayOrderApplyDTO.getProductType());
             //通道信息
             ChannelInfoTable channelInfoTable = null;
             //进件信息
@@ -111,7 +112,7 @@ public class NewPayOrderController extends NewAbstractCommonController {
             //没有通道使用记录
             if(isNull(channelHistoryTable)){
                 //获取成功进件记录
-                List<RegisterCollectTable> registerCollectTableList = newPayOrderService.getSuccessRegisterInfo(merPayOrderApplyDTO, ipo);
+                List<RegisterCollectTable> registerCollectTableList = newPayOrderService.getSuccessRegisterInfo(ipo,merPayOrderApplyDTO.getMerId(),merPayOrderApplyDTO.getTerMerId(),merPayOrderApplyDTO.getProductType());
                 //根据商户配置信息
                 List<MerchantSettingTable> merchantSettingTableList = newPayOrderService.getMerchantSetting(ipo);
                 //根据配置通道信息过滤可用的进件信息
@@ -119,17 +120,17 @@ public class NewPayOrderController extends NewAbstractCommonController {
                 //根据进件信息获取邦卡记录
                 List<MerchantCardTable> merchantCardTableList = newPayOrderService.getSuccessMerchantCardInfo(registerCollectTableList, ipo);
                 //根据收单的信息过滤出绑卡信息
-                merchantCardTableList= newPayOrderService.filterMerCardByPaymentMsg(merchantCardTableList,merPayOrderApplyDTO,ipo);
+                merchantCardTableList= newPayOrderService.filterMerCardByPaymentMsg(merchantCardTableList,ipo,merPayOrderApplyDTO.getBankCardNum(),merPayOrderApplyDTO.getBankCardPhone());
                 //根据进件信息和绑卡信息过滤进件信息,  merchantCardTableList,registerCollectTableList 有共同的组织机构
                 registerCollectTableList  = newPayOrderService.filterRegCollectInfoByMerCard(registerCollectTableList,merchantCardTableList,ipo);
                 //获取可行的通道
-                List<ChannelInfoTable> channelInfoTableList = newPayOrderService.getAllUsableChannelList(registerCollectTableList,merPayOrderApplyDTO,ipo);
+                List<ChannelInfoTable> channelInfoTableList = newPayOrderService.getAllUsableChannelList(registerCollectTableList,ipo,merPayOrderApplyDTO.getProductType());
                 //获取最终可用的通道
-                channelInfoTable = newPayOrderService.getFeasibleChannel(merPayOrderApplyDTO,channelInfoTableList,ipo);
+                channelInfoTable = newPayOrderService.getFeasibleChannel(channelInfoTableList,ipo,merPayOrderApplyDTO.getAmount());
                 //确定进件信息
                 registerCollectTable = newPayOrderService.finallyFilterRegCollect(channelInfoTable,registerCollectTableList,ipo);
                 //确定绑卡信息
-                merchantCardTable = newPayOrderService.finallyFilterMerCard(merchantCardTableList,merPayOrderApplyDTO,ipo);
+                merchantCardTable = newPayOrderService.finallyFilterMerCard(merchantCardTableList,ipo,merPayOrderApplyDTO.getBankCardNum() ,merPayOrderApplyDTO.getBankCardPhone());
             }else{
                 //获取通道信息
                 channelInfoTable = newPayOrderService.getChannelInfoByChannelHistory(channelHistoryTable,ipo);
@@ -144,35 +145,35 @@ public class NewPayOrderController extends NewAbstractCommonController {
                     //获取该通道历史统计交易量
                     Tuple2<RiskQuotaTable,RiskQuotaTable> channelRiskQuota = newPayOrderService.getRiskQuotaInfoByChannel(channelInfoTable,ipo);
                     //执行通道风控
-                    channelInfoTable = newPayOrderService.executeChannelRisk(merPayOrderApplyDTO,channelInfoTable,channelRiskQuota,ipo);
+                    channelInfoTable = newPayOrderService.executeChannelRisk(channelInfoTable,channelRiskQuota,ipo,merPayOrderApplyDTO.getAmount());
                 }
                 //如果该通道从商户配置中删除，则该通道为null,需要重新获取一次
                 if(isNull(channelInfoTable)){
                     //获取成功进件记录
-                    List<RegisterCollectTable> registerCollectTableList = newPayOrderService.getSuccessRegisterInfo(merPayOrderApplyDTO, ipo);
+                    List<RegisterCollectTable> registerCollectTableList = newPayOrderService.getSuccessRegisterInfo(ipo,merPayOrderApplyDTO.getMerId(),merPayOrderApplyDTO.getTerMerId(),merPayOrderApplyDTO.getProductType());
                     //根据配置通道信息过滤可用的进件信息
                     registerCollectTableList = newPayOrderService.filterRegCollectByMerSet(registerCollectTableList,merchantSettingTableList,ipo);
                     //根据进件信息获取邦卡记录
                     List<MerchantCardTable> merchantCardTableList = newPayOrderService.getSuccessMerchantCardInfo(registerCollectTableList, ipo);
                     //根据收单的信息过滤出绑卡信息
-                    merchantCardTableList= newPayOrderService.filterMerCardByPaymentMsg(merchantCardTableList,merPayOrderApplyDTO,ipo);
+                    merchantCardTableList= newPayOrderService.filterMerCardByPaymentMsg(merchantCardTableList,ipo,merPayOrderApplyDTO.getBankCardNum(),merPayOrderApplyDTO.getBankCardPhone());
                     //根据进件信息和绑卡信息过滤进件信息,  merchantCardTableList,registerCollectTableList 有共同的组织机构
                     registerCollectTableList  = newPayOrderService.filterRegCollectInfoByMerCard(registerCollectTableList,merchantCardTableList,ipo);
                     //获取可行的通道
-                    List<ChannelInfoTable> channelInfoTableList = newPayOrderService.getAllUsableChannelList(registerCollectTableList,merPayOrderApplyDTO,ipo);
+                    List<ChannelInfoTable> channelInfoTableList = newPayOrderService.getAllUsableChannelList(registerCollectTableList,ipo,merPayOrderApplyDTO.getProductType());
                     //去除前面备份的通道
                     channelInfoTableList = newPayOrderService.subtractUnableChanInfo(channelInfoTableList,channelInfoTable_back,ipo);
                     //获取最终可用的通道
-                    channelInfoTable = newPayOrderService.getFeasibleChannel(merPayOrderApplyDTO,channelInfoTableList,ipo);
+                    channelInfoTable = newPayOrderService.getFeasibleChannel(channelInfoTableList,ipo,merPayOrderApplyDTO.getAmount());
                     //确定进件信息
                     registerCollectTable = newPayOrderService.finallyFilterRegCollect(channelInfoTable,registerCollectTableList,ipo);
                     //确定绑卡信息
-                    merchantCardTable = newPayOrderService.finallyFilterMerCard(merchantCardTableList,merPayOrderApplyDTO,ipo);
+                    merchantCardTable = newPayOrderService.finallyFilterMerCard(merchantCardTableList,ipo,merPayOrderApplyDTO.getBankCardNum() ,merPayOrderApplyDTO.getBankCardPhone());
                 }else {
                     //获取进件信息
                     registerCollectTable = newPayOrderService.getSuccessRegInfoByChanInfo(channelInfoTable, ipo);
                     //获取绑卡信息
-                    merchantCardTable = newPayOrderService.getMerCardByChanAndReg(channelInfoTable, registerCollectTable, merPayOrderApplyDTO, ipo);
+                    merchantCardTable = newPayOrderService.getMerCardByChanAndReg(channelInfoTable, registerCollectTable, ipo, merPayOrderApplyDTO.getBankCardNum(),merPayOrderApplyDTO.getBankCardPhone());
                 }
             }
             //3.保存订单信息
@@ -352,8 +353,8 @@ public class NewPayOrderController extends NewAbstractCommonController {
             //状态为成功是才执行以下操作
             if(crossResponseMsgDTO.getCrossStatusCode().equals(StatusEnum._0.getStatus())){
                 MerPayOrderApplyDTO  merPayOrderApplyDTO = newPayOrderService.getMerPayOrderApplyDTO(payOrderInfoTable);
-                //查询通道使用记录
-                ChannelHistoryTable channelHistoryTable = newPayOrderService.getChannelHistoryInfo(merPayOrderApplyDTO,ipo);
+                //查询通道使用记录  MerchantId  TerminalMerId ProductId
+                ChannelHistoryTable channelHistoryTable = newPayOrderService.getChannelHistoryInfo(ipo,merPayOrderApplyDTO.getMerId(),merPayOrderApplyDTO.getTerMerId(),merPayOrderApplyDTO.getProductType());
                 //更新通道历史使用记录 8_channel_history_table
                 ChannelHistoryTable  cht = newPayOrderService.updateByChannelHistoryInfo(channelHistoryTable,payOrderInfoTable);
                 //获取风控交易量统计数据
