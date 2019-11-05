@@ -11,4 +11,5 @@ public class ResponseVO implements Serializable {
     private String message;
     private Object Data;
     private PageInfo pageinfo;
+    private Object customData;
 }

@@ -16,4 +16,9 @@ public class MerchantRoleServiceImpl extends AbstractBaseService<MerchantRole, L
         this.merchantRoleMapper = merchantRoleMapper;
         setMapper(merchantRoleMapper);
     }
+
+    @Override
+    public int save(MerchantRole role) {
+        return merchantRoleMapper.insert(role);
+    }
 }

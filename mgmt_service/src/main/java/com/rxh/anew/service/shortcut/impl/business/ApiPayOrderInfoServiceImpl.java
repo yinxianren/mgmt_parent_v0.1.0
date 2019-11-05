@@ -2,11 +2,15 @@ package com.rxh.anew.service.shortcut.impl.business;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rxh.anew.service.db.business.PayOrderInfoDBService;
 import com.rxh.anew.table.business.PayOrderInfoTable;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.service.anew.business.ApiPayOrderInfoService;
+import com.rxh.vo.PageInfo;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,5 +64,21 @@ public class ApiPayOrderInfoServiceImpl implements ApiPayOrderInfoService, NewPa
     public boolean updateByPrimaryKey(PayOrderInfoTable pit) {
         if(isNull(pit)) return false;
         return payOrderInfoDBService.updateById(pit);
+    }
+
+    @Override
+    public IPage page(PayOrderInfoTable pit) {
+        if (isNull(pit)) return new Page();
+        LambdaQueryWrapper<PayOrderInfoTable> queryWrapper = new QueryWrapper<PayOrderInfoTable>().lambda();
+        if (StringUtils.isNotEmpty(pit.getMerchantId())) queryWrapper.eq(PayOrderInfoTable::getMerchantId,pit.getMerchantId());
+        if (StringUtils.isNotEmpty(pit.getPlatformOrderId())) queryWrapper.eq(PayOrderInfoTable::getPlatformOrderId,pit.getPlatformOrderId());
+//            if (StringUtils.isNotEmpty(pit.getOrganizationId())) queryWrapper.setChannelId(searchInfo.getExpressName());
+        if (null != (pit.getStatus())) queryWrapper.eq(PayOrderInfoTable::getStatus,pit.getStatus());
+        if (null != (pit.getSettleStatus())) queryWrapper.eq(PayOrderInfoTable::getSettleStatus,pit.getSettleStatus());
+        if (StringUtils.isNotEmpty(pit.getProductId())) queryWrapper.eq(PayOrderInfoTable::getProductId,pit.getProductId());
+        if (null != (pit.getBeginTime())) queryWrapper.ge(PayOrderInfoTable::getCreateTime,pit.getBeginTime());
+        if (null != pit.getEndTime()) queryWrapper.le(PayOrderInfoTable::getUpdateTime,pit.getEndTime());
+        IPage<PayOrderInfoTable> iPage = new Page(pit.getPageNum(),pit.getPageSize());
+        return payOrderInfoDBService.page(iPage,queryWrapper);
     }
 }

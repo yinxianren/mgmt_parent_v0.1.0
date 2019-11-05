@@ -1,11 +1,14 @@
 package com.rxh.controller.anew.merchant;
 
+import com.rxh.anew.table.merchant.MerchantRateTable;
 import com.rxh.pojo.Result;
+import com.rxh.service.AnewMerchantRateService;
 import com.rxh.service.ConstantService;
 import com.rxh.service.square.MerchantSquareRateService;
 import com.rxh.square.pojo.MerchantRate;
 import com.rxh.square.pojo.MerchantSetting;
 import com.rxh.utils.SystemConstant;
+import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,24 +23,20 @@ import java.util.Map;
 public class AnewMerchantRateController {
 
     @Autowired
-    private MerchantSquareRateService merchantSquareRateService;
-    @Autowired
-    private ConstantService constantService;
+    private AnewMerchantRateService anewMerchantRateService;
 
     @RequestMapping("/search")
-    public List<MerchantRate> search(@RequestBody MerchantSetting merchantSetting){
-        return  merchantSquareRateService.search(merchantSetting.getMerId());
+    public ResponseVO search(@RequestBody MerchantRateTable merchantRateTable){
+        return  anewMerchantRateService.getList(merchantRateTable);
     }
 
     @RequestMapping("/update")
-    public Result update(@RequestBody  List<MerchantRate> param ){
-        return merchantSquareRateService.update(param);
+    public ResponseVO update(@RequestBody  List<MerchantRateTable> param ){
+        return anewMerchantRateService.batchUpdate(param);
     }
 
     @RequestMapping("/init")
-    public Map<String,Object> init(){
-        Map<String,Object> init = new HashMap<>();
-        init.put("productTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PRODUCTTYPE));
-        return init;
+    public ResponseVO init(){
+        return anewMerchantRateService.init();
     }
 }

@@ -44,6 +44,9 @@
 
 
 
+    <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantWalletService"      ref="apiAgentMerchantWalletServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.merchant.MerchantPrivilegesService" ref="merchantPrivilegesServiceImpl" />
+    <dubbo:service interface="com.rxh.service.merchant.MerchantRoleService" ref="merchantRoleServiceImpl" />
 
     <!--  **********************************************************************************************************************   -->
     <!--<dubbo:protocol name="dubbo" host="${dubbo.protocol.host}" port="${dubbo.protocol.port}" payload="1073741824"/>-->

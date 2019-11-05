@@ -1,4 +1,4 @@
-package com.rxh.controller.trading;
+package com.rxh.controller.anew.order;
 
 
 import com.rxh.pojo.Result;
@@ -12,21 +12,20 @@ import com.rxh.service.square.OrganizationService;
 import com.rxh.service.trading.TransOrderService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.utils.SystemConstant;
-import org.springframework.web.bind.annotation.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
-
-/**
- * @ClassName : TransOrderController
- * @Author : zoe
- * @Date : 2019/5/19 16:15
- */
-
 @RestController
 @RequestMapping("/transOrder")
-public class TransOrderController {
+@Slf4j
+public class AnewTransOrderController {
 
     @Resource
     private TransOrderService transOrderService;

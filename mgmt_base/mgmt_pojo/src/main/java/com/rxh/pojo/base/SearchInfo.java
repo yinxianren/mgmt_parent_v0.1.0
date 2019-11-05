@@ -116,6 +116,8 @@ public class SearchInfo implements Serializable {
 
     private String agentMerId;
 
+    private String productId;
+
 
     public String getLoginIp() {
         return loginIp;
@@ -634,5 +636,13 @@ public class SearchInfo implements Serializable {
 
     public void setAgentMerId(String agentMerId) {
         this.agentMerId = agentMerId;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 }

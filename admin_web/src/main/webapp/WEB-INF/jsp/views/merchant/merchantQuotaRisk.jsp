@@ -54,10 +54,10 @@
                     <label class="col-sm-4 control-label p-w-xs"><span class="text-danger">*</span>商户：</label>
                     <div class="col-sm-8">
                         <input class="form-control b-r-sm"
-                               name="merId"
+                               name="merchantId"
                                type="text"
-                               ng-model="merchantQuotaRisk.merId"
-                               ng-blur="merIdBlur($event, merchantQuotaRisk.merId)"
+                               ng-model="merchantQuotaRisk.merchantId"
+                               ng-blur="merIdBlur($event, merchantQuotaRisk.merchantId)"
                                readonly
                                required>
                     </div>
@@ -66,7 +66,7 @@
                     <label class="col-sm-4 control-label p-w-xs"><span class="text-danger">*</span>单笔交易限额：</label>
                     <div class="col-sm-8">
                         <input class="form-control b-r-sm"
-                               name="merId"
+                               name="merchantId"
                                type="text"
                                ng-model="merchantQuotaRisk.singleQuotaAmount"
                                <%--ng-blur="merIdBlur($event, merchantQuotaRisk.singleQuotaAmount)"--%>
@@ -77,7 +77,7 @@
                     <label class="col-sm-4 control-label p-w-xs"><span class="text-danger">*</span>日交易限额：</label>
                     <div class="col-sm-8">
                         <input class="form-control b-r-sm"
-                               name="merId"
+                               name="merchantId"
                                type="text"
                                ng-model="merchantQuotaRisk.dayQuotaAmount"
                                <%--ng-blur="merIdBlur($event, merchantQuotaRisk.dayQuotaAmount)"--%>
@@ -88,7 +88,7 @@
                     <label class="col-sm-4 control-label p-w-xs"><span class="text-danger">*</span>月交易限额：</label>
                     <div class="col-sm-8">
                         <input class="form-control b-r-sm"
-                               name="merId"
+                               name="merchantId"
                                type="text"
                                ng-model="merchantQuotaRisk.monthQuotaAmount"
                                <%--ng-blur="merIdBlur($event, merchantQuotaRisk.monthQuotaAmount)"--%>

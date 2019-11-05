@@ -168,9 +168,9 @@ public class AllinPayBindCard {
                         bankResult.setParam(content);
                         bankResult.setBankCode("301");
                     }else {
-                    bankResult = new BankResult(SystemConstant.BANK_STATUS_FAIL, "error.5000");
-                    bankResult.setBankResult("绑卡失败："+status);
-                    bankResult.setParam(content);
+                        bankResult = new BankResult(SystemConstant.BANK_STATUS_FAIL, "error.5000");
+                        bankResult.setBankResult("绑卡失败："+status);
+                        bankResult.setParam(content);
                     }
                     break;
             }

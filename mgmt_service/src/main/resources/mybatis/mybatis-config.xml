@@ -28,5 +28,10 @@
             <!-- 4.0.0版本以后不需要配置方言 自动识别 :) -->
             <!--<property name="dialect" value="mysql"/>-->
         </plugin>
+        <plugin interceptor="com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor">
+            <!--<property name="sqlParser" ref="自定义解析类、可以没有" />
+            <property name="dialectClazz" value="自定义方言类、可以没有" />-->
+        </plugin>
     </plugins>
+
 </configuration>

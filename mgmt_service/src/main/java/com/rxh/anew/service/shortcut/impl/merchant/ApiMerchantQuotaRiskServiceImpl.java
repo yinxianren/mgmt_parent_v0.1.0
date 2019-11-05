@@ -47,12 +47,12 @@ public class ApiMerchantQuotaRiskServiceImpl implements ApiMerchantQuotaRiskServ
     @Override
     public boolean save(MerchantQuotaRiskTable mqr) {
         if(isNull(mqr)) return false;
-        return false;
+        return merchantQuotaRiskDBService.save(mqr);
     }
 
     @Override
     public boolean updateByPrimaryKey(MerchantQuotaRiskTable mqr) {
         if(isNull(mqr)) return false;
-        return false;
+        return merchantQuotaRiskDBService.updateById(mqr);
     }
 }

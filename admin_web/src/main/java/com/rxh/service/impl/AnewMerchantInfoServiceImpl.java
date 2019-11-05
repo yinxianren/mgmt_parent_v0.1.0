@@ -2,20 +2,31 @@ package com.rxh.service.impl;
 
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.payInterface.NewPayAssert;
+import com.rxh.pojo.merchant.MerchantPrivileges;
+import com.rxh.pojo.merchant.MerchantRole;
 import com.rxh.service.AnewMerchantInfoService;
 import com.rxh.service.anew.merchant.ApiMerchantInfoService;
+import com.rxh.service.merchant.MerchantPrivilegesService;
+import com.rxh.service.merchant.MerchantRoleService;
 import com.rxh.utils.SystemConstant;
+import com.rxh.utils.UUID;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AnewMerchantInfoServiceImpl implements AnewMerchantInfoService, NewPayAssert {
 
     @Autowired
     private ApiMerchantInfoService apiMerchantInfoService;
+    @Autowired
+    private MerchantPrivilegesService merchantPrivilegesService;
+    @Autowired
+    private MerchantRoleService merchantRoleService;
 
     @Override
     public ResponseVO getMerchants(MerchantInfoTable merchantInfoTable) {
@@ -41,6 +52,23 @@ public class AnewMerchantInfoServiceImpl implements AnewMerchantInfoService, New
     public ResponseVO saveOrUpdate(MerchantInfoTable merchantInfoTable) {
         ResponseVO responseVO = new ResponseVO();
         Boolean b = apiMerchantInfoService.saveOrUpdate(merchantInfoTable);
+        if (merchantInfoTable.getId() == null){
+            MerchantRole merchantRole = new MerchantRole();
+            merchantRole.setBelongto(merchantInfoTable.getMerchantId());
+            merchantRole.setRoleName("管理员");
+            List<Long> privilegesId = merchantPrivilegesService.getAll()
+                    .stream()
+                    .filter(merchantPrivileges -> merchantPrivileges.getParentId() != null)
+                    .map(MerchantPrivileges::getId)
+                    .collect(Collectors.toList());
+            merchantRole.setPrivilegesId(privilegesId.toString().replaceAll("[^,0-9]", ""));
+            Long roleid = UUID.createKey("merchant_role");
+            merchantRole.setId(roleid);
+            merchantRole.setRole(SystemConstant.ROLE_MERCHANT_USER);
+            merchantRole.setCreateTime(new Date());
+            merchantRole.setAvailable(true);
+            merchantRoleService.save(merchantRole);
+        }
         if (b){
             responseVO.setCode(0);
         }else {
