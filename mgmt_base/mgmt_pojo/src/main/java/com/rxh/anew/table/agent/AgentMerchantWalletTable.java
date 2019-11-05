@@ -18,7 +18,7 @@ import java.util.Date;
 @TableName ( "3_agent_merchant_wallet_table" )
 @Getter
 public class AgentMerchantWalletTable implements Serializable {
-	@TableId(type= IdType.INPUT)
+	@TableId(type= IdType.AUTO)
 	private Long id;//表主键
 	private String agentMerchantId;//代理商ID
 	private BigDecimal totalAmount;//订单总金额

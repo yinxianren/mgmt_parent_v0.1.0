@@ -23,7 +23,10 @@ import com.rxh.tuple.Tuple2;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -66,7 +69,6 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         try{
             mrt = commonRPCComponent.apiMerchantRateService.getOne(new MerchantRateTable()
                     .setProductId(poi.getProductId())
-                    .setChannelId(poi.getChannelId())
                     .setMerchantId(ipo.getMerId())
                     .setStatus(StatusEnum._0.getStatus()));
         }catch (Exception e){
@@ -83,7 +85,7 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
                 format("%s-->商户号：%s；终端号：%s；错误信息: %s ；产品类型：%s,代码所在位置：%s;",
                         ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00041.getMsg(),poi.getProductId(),localPoint),
                 format(" %s",ResponseCodeEnum.RXH00041.getMsg()));
-        return null;
+        return mrt;
     }
 
     @Override
@@ -215,7 +217,7 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         BigDecimal rateFee = (null == mrt.getRateFee() ? new BigDecimal(0) : mrt.getRateFee().divide(new BigDecimal(100)) );
         BigDecimal singleFee = (null == mrt.getSingleFee() ? new BigDecimal(0) : mrt.getSingleFee() );
         //单笔总费用
-        BigDecimal totalSingleFee = ( totalAmount.multiply(rateFee).setScale(2, BigDecimal.ROUND_UP ) .add(singleFee)) ;
+        BigDecimal totalSingleFee = ( amount.multiply(rateFee).setScale(2, BigDecimal.ROUND_UP ) .add(singleFee)) ;
         //入账金额
         BigDecimal inAmount = amount.subtract(totalSingleFee);
         //总入账金额
@@ -223,7 +225,8 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         //总手续费用
         BigDecimal totalFee = ( null == mwt.getTotalFee() ? totalSingleFee : mwt.getTotalFee().add(totalSingleFee) );
         //终端手续费
-        BigDecimal terMerFee = amount.multiply(poi.getPayFee()).setScale(2, BigDecimal.ROUND_UP );
+        BigDecimal payFee = poi.getPayFee().divide(new BigDecimal(100));
+        BigDecimal terMerFee = amount.multiply(payFee).setScale(2, BigDecimal.ROUND_UP );
         //商户单笔手续费利润 = 终端手续费 - 单笔总费用;
         BigDecimal merSingleFeeProfit = terMerFee.subtract(totalSingleFee);
         //手续费利润总和
@@ -237,13 +240,15 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         //总可用余额
         BigDecimal totalAvailableAmount = ( null== mwt.getTotalAvailableAmount() ?  new BigDecimal(0) : mwt.getTotalAvailableAmount() );
         //判断结算周期
-        if( !mrt.getSettleCycle().equalsIgnoreCase("d0")  || !mrt.getSettleCycle().equalsIgnoreCase("t0")){
+        List<String>  settleCycleList= Arrays.asList("d0","D0","t0","T0");
+        String settleCycle = isBlank(mrt.getSettleCycle()) ? "T7"  :  mrt.getSettleCycle().trim() ;
+        if( !settleCycleList.contains(settleCycle) ){
             totalUnavailableAmount = totalUnavailableAmount.add(inAmount);
         }else{
             totalAvailableAmount = totalAvailableAmount.add(inAmount);
         }
         //商户钱包
-        mwt.setId(  null == mwt.getId() ? System.currentTimeMillis() : mrt.getId() )
+        mwt.setId(  null == mwt.getId() ? null : mwt.getId() )
                 .setMerchantId( poi.getMerchantId())
                 .setTotalAmount(totalAmount)//总订单金额
                 .setIncomeAmount(totalIncomeAmount)  //总入账金额
@@ -260,7 +265,7 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
                 .setUpdateTime(new Date());
         //创建商户钱包明细
         MerchantsDetailsTable mdt = new MerchantsDetailsTable()
-                .setId(System.currentTimeMillis())
+                .setId(null)
                 .setMerchantId(poi.getMerchantId())
                 .setProductId(poi.getProductId())
                 .setMerOrderId(poi.getMerOrderId())
@@ -305,13 +310,16 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         //总可用余额
         BigDecimal totalAvailableAmount = ( null== tmw.getTotalAvailableAmount() ?  new BigDecimal(0) : tmw.getTotalAvailableAmount() );
         //判断结算周期
-        if( !mrt.getSettleCycle().equalsIgnoreCase("d0")  || !mrt.getSettleCycle().equalsIgnoreCase("t0")){
+        List<String>  settleCycleList= Arrays.asList("d0","D0","t0","T0");
+        String settleCycle = isBlank(mrt.getSettleCycle()) ? "T7"  :  mrt.getSettleCycle().trim() ;
+        if( !settleCycleList.contains(settleCycle) ){
             totalUnavailableAmount = totalUnavailableAmount.add(inAmount);
         }else{
             totalAvailableAmount = totalAvailableAmount.add(inAmount);
         }
+
         //钱包
-        tmw.setId( null == tmw.getId() ? System.currentTimeMillis() : tmw.getId())
+        tmw.setId( null == tmw.getId() ? null : tmw.getId())
                 .setMerchantId(poi.getMerchantId())
                 .setTerminalMerId(poi.getTerminalMerId())
                 .setTotalAmount(totalAmount) //总订单金额
@@ -328,7 +336,7 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
                 .setUpdateTime(new Date());
         //钱包明细
         TerminalMerchantsDetailsTable tmd = new TerminalMerchantsDetailsTable()
-                .setId(System.currentTimeMillis())
+                .setId(null)
                 .setMerchantId(poi.getMerchantId())
                 .setTerminalMerId(poi.getTerminalMerId())
                 .setProductId(poi.getProductId())
@@ -337,7 +345,7 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
                 .setAmount(poi.getAmount())
                 .setInAmount(inAmount)
                 .setOutAmount(new BigDecimal(0))
-                .setRateFee(payFee)
+                .setRateFee( poi.getPayFee())
                 .setFee(terMerFee)
                 .setTotalBalance(totalBalance)
                 .setTimestamp(System.currentTimeMillis())
@@ -359,7 +367,7 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         BigDecimal chanFee = amount.multiply(chanRateFee).setScale(2,BigDecimal.ROUND_UP);
         chanFee = chanFee.add(singleFee);
         //入账金额
-        BigDecimal inAmount = amount.subtract(amount);
+        BigDecimal inAmount = amount.subtract(chanFee);
         //总入帐金额
         BigDecimal totalInAmount = ( null == cwt.getIncomeAmount() ? inAmount : cwt.getIncomeAmount().add(inAmount) );
         //总订单金额
@@ -369,23 +377,26 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         //计算商户费用
         BigDecimal merRateFee = (null == mrt.getRateFee() ? new BigDecimal(0) : mrt.getRateFee().divide(new BigDecimal(100)) );
         BigDecimal merSingleFee = (null == mrt.getSingleFee() ? new BigDecimal(0) : mrt.getSingleFee() );
-        BigDecimal merFee = ( totalAmount.multiply(merRateFee).setScale(2, BigDecimal.ROUND_UP ) .add(merSingleFee)) ;
+        BigDecimal merFee = ( amount.multiply(merRateFee).setScale(2, BigDecimal.ROUND_UP ) .add(merSingleFee)) ;
         //通道利润 = 商户的费用 - 通道费用
         BigDecimal chanProfit = merFee.subtract(chanFee);
         //总余额
-        BigDecimal totalBalance = (null == cwt.getTotalBalance() ? inAmount : cwt.getTotalBalance().add(inAmount));
+        BigDecimal totalBalance = (null == cwt.getTotalBalance() ? chanProfit : cwt.getTotalBalance().add(chanProfit));
         //总不可用余额
         BigDecimal totalUnavailableAmount = ( null == cwt.getTotalUnavailableAmount() ? new BigDecimal(0) : cwt.getTotalUnavailableAmount() );
         //总可用余额
         BigDecimal totalAvailableAmount = ( null== cwt.getTotalAvailableAmount() ?  new BigDecimal(0) : cwt.getTotalAvailableAmount() );
         //判断结算周期
-        if( !cit.getSettleCycle().equalsIgnoreCase("d0")  || !cit.getSettleCycle().equalsIgnoreCase("t0")){
-            totalUnavailableAmount = totalUnavailableAmount.add(inAmount);
+        List<String>  settleCycleList= Arrays.asList("d0","D0","t0","T0");
+        String settleCycle = isBlank(cit.getSettleCycle()) ? "T7"  :  cit.getSettleCycle().trim() ;
+        if( !settleCycleList.contains(settleCycle) ){
+            totalUnavailableAmount = totalUnavailableAmount.add(chanProfit);
         }else{
-            totalAvailableAmount = totalAvailableAmount.add(inAmount);
+            totalAvailableAmount = totalAvailableAmount.add(chanProfit);
         }
+
         //通道钱包
-        cwt.setId( null == cwt.getId() ? System.currentTimeMillis() : cwt.getId())
+        cwt.setId( null == cwt.getId() ? null : cwt.getId())
                 .setChannelId( null == cwt.getChannelId() ? poi.getChannelId() : cwt.getChannelId())
                 .setOrganizationId( null == cwt.getOrganizationId() ? cit.getOrganizationId() : cwt.getOrganizationId())
                 .setProductId( null == cwt.getProductId() ? poi.getProductId() : cwt.getProductId())
@@ -393,7 +404,7 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
                 .setIncomeAmount(totalInAmount)
                 .setOutAmount(cwt.getOutAmount())
                 .setTotalFee(totalFee)
-                .setFeeProfit(chanProfit)
+                .setFeeProfit( null == cwt.getFeeProfit() ? chanProfit : cwt.getFeeProfit().add(chanProfit) )
                 .setTotalBalance(totalBalance)
                 .setTotalAvailableAmount(totalAvailableAmount)
                 .setTotalUnavailableAmount(totalUnavailableAmount)
@@ -404,7 +415,7 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
                 .setUpdateTime(new Date());
         //通道钱包明细
         ChannelDetailsTable cdt = new ChannelDetailsTable()
-                .setId(System.currentTimeMillis())
+                .setId(null)
                 .setChannelId(poi.getChannelId())
                 .setOrganizationId(cit.getOrganizationId())
                 .setProductId(poi.getProductId())
@@ -413,9 +424,11 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
                 .setAmount(poi.getAmount())
                 .setInAmount(inAmount)
                 .setOutAmount(new BigDecimal(0))
-                .setRateFee(cit.getChannelRateFee())
-                .setFee(chanFee)
-                .setFeeProfit(chanProfit)
+                .setChRateFee(cit.getChannelRateFee())
+                .setMerRateFee(mrt.getRateFee())
+                .setMerFee(merFee)
+                .setChFee(chanFee)
+                .setChFeeProfit(chanProfit)
                 .setTotalBalance(totalBalance)
                 .setTimestamp(System.currentTimeMillis())
                 .setStatus(StatusEnum._0.getStatus())
@@ -430,11 +443,11 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         //订单金额
         BigDecimal amount = poi.getAmount();
         //总订单金额
-        BigDecimal totalAmount = ( null == amw.getTotalAmount() ? amount : amw.getTotalAmount().add(amount) );
-        BigDecimal payFee = poi.getPayFee().divide(new BigDecimal(100));
+//        BigDecimal totalAmount = ( null == amw.getTotalAmount() ? amount : amw.getTotalAmount().add(amount) );
+//        BigDecimal payFee = poi.getPayFee().divide(new BigDecimal(100));
         //订单入账总金额
-        BigDecimal inAmount = amount.multiply(payFee).setScale(2,BigDecimal.ROUND_UP);
-        BigDecimal incomeAmount = ( null == amw.getIncomeAmount() ? inAmount : amw.getIncomeAmount().add(inAmount) );
+//        BigDecimal inAmount = amount.multiply(payFee).setScale(2,BigDecimal.ROUND_UP);
+//        BigDecimal incomeAmount = ( null == amw.getIncomeAmount() ? inAmount : amw.getIncomeAmount().add(inAmount) );
         //代理费率
         BigDecimal rateFee = ( null == ams.getRateFee() ? new BigDecimal(0) :  ams.getRateFee().divide(new BigDecimal(100)) );
         BigDecimal singleFee = ams.getSingleFee();
@@ -444,40 +457,42 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         //代理商总手续费入账
         BigDecimal totalFee = ( null == amw.getTotalFee() ? agentMerFee : amw.getTotalFee().add(agentMerFee) );
         //代理商总余额
-        BigDecimal totalBalance = ( null == amw.getTotalAmount() ? agentMerFee : amw.getTotalAmount().add(agentMerFee) );
+        BigDecimal totalBalance = ( null == amw.getTotalBalance() ? agentMerFee : amw.getTotalBalance().add(agentMerFee) );
         //总不可用余额
         BigDecimal totalUnavailableAmount = ( null == amw.getTotalUnavailableAmount() ? new BigDecimal(0) : amw.getTotalUnavailableAmount() );
         //总可用余额
         BigDecimal totalAvailableAmount = ( null== amw.getTotalAvailableAmount() ?  new BigDecimal(0) : amw.getTotalAvailableAmount() );
         //判断结算周期
-        if( !ams.getSettleCycle().equalsIgnoreCase("d0")  || !ams.getSettleCycle().equalsIgnoreCase("t0")){
+        List<String>  settleCycleList= Arrays.asList("d0","D0","t0","T0");
+        String settleCycle = isBlank(ams.getSettleCycle()) ? "T7"  :  ams.getSettleCycle().trim() ;
+        if( !settleCycleList.contains(settleCycle) ){
             totalUnavailableAmount = totalUnavailableAmount.add(agentMerFee);
         }else{
             totalAvailableAmount = totalAvailableAmount.add(agentMerFee);
         }
 
-        amw.setId( null == amw.getId() ? System.currentTimeMillis() : amw.getId())
+        amw.setId( null == amw.getId() ? null : amw.getId())
         .setAgentMerchantId( null ==  amw.getAgentMerchantId() ?  ams.getAgentMerchantId() : amw.getAgentMerchantId() )
-        .setTotalAmount(totalAmount)
-        .setIncomeAmount(incomeAmount)//总入账金额,这里存放的是终端商户入账的金额
+        .setTotalAmount(amw.getTotalAmount())
+        .setIncomeAmount(amw.getIncomeAmount())//总入账金额,这里存放的是终端商户入账的金额
         .setOutAmount(amw.getOutAmount())//手续费出帐金额
         .setTotalBalance(totalBalance) //代理商总余额
         .setTotalAvailableAmount(totalAvailableAmount)
         .setTotalUnavailableAmount(totalUnavailableAmount)
-        .setTotalFee(totalFee)
+        .setTotalFee(amw.getTotalFee())
         .setTotalFreezeAmount(amw.getTotalFreezeAmount())
         .setStatus(StatusEnum._0.getStatus())
         .setCreateTime( null == amw.getCreateTime() ? new Date() : amw.getCreateTime() )
         .setUpdateTime(new Date());
 
         AgentMerchantsDetailsTable amd = new AgentMerchantsDetailsTable()
-        .setId(System.currentTimeMillis())
+        .setId(null)
         .setAgentMerchantId(ams.getAgentMerchantId())
         .setMerOrderId(poi.getMerOrderId())
         .setPlatformOrderId(poi.getPlatformOrderId())
         .setProductId(poi.getProductId())
-        .setAmount(poi.getAmount())
-        .setInAmount(incomeAmount)
+        .setAmount(new BigDecimal(0))
+        .setInAmount(new BigDecimal(0))
         .setOutAmount(new BigDecimal(0))
         .setRateFee(ams.getRateFee())
         .setFee(agentMerFee)

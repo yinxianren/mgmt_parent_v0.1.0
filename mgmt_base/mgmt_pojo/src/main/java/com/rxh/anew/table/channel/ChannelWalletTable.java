@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 @TableName ( "5_channel_wallet_table" )
 @Getter
 public class ChannelWalletTable  implements Serializable {
-	@TableId(type= IdType.INPUT)
+	@TableId(type= IdType.AUTO)
 	private Long id;//表主键
 	private String channelId;//通道id
 	private String organizationId;//机构ID
