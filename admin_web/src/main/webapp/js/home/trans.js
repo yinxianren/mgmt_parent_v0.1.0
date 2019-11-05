@@ -24,28 +24,25 @@ function transPaymentCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$ti
     $timeout(function () {
         httpSvc.getData('post', '/payOrder/init').then(function (value) {
             $scope.organizations = value.organizations;
-            $scope.channels = value.channels;
-            $scope.payTypes = value.payType;
+            $scope.productTypes = value.productTypes;
             $scope.orderStatus = value.orderStatus;
             $scope.settleStatus = value.settleStatus;
-            $scope.merchants = value.merchants;
-            $scope.identityTypes = value.identityTypes;
-            $scope.bankcardTypes = value.bankcardTypes;
+            $scope.merchants = value.merchants.data;
             $scope.agents = value.agents;
             $scope.transPaymentTable = new NgTableParams({}, {
                 getData: function (params) {
                     angular.element('.ibox-content').addClass('sk-loading');
                     return httpSvc.getData('post', '/payOrder/findPayOrderPage', {
-                        pageNum: params.page()-1,
+                        pageNum: params.page(),
                         pageSize: params.count(),
                         orderBy: params.sorting(),
                         searchInfo: $scope.searchInfo
                     }).then(function (value) {
-                        $scope.totalOrder = value.total;
-                        $scope.customize = value.customize;
-                        params.total(value.total);
+                        $scope.totalOrder = value.data.total;
+                        $scope.customize = value.customData;
+                        params.total(value.data.total);
                         angular.element('.ibox-content').removeClass('sk-loading');
-                        return value.rows;
+                        return value.data.records;
                     });
                 }
             });
@@ -116,16 +113,16 @@ function transPaymentCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$ti
             getData: function (params) {
                 angular.element('.ibox-content').addClass('sk-loading');
                 return httpSvc.getData('post', '/payOrder/findPayOrderPage', {
-                    pageNum: params.page()-1,
+                    pageNum: params.page(),
                     pageSize: params.count(),
                     orderBy: params.sorting(),
                     searchInfo: $scope.searchInfo
                 }).then(function (value) {
-                    $scope.totalOrder = value.total;
-                    $scope.customize = value.customize;
-                    params.total(value.total);
+                    $scope.totalOrder = value.data.total;
+                    $scope.customize = value.customData;
+                    params.total(value.data.total);
                     angular.element('.ibox-content').removeClass('sk-loading');
-                    return value.rows;
+                    return value.data.records;
                 });
             }
         });
@@ -221,19 +218,14 @@ function payProductDetialCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc
 
 // 持卡人详情
 function cardHolderInfoCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$filter,type,transOrder,$uibModalInstance,identityTypes,bankcardTypes) {
-    $scope.identityTypes = identityTypes;
-    $scope.bankcardTypes = bankcardTypes;
     $scope.cardHolderInfo = {};
-    httpSvc.getData('post', '/transOrder/init').then(function (value1) {
-        $scope.bankcardType=value1.bankcardType;
-        $scope.identityType=value1.identityType;
-        //初始付款人详情
-        httpSvc.getData('post', '/payOrder/getCardHolderInfo', transOrder.payId).then(function (value) {
-            if(value.code == 1 ){
-                $scope.cardHolderInfo=value.data;
-            }
-            angular.element('.ibox-content').removeClass('sk-loading');
-        });
+    $scope.payOrder = transOrder;
+    //初始付款人详情
+    httpSvc.getData('get', '/payOrder/getCardHolderInfo', {payId:transOrder.platformOrderId}).then(function (value) {
+        if(value.code == 0 ){
+            $scope.cardHolderInfo=value.data;
+        }
+        angular.element('.ibox-content').removeClass('sk-loading');
     });
     //返回
     $scope.cancel = function () {

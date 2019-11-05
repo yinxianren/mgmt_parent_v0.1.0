@@ -62,4 +62,8 @@
     <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantSettingService" id="apiAgentMerchantSettingService" />
     <dubbo:reference interface="com.rxh.service.anew.system.ApiMerchantSettingService" id="apiMerchantSettingService" />
     <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantRateService"  id="apiMerchantRateService" />
+    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantQuotaRiskService" id="apiMerchantQuotaRiskService" />
+    <dubbo:reference interface="com.rxh.service.merchant.MerchantPrivilegesService" id="merchantPrivilegesService" />
+    <dubbo:reference interface="com.rxh.service.merchant.MerchantRoleService" id="merchantRoleService" />
+    <dubbo:reference interface="com.rxh.service.anew.business.ApiPayOrderInfoService" id="apiPayOrderInfoService" />
 </beans>

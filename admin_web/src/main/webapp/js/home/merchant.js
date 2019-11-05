@@ -510,11 +510,13 @@ function merchantAccountCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
     $scope.merchantAccount = {};
     $scope.merchantAccount = getMerchantAccount(merchantInfo);
     // var params = {"merId":$scope.merchantAccount.merId};
-    httpSvc.getData('post', '/merchantAcount/search',{"merchantId":$scope.merchantAccount.merchantId}).then(function (value) {
-        if(value.code == 0 ){
-            $scope.merchantAccount = value.data;
-            if ($scope.merchantAccount.identityPath != null && $scope.merchantAccount.identityPath.trim() !== '') {
-                $scope.certificateImgUrl = $scope.merchantAccount.identityPath.split(',');
+    httpSvc.getData('post', '/merchantAcount/search',{"merId":$scope.merchantAccount.merId}).then(function (value) {
+        if(value.code == 1 ){
+            if (value.data != null) {
+                $scope.merchantAccount = value.data;
+            }
+            if ($scope.merchantAccount.identityUrl1 != null && $scope.merchantAccount.identityUrl1.trim() !== '') {
+                $scope.certificateImgUrl = $scope.merchantAccount.identityUrl1.split(',');
                 // certificateImgUrl = angular.copy(certificateImgUrl);
             }
         }
@@ -522,7 +524,7 @@ function merchantAccountCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
     });
     function getMerchantAccount(merchantInfo) {
         var merchantAccount = {
-            merchantId: merchantInfo.merchantId,
+            merId: merchantInfo.merchantId,
             benefitName: '',
             bankName: '',
             bankcardNum: '',
@@ -542,7 +544,7 @@ function merchantAccountCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
     $scope.confirm = function (merchantAccount) {
         merchantAccount.identityPath = $scope.certificateImgUrl.toString();
         httpSvc.getData('post', '/merchantAcount/update', merchantAccount).then(function (value) {
-            if (value.code == 0) {
+            if (value.code == 1) {
                 toaster.pop({
                     type: 'success',
                     title: '结算账户',
@@ -572,7 +574,7 @@ function merchantAccountCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
         $scope.checkDisabled = function (myForm) {
             return myForm.merId.$error.required || myForm.benefitName.$error.required || myForm.bankName.$error.required
                 || myForm.bankcardNum.$error.required || myForm.bankBranchName.$error.required || myForm.bankBranchNum.$error.required
-                ||  myForm.identityType.$error.required || myForm.identityNum.$error.required || myForm.identityPath.$error.required;
+                ||  myForm.identityType.$error.required || myForm.identityNum.$error.required || myForm.identityUrl1.$error.required;
         };
     });
 
@@ -588,7 +590,7 @@ function merchantAccountCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
     };
     $scope.uploader.onSuccessItem = function (item, response, status, headers) {
         $scope.certificateImgUrl.push(response);
-        $scope.merchantAccount.identityPath = $scope.certificateImgUrl.toString();
+        $scope.merchantAccount.identityUrl1 = $scope.certificateImgUrl.toString();
     };
     $scope.uploader.onCompleteAll = function () {
         $scope.uploader.clearQueue();
@@ -810,22 +812,19 @@ function merchantQuotaRiskCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
         };
         return merchantSetting;
     }
-
-    httpSvc.getData('post', '/merchantInfo/init').then(function (value) {
-       $scope.merchantType=value.merchantType;
-       $scope.channelLevel=value.channelLevel;
-       $scope.agentMerchants=value.agentMerchants;
-       $scope.channels=value.channels;
-        angular.element('.ibox-content').removeClass('sk-loading');
-
     // 初始化对象信息
     httpSvc.getData('post', '/merchantQuotaRisk/search',{"merchantId":$scope.merchantSetting.merchantId}).then(function (value1) {
 
         if(value1.code == 0 ){
-            $scope.merchantQuotaRisk = value1.data;
+            if (value1.data == null){
+                $scope.merchantQuotaRisk = {};
+                $scope.merchantQuotaRisk.merchantId = merchantInfo.merchantId;
+            } else {
+                $scope.merchantQuotaRisk = value1.data;
+            }
+
         }
         angular.element('.ibox-content').removeClass('sk-loading');
-    });
     });
 
     /**
@@ -871,7 +870,7 @@ function merchantSquareRateCtrl($scope, $uibModal, toaster, NgTableParams, httpS
     $scope.goType = parseInt(goType);
     $scope.merchantSetting = {};
     $scope.selected=[];
-    $scope.merchantSquareRates = [];
+    $scope.merchantRates = [];
 
     $scope.merchantSetting = getMerchantSetting(merchantInfo);
     function getMerchantSetting(merchantInfo) {
@@ -886,19 +885,16 @@ function merchantSquareRateCtrl($scope, $uibModal, toaster, NgTableParams, httpS
         return merchantSetting;
     }
 
-    httpSvc.getData('post', '/merchantSquareRate/init').then(function (value) {
-       $scope.merchantType=value.merchantType;
-       $scope.channelLevel=value.channelLevel;
-       $scope.agentMerchants=value.agentMerchants;
-       $scope.status=value.status;
-       $scope.payType=value.payType;
-       $scope.productTypes=value.productTypes;
+    httpSvc.getData('get', '/merchantSquareRate/init').then(function (value) {
+        value = value.data;
+        $scope.status = value.status;
+        $scope.productTypes = value.productTypes;
         angular.element('.ibox-content').removeClass('sk-loading');
 
     // 初始化对象信息
     httpSvc.getData('post', '/merchantSquareRate/search',{"merchantId":$scope.merchantSetting.merchantId}).then(function (value1) {
 
-            $scope.merchantSquareRates = value1.data;
+            $scope.merchantRates = value1.data;
         angular.element('.ibox-content').removeClass('sk-loading');
     });
     });
@@ -916,7 +912,7 @@ function merchantSquareRateCtrl($scope, $uibModal, toaster, NgTableParams, httpS
     /**
      * 确定
      */
-    $scope.confirm = function (merchantSquareRates) {
+    $scope.confirm = function (merchantRates) {
         var codes = [];
 
         for (var code in $scope.selected) {
@@ -925,10 +921,10 @@ function merchantSquareRateCtrl($scope, $uibModal, toaster, NgTableParams, httpS
             }
         }
         httpSvc.getData('post', '/merchantSquareRate/update',
-            merchantSquareRates
+            merchantRates
         ).then(function (value) {
 
-            if (value.code == 1) {
+            if (value.code == 0) {
                 toaster.pop({
                     type: 'success',
                     title: '商户配置',
@@ -950,43 +946,43 @@ function merchantSquareRateCtrl($scope, $uibModal, toaster, NgTableParams, httpS
         $uibModalInstance.dismiss();
     };
     // 验证输入框的输入数据
-    $scope.singleFeeBlur =$scope.rateFeeBlur= $scope.bondRateBlur =$scope.settlecycleBlur =$scope.bondCycleBlur =  function ($event, name) {
+    $scope.singleFeeBlur =$scope.rateFeeBlur= $scope.marginRatioBlur =$scope.settleCycleBlur =$scope.marginCycleBlur =  function ($event, name) {
         verification(name,$event.target);
     };
     $timeout(function () {
-        $scope.checkRateDisabled = function (myForm,merchantSquareRates) {
-            if(merchantSquareRates.length == 0){
+        $scope.checkRateDisabled = function (myForm,merchantRates) {
+            if(merchantRates.length == 0){
                 return;
             }
-            // for (var i=0;i<merchantSquareRates.length;i++){
-            if(merchantSquareRates[0].status == 0 && merchantSquareRates[1].status == 0 && merchantSquareRates[2].status == 0) {// 启用
-                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.bondRate0.$error.required ||myForm.settlecycle0.$error.required ||myForm.bondCycle0.$error.required
-                    || myForm.singleFee1.$error.required || myForm.rateFee1.$error.required ||myForm.bondRate1.$error.required ||myForm.settlecycle1.$error.required ||myForm.bondCycle1.$error.required
-                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.bondRate2.$error.required ||myForm.settlecycle2.$error.required ||myForm.bondCycle2.$error.required;
+            // for (var i=0;i<merchantRates.length;i++){
+            if(merchantRates[0].status == 0 && merchantRates[1].status == 0 && merchantRates[2].status == 0) {// 启用
+                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.marginRatio0.$error.required ||myForm.settleCycle0.$error.required ||myForm.marginCycle0.$error.required
+                    || myForm.singleFee1.$error.required || myForm.rateFee1.$error.required ||myForm.marginRatio1.$error.required ||myForm.settleCycle1.$error.required ||myForm.marginCycle1.$error.required
+                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.marginRatio2.$error.required ||myForm.settleCycle2.$error.required ||myForm.marginCycle2.$error.required;
             }
-            if(merchantSquareRates[0].status == 0 && merchantSquareRates[1].status == 0) {// 启用
-                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.bondRate0.$error.required ||myForm.settlecycle0.$error.required ||myForm.bondCycle0.$error.required
-                    || myForm.singleFee1.$error.required || myForm.rateFee1.$error.required ||myForm.bondRate1.$error.required ||myForm.settlecycle1.$error.required ||myForm.bondCycle1.$error.required;
+            if(merchantRates[0].status == 0 && merchantRates[1].status == 0) {// 启用
+                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.marginRatio0.$error.required ||myForm.settleCycle0.$error.required ||myForm.marginCycle0.$error.required
+                    || myForm.singleFee1.$error.required || myForm.rateFee1.$error.required ||myForm.marginRatio1.$error.required ||myForm.settleCycle1.$error.required ||myForm.marginCycle1.$error.required;
             }
-            if(merchantSquareRates[0].status == 0 && merchantSquareRates[2].status == 0) {// 启用
-                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.bondRate0.$error.required ||myForm.settlecycle0.$error.required ||myForm.bondCycle0.$error.required
-                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.bondRate2.$error.required ||myForm.settlecycle2.$error.required ||myForm.bondCycle2.$error.required;
+            if(merchantRates[0].status == 0 && merchantRates[2].status == 0) {// 启用
+                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.marginRatio0.$error.required ||myForm.settleCycle0.$error.required ||myForm.marginCycle0.$error.required
+                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.marginRatio2.$error.required ||myForm.settleCycle2.$error.required ||myForm.marginCycle2.$error.required;
             }
-            if(merchantSquareRates[1].status == 0 && merchantSquareRates[2].status == 0) {// 启用
-                return myForm.singleFee1.$error.required || myForm.rateFee1.$error.required ||myForm.bondRate1.$error.required ||myForm.settlecycle1.$error.required ||myForm.bondCycle1.$error.required
-                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.bondRate2.$error.required ||myForm.settlecycle2.$error.required ||myForm.bondCycle2.$error.required;
+            if(merchantRates[1].status == 0 && merchantRates[2].status == 0) {// 启用
+                return myForm.singleFee1.$error.required || myForm.rateFee1.$error.required ||myForm.marginRatio1.$error.required ||myForm.settleCycle1.$error.required ||myForm.marginCycle1.$error.required
+                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.marginRatio2.$error.required ||myForm.settleCycle2.$error.required ||myForm.marginCycle2.$error.required;
             }
-            if(merchantSquareRates[0].status == 0){// 启用
-                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.bondRate0.$error.required
-                    ||myForm.settlecycle0.$error.required ||myForm.bondCycle0.$error.required;
+            if(merchantRates[0].status == 0){// 启用
+                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.marginRatio0.$error.required
+                    ||myForm.settleCycle0.$error.required ||myForm.marginCycle0.$error.required;
             }
-            if(merchantSquareRates[1].status == 0){// 启用
-                return myForm.singleFee1.$error.required ||myForm.rateFee1.$error.required ||myForm.bondRate1.$error.required
-                    ||myForm.settlecycle1.$error.required ||myForm.bondCycle1.$error.required;
+            if(merchantRates[1].status == 0){// 启用
+                return myForm.singleFee1.$error.required ||myForm.rateFee1.$error.required ||myForm.marginRatio1.$error.required
+                    ||myForm.settleCycle1.$error.required ||myForm.marginCycle1.$error.required;
             }
-            if(merchantSquareRates[2].status == 0){// 启用
-                return myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.bondRate2.$error.required
-                    ||myForm.settlecycle2.$error.required ||myForm.bondCycle2.$error.required;
+            if(merchantRates[2].status == 0){// 启用
+                return myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.marginRatio2.$error.required
+                    ||myForm.settleCycle2.$error.required ||myForm.marginCycle2.$error.required;
             }
             // }
             return null;
@@ -1020,13 +1016,13 @@ function merchantUserMgmtCtrl($scope, $state, $stateParams, $uibModal, toaster, 
                 }
             })
         };
-        httpSvc.getData('post', '/merchant/getMerchantUserByMerchantId',{"merchantId":id}).then(function (value) {
+        httpSvc.getData('post', '/merchant/getMerchantUserByMerchantId',{"merId":id}).then(function (value) {
             $scope.merchantUserTable = new NgTableParams({}, {
                 dataset: value
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
-        httpSvc.getData('post', '/merchant/getMerchantRoleByMerchantId', {"merchantId":id}).then(function (value) {
+        httpSvc.getData('post', '/merchant/getMerchantRoleByMerchantId', {"merId":id}).then(function (value) {
             $scope.merchantRole = value;
         });
         $scope.showModal = function (user, type) {

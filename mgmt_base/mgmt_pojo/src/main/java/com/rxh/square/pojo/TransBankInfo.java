@@ -1,6 +1,7 @@
 package com.rxh.square.pojo;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class TransBankInfo implements Serializable {
     private String transId;
@@ -20,6 +21,26 @@ public class TransBankInfo implements Serializable {
     private Integer identityType;
 
     private String identityNum;
+
+    private String agentMerchantName;
+
+    private Date channelBankTime;
+
+    private String channelBankResult;
+
+    private String currency;
+
+    private String payFee;
+
+    private String orgOrderId;
+
+    private String terminalMerId;
+
+    private Integer orderStatus;
+
+    private String productName;
+
+    private String channelName;
 
     public String getTransId() {
         return transId;
@@ -91,5 +112,85 @@ public class TransBankInfo implements Serializable {
 
     public void setIdentityNum(String identityNum) {
         this.identityNum = identityNum == null ? null : identityNum.trim();
+    }
+
+    public String getAgentMerchantName() {
+        return agentMerchantName;
+    }
+
+    public void setAgentMerchantName(String agentMerchantName) {
+        this.agentMerchantName = agentMerchantName;
+    }
+
+    public Date getChannelBankTime() {
+        return channelBankTime;
+    }
+
+    public void setChannelBankTime(Date channelBankTime) {
+        this.channelBankTime = channelBankTime;
+    }
+
+    public String getChannelBankResult() {
+        return channelBankResult;
+    }
+
+    public void setChannelBankResult(String channelBankResult) {
+        this.channelBankResult = channelBankResult;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public String getPayFee() {
+        return payFee;
+    }
+
+    public void setPayFee(String payFee) {
+        this.payFee = payFee;
+    }
+
+    public String getOrgOrderId() {
+        return orgOrderId;
+    }
+
+    public void setOrgOrderId(String orgOrderId) {
+        this.orgOrderId = orgOrderId;
+    }
+
+    public String getTerminalMerId() {
+        return terminalMerId;
+    }
+
+    public void setTerminalMerId(String terminalMerId) {
+        this.terminalMerId = terminalMerId;
+    }
+
+    public Integer getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(Integer orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
     }
 }

@@ -1,5 +1,13 @@
 package com.rxh.service.impl.trading;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.rxh.anew.service.db.agent.AgentMerchantInfoDbService;
+import com.rxh.anew.service.db.business.PayOrderInfoDBService;
+import com.rxh.anew.service.db.channel.ChannelInfoDbService;
+import com.rxh.anew.table.agent.AgentMerchantInfoTable;
+import com.rxh.anew.table.business.PayOrderInfoTable;
+import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.mapper.square.*;
 import com.rxh.pojo.Result;
 import com.rxh.pojo.base.Page;
@@ -34,9 +42,9 @@ public class PayOrderServiceImpl implements PayOrderService {
     @Autowired
     private PayCardholderInfoMapper payCardholderInfoMapper;
     @Autowired
-    private AgentMerchantInfoMapper agentMerchantInfoMapper;
+    private PayOrderInfoDBService payOrderInfoDBService;
     @Autowired
-    private ChannelInfoMapper channelInfoMapper;
+    private ChannelInfoDbService channelInfoDbService;
 
     @Override
     public PageResult findPayOrder(Page page) {
@@ -124,18 +132,18 @@ public class PayOrderServiceImpl implements PayOrderService {
     @Override
     public Result getCardHolderInfo(String payId) {
         PayCardholderInfo cardholderInfo = payCardholderInfoMapper.selectByPrimaryKey(payId);
-        PayOrder payOrder = payOrderMapper.selectByPrimaryKey(payId);
+        LambdaQueryWrapper<PayOrderInfoTable> queryWrapper = new QueryWrapper<PayOrderInfoTable>().lambda();
+        queryWrapper.eq(PayOrderInfoTable::getPlatformOrderId,payId);
+        PayOrderInfoTable payOrder = payOrderInfoDBService.getOne(queryWrapper);
         Result <PayCardholderInfo> result=new Result<>();
         if(cardholderInfo!=null){
-            AgentMerchantInfo agentMerchantInfo = agentMerchantInfoMapper.selectByPrimaryKey(payOrder.getAgmentId());
-            ChannelInfo channelInfo = channelInfoMapper.selectByChannelId(payOrder.getChannelId());
-            cardholderInfo.setAgentMerchantName(agentMerchantInfo != null?agentMerchantInfo.getAgentMerchantName():"");
-            cardholderInfo.setChannelBankResult(payOrder.getTradeResult());
-            cardholderInfo.setChannelBankTime(payOrder.getBankTime());
-            cardholderInfo.setOrgOrderId(payOrder.getOrgOrderId());
+            ChannelInfoTable channelInfo = channelInfoDbService.getOne(new QueryWrapper<ChannelInfoTable>().lambda().eq(ChannelInfoTable::getChannelId,payOrder.getChannelId()));
+            cardholderInfo.setChannelBankResult(payOrder.getChannelRespResult());
+            cardholderInfo.setChannelBankTime(payOrder.getUpdateTime());
+            cardholderInfo.setOrgOrderId(payOrder.getChannelOrderId());
             cardholderInfo.setCurrency(payOrder.getCurrency());
             cardholderInfo.setTerminalMerId(payOrder.getTerminalMerId());
-            cardholderInfo.setOrderStatus(payOrder.getOrderStatus());
+            cardholderInfo.setOrderStatus(payOrder.getStatus());
             cardholderInfo.setChannelName(channelInfo == null ? "" : channelInfo.getChannelName());
             result.setCode(Result.SUCCESS);
             result.setMsg("获取持卡人详情成功");

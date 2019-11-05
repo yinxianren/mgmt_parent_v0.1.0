@@ -6,4 +6,8 @@ import com.rxh.service.base.BaseService;
 import java.util.List;
 
 public interface MerchantPrivilegesService extends BaseService<MerchantPrivileges, Long> {
+
+    List<MerchantPrivileges> getAll();
+
+    int save(MerchantPrivileges merchantPrivileges);
 }

@@ -1,6 +1,7 @@
 package com.rxh.anew.table.business;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
@@ -62,6 +63,19 @@ public class PayOrderInfoTable implements Serializable {
     private Integer status;// 状态 0：success,1:fail,
     private Date createTime;// 创建时间,
     private Date updateTime;// 更新时间,
+
+    //分页参数
+    @TableField(exist = false)
+    private Integer pageNum;
+    @TableField(exist = false)
+    private Integer pageSize;
+    @TableField(exist = false)
+    private Date beginTime;
+    @TableField(exist = false)
+    private Date endTime;
+
+    @TableField(exist = false)
+    private String organizationId;
 
     public PayOrderInfoTable setChannelOrderId(String channelOrderId) {
         this.channelOrderId = channelOrderId;
@@ -271,5 +285,25 @@ public class PayOrderInfoTable implements Serializable {
     public PayOrderInfoTable setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
         return this;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public void setPageNum(Integer pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public void setBeginTime(Date beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
     }
 }

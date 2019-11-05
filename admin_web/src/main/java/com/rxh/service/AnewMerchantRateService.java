@@ -10,4 +10,6 @@ public interface AnewMerchantRateService {
     ResponseVO batchUpdate(List<MerchantRateTable> param);
 
     ResponseVO getList(MerchantRateTable m);
+
+    ResponseVO init();
 }

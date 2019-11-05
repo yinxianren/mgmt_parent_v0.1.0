@@ -69,10 +69,10 @@
                     <label class="col-sm-2 control-label p-w-xs"><span class="text-danger">*</span>商户：</label>
                     <div class="col-sm-10">
                         <input class="form-control b-r-sm"
-                               name="merId"
+                               name="merchantId"
                                type="text"
-                               ng-model="merchantSetting.merId"
-                               ng-blur="merIdBlur($event, merchantSetting.merId)"
+                               ng-model="merchantSetting.merchantId"
+                               ng-blur="merIdBlur($event, merchantSetting.merchantId)"
                                readonly
                                required>
                     </div>
@@ -87,7 +87,7 @@
                         <th class="text-center rate-tr-width">结算周期</th>
                         <th class="text-center rate-tr-width">保证金周期</th>
                     </tr>
-                    <tr ng-repeat="row in merchantSquareRates track by $index" class="rate-tr-width">
+                    <tr ng-repeat="row in merchantRates track by $index" class="rate-tr-width">
                         <td class="text-center" style="line-height: 2;min-width: 80px!important;">
                             <select class="form-control b-r-sm" name="status" ng-model="row.status"
                                     ng-blur="statusBlur($event, row.status)" required
@@ -95,7 +95,7 @@
                             </select>
                         </td>
                         <td class="text-center " style="min-width: 100px"  >
-                            {{row.payType | getValueByList : productTypes : 'firstValue' : 'name'  }}
+                            {{row.productId | getValueByList : productTypes : 'firstValue' : 'name'  }}
                         </td>
                         <td class="text-center col-lg-2" style="min-width: 100px" >
                             <input type="number"
@@ -114,23 +114,23 @@
                         </td>
                         <td class="text-center col-lg-2" >
                             <input type="text" class="form-control"
-                                   name="bondRate{{$index}}"
-                                   ng-blur="bondRateBlur($event, 'bondRate'+$index)"
-                                   ng-model="row.bondRate"
+                                   name="marginRatio{{$index}}"
+                                   ng-blur="bondRateBlur($event, 'marginRatio'+$index)"
+                                   ng-model="row.marginRatio"
                                    required>
                         </td>
                         <td class="text-center col-lg-2"  >
                             <input type="text" class="form-control"
-                                   name="settlecycle{{$index}}"
-                                   ng-blur="settlecycleBlur($event, 'settlecycle'+$index)"
-                                   ng-model="row.settlecycle"
+                                   name="settleCycle{{$index}}"
+                                   ng-blur="settlecycleBlur($event, 'settleCycle'+$index)"
+                                   ng-model="row.settleCycle"
                                    required>
                         </td>
                         <td class="text-center col-lg-2"  >
                             <input type="text" class="form-control"
-                                   name="bondCycle{{$index}}"
-                                   ng-blur="bondCycleBlur($event, 'bondCycle'+$index)"
-                                   ng-model="row.bondCycle"
+                                   name="marginCycle{{$index}}"
+                                   ng-blur="bondCycleBlur($event, 'marginCycle'+$index)"
+                                   ng-model="row.marginCycle"
                                    required>
                         </td>
                     </tr>
@@ -143,8 +143,8 @@
                 <div class="center">
                     <button class="btn btn-sm btn-success"
                             type="button"
-                            ng-disabled="checkRateDisabled(myForm,merchantSquareRates)"
-                            ng-click="confirm(merchantSquareRates)">
+                            ng-disabled="checkRateDisabled(myForm,merchantRates)"
+                            ng-click="confirm(merchantRates)">
                         确定
                     </button>
                 </div>

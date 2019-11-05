@@ -8,10 +8,7 @@ import com.rxh.pojo.base.Page;
 import com.rxh.pojo.base.PageResult;
 import com.rxh.pojo.base.SearchInfo;
 import com.rxh.service.trading.TransOrderService;
-import com.rxh.square.pojo.BatchData;
-import com.rxh.square.pojo.TransBankInfo;
-import com.rxh.square.pojo.TransOrder;
-import com.rxh.square.pojo.TransProductDetail;
+import com.rxh.square.pojo.*;
 import com.rxh.utils.HttpClientUtils;
 import com.rxh.utils.JsonUtils;
 import com.rxh.utils.StringUtils;
@@ -51,6 +48,10 @@ public class TransOrderServiceImpl implements TransOrderService {
     private BatchRepayMapper batchRepayMapper;
     @Resource
     MerchantSquareInfoMapper merchantSquareInfoMapper;
+    @Autowired
+    private AgentMerchantInfoMapper agentMerchantInfoMapper;
+    @Autowired
+    private ChannelInfoMapper channelInfoMapper;
 
     private  Logger logger = LoggerFactory.getLogger(TransOrderServiceImpl.class);
 
@@ -105,7 +106,18 @@ public class TransOrderServiceImpl implements TransOrderService {
     public Result getTransBankInfo(String transId) {
         Result<TransBankInfo> result = new Result<TransBankInfo>();
         TransBankInfo bankInfo=  transBankInfoMapper.getTransBankInfo(transId);
+        TransOrder transOrder = transOrderMapper.selectByPrimaryKey(transId);
         if (bankInfo!=null){
+            AgentMerchantInfo agentMerchantInfo = agentMerchantInfoMapper.selectByPrimaryKey(transOrder.getAgmentId());
+            ChannelInfo channelInfo = channelInfoMapper.selectByChannelId(transOrder.getChannelId());
+            bankInfo.setAgentMerchantName(agentMerchantInfo != null?agentMerchantInfo.getAgentMerchantName():"");
+            bankInfo.setChannelBankResult(transOrder.getTradeResult());
+            bankInfo.setChannelBankTime(transOrder.getBankTime());
+            bankInfo.setOrgOrderId(transOrder.getOrgOrderId());
+            bankInfo.setCurrency(transOrder.getCurrency());
+            bankInfo.setTerminalMerId(transOrder.getTerminalMerId());
+            bankInfo.setOrderStatus(transOrder.getOrderStatus());
+            bankInfo.setChannelName(channelInfo == null ? "" : channelInfo.getChannelName());
             result.setCode(Result.SUCCESS);
             result.setMsg("获取订单详情成功");
             result.setData(bankInfo);

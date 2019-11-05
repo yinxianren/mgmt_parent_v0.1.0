@@ -1,52 +1,53 @@
-package com.rxh.controller.trading;
+package com.rxh.controller.anew.order;
 
 import com.rxh.pojo.Result;
-import com.rxh.pojo.base.PageResult;
 import com.rxh.pojo.base.Page;
-import com.rxh.pojo.merchant.Merchant;
+import com.rxh.pojo.base.PageResult;
+import com.rxh.service.AnewMerchantInfoService;
+import com.rxh.service.AnewPayOrderService;
 import com.rxh.service.ConstantService;
+import com.rxh.service.OrganizationInfoService;
 import com.rxh.service.square.*;
 import com.rxh.service.trading.PayOrderService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.square.pojo.ChannelInfo;
 import com.rxh.square.pojo.MerchantInfo;
 import com.rxh.utils.SystemConstant;
+import com.rxh.vo.ResponseVO;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @ClassName : PayOrderController
- * @Author : zoe
- * @Date : 2019/5/19 14:42
- */
 @RestController
-@RequestMapping(value = "/payOrder")
-public class PayOrderController {
+@RequestMapping("/payOrder")
+@Slf4j
+public class AnewPayOrderController {
 
     @Resource
     private PayOrderService payOrderService;
     @Resource
     private ConstantService constantService;
     @Resource
-    private ChannelWalletService channelWalletService;
-    @Resource
     private OrganizationService organizationService;
     @Resource
-    private MerchantInfoService merchantInfoService;
-    @Resource
-    private AgentMerchantInfoService agentMerchantInfoService;
-    @Resource
     private ChannelInfoService channelInfoService;
+    @Autowired
+    private AnewPayOrderService anewPayOrderService;
+    @Autowired
+    private AnewMerchantInfoService anewMerchantInfoService;
+    @Autowired
+    private OrganizationInfoService organizationInfoService;
 
     @SystemLogInfo(description = "支付交易查询")
     @RequestMapping(value="/findPayOrderPage")
     @ResponseBody
-    public PageResult  findPayOrderPage(@RequestBody Page page ) {
-        PageResult pageResult = payOrderService.findPayOrder(page);
-        return pageResult;
+    public ResponseVO findPayOrderPage(@RequestBody Page page ) {
+        return anewPayOrderService.getList(page);
     }
 
     @RequestMapping("/init")
@@ -55,19 +56,20 @@ public class PayOrderController {
         init.put("payType", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
         init.put("orderStatus", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.ORDERSTATUS));
         init.put("settleStatus", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.SETTLESTATUS));
-        init.put("channels", channelWalletService.getIdsAndName());
-        init.put("organizations",organizationService .getIdsAndName());
-        init.put("merchants", merchantInfoService.getIdsAndName());
-        init.put("identityTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.IDENTITYTYPE));
-        init.put("bankcardTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.BANKCARDTYPE));
-        init.put("agents",agentMerchantInfoService.getAllIdAndName());
+//        init.put("channels", channelWalletService.getIdsAndName());
+        init.put("organizations",organizationInfoService .getAll(null).getData());
+        init.put("merchants", anewMerchantInfoService.getMerchants(null));
+//        init.put("identityTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.IDENTITYTYPE));
+//        init.put("bankcardTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.BANKCARDTYPE));
+//        init.put("agents",agentMerchantInfoService.getAllIdAndName());
+        init.put("productTypes",constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PRODUCTTYPE));
+
         return init;
     }
 
     @RequestMapping("/getCardHolderInfo")
-    public Result getCardHolderInfo(@RequestBody  String payId) {
-        Result result = payOrderService.getCardHolderInfo(payId);
-        return result;
+    public ResponseVO getCardHolderInfo(@RequestParam(value = "payId") String payId) {
+        return anewPayOrderService.getCardHolderInfo(payId);
     }
     @RequestMapping(value = "/getProductInfo",method = RequestMethod.POST)
     public Result getProductInfo(@RequestBody String payId) {
