@@ -15,5 +15,7 @@ public interface ApiMerchantCardService {
 
     boolean updateById(MerchantCardTable mct);
 
+    boolean bachUpdateById(List<MerchantCardTable> list);
+
     boolean save(MerchantCardTable mct);
 }

@@ -37,6 +37,7 @@ public class ApiMerchantCardServiceImpl implements ApiMerchantCardService , NewP
         if( !isBlank(mct.getTerminalMerId()) )  lambdaQueryWrapper.eq(MerchantCardTable::getTerminalMerId,mct.getTerminalMerId());
         if( !isBlank(mct.getBankCardNum()) )  lambdaQueryWrapper.eq(MerchantCardTable::getBankCardNum,mct.getBankCardNum());
         if( !isBlank(mct.getBussType()) )  lambdaQueryWrapper.eq(MerchantCardTable::getBussType,mct.getBussType());
+        if( !isBlank(mct.getPlatformOrderId()) )  lambdaQueryWrapper.eq(MerchantCardTable::getPlatformOrderId,mct.getPlatformOrderId());
         return merchantCardDBService.getOne(lambdaQueryWrapper);
     }
 
@@ -57,6 +58,11 @@ public class ApiMerchantCardServiceImpl implements ApiMerchantCardService , NewP
     public boolean updateById(MerchantCardTable mct) {
         if(isNull(mct)) return false;
         return merchantCardDBService.updateById(mct);
+    }
+
+    public boolean bachUpdateById(List<MerchantCardTable> list){
+        if(isHasNotElement(list)) return false;
+        return merchantCardDBService.updateBatchById(list);
     }
 
     @Override

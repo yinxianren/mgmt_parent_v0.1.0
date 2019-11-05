@@ -133,4 +133,14 @@ public interface NewBondCardService extends CommonSerivceInterface {
      * @return
      */
     List<RegisterCollectTable> filterRegCollectByBondCardSuccess(List<RegisterCollectTable> registerCollectTableList, List<MerchantCardTable> merchantCardTableList, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param crossResponseMsgDTO
+     * @param crossResponseMsg
+     * @param merchantCardTable
+     * @param merchantCardTable_old
+     * @param ipo
+     */
+    void updateByBondCardInfoByB6(CrossResponseMsgDTO crossResponseMsgDTO, String crossResponseMsg, MerchantCardTable merchantCardTable, MerchantCardTable merchantCardTable_old, InnerPrintLogObject ipo) throws NewPayException;
 }

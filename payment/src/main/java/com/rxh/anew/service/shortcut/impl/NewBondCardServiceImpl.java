@@ -395,6 +395,31 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
         return linkedList;
     }
 
+    @Override
+    public void updateByBondCardInfoByB6(CrossResponseMsgDTO crossResponseMsgDTO, String crossResponseMsg, MerchantCardTable merchantCardTable, MerchantCardTable merchantCardTable_old, InnerPrintLogObject ipo) throws NewPayException {
+        final String localPoint="updateByBondCardInfoByB6";
+        merchantCardTable.setCrossRespResult(crossResponseMsg)
+                .setChannelRespResult( null == crossResponseMsgDTO ? null  : crossResponseMsgDTO.getChannelResponseMsg() )
+                .setStatus( null == crossResponseMsgDTO ? StatusEnum._1.getStatus() : crossResponseMsgDTO.getCrossStatusCode() );
+
+        merchantCardTable_old.setStatus(StatusEnum._5.getStatus());
+
+        List<MerchantCardTable> list = new ArrayList<>(2);
+        list.add(merchantCardTable);
+        list.add(merchantCardTable_old);
+        try {
+            commonRPCComponent.apiMerchantCardService.bachUpdateById(list);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new NewPayException(
+                    ResponseCodeEnum.RXH99999.getCode(),
+                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：更新绑卡申请信息发生异常,异常信息：%s", ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
+                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
+            );
+        }
+
+    }
+
 
     @Override
     public RequestCrossMsgDTO getRequestCrossMsgDTO(Tuple2 tuple) {

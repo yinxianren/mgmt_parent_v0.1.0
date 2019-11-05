@@ -18,7 +18,7 @@ import java.util.Date;
 
 @TableName ( "7_merchant_card_table" )
 @Getter
-public class MerchantCardTable  implements Serializable {
+public class MerchantCardTable  implements Serializable,Cloneable{
 	@TableId(type= IdType.INPUT)
 	private Long id;//表主键
 	private String organizationId;
@@ -193,5 +193,11 @@ public class MerchantCardTable  implements Serializable {
 	public MerchantCardTable setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 		return this;
+	}
+
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 }

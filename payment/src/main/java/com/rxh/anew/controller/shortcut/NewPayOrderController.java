@@ -74,6 +74,7 @@ public class NewPayOrderController extends NewAbstractCommonController {
         RequestCrossMsgDTO requestCrossMsgDTO = null;
         CrossResponseMsgDTO crossResponseMsgDTO = null;
         InnerPrintLogObject ipo = null ;
+        PayOrderInfoTable payOrderInfoTable = null;
         try{
             //0.解析 以及 获取SystemOrderTrackTable对象
             sotTable = this.getSystemOrderTrackTable(request,param,bussType);
@@ -141,7 +142,7 @@ public class NewPayOrderController extends NewAbstractCommonController {
                 //备份一个通道信息
                 ChannelInfoTable channelInfoTable_back = channelInfoTable;
                 //执行通道风控
-                if(isNull(channelInfoTable)){
+                if(!isNull(channelInfoTable)){
                     //获取该通道历史统计交易量
                     Tuple2<RiskQuotaTable,RiskQuotaTable> channelRiskQuota = newPayOrderService.getRiskQuotaInfoByChannel(channelInfoTable,ipo);
                     //执行通道风控
@@ -177,7 +178,7 @@ public class NewPayOrderController extends NewAbstractCommonController {
                 }
             }
             //3.保存订单信息
-            PayOrderInfoTable payOrderInfoTable = newPayOrderService.savePayOrder(merInfoTable, merPayOrderApplyDTO,channelInfoTable,registerCollectTable,merchantCardTable,ipo);
+             payOrderInfoTable = newPayOrderService.savePayOrder(merInfoTable, merPayOrderApplyDTO,channelInfoTable,registerCollectTable,merchantCardTable,ipo);
             //封装请求cross必要参数
             requestCrossMsgDTO = newPayOrderService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,payOrderInfoTable,registerCollectTable,merchantCardTable));
             //请求cross请求
@@ -186,8 +187,8 @@ public class NewPayOrderController extends NewAbstractCommonController {
             crossResponseMsgDTO = newPayOrderService.jsonToPojo(crossResponseMsg,ipo);
             //更新订单信息
             payOrderInfoTable = newPayOrderService.updateByPayOrderInfo(crossResponseMsgDTO,crossResponseMsg,payOrderInfoTable,ipo);
-            //封装放回结果
-            respResult = newPayOrderService.responseMsg(merPayOrderApplyDTO.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,merPayOrderApplyDTO.getAmount(),null,null,ipo);
+            //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
+            respResult = newPayOrderService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,merPayOrderApplyDTO.getMerOrderId(),payOrderInfoTable.getPlatformOrderId(),merPayOrderApplyDTO.getAmount(),null,null);
             sotTable.setPlatformPrintLog(  null == crossResponseMsgDTO ? crossResponseMsg : StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()))
                     .setTradeCode( null == crossResponseMsgDTO ? StatusEnum._1.getStatus(): crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
@@ -203,7 +204,9 @@ public class NewPayOrderController extends NewAbstractCommonController {
                 printErrorMsg = isBlank(e.getMessage()) ? "" : (e.getMessage().length()>=512 ? e.getMessage().substring(0,526) : e.getMessage());
                 errorCode = ResponseCodeEnum.RXH99999.getCode();
             }
-            respResult = newPayOrderService.responseMsg(null != merPayOrderApplyDTO ? merPayOrderApplyDTO.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,null != merPayOrderApplyDTO ? merPayOrderApplyDTO.getAmount() : null,errorCode,errorMsg,ipo);
+            // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
+            respResult = newPayOrderService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,
+                    null != merPayOrderApplyDTO ? merPayOrderApplyDTO.getMerOrderId() : null, null != payOrderInfoTable ? payOrderInfoTable.getPlatformOrderId(): null,null,errorCode,errorMsg);
             sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
         }finally {
             sotTable.setResponseResult(respResult).setCreateTime(new Date());
@@ -265,8 +268,8 @@ public class NewPayOrderController extends NewAbstractCommonController {
             crossResponseMsgDTO = newPayOrderService.jsonToPojo(crossResponseMsg,ipo);
             //更新订单信息
             payOrderInfoTable = newPayOrderService.updateByPayOrderInfo(crossResponseMsgDTO,crossResponseMsg,payOrderInfoTable,ipo);
-            //封装放回结果
-            respResult = newPayOrderService.responseMsg(payOrderInfoTable.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,payOrderInfoTable.getAmount().toString(),null,null,ipo);
+            //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
+            respResult = newPayOrderService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,payOrderInfoTable.getMerOrderId(),payOrderInfoTable.getPlatformOrderId(),payOrderInfoTable.getAmount().toString(),null,null);
             sotTable.setPlatformPrintLog(StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode())).setTradeCode( crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
             if(e instanceof NewPayException){
@@ -280,7 +283,9 @@ public class NewPayOrderController extends NewAbstractCommonController {
                 printErrorMsg = isBlank(e.getMessage()) ? "" : (e.getMessage().length()>=512 ? e.getMessage().substring(0,526) : e.getMessage());
                 errorCode = ResponseCodeEnum.RXH99999.getCode();
             }
-            respResult = newPayOrderService.responseMsg(null != payOrderInfoTable ? payOrderInfoTable.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null != payOrderInfoTable ? payOrderInfoTable.getAmount().toString() : null ,errorCode,errorMsg,ipo);
+            // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
+            respResult = newPayOrderService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,
+                    null != payOrderInfoTable ? payOrderInfoTable.getMerOrderId() : null, null != payOrderInfoTable ? payOrderInfoTable.getPlatformOrderId(): null,null,errorCode,errorMsg);
             sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
         }finally {
             sotTable.setResponseResult(respResult).setCreateTime(new Date());
@@ -368,8 +373,8 @@ public class NewPayOrderController extends NewAbstractCommonController {
             }
             //通道差异化处理
             commonChannelHandlePort.channelDifferBusinessHandle(requestCrossMsgDTO,crossResponseMsgDTO);
-            //封装放回结果
-            respResult = newPayOrderService.responseMsg(payOrderInfoTable.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,payOrderInfoTable.getAmount().toString(),null,null,ipo);
+            //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
+            respResult = newPayOrderService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,payOrderInfoTable.getMerOrderId(),payOrderInfoTable.getPlatformOrderId(),payOrderInfoTable.getAmount().toString(),null,null);
             sotTable.setPlatformPrintLog(StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode())).setTradeCode( crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
             if(e instanceof NewPayException){
@@ -383,7 +388,9 @@ public class NewPayOrderController extends NewAbstractCommonController {
                 printErrorMsg = isBlank(e.getMessage()) ? "" : (e.getMessage().length()>=512 ? e.getMessage().substring(0,526) : e.getMessage());
                 errorCode = ResponseCodeEnum.RXH99999.getCode();
             }
-            respResult = newPayOrderService.responseMsg(null != payOrderInfoTable ? payOrderInfoTable.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,null !=payOrderInfoTable ? payOrderInfoTable.getAmount().toString() : null ,errorCode,errorMsg,ipo);
+            // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
+            respResult = newPayOrderService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,
+                    null != payOrderInfoTable ? payOrderInfoTable.getMerOrderId() : null, null != payOrderInfoTable ? payOrderInfoTable.getPlatformOrderId(): null,null,errorCode,errorMsg);
             sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
         }finally {
             sotTable.setResponseResult(respResult).setCreateTime(new Date());

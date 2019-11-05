@@ -239,8 +239,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
     }
 
 
-
-    public String responseMsg(String merOrderId,MerchantInfoTable merInfoTable, RequestCrossMsgDTO  requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO,String  amount,String errorCode,String errorMsg,InnerPrintLogObject ipo) throws NewPayException, IllegalAccessException {
+    public String responseMsg(MerchantInfoTable merInfoTable,InnerPrintLogObject ipo,CrossResponseMsgDTO crossResponseMsgDTO,String ...args) throws NewPayException, IllegalAccessException {
         final String localPoint="responseMsg";
         String responseMsg = null;
         try {
@@ -248,11 +247,11 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
                     .setMerId( null !=merInfoTable ? merInfoTable.getMerchantId() : null)
                     .setStatus( null != crossResponseMsgDTO ? crossResponseMsgDTO.getCrossStatusCode() :  StatusEnum._1.getStatus() )
                     .setMsg( null != crossResponseMsgDTO ? StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()) : StatusEnum._1.getRemark())
-                    .setMerOrderId( null != merOrderId ? merOrderId : null )
-                    .setPlatformOrderId( null != requestCrossMsgDTO ? requestCrossMsgDTO.getRegisterCollectTable().getPlatformOrderId() : null)
-                    .setAmount(amount)
-                    .setErrorCode(errorCode)
-                    .setErrorMsg(errorMsg)
+                    .setMerOrderId( args[0] )
+                    .setPlatformOrderId( args[1] )
+                    .setAmount(args[2])
+                    .setErrorCode(args[3])
+                    .setErrorMsg(args[4])
                     ;
 
             Field[] fields = responseEntity.getClass().getDeclaredFields();
@@ -276,7 +275,6 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
             } else
                 throw  e;
         }
-
         return responseMsg;
     }
 

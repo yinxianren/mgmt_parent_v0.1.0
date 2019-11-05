@@ -141,7 +141,7 @@ public class NewNoAuthenticationPayOrderController  extends NewAbstractCommonCon
                 //备份一个通道信息
                 ChannelInfoTable channelInfoTable_back = channelInfoTable;
                 //执行通道风控
-                if(isNull(channelInfoTable)){
+                if(!isNull(channelInfoTable)){
                     //获取该通道历史统计交易量
                     channelRiskQuota = newPayOrderService.getRiskQuotaInfoByChannel(channelInfoTable,ipo);
                     //执行通道风控
@@ -178,6 +178,7 @@ public class NewNoAuthenticationPayOrderController  extends NewAbstractCommonCon
             }
             //3.保存订单信息
             payOrderInfoTable = newPayOrderService.savePayOrderByNoAuth(merInfoTable, merNoAuthPayOrderApplyDTO,channelInfoTable,registerCollectTable,merchantCardTable,ipo);
+            sotTable.setPlatformOrderId(payOrderInfoTable.getPlatformOrderId());
             //获取组织机构信息
             OrganizationInfoTable organizationInfoTable = newPayOrderService.getOrganizationInfo(channelInfoTable.getOrganizationId(),ipo);
             Class  clz=Class.forName(organizationInfoTable.getApplicationClassObj().trim());
@@ -202,8 +203,8 @@ public class NewNoAuthenticationPayOrderController  extends NewAbstractCommonCon
             }
             //通道差异化处理
             commonChannelHandlePort.channelDifferBusinessHandle(requestCrossMsgDTO,crossResponseMsgDTO);
-            //封装放回结果
-            respResult = newPayOrderService.responseMsg(payOrderInfoTable.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,payOrderInfoTable.getAmount().toString(),null,null,ipo);
+            //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
+            respResult = newPayOrderService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,merNoAuthPayOrderApplyDTO.getMerOrderId(),payOrderInfoTable.getPlatformOrderId(),merNoAuthPayOrderApplyDTO.getAmount(),null,null);
             sotTable.setPlatformPrintLog(StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode())).setTradeCode( crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
             if(e instanceof NewPayException){
@@ -217,7 +218,9 @@ public class NewNoAuthenticationPayOrderController  extends NewAbstractCommonCon
                 printErrorMsg = isBlank(e.getMessage()) ? "" : (e.getMessage().length()>=512 ? e.getMessage().substring(0,526) : e.getMessage());
                 errorCode = ResponseCodeEnum.RXH99999.getCode();
             }
-            respResult = newPayOrderService.responseMsg(null != payOrderInfoTable ? payOrderInfoTable.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO,null !=payOrderInfoTable ? payOrderInfoTable.getAmount().toString() : null ,errorCode,errorMsg,ipo);
+            // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
+            respResult = newPayOrderService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,
+                    null != merNoAuthPayOrderApplyDTO ? merNoAuthPayOrderApplyDTO.getMerOrderId() : null, null != payOrderInfoTable ? payOrderInfoTable.getPlatformOrderId(): null,null,errorCode,errorMsg);
             sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
         }finally {
             sotTable.setResponseResult(respResult).setCreateTime(new Date());

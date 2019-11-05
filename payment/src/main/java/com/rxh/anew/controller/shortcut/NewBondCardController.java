@@ -111,8 +111,8 @@ public class NewBondCardController extends NewAbstractCommonController {
             crossResponseMsgDTO = newBondCardService.jsonToPojo(crossResponseMsg,ipo);
             //更新进件信息
             newBondCardService.updateByBondCardInfo(crossResponseMsgDTO,crossResponseMsg,merchantCardTable,ipo);
-            //封装放回结果
-            respResult = newBondCardService.responseMsg(mbcaDTO.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,null,null,ipo);
+            //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
+            respResult = newBondCardService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,mbcaDTO.getMerOrderId(),merchantCardTable.getPlatformOrderId(),null,null,null);
             sotTable.setPlatformPrintLog(  null == crossResponseMsgDTO ? crossResponseMsg : StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()))
                     .setTradeCode( null == crossResponseMsgDTO ? StatusEnum._1.getStatus(): crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
@@ -130,7 +130,10 @@ public class NewBondCardController extends NewAbstractCommonController {
             }
             if( !isNull(merchantCardTable) )
                 newBondCardService.updateByBondCardInfo(crossResponseMsgDTO,crossResponseMsg,merchantCardTable,ipo);
-            respResult = newBondCardService.responseMsg(null != mbcaDTO ? mbcaDTO.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,errorCode,errorMsg,ipo);
+            // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
+            respResult = newBondCardService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,
+                    null != mbcaDTO ? mbcaDTO.getMerOrderId() : null, null != merchantCardTable ? merchantCardTable.getPlatformOrderId(): null,null,errorCode,errorMsg);
+
             sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
         }finally {
             sotTable.setResponseResult(respResult).setCreateTime(new Date());
@@ -195,8 +198,8 @@ public class NewBondCardController extends NewAbstractCommonController {
             crossResponseMsgDTO = newBondCardService.jsonToPojo(crossResponseMsg,ipo);
             //更新进件信息
             newBondCardService.updateByBondCardInfo(crossResponseMsgDTO,crossResponseMsg,merchantCardTable,ipo);
-            //封装放回结果
-            respResult = newBondCardService.responseMsg(merchantCardTable.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,null,null,ipo);
+            //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
+            respResult = newBondCardService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,merchantCardTable.getMerOrderId(),merchantCardTable.getPlatformOrderId(),null,null,null);
             sotTable.setPlatformPrintLog(  null == crossResponseMsgDTO ? crossResponseMsg : StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()))
                     .setTradeCode( null == crossResponseMsgDTO ? StatusEnum._1.getStatus(): crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
@@ -214,7 +217,9 @@ public class NewBondCardController extends NewAbstractCommonController {
             }
             if( !isNull(merchantCardTable) &&  merchantCardTable.getBussType().equalsIgnoreCase(BusinessTypeEnum.b5.getBusiType()))
                 newBondCardService.updateByBondCardInfo(crossResponseMsgDTO,crossResponseMsg,merchantCardTable,ipo);
-            respResult = newBondCardService.responseMsg(null != merchantCardTable ? merchantCardTable.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,errorCode,errorMsg,ipo);
+            // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
+            respResult = newBondCardService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,
+                    null != merchantCardTable ? merchantCardTable.getMerOrderId() : null, null != merchantCardTable ? merchantCardTable.getPlatformOrderId(): null,null,errorCode,errorMsg);
             sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
         }finally {
             sotTable.setResponseResult(respResult).setCreateTime(new Date());
@@ -241,6 +246,7 @@ public class NewBondCardController extends NewAbstractCommonController {
         CrossResponseMsgDTO crossResponseMsgDTO = null;
         InnerPrintLogObject ipo = null ;
         MerchantCardTable merchantCardTable = null;
+        MerchantCardTable merchantCardTable_old =null;
         String crossResponseMsg =null;
         try{
             //解析 以及 获取SystemOrderTrackTable对象
@@ -255,6 +261,7 @@ public class NewBondCardController extends NewAbstractCommonController {
             //更加平台订单号获取B4或B5操作记录
             merchantCardTable = newBondCardService.getMerchantCardInfoByPlatformOrderId(mcbcDTO.getPlatformOrderId(),null,ipo);
             sotTable.setMerOrderId(merchantCardTable.getMerOrderId());
+            merchantCardTable_old = (MerchantCardTable) merchantCardTable.clone();
             //获取必要参数
             Map<String, ParamRule> paramRuleMap = newBondCardService.getParamMapByB6();
             //参数校验
@@ -279,9 +286,9 @@ public class NewBondCardController extends NewAbstractCommonController {
             //将请求结果转为对象
             crossResponseMsgDTO = newBondCardService.jsonToPojo(crossResponseMsg,ipo);
             //更新进件信息
-            newBondCardService.updateByBondCardInfo(crossResponseMsgDTO,crossResponseMsg,merchantCardTable,ipo);
-            //封装放回结果
-            respResult = newBondCardService.responseMsg(merchantCardTable.getMerOrderId(),merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,null,null,ipo);
+            newBondCardService.updateByBondCardInfoByB6(crossResponseMsgDTO,crossResponseMsg,merchantCardTable,merchantCardTable_old,ipo);
+            //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
+            respResult = newBondCardService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,merchantCardTable.getMerOrderId(),merchantCardTable.getPlatformOrderId(),null,null,null);
             sotTable.setPlatformPrintLog(  null == crossResponseMsgDTO ? crossResponseMsg : StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()))
                     .setTradeCode( null == crossResponseMsgDTO ? StatusEnum._1.getStatus(): crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
@@ -299,7 +306,9 @@ public class NewBondCardController extends NewAbstractCommonController {
             }
             if( !isNull(merchantCardTable) &&  merchantCardTable.getBussType().equalsIgnoreCase(BusinessTypeEnum.b6.getBusiType()))
                 newBondCardService.updateByBondCardInfo(crossResponseMsgDTO,crossResponseMsg,merchantCardTable,ipo);
-            respResult = newBondCardService.responseMsg(null != merchantCardTable ? merchantCardTable.getMerOrderId() : null ,merInfoTable,requestCrossMsgDTO,crossResponseMsgDTO, null ,errorCode,errorMsg,ipo);
+            // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
+            respResult = newBondCardService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,
+                    null != merchantCardTable ? merchantCardTable.getMerOrderId() : null, null != merchantCardTable ? merchantCardTable.getPlatformOrderId(): null,null,errorCode,errorMsg);
             sotTable.setPlatformPrintLog(printErrorMsg).setTradeCode( StatusEnum._1.getStatus());
         }finally {
             sotTable.setResponseResult(respResult).setCreateTime(new Date());
