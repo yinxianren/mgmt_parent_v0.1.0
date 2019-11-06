@@ -22,6 +22,12 @@ public class ResponseEntity  implements Serializable {
     private String signMsg;
     private String errorCode;
     private String errorMsg;
+    private String channelTab;
+
+    public ResponseEntity setChannelTab(String channelTab) {
+        this.channelTab = channelTab;
+        return this;
+    }
 
     public ResponseEntity setAmount(String amount) {
         this.amount = amount;

@@ -3,6 +3,7 @@ package com.rxh.payInterface;
 import com.rxh.exception.NewPayException;
 
 import java.util.Collection;
+import java.util.Map;
 
 public interface NewPayAssert {
 
@@ -93,6 +94,12 @@ public interface NewPayAssert {
         if(null == collection || collection.size() == 0)
             throw new NewPayException(code,innerPrintMsg,responseMsg);
     }
+
+    default void isHasNotElement(Map map, String code, String innerPrintMsg, String responseMsg) throws NewPayException {
+        if(null == map || map.size() == 0)
+            throw new NewPayException(code,innerPrintMsg,responseMsg);
+    }
+
     default boolean isHasNotElement(Collection collection){
         if(null == collection || collection.size() == 0) return true;
         return false;
@@ -102,6 +109,10 @@ public interface NewPayAssert {
         return true;
     }
 
+    default void isHasElement(Collection collection ,String code, String innerPrintMsg, String responseMsg) throws NewPayException {
+        if(null == collection || collection.size() != 0)
+            throw new NewPayException(code,innerPrintMsg,responseMsg);
+    }
 
     default void state(boolean state,String code, String innerPrintMsg, String responseMsg) throws NewPayException {
         if(state)

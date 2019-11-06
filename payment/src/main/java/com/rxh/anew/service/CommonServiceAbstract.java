@@ -251,8 +251,10 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
                     .setPlatformOrderId( args[1] )
                     .setAmount(args[2])
                     .setErrorCode(args[3])
-                    .setErrorMsg(args[4])
-                    ;
+                    .setErrorMsg(args[4]);
+
+            if(args.length == 6)//支付成功才传通道标识
+                responseEntity.setChannelTab(args[5]);
 
             Field[] fields = responseEntity.getClass().getDeclaredFields();
             PayTreeMap<String,Object> map = new PayTreeMap<>();

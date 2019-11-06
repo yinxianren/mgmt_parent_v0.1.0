@@ -125,7 +125,7 @@ public class NewPayOrderController extends NewAbstractCommonController {
                 //根据进件信息和绑卡信息过滤进件信息,  merchantCardTableList,registerCollectTableList 有共同的组织机构
                 registerCollectTableList  = newPayOrderService.filterRegCollectInfoByMerCard(registerCollectTableList,merchantCardTableList,ipo);
                 //获取可行的通道
-                List<ChannelInfoTable> channelInfoTableList = newPayOrderService.getAllUsableChannelList(registerCollectTableList,ipo,merPayOrderApplyDTO.getProductType());
+                List<ChannelInfoTable> channelInfoTableList = newPayOrderService.getAllUsableChannelList(registerCollectTableList,ipo,merPayOrderApplyDTO.getProductType(),BusinessTypeEnum.PAY.getBusiType());
                 //获取最终可用的通道
                 channelInfoTable = newPayOrderService.getFeasibleChannel(channelInfoTableList,ipo,merPayOrderApplyDTO.getAmount());
                 //确定进件信息
@@ -161,7 +161,7 @@ public class NewPayOrderController extends NewAbstractCommonController {
                     //根据进件信息和绑卡信息过滤进件信息,  merchantCardTableList,registerCollectTableList 有共同的组织机构
                     registerCollectTableList  = newPayOrderService.filterRegCollectInfoByMerCard(registerCollectTableList,merchantCardTableList,ipo);
                     //获取可行的通道
-                    List<ChannelInfoTable> channelInfoTableList = newPayOrderService.getAllUsableChannelList(registerCollectTableList,ipo,merPayOrderApplyDTO.getProductType());
+                    List<ChannelInfoTable> channelInfoTableList = newPayOrderService.getAllUsableChannelList(registerCollectTableList,ipo,merPayOrderApplyDTO.getProductType(),BusinessTypeEnum.PAY.getBusiType());
                     //去除前面备份的通道
                     channelInfoTableList = newPayOrderService.subtractUnableChanInfo(channelInfoTableList,channelInfoTable_back,ipo);
                     //获取最终可用的通道
@@ -357,6 +357,9 @@ public class NewPayOrderController extends NewAbstractCommonController {
             payOrderInfoTable = newPayOrderService.updateByPayOrderInfoByB9After(crossResponseMsgDTO,crossResponseMsg,payOrderInfoTable,ipo);
             //状态为成功是才执行以下操作
             if(crossResponseMsgDTO.getCrossStatusCode().equals(StatusEnum._0.getStatus())){
+                /**
+                 * 事务处理
+                 */
                 MerPayOrderApplyDTO  merPayOrderApplyDTO = newPayOrderService.getMerPayOrderApplyDTO(payOrderInfoTable);
                 //查询通道使用记录  MerchantId  TerminalMerId ProductId
                 ChannelHistoryTable channelHistoryTable = newPayOrderService.getChannelHistoryInfo(ipo,merPayOrderApplyDTO.getMerId(),merPayOrderApplyDTO.getTerMerId(),merPayOrderApplyDTO.getProductType());
@@ -372,9 +375,9 @@ public class NewPayOrderController extends NewAbstractCommonController {
                 newPayOrderService.batchUpdatePayOderCorrelationInfo(payOrderInfoTable,cht,rqtSet,ipo);
             }
             //通道差异化处理
-            commonChannelHandlePort.channelDifferBusinessHandle(requestCrossMsgDTO,crossResponseMsgDTO);
-            //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
-            respResult = newPayOrderService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,payOrderInfoTable.getMerOrderId(),payOrderInfoTable.getPlatformOrderId(),payOrderInfoTable.getAmount().toString(),null,null);
+            commonChannelHandlePort.channelDifferBusinessHandleByPayOrder(requestCrossMsgDTO,crossResponseMsgDTO);
+            //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg，channelTab
+            respResult = newPayOrderService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,payOrderInfoTable.getMerOrderId(),payOrderInfoTable.getPlatformOrderId(),payOrderInfoTable.getAmount().toString(),null,null,channelInfoTable.getChannelId());
             sotTable.setPlatformPrintLog(StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode())).setTradeCode( crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
             if(e instanceof NewPayException){

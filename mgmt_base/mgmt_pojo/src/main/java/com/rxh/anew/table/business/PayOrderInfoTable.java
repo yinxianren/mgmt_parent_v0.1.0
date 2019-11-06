@@ -8,6 +8,7 @@ import lombok.Getter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -64,6 +65,10 @@ public class PayOrderInfoTable implements Serializable {
     private Date createTime;// 创建时间,
     private Date updateTime;// 更新时间,
 
+    @TableField(exist = false)
+    private Collection<String> merOrderIdCollect; //支持多订单查找
+    @TableField(exist = false)
+    private Collection<Integer> statusCollect; //支持多状态查找
     //分页参数
     @TableField(exist = false)
     private Integer pageNum;
@@ -76,6 +81,16 @@ public class PayOrderInfoTable implements Serializable {
 
     @TableField(exist = false)
     private String organizationId;
+
+    public PayOrderInfoTable setStatusCollect(Collection<Integer> statusCollect) {
+        this.statusCollect = statusCollect;
+        return this;
+    }
+
+    public PayOrderInfoTable setMerOrderIdCollect(Collection<String> merOrderIdCollect) {
+        this.merOrderIdCollect = merOrderIdCollect;
+        return this;
+    }
 
     public PayOrderInfoTable setChannelOrderId(String channelOrderId) {
         this.channelOrderId = channelOrderId;

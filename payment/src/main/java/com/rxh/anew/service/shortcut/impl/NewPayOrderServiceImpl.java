@@ -972,6 +972,7 @@ signMsg
             list = commonRPCComponent.apiChannelInfoService.getList(new ChannelInfoTable()
                     .setOrganizationIds(organizationIdSet)
                     .setProductId(args[0])
+                    .setBusiType(args[1])
                     .setStatus(StatusEnum._0.getStatus()));
         }catch (Exception e){
             e.printStackTrace();
@@ -1311,11 +1312,11 @@ signMsg
         BigDecimal channelFeeAmount = amount.multiply(channelRate.divide(new BigDecimal(100))).add(channelSingleFee).setScale(2, BigDecimal.ROUND_UP);
 
         state(channelFeeAmount.compareTo(terFee) == 1,
-                ResponseCodeEnum.RXH00042.getCode(),
+                ResponseCodeEnum.RXH00043.getCode(),
                 format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s;payFree = %s,通道费率 = %s",
-                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00042.getMsg(),localPoint,
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00043.getMsg(),localPoint,
                         merNoAuthPayOrderApplyDTO.getPayFee(),channelInfoTable.getChannelRateFee()),
-                format(" %s",ResponseCodeEnum.RXH00042.getMsg()));
+                format(" %s",ResponseCodeEnum.RXH00043.getMsg()));
 
 
         state(channelFeeAmount.compareTo(merFree) == 1,
@@ -1356,6 +1357,7 @@ signMsg
 
 
         //平台收入 = 商户费用-通道费用-代理商费用
+        agentMerFree = null == agentMerFree? new BigDecimal(0) : agentMerFree;
         BigDecimal platformIncome = merFree.subtract(channelFeeAmount).subtract(agentMerFree);
         state( platformIncome.compareTo(new BigDecimal(0)) == -1,
                 ResponseCodeEnum.RXH00044.getCode(),

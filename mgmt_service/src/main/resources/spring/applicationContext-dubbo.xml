@@ -12,41 +12,44 @@
     <dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" check="false"/>
     <dubbo:protocol name="dubbo" port="${dubbo.protocol.port}" payload="1073741824"/>
      <!--  ***********************************************new***********************************************************************   -->
-    <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantInfoService"     ref="apiAgentMerchantInfoServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantInfoService"       ref="apiMerchantInfoServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.business.ApiRegisterCollectService"    ref="apiRegisterCollectServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.system.ApiMerchantSettingService"      ref="apiMerchantSettingServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantInfoService"     ref="apiAgentMerchantInfoServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantInfoService"       ref="apiMerchantInfoServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.business.ApiRegisterCollectService"    ref="apiRegisterCollectServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.system.ApiMerchantSettingService"      ref="apiMerchantSettingServiceImpl" timeout="50000"/>
     <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelInfoService"         ref="apiChannelInfoServiceImpl"        timeout="30000" />
     <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelExtraInfoService"    ref="apiChannelExtraInfoServiceImpl"   timeout="30000" />
-    <dubbo:service interface="com.rxh.service.anew.business.ApiRegisterInfoService"       ref="apiRegisterInfoServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.system.ApiSystemOrderTrackService"     ref="apiSystemOrderTrackServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.business.ApiMerchantCardService"       ref="apiMerchantCardServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.business.ApiPayOrderInfoService"       ref="apiPayOrderInfoServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelHistoryService"      ref="apiChannelHistoryServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantQuotaRiskService"  ref="apiMerchantQuotaRiskServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.system.ApiRiskQuotaService"            ref="apiRiskQuotaServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantSettingService"  ref="apiAgentMerchantSettingServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantRateService"       ref="apiMerchantRateServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.system.ApiRiskQuotaService"            ref="apiRiskQuotaServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.anew.business.ApiRegisterInfoService"       ref="apiRegisterInfoServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.system.ApiSystemOrderTrackService"     ref="apiSystemOrderTrackServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.business.ApiMerchantCardService"       ref="apiMerchantCardServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.business.ApiPayOrderInfoService"       ref="apiPayOrderInfoServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelHistoryService"      ref="apiChannelHistoryServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantQuotaRiskService"  ref="apiMerchantQuotaRiskServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.system.ApiRiskQuotaService"            ref="apiRiskQuotaServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantSettingService"  ref="apiAgentMerchantSettingServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantRateService"       ref="apiMerchantRateServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.system.ApiRiskQuotaService"            ref="apiRiskQuotaServiceImpl"  timeout="50000"/>
     <dubbo:service interface="com.rxh.service.anew.channel.ApiProductTypeSettingService"  ref="apiProductTypeSettingServiceImpl" timeout="30000" />
     <dubbo:service interface="com.rxh.service.anew.system.ApiOrganizationInfoService"     ref="apiOrganizationInfoServiceImpl"   timeout="300000" />
     <dubbo:service interface="com.rxh.service.anew.transaction.ApiPayOrderBusinessTransactionService" ref="apiPayOrderBusinessTransactionServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantsDetailsService"   ref="apiMerchantsDetailsServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantWalletService"     ref="apiMerchantWalletServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsWalletService"      ref="apiTerminalMerchantsWalletServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsDetailsService"     ref="apiTerminalMerchantsDetailsServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelDetailsService"      ref="apiChannelDetailsServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelWalletService"       ref="apiChannelWalletServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantsDetailsService"      ref="apiAgentMerchantsDetailsServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantWalletService"        ref="apiAgentMerchantWalletServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.system.ApiBankRateService"        ref="apiBankRateServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.anew.system.ApiBankCodeService"        ref="apiBankCodeServiceImpl"/>
+    <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantsDetailsService"   ref="apiMerchantsDetailsServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.merchant.ApiMerchantWalletService"     ref="apiMerchantWalletServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsWalletService"      ref="apiTerminalMerchantsWalletServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsDetailsService"     ref="apiTerminalMerchantsDetailsServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelDetailsService"      ref="apiChannelDetailsServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.channel.ApiChannelWalletService"       ref="apiChannelWalletServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantsDetailsService"      ref="apiAgentMerchantsDetailsServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantWalletService"        ref="apiAgentMerchantWalletServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.system.ApiBankRateService"        ref="apiBankRateServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.system.ApiBankCodeService"        ref="apiBankCodeServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.business.ApiTransOrderInfoService"        ref="apiTransOrderInfoServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.anew.transaction.ApiTransOrderBusinessTransactionService"  ref="apiTransOrderBusinessTransactionServiceImpl" timeout="50000"/>
 
 
 
-    <dubbo:service interface="com.rxh.service.anew.agent.ApiAgentMerchantWalletService"      ref="apiAgentMerchantWalletServiceImpl"/>
-    <dubbo:service interface="com.rxh.service.merchant.MerchantPrivilegesService" ref="merchantPrivilegesServiceImpl" />
-    <dubbo:service interface="com.rxh.service.merchant.MerchantRoleService" ref="merchantRoleServiceImpl" />
+    <dubbo:service interface="com.rxh.service.merchant.MerchantPrivilegesService" ref="merchantPrivilegesServiceImpl" timeout="50000"/>
+    <dubbo:service interface="com.rxh.service.merchant.MerchantRoleService" ref="merchantRoleServiceImpl" timeout="50000"/>
+
+
 
     <!--  **********************************************************************************************************************   -->
     <!--<dubbo:protocol name="dubbo" host="${dubbo.protocol.host}" port="${dubbo.protocol.port}" payload="1073741824"/>-->

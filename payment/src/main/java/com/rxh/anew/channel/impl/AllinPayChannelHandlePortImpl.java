@@ -5,6 +5,7 @@ import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.mq.PayMessageSend;
 import com.rxh.anew.table.business.PayOrderInfoTable;
+import com.rxh.anew.table.business.TransOrderInfoTable;
 import com.rxh.enums.StatusEnum;
 import com.rxh.tuple.Tuple2;
 import lombok.AllArgsConstructor;
@@ -24,13 +25,21 @@ public class AllinPayChannelHandlePortImpl implements CommonChannelHandlePort {
     private  final PayMessageSend payMessageSend;
 
     @Override
-    public Tuple2 channelDifferBusinessHandle(RequestCrossMsgDTO requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO) {
+    public Tuple2 channelDifferBusinessHandleByPayOrder(RequestCrossMsgDTO requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO) {
 
         PayOrderInfoTable payOrderInfoTable = requestCrossMsgDTO.getPayOrderInfoTable();
         if(crossResponseMsgDTO.getCrossStatusCode() == StatusEnum._0.getStatus())
             payMessageSend.sendObjectMessageToPayOderMsgMQ(payOrderInfoTable);
 
 
+        return null;
+    }
+
+    @Override
+    public Tuple2 channelDifferBusinessHandleByTransOrder(RequestCrossMsgDTO requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO) {
+        TransOrderInfoTable transOrderInfoTable = requestCrossMsgDTO.getTransOrderInfoTable();
+        if(crossResponseMsgDTO.getCrossStatusCode() == StatusEnum._0.getStatus())
+            payMessageSend.sendObjectMessageToTransOderMsgMQ(transOrderInfoTable);
         return null;
     }
 }

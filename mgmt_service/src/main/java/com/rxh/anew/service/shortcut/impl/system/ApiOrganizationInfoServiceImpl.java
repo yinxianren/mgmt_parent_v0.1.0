@@ -21,19 +21,22 @@ public class ApiOrganizationInfoServiceImpl implements ApiOrganizationInfoServic
     private OrganizationInfoDBService organizationInfoDBService;
 
     @Override
-    public List<OrganizationInfoTable> getAll(OrganizationInfoTable organizationInfoTable) {
-        if (isNull(organizationInfoTable)) return organizationInfoDBService.list();
+    public List<OrganizationInfoTable> getAll(OrganizationInfoTable oit) {
+        if (isNull(oit)) return organizationInfoDBService.list();
         LambdaQueryWrapper<OrganizationInfoTable> queryWrapper = new QueryWrapper<OrganizationInfoTable>().lambda();
-        if ( !isBlank(organizationInfoTable.getOrganizationName()))  queryWrapper.eq(OrganizationInfoTable::getOrganizationName, organizationInfoTable.getOrganizationName());
-        if ((organizationInfoTable.getId()!= null) && organizationInfoTable.getId()>0)  queryWrapper.eq(OrganizationInfoTable::getId, organizationInfoTable.getId());
+        if ( !isBlank(oit.getOrganizationName()))  queryWrapper.eq(OrganizationInfoTable::getOrganizationName, oit.getOrganizationName());
+        if ( !isNull(oit.getId()) )  queryWrapper.eq(OrganizationInfoTable::getId, oit.getId());
+        if ( isHasElement(oit.getOrganizationIdColl()) )  queryWrapper.in(OrganizationInfoTable::getOrganizationIdColl, oit.getOrganizationIdColl());
+        if ( !isNull(oit.getStatus()))  queryWrapper.eq(OrganizationInfoTable::getStatus, oit.getStatus());
         return organizationInfoDBService.list(queryWrapper);
     }
 
     @Override
-    public OrganizationInfoTable getOne(OrganizationInfoTable oi) {
-        if (isNull(oi)) return  null;
+    public OrganizationInfoTable getOne(OrganizationInfoTable oit) {
+        if (isNull(oit)) return  null;
         LambdaQueryWrapper<OrganizationInfoTable> queryWrapper = new QueryWrapper<OrganizationInfoTable>().lambda();
-        if ( !isBlank(oi.getOrganizationId()))  queryWrapper.eq(OrganizationInfoTable::getOrganizationId, oi.getOrganizationId());
+        if ( !isBlank(oit.getOrganizationId()))  queryWrapper.eq(OrganizationInfoTable::getOrganizationId, oit.getOrganizationId());
+        if ( !isNull(oit.getStatus()) )  queryWrapper.eq(OrganizationInfoTable::getStatus, oit.getStatus());
         return organizationInfoDBService.getOne(queryWrapper);
     }
 

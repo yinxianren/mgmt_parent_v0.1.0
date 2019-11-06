@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +33,13 @@ public class OrganizationInfoTable  implements Serializable {
 	private String productIds;
 	@TableField(exist = false)
 	private List<ProductSettingTable> productTypes;
+	@TableField(exist = false)
+    private Collection<String> organizationIdColl;
+
+	public OrganizationInfoTable setOrganizationIdColl(Collection<String> organizationIdColl) {
+		this.organizationIdColl = organizationIdColl;
+		return this;
+	}
 
 	public OrganizationInfoTable setId(Long id) {
 		this.id = id;

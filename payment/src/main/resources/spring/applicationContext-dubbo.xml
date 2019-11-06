@@ -24,10 +24,11 @@
     <dubbo:reference interface="com.rxh.service.anew.system.ApiRiskQuotaService"               id="apiRiskQuotaService"/>
     <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantSettingService"     id="apiAgentMerchantSettingService"/>
     <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantRateService"          id="apiMerchantRateService"/>
-    <dubbo:reference interface="com.rxh.service.anew.transaction.ApiPayOrderBusinessTransactionService" id="apiPayOrderBusinessTransactionService"/>
+    <dubbo:reference interface="com.rxh.service.anew.transaction.ApiPayOrderBusinessTransactionService"     id="apiPayOrderBusinessTransactionService"/>
+    <dubbo:reference interface=" com.rxh.service.anew.transaction.ApiTransOrderBusinessTransactionService"  id="apiTransOrderBusinessTransactionService"/>
     <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantsDetailsService"      id="apiMerchantsDetailsService"/>
     <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantWalletService"        id="apiMerchantWalletService"/>
-    <dubbo:reference interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsWalletService"       id="apiTerminalMerchantsWalletService"/>
+    <dubbo:reference interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsWalletService"      id="apiTerminalMerchantsWalletService"/>
     <dubbo:reference interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsDetailsService"     id="apiTerminalMerchantsDetailsService"/>
     <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelDetailsService"         id="apiChannelDetailsService"/>
     <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelWalletService"          id="apiChannelWalletService"/>
@@ -36,4 +37,6 @@
     <dubbo:reference interface="com.rxh.service.anew.system.ApiBankRateService"                id="apiBankRateService"/>
     <dubbo:reference interface="com.rxh.service.anew.system.ApiBankCodeService"                id="apiBankCodeService"/>
     <dubbo:reference interface="com.rxh.service.anew.system.ApiOrganizationInfoService"        id="apiOrganizationInfoService"/>
+    <dubbo:reference interface="com.rxh.service.anew.business.ApiTransOrderInfoService"        id="apiTransOrderInfoService"/>
+
 </beans>

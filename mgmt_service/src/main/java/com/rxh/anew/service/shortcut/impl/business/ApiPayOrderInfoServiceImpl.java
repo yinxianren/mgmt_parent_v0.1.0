@@ -38,6 +38,7 @@ public class ApiPayOrderInfoServiceImpl implements ApiPayOrderInfoService, NewPa
         if( !isBlank(pit.getMerchantId())) lambdaQueryWrapper.eq(PayOrderInfoTable::getMerchantId,pit.getMerchantId());
         if( !isBlank(pit.getTerminalMerId())) lambdaQueryWrapper.eq(PayOrderInfoTable::getTerminalMerId,pit.getTerminalMerId());
         if( !isBlank(pit.getBussType())) lambdaQueryWrapper.eq(PayOrderInfoTable::getBussType,pit.getBussType());
+        if( isHasElement(pit.getStatusCollect())) lambdaQueryWrapper.in(PayOrderInfoTable::getStatus,pit.getStatusCollect());
         return payOrderInfoDBService.getOne(lambdaQueryWrapper);
     }
 
@@ -45,6 +46,8 @@ public class ApiPayOrderInfoServiceImpl implements ApiPayOrderInfoService, NewPa
     public List<PayOrderInfoTable> getList(PayOrderInfoTable pit) {
         if(isNull(pit)) return null;
         LambdaQueryWrapper<PayOrderInfoTable> lambdaQueryWrapper = new QueryWrapper<PayOrderInfoTable>() .lambda();
+        if(isHasElement(pit.getMerOrderIdCollect()) ) lambdaQueryWrapper.in(PayOrderInfoTable::getMerOrderId,pit.getMerOrderIdCollect());
+        if(isHasElement(pit.getStatusCollect())) lambdaQueryWrapper.in(PayOrderInfoTable::getStatus,pit.getStatusCollect());
         if( !isNull(pit.getStatus())) lambdaQueryWrapper.eq(PayOrderInfoTable::getStatus,pit.getStatus());
         if( !isBlank(pit.getPlatformOrderId())) lambdaQueryWrapper.eq(PayOrderInfoTable::getPlatformOrderId,pit.getPlatformOrderId());
         if( !isBlank(pit.getMerOrderId())) lambdaQueryWrapper.eq(PayOrderInfoTable::getMerOrderId,pit.getMerOrderId());

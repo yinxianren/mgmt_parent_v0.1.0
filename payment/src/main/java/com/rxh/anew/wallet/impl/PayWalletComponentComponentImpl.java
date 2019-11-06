@@ -8,6 +8,7 @@ import com.rxh.anew.table.agent.AgentMerchantSettingTable;
 import com.rxh.anew.table.agent.AgentMerchantWalletTable;
 import com.rxh.anew.table.agent.AgentMerchantsDetailsTable;
 import com.rxh.anew.table.business.PayOrderInfoTable;
+import com.rxh.anew.table.business.TransOrderInfoTable;
 import com.rxh.anew.table.channel.ChannelDetailsTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.channel.ChannelWalletTable;
@@ -46,7 +47,7 @@ public class PayWalletComponentComponentImpl implements PayWalletComponent, NewP
 
     @Override
     public void payOrderWallet( ActiveMQObjectMessage objectMessage) {
-        final String bussType = "MQ队列--->收单业务钱包更新";
+        final String bussType = "快捷MQ队列--->收单业务钱包更新";
         InnerPrintLogObject ipo;
         PayOrderInfoTable poi = null;
         try {
@@ -109,7 +110,20 @@ public class PayWalletComponentComponentImpl implements PayWalletComponent, NewP
 
     @Override
     public void transOrderWallet( ActiveMQObjectMessage objectMessage) {
+        final String bussType = "快捷MQ队列--->代付业务钱包更新";
+        InnerPrintLogObject ipo;
+        TransOrderInfoTable toit = null;
+        try{
+            toit = (TransOrderInfoTable) objectMessage.getObject();
+            //创建日志打印对象
+            ipo = new InnerPrintLogObject(toit.getMerchantId(), toit.getTerminalMerId(),bussType);
+            //获取商户信息
+            MerchantInfoTable mit = payWalletService.getMerInfo(ipo);
 
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
