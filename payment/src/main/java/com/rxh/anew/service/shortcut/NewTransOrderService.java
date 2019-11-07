@@ -4,7 +4,7 @@ import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.MerTransOrderApplyDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
-import com.rxh.anew.service.CommonSerivceInterface;
+import com.rxh.anew.service.CommonServiceInterface;
 import com.rxh.anew.table.business.PayOrderInfoTable;
 import com.rxh.anew.table.business.TransOrderInfoTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
@@ -24,7 +24,7 @@ import java.util.Map;
  * Time: 下午7:28
  * Description:
  */
-public interface NewTransOrderService extends CommonSerivceInterface {
+public interface NewTransOrderService extends CommonServiceInterface {
     /**
      *
      * @return

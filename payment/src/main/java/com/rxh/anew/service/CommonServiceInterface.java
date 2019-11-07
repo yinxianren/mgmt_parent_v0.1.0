@@ -18,7 +18,7 @@ import com.rxh.tuple.Tuple2;
 
 import java.util.List;
 
-public interface CommonSerivceInterface {
+public interface CommonServiceInterface {
     /**
      *  获取商户信息
      * @param ipo
@@ -141,5 +141,5 @@ public interface CommonSerivceInterface {
      * @param crossResponseMsgDTO
      * @param ipo
      */
-    void isSuccess(CrossResponseMsgDTO crossResponseMsgDTO, InnerPrintLogObject ipo);
+    void isSuccess(CrossResponseMsgDTO crossResponseMsgDTO, InnerPrintLogObject ipo)throws NewPayException;
 }

@@ -112,6 +112,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             sotTable.setPlatformOrderId(tuple._2.getPlatformOrderId());
             //封装请求cross必要参数
             requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,extraInfoTable,tuple._1,tuple._2));
+            requestCrossMsgDTO.setIP(sotTable.getIp());
             //生成通道处理对象
             CommonChannelHandlePortComponent commonChannelHandlePortComponent = (CommonChannelHandlePortComponent) SpringContextUtil.getBean(clz);
             //调用业务申请
@@ -203,6 +204,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             Class  clz=Class.forName(organizationInfoTable.getApplicationClassObj().trim());
             //封装请求cross必要参数
             requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,channelExtraInfoTable,tuple2._1,tuple2._2));
+            requestCrossMsgDTO.setIP(sotTable.getIp());
             //生成通道处理对象
             CommonChannelHandlePortComponent commonChannelHandlePortComponent = (CommonChannelHandlePortComponent) SpringContextUtil.getBean(clz);
             //调用业务申请
@@ -296,6 +298,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             Class  clz=Class.forName(organizationInfoTable.getApplicationClassObj().trim());
             //封装请求cross必要参数
             requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,channelExtraInfoTable,registerInfoTable,registerCollectTable));
+            requestCrossMsgDTO.setIP(sotTable.getIp());
             //生成通道处理对象
             CommonChannelHandlePortComponent commonChannelHandlePortComponent = (CommonChannelHandlePortComponent) SpringContextUtil.getBean(clz);
             //调用业务申请

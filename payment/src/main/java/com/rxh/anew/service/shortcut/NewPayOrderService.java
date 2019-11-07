@@ -3,9 +3,10 @@ package com.rxh.anew.service.shortcut;
 import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.MerNoAuthPayOrderApplyDTO;
 import com.rxh.anew.dto.MerPayOrderApplyDTO;
+import com.rxh.anew.dto.MerReGetBondCodeDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
-import com.rxh.anew.service.CommonSerivceInterface;
+import com.rxh.anew.service.CommonServiceInterface;
 import com.rxh.anew.table.business.MerchantCardTable;
 import com.rxh.anew.table.business.PayOrderInfoTable;
 import com.rxh.anew.table.business.RegisterCollectTable;
@@ -14,7 +15,6 @@ import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.merchant.MerchantQuotaRiskTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
-import com.rxh.anew.table.system.OrganizationInfoTable;
 import com.rxh.anew.table.system.RiskQuotaTable;
 import com.rxh.exception.NewPayException;
 import com.rxh.tuple.Tuple2;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface NewPayOrderService extends CommonSerivceInterface {
+public interface NewPayOrderService extends CommonServiceInterface {
     /**
      * 支付下单申请
      * @return
@@ -314,11 +314,12 @@ public interface NewPayOrderService extends CommonSerivceInterface {
     /**
      *
      * @param payOrderInfoTable
-     * @param busiType
      * @param ipo
+     * @param args
      * @return
+     * @throws NewPayException
      */
-    PayOrderInfoTable updateByPayOrderInfoByB9Before(PayOrderInfoTable payOrderInfoTable, String busiType, InnerPrintLogObject ipo) throws NewPayException;
+    PayOrderInfoTable updateByPayOrderInfoByBefore(PayOrderInfoTable payOrderInfoTable, InnerPrintLogObject ipo, String  ...args) throws NewPayException;
 
     /**
      *

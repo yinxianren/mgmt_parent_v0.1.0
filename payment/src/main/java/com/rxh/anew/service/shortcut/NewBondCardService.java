@@ -6,7 +6,7 @@ import com.rxh.anew.dto.MerConfirmBondCardDTO;
 import com.rxh.anew.dto.MerReGetBondCodeDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
-import com.rxh.anew.service.CommonSerivceInterface;
+import com.rxh.anew.service.CommonServiceInterface;
 import com.rxh.anew.table.business.MerchantCardTable;
 import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
@@ -15,7 +15,7 @@ import com.rxh.exception.NewPayException;
 import java.util.List;
 import java.util.Map;
 
-public interface NewBondCardService extends CommonSerivceInterface {
+public interface NewBondCardService extends CommonServiceInterface {
     /**
      *  绑卡申请接口
      * @return

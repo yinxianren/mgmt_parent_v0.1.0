@@ -8,6 +8,7 @@ import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.exception.NewPayException;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.payInterface.PayUtil;
+import com.rxh.utils.IpUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.http.HttpHeaders;
 
@@ -62,9 +63,11 @@ public abstract class NewAbstractCommonController implements NewPayAssert, PayUt
                 ResponseCodeEnum.RXH00013.getMsg());//请求参数为空
         String tradeInfoDecode = new String(Base64.decodeBase64(param.getBytes()));
         param = URLDecoder.decode(tradeInfoDecode, "UTF-8");
+        String ip = IpUtils.getReallyIpForRequest(request);
         return new SystemOrderTrackTable()
                 .setRequestMsg(param)
                 .setReferPath(reqUrl)
+                .setIp(ip)
                 .setTradeTime(new Date());
     }
 

@@ -114,6 +114,7 @@ public class NewTransOrderController extends NewAbstractCommonController {
             CommonChannelHandlePortComponent commonChannelHandlePortComponent = (CommonChannelHandlePortComponent) SpringContextUtil.getBean(clz);
             //封装请求cross必要参数   TransOrderInfoTable,ChannelInfoTable,RegisterCollectTable,RegisterInfoTable,MerchantCardTable
             requestCrossMsgDTO = newTransOrderService.getRequestCrossMsgDTO(new Tuple5(transOrderInfoTable,tuple2._2,registerCollectTable,registerInfoTable,merchantCardTable));
+            requestCrossMsgDTO.setIP(sotTable.getIp());
             //调用业务申请
             crossResponseMsgDTO = commonChannelHandlePortComponent.payment(requestCrossMsgDTO,ipo);
             String crossResponseMsg = null == crossResponseMsgDTO ? null : crossResponseMsgDTO.toString();

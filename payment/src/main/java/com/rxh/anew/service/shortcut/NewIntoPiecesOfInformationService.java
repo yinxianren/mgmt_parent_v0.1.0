@@ -6,7 +6,7 @@ import com.rxh.anew.dto.MerBankCardBindDTO;
 import com.rxh.anew.dto.MerBasicInfoRegDTO;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
-import com.rxh.anew.service.CommonSerivceInterface;
+import com.rxh.anew.service.CommonServiceInterface;
 import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.business.RegisterInfoTable;
 import com.rxh.anew.table.channel.ChannelExtraInfoTable;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface NewIntoPiecesOfInformationService  extends CommonSerivceInterface {
+public interface NewIntoPiecesOfInformationService  extends CommonServiceInterface {
     /**
      *
       * @return

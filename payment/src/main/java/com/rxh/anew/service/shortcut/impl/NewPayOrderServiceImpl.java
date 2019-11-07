@@ -1,10 +1,7 @@
 package com.rxh.anew.service.shortcut.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.rxh.anew.dto.CrossResponseMsgDTO;
-import com.rxh.anew.dto.MerNoAuthPayOrderApplyDTO;
-import com.rxh.anew.dto.MerPayOrderApplyDTO;
-import com.rxh.anew.dto.RequestCrossMsgDTO;
+import com.rxh.anew.dto.*;
 import com.rxh.anew.inner.InnerPrintLogObject;
 import com.rxh.anew.inner.ParamRule;
 import com.rxh.anew.service.CommonServiceAbstract;
@@ -1127,9 +1124,9 @@ signMsg
 
 
     @Override
-    public PayOrderInfoTable updateByPayOrderInfoByB9Before(PayOrderInfoTable payOrderInfoTable, String busiType, InnerPrintLogObject ipo) throws NewPayException {
-        final String localPoint="updateByPayOrderInfoByB9Before";
-        payOrderInfoTable.setBussType(busiType)
+    public PayOrderInfoTable updateByPayOrderInfoByBefore(PayOrderInfoTable payOrderInfoTable, InnerPrintLogObject ipo, String  ...args) throws NewPayException {
+        final String localPoint="updateByPayOrderInfoByB9";
+        payOrderInfoTable.setBussType(args[0])
                 .setStatus(StatusEnum._3.getStatus());
         try {
             commonRPCComponent.apiPayOrderInfoService.updateByPrimaryKey(payOrderInfoTable);
@@ -1142,6 +1139,7 @@ signMsg
                     format(" %s", ResponseCodeEnum.RXH99999.getMsg())
             );
         }
+        if(args.length> 1 ) payOrderInfoTable.setSmsCode(args[1]);
         return  payOrderInfoTable;
     }
 

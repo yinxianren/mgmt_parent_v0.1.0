@@ -188,6 +188,7 @@ public class NewNoAuthenticationPayOrderController  extends NewAbstractCommonCon
             CommonChannelHandlePortComponent commonChannelHandlePortComponent = (CommonChannelHandlePortComponent) SpringContextUtil.getBean(clz);
             //封装请求cross必要参数
             requestCrossMsgDTO = newPayOrderService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,payOrderInfoTable,registerCollectTable,merchantCardTable));
+            requestCrossMsgDTO.setIP(sotTable.getIp());
             //调用业务申请
             crossResponseMsgDTO = allinPayChannelHandlePortComponent.exemptCodePay(requestCrossMsgDTO,ipo);
             String crossResponseMsg = null == crossResponseMsgDTO ? null : crossResponseMsgDTO.toString();

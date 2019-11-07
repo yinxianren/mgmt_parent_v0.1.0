@@ -21,6 +21,7 @@ import java.util.Date;
 public class SystemOrderTrackTable implements Serializable {
     @TableId(type= IdType.AUTO)
     private Long id;//主键
+    private String ip;//IP地址
     private String merId;//商户号
     private String merOrderId;//商户订单号
     private String platformOrderId;//平台订单号
@@ -34,6 +35,11 @@ public class SystemOrderTrackTable implements Serializable {
     private String platformPrintLog;//平台打印日志
     private Date tradeTime; // 交易时间
     private Date createTime;//创建时间
+
+    public SystemOrderTrackTable setIp(String ip) {
+        this.ip = ip;
+        return  this;
+    }
 
     public SystemOrderTrackTable setRequestPath(String requestPath) {
         this.requestPath = requestPath;
