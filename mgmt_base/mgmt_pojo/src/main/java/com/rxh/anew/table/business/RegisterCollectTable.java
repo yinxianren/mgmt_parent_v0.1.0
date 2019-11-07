@@ -1,13 +1,15 @@
 package com.rxh.anew.table.business;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
+import com.rxh.anew.table.merchant.MerchantRateTable;
 import lombok.Getter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -48,6 +50,13 @@ public class RegisterCollectTable implements Serializable {
     private Integer status;//状态 0：success ,1:fail',
     private Date   createTime;//创建时间',
     private Date   updateTime;//更新时间',
+    @TableField(exist = false)
+    private Collection<MerchantRateTable> merchantRateTableCollect;
+
+    public RegisterCollectTable setMerchantRateTableCollect(Collection<MerchantRateTable> merchantRateTableCollect) {
+        this.merchantRateTableCollect = merchantRateTableCollect;
+        return this;
+    }
 
     public RegisterCollectTable setOrganizationId(String organizationId) {
         this.organizationId = organizationId;
