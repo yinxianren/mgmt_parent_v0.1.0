@@ -124,19 +124,19 @@
                                    class="table table-condensed table-striped table-hover table-bordered">
                                 <tr ng-repeat="row in $data">
                                     <td class="text-center" data-title="'代理商'">
-                                        {{row.agentMerId}}({{row.agentMerId  | getValueByList : agents : 'agentMerchantId':'agentMerchantName'}})
+                                        {{row.agentMerchantId}}({{row.agentMerchantId  | getValueByList : agents : 'agentMerchantId':'agentMerchantName'}})
                                     </td>
                                     <td class="text-center" data-title="'商户订单号'" >
                                         {{row.merOrderId}}
                                     </td>
                                     <td class="text-center" data-title="'平台订单号'" >
-                                        {{row.orderId}}
+                                        {{row.platformOrderId}}
                                     </td>
                                     <td class="text-center" data-title="'订单金额'">
                                         {{row.amount == null?"--":(row.amount | number: 2)}}
                                     </td>
-                                    <td class="text-center" data-title="'类型'">
-                                        {{row.type | getValueByList : detailsTypes : 'firstValue' : 'name'}}
+                                    <td class="text-center" data-title="'产品类型'">
+                                        {{row.productId | getValueByList : productTypes : 'firstValue' : 'name'}}
                                     </td>
                                     <td class="text-center" data-title="'入账金额'">
                                         {{row.inAmount == null?"--":(row.inAmount | number: 2)}}
@@ -148,7 +148,7 @@
                                         {{row.fee== null?"--":(row.fee | number: 2)}}
                                     </td>
                                     <td class="text-center" data-title="'总余额'">
-                                        {{row.totalBenifit== null?"--":(row.totalBenifit | number: 2)}}
+                                        {{row.totalBalance== null?"--":(row.totalBalance | number: 2)}}
                                     </td>
 
                                     <td class="text-center" data-title="'更新时间'">

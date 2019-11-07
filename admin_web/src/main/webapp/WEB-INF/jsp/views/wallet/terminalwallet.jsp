@@ -20,8 +20,8 @@
                                 <div class="col-sm-6 col-md-6 col-lg-3 form-group form-group-sm">
                                     <div class="input-group">
                                         <span class="input-group-addon">商户：</span>
-                                        <input class="form-control b-r-sm" type="text" ng-model="searchInfo.merId"
-                                               uib-typeahead="x.merId as x.merId + '(' + x.merchantName + ')' for x in merchants | filter: {merId : $viewValue}"
+                                        <input class="form-control b-r-sm" type="text" ng-model="searchInfo.merchantId"
+                                               uib-typeahead="x.merchantId as x.merchantId + '(' + x.merchantName + ')' for x in merchants | filter: {merchantId : $viewValue}"
                                                typeahead-min-length="0"
                                         >
                                     </div>
@@ -29,7 +29,7 @@
                                 <div class="form-group form-group-sm">
                                     <button class="btn btn-sm btn-w-m btn-primary"
                                             ng-click="search()"
-                                            ng-disabled="searchInfo.merId==null">
+                                            ng-disabled="searchInfo.merchantId==null">
                                         查询
                                     </button>
                                     <button class="btn btn-sm btn-w-m btn-info"
@@ -50,7 +50,7 @@
                                                ng-model="selected[row.channelId]"/>
                                     </td>--%>
                                     <td class="text-center" data-title="'商户'">
-                                        {{row.merId}}({{row.merId  | getValueByList : merchants : 'merId':'merchantName'}})
+                                        {{row.merchantId}}({{row.merchantId  | getValueByList : merchants : 'merchantId':'merchantName'}})
                                     </td>
                                     <td class="text-center" data-title="'子商户'">
                                         {{row.terminalMerId}}
@@ -64,7 +64,7 @@
                                     <td class="text-center" data-title="'出账金额'">
                                         {{row.outAmount == null?"--":(row.outAmount | number: 2) }}
                                     </td>
-                                    <td class="text-center" data-title="'手续费成本'">
+                                    <td class="text-center" data-title="'手续费'">
                                         {{row.totalFee == null?"--":(row.totalFee | number: 2) }}
                                     </td>
                                     <td class="text-center" data-title="'总余额'">
@@ -77,7 +77,7 @@
                                         {{row.totalUnavailableAmount == null?"--":(row.totalUnavailableAmount | number: 2) }}
                                     </td>
                                     <td class="text-center" data-title="'保证金'">
-                                        {{row.totalBond== null?"--":(row.totalBond | number: 2) }}
+                                        {{row.totalMargin== null?"--":(row.totalMargin | number: 2) }}
                                     </td>
                                     <td class="text-center" data-title="'冻结金额'">
                                         {{row.totalFreezeAmount == null?"--":(row.totalFreezeAmount | number: 2) }}

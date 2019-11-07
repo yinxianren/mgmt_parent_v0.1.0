@@ -1,6 +1,7 @@
 package com.rxh.anew.table.terminal;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import java.io.Serializable;
 import java.util.Date;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @Description
@@ -36,6 +38,16 @@ public class TerminalMerchantsDetailsTable  implements Serializable {
 	private Integer status;//状态 0：success,1:fail
 	private Date createTime;//创建时间
 	private Date updateTime;//更新时间
+
+	//分页参数
+	@TableField(exist = false)
+	private Integer pageNum;
+	@TableField(exist = false)
+	private Integer pageSize;
+	@TableField(exist = false)
+	private Date beginTime;
+	@TableField(exist = false)
+	private Date endTime;
 
 	public TerminalMerchantsDetailsTable setId(Long id) {
 		this.id = id;
@@ -116,4 +128,21 @@ public class TerminalMerchantsDetailsTable  implements Serializable {
 		this.updateTime = updateTime;
 		return this;
 	}
+
+	public void setPageNum(Integer pageNum) {
+		this.pageNum = pageNum;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public void setBeginTime(Date beginTime) {
+		this.beginTime = beginTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
 }

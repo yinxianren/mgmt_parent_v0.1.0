@@ -1,14 +1,11 @@
 package com.rxh.controller.anew.agent;
 
 import com.rxh.anew.table.agent.AgentMerchantInfoTable;
-import com.rxh.pojo.Result;
+import com.rxh.enums.StatusEnum;
 import com.rxh.service.AnewAgentMerchantService;
 import com.rxh.service.ConstantService;
 import com.rxh.service.square.AgentMerchantInfoService;
 import com.rxh.spring.annotation.SystemLogInfo;
-import com.rxh.square.pojo.AgentMerchantInfo;
-import com.rxh.square.vo.VoAgentMerchantInfo;
-import com.rxh.util.UserInfoUtils;
 import com.rxh.utils.GlobalConfiguration;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
@@ -18,7 +15,6 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -74,7 +70,15 @@ public class AnewAgentMerchantInfoController {
     @RequestMapping(value = "/getAllByVoAgentMerchantInfo")
     @ResponseBody
     public ResponseVO getAllByVoAgentMerchantInfo(@RequestBody AgentMerchantInfoTable agentMerchantInfoTable) {
-        return anewAgentMerchantService.list(agentMerchantInfoTable);
+        try {
+            return anewAgentMerchantService.list(agentMerchantInfoTable);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
     }
 
     @SystemLogInfo(description = "代理商删除")
@@ -93,16 +97,34 @@ public class AnewAgentMerchantInfoController {
     @RequestMapping(value = "/updateAgentMerchantInfo")
     @ResponseBody
     public ResponseVO updateAgentMerchantInfo(@RequestBody AgentMerchantInfoTable agentMerchantInfo){
-       return anewAgentMerchantService.update(agentMerchantInfo);
+        try {
+            return anewAgentMerchantService.update(agentMerchantInfo);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
     }
+
     @SystemLogInfo(description = "代理商新增")
     @RequestMapping(value = "/addAgentMerchantInfo")
     @ResponseBody
     public ResponseVO addAgentMerchantInfo(@RequestBody AgentMerchantInfoTable agentMerchantInfo){
-        agentMerchantInfo.setCreateTime(new Date());
-        agentMerchantInfo.setUpdateTime(new Date());
-        agentMerchantInfo.setAgentMerchantId("A"+System.currentTimeMillis());
-       return anewAgentMerchantService.save(agentMerchantInfo);
+        try {
+            agentMerchantInfo.setCreateTime(new Date());
+            agentMerchantInfo.setUpdateTime(new Date());
+            agentMerchantInfo.setAgentMerchantId("A"+System.currentTimeMillis());
+            return anewAgentMerchantService.save(agentMerchantInfo);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
+
     }
 
     /**
@@ -114,7 +136,15 @@ public class AnewAgentMerchantInfoController {
     @RequestMapping("/batchDel")
     @ResponseBody
     public ResponseVO batchDel(@RequestBody List<String> ids) {
-        return anewAgentMerchantService.delByIds(ids);
+        try {
+            return anewAgentMerchantService.delByIds(ids);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
     }
 
     @ResponseBody

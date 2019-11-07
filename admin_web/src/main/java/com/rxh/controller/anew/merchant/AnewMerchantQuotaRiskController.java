@@ -1,12 +1,8 @@
 package com.rxh.controller.anew.merchant;
 
 import com.rxh.anew.table.merchant.MerchantQuotaRiskTable;
-import com.rxh.cache.RedisCacheCommonCompoment;
-import com.rxh.pojo.Result;
+import com.rxh.enums.StatusEnum;
 import com.rxh.service.AnewMerchantQuotaRiskService;
-import com.rxh.service.square.MerchantQuotaRiskService;
-import com.rxh.square.pojo.MerchantQuotaRisk;
-import com.rxh.square.pojo.MerchantSetting;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,11 +18,29 @@ public class AnewMerchantQuotaRiskController {
 
     @RequestMapping("/search")
     public ResponseVO search(@RequestBody MerchantQuotaRiskTable merchantQuotaRiskTable){
-        return anewMerchantQuotaRiskService.search(merchantQuotaRiskTable);
+        try {
+            return anewMerchantQuotaRiskService.search(merchantQuotaRiskTable);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
+
     }
     @RequestMapping("/update")
     public ResponseVO update(@RequestBody  MerchantQuotaRiskTable merchantQuotaRiskTable){
-        return anewMerchantQuotaRiskService.saveOrUpdate(merchantQuotaRiskTable);
+        try {
+            return anewMerchantQuotaRiskService.saveOrUpdate(merchantQuotaRiskTable);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
+
     }
 
 }

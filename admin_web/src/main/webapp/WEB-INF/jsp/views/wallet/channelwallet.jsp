@@ -50,7 +50,7 @@
                                                ng-model="selected[row.channelId]"/>
                                     </td>--%>
                                     <td class="text-center" data-title="'通道名称'">
-                                        {{row.channelId | getValueByList : channels : 'channelId' : 'channelName' }}
+                                        {{row.channelId | getValueByList : channels : 'channelId' : 'channelName' }}  ({{row.channelId}})
                                     </td>
                                     <td class="text-center" data-title="'支付方式'">
                                         {{row.payType | getValueByList : paytype : 'firstValue' : 'name' }}
@@ -80,7 +80,7 @@
                                         {{row.totalUnavailableAmount == null?"--":(row.totalUnavailableAmount | number: 2) }}
                                     </td>
                                     <td class="text-center" data-title="'保证金'">
-                                        {{row.totalBond == null?"--":(row.totalBond | number: 2) }}
+                                        {{row.totalMargin == null?"--":(row.totalMargin | number: 2) }}
                                     </td>
                                     <td class="text-center" data-title="'冻结金额'">
                                         {{row.totalFreezeAmount == null?"--":(row.totalFreezeAmount | number: 2) }}

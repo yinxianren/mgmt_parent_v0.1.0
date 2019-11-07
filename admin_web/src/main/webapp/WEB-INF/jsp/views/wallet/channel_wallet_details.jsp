@@ -23,12 +23,12 @@
                                     <div class="input-group">
                                         <span class="input-group-addon">通道ID：</span>
                                         <input class="form-control b-r-sm" type="text" ng-model="searchInfo.channelId"
-                                               uib-typeahead="x.channelId as x.channelId  for x in channelIds | filter: {channelId : $viewValue}"
+                                               uib-typeahead="x.channelId as x.channelId  for x in channels | filter: {channelId : $viewValue}"
                                                typeahead-min-length="0">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-6 col-lg-1-5">
+                            <%--<div class="col-sm-6 col-md-6 col-lg-1-5">
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
                                         <span class="input-group-addon">支付商户号：</span>
@@ -37,13 +37,13 @@
                                                typeahead-min-length="0">
                                     </div>
                                 </div>
-                            </div>
+                            </div>--%>
                             <div class="col-sm-6 col-md-6 col-lg-1-5">
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
-                                        <span class="input-group-addon">支付方式：</span>
-                                        <select class="form-control b-r-sm" ng-model="searchInfo.payType"
-                                                ng-options="x.firstValue as x.name for x in payTypes">
+                                        <span class="input-group-addon">支付产品：</span>
+                                        <select class="form-control b-r-sm" ng-model="searchInfo.productId"
+                                                ng-options="x.firstValue as x.name for x in productTypes">
                                         </select>
                                     </div>
                                 </div>
@@ -71,7 +71,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-6 col-lg-1-5">
+                           <%-- <div class="col-sm-6 col-md-6 col-lg-1-5">
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
                                         <span class="input-group-addon">类型：</span>
@@ -80,7 +80,7 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
+                            </div>--%>
                             <div class="col-sm-6 col-md-6 col-lg-1-5">
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
@@ -144,37 +144,37 @@
                                         {{row.id}}
                                     </td>--%>
                                     <td class="text-center" data-title="'通道名称'">
-                                        {{row.channelName}}
+                                        {{row.channelId}}({{row.channelId  | getValueByList : channels : 'channelId':'channelName'}})
                                     </td>
-                                    <td class="text-center" data-title="'支付商户号'">
+                                    <%--<td class="text-center" data-title="'支付商户号'">
                                         {{row.channelTransCode}}
-                                    </td>
-                                    <td class="text-center" data-title="'支付方式'">
-                                        {{row.type | getValueByList : payTypes : 'firstValue' : 'name'}}
+                                    </td>--%>
+                                    <td class="text-center" data-title="'支付产品'">
+                                        {{row.productId | getValueByList : productTypes : 'firstValue' : 'name'}}
                                     </td>
                                     <td class="text-center" data-title="'商户订单号'" >
                                         {{row.merOrderId}}
                                     </td>
                                     <td class="text-center" data-title="'平台订单号'" >
-                                        {{row.orderId}}
+                                        {{row.platformOrderId}}
                                     </td>
                                     <td class="text-center" data-title="'订单金额'">
                                         {{row.amount== null?"--":(row.amount | number: 2)}}
                                     </td>
-                                    <td class="text-center" data-title="'类型'">
+                                    <%--<td class="text-center" data-title="'产品类型'">
                                         {{row.type | getValueByList : detailsTypes : 'firstValue' : 'name'}}
-                                    </td>
+                                    </td>--%>
                                     <td class="text-center" data-title="'入账金额'">
                                         {{row.inAmount == null?"--":(row.inAmount| number: 2)  }}
                                     </td>
                                     <td class="text-center" data-title="'出账金额'">
                                         {{row.outAmount==null?"--":(row.outAmount| number: 2)  }}
                                     </td>
-                                    <td class="text-center" data-title="'手续费成本'">
-                                        {{row.fee== null?"--":(row.fee | number: 2)}}
+                                    <td class="text-center" data-title="'手续费'">
+                                        {{row.chFee== null?"--":(row.chFee | number: 2)}}
                                     </td>
-                                    <td class="text-center" data-title="'手续费利润'">
-                                        {{row.feeProfit== null?"--":(row.feeProfit | number: 2)}}
+                                    <td class="text-center" data-title="'利润'">
+                                        {{row.chFeeProfit== null?"--":(row.chFeeProfit | number: 2)}}
                                     </td>
                                     <td class="text-center" data-title="'总余额'">
                                         {{row.totalBalance== null?"--":(row.totalBalance | number: 2)}}

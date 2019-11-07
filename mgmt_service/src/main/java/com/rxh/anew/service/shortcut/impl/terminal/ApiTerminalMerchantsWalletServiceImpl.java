@@ -10,6 +10,8 @@ import com.rxh.service.anew.terminal.ApiTerminalMerchantsWalletService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: panda
@@ -36,5 +38,13 @@ public class ApiTerminalMerchantsWalletServiceImpl implements ApiTerminalMerchan
     public boolean updateOrSave(TerminalMerchantsWalletTable tmw) {
         if(isNull(tmw)) return false;
         return terminalMerchantsWalletDBservice.saveOrUpdate(tmw);
+    }
+
+    @Override
+    public List<TerminalMerchantsWalletTable> getList(TerminalMerchantsWalletTable terminalMerchantsWalletTable) {
+        if (isNull(terminalMerchantsWalletTable)) return terminalMerchantsWalletDBservice.list();
+        LambdaQueryWrapper<TerminalMerchantsWalletTable> queryWrapper = new LambdaQueryWrapper<>();
+        if (!isBlank(terminalMerchantsWalletTable.getMerchantId())) queryWrapper.eq(TerminalMerchantsWalletTable::getMerchantId,terminalMerchantsWalletTable.getMerchantId());
+        return terminalMerchantsWalletDBservice.list(queryWrapper);
     }
 }

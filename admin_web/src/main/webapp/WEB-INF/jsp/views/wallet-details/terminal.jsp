@@ -22,7 +22,7 @@
                                     <div class="input-group">
                                         <span class="input-group-addon">商户：</span>
                                         <input class="form-control b-r-sm" type="text" ng-model="searchInfo.merId"
-                                               uib-typeahead="x.merId as x.merId + '(' + x.merchantName + ')' for x in merchants | filter: {merId : $viewValue}"
+                                               uib-typeahead="x.merchantId as x.merchantId + '(' + x.merchantName + ')' for x in merchants | filter: {merchantId : $viewValue}"
                                                typeahead-min-length="0">
                                     </div>
                                 </div>
@@ -56,9 +56,9 @@
                             <div class="col-sm-6 col-md-6 col-lg-1-5">
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
-                                        <span class="input-group-addon">类型：</span>
-                                        <select class="form-control b-r-sm" ng-model="searchInfo.type"
-                                                ng-options="x.firstValue as x.name for x in detailsTypes">
+                                        <span class="input-group-addon">产品类型：</span>
+                                        <select class="form-control b-r-sm" ng-model="searchInfo.productId"
+                                                ng-options="x.firstValue as x.name for x in productTypes">
                                         </select>
                                     </div>
                                 </div>
@@ -124,7 +124,7 @@
                                    class="table table-condensed table-striped table-hover table-bordered">
                                 <tr ng-repeat="row in $data">
                                     <td class="text-center" data-title="'商户'">
-                                        {{row.merId}}({{row.merId  | getValueByList : merchants : 'merId':'merchantName'}})
+                                        {{row.merchantId}}({{row.merchantId  | getValueByList : merchants : 'merchantId':'merchantName'}})
                                     </td>
                                     <td class="text-center" data-title="'子商户'">
                                         {{row.terminalMerId  }}
@@ -133,10 +133,10 @@
                                         {{row.merOrderId  }}
                                     </td>
                                     <td class="text-center" data-title="'平台订单号'">
-                                        {{row.orderId  }}
+                                        {{row.platformOrderId  }}
                                     </td>
-                                    <td class="text-center" data-title="'类型'">
-                                        {{row.type | getValueByList : detailsTypes : 'firstValue' : 'name'}}
+                                    <td class="text-center" data-title="'产品类型'">
+                                        {{row.productId | getValueByList : productTypes : 'firstValue' : 'name'}}
                                     </td>
                                     <td class="text-center" data-title="'订单金额'" >
                                         {{row.amount | number: 2}}

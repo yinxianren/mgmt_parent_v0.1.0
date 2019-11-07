@@ -10,6 +10,8 @@ import com.rxh.service.anew.agent.ApiAgentMerchantWalletService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: panda
@@ -36,5 +38,12 @@ public class ApiAgentMerchantWalletServiceImpl implements ApiAgentMerchantWallet
     public boolean updateOrSave(AgentMerchantWalletTable amw) {
         if(isNull(amw)) return false;
         return agentMerchantWalletDBService.saveOrUpdate(amw);
+    }
+
+    @Override
+    public List<AgentMerchantWalletTable> getList(AgentMerchantWalletTable agentMerchantWalletTable) {
+        LambdaQueryWrapper<AgentMerchantWalletTable> queryWrapper = new LambdaQueryWrapper();
+        if (!isBlank(agentMerchantWalletTable.getAgentMerchantId())) queryWrapper.eq(AgentMerchantWalletTable::getAgentMerchantId,agentMerchantWalletTable.getAgentMerchantId());
+        return agentMerchantWalletDBService.list(queryWrapper);
     }
 }

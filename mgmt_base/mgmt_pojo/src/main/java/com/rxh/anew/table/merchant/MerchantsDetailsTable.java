@@ -1,6 +1,7 @@
 package com.rxh.anew.table.merchant;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -36,6 +37,16 @@ public class MerchantsDetailsTable  implements Serializable {
 	private Integer status;//状态 0：success,1:fail
 	private Date createTime;//创建时间
 	private Date updateTime;//更新时间
+
+	//分页参数
+	@TableField(exist = false)
+	private Integer pageNum;
+	@TableField(exist = false)
+	private Integer pageSize;
+	@TableField(exist = false)
+	private Date beginTime;
+	@TableField(exist = false)
+	private Date endTime;
 
 
 	public MerchantsDetailsTable setId(Long id) {
@@ -116,5 +127,21 @@ public class MerchantsDetailsTable  implements Serializable {
 	public MerchantsDetailsTable setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 		return this;
+	}
+
+	public void setPageNum(Integer pageNum) {
+		this.pageNum = pageNum;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public void setBeginTime(Date beginTime) {
+		this.beginTime = beginTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 }
