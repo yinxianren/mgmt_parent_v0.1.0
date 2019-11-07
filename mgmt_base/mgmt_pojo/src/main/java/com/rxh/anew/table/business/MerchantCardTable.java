@@ -1,6 +1,7 @@
 package com.rxh.anew.table.business;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -49,6 +50,14 @@ public class MerchantCardTable  implements Serializable,Cloneable{
 	private Integer status;//状态 0：success ,1:fail
 	private Date createTime;//创建时间
 	private Date updateTime;//更新时间
+
+	@TableField(exist = false)
+	private String smsCode;
+
+	public MerchantCardTable setSmsCode(String smsCode) {
+		this.smsCode = smsCode;
+		return this;
+	}
 
 	public MerchantCardTable setPayFee(BigDecimal payFee) {
 		this.payFee = payFee;

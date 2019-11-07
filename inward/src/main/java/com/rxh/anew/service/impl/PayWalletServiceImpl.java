@@ -7,6 +7,7 @@ import com.rxh.anew.table.agent.AgentMerchantSettingTable;
 import com.rxh.anew.table.agent.AgentMerchantWalletTable;
 import com.rxh.anew.table.agent.AgentMerchantsDetailsTable;
 import com.rxh.anew.table.business.PayOrderInfoTable;
+import com.rxh.anew.table.business.TransOrderInfoTable;
 import com.rxh.anew.table.channel.ChannelDetailsTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.channel.ChannelWalletTable;
@@ -208,7 +209,7 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
     }
 
     @Override
-    public Tuple2<MerchantWalletTable, MerchantsDetailsTable> updateMerWallet(MerchantWalletTable mwt, PayOrderInfoTable poi, MerchantRateTable mrt) {
+    public Tuple2<MerchantWalletTable, MerchantsDetailsTable> updateMerWalletByPayOrder(MerchantWalletTable mwt, PayOrderInfoTable poi, MerchantRateTable mrt) {
         //订单金额
         BigDecimal amount = poi.getAmount();
         //总订单金额
@@ -286,7 +287,7 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
 
 
     @Override
-    public Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> updateTerMerWallet(TerminalMerchantsWalletTable tmw, PayOrderInfoTable poi, MerchantRateTable mrt){
+    public Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> updateTerMerWalletByPayOrder(TerminalMerchantsWalletTable tmw, PayOrderInfoTable poi, MerchantRateTable mrt){
         //订单金额
         BigDecimal amount = poi.getAmount();
         //订单总金额
@@ -356,7 +357,7 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
 
 
     @Override
-    public Tuple2<ChannelWalletTable, ChannelDetailsTable> updateChannelWallet(ChannelWalletTable cwt, ChannelInfoTable cit, PayOrderInfoTable poi,MerchantRateTable mrt) {
+    public Tuple2<ChannelWalletTable, ChannelDetailsTable> updateChannelWalletByPayOrder(ChannelWalletTable cwt, ChannelInfoTable cit, PayOrderInfoTable poi, MerchantRateTable mrt) {
         //订单金额
         BigDecimal amount = poi.getAmount();
         //通道费率
@@ -438,7 +439,7 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
 
 
     @Override
-    public Tuple2<AgentMerchantWalletTable, AgentMerchantsDetailsTable> updateAgentMerWallet(AgentMerchantWalletTable amw, AgentMerchantSettingTable ams, PayOrderInfoTable poi) {
+    public Tuple2<AgentMerchantWalletTable, AgentMerchantsDetailsTable> updateAgentMerWalletByPayOrder(AgentMerchantWalletTable amw, AgentMerchantSettingTable ams, PayOrderInfoTable poi) {
         //订单金额
         BigDecimal amount = poi.getAmount();
         //总订单金额
@@ -471,36 +472,79 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         }
 
         amw.setId( null == amw.getId() ? null : amw.getId())
-        .setAgentMerchantId( null ==  amw.getAgentMerchantId() ?  ams.getAgentMerchantId() : amw.getAgentMerchantId() )
-        .setTotalAmount(amw.getTotalAmount())
-        .setIncomeAmount(amw.getIncomeAmount())//总入账金额,这里存放的是终端商户入账的金额
-        .setOutAmount(amw.getOutAmount())//手续费出帐金额
-        .setTotalBalance(totalBalance) //代理商总余额
-        .setTotalAvailableAmount(totalAvailableAmount)
-        .setTotalUnavailableAmount(totalUnavailableAmount)
-        .setTotalFee(amw.getTotalFee())
-        .setTotalFreezeAmount(amw.getTotalFreezeAmount())
-        .setStatus(StatusEnum._0.getStatus())
-        .setCreateTime( null == amw.getCreateTime() ? new Date() : amw.getCreateTime() )
-        .setUpdateTime(new Date());
+                .setAgentMerchantId( null ==  amw.getAgentMerchantId() ?  ams.getAgentMerchantId() : amw.getAgentMerchantId() )
+                .setTotalAmount(amw.getTotalAmount())
+                .setIncomeAmount(amw.getIncomeAmount())//总入账金额,这里存放的是终端商户入账的金额
+                .setOutAmount(amw.getOutAmount())//手续费出帐金额
+                .setTotalBalance(totalBalance) //代理商总余额
+                .setTotalAvailableAmount(totalAvailableAmount)
+                .setTotalUnavailableAmount(totalUnavailableAmount)
+                .setTotalFee(amw.getTotalFee())
+                .setTotalFreezeAmount(amw.getTotalFreezeAmount())
+                .setStatus(StatusEnum._0.getStatus())
+                .setCreateTime( null == amw.getCreateTime() ? new Date() : amw.getCreateTime() )
+                .setUpdateTime(new Date());
 
         AgentMerchantsDetailsTable amd = new AgentMerchantsDetailsTable()
-        .setId(null)
-        .setAgentMerchantId(ams.getAgentMerchantId())
-        .setMerOrderId(poi.getMerOrderId())
-        .setPlatformOrderId(poi.getPlatformOrderId())
-        .setProductId(poi.getProductId())
-        .setAmount(new BigDecimal(0))
-        .setInAmount(new BigDecimal(0))
-        .setOutAmount(new BigDecimal(0))
-        .setRateFee(ams.getRateFee())
-        .setFee(agentMerFee)
-        .setTotalBalance(totalBalance)
-        .setTimestamp(System.currentTimeMillis())
-        .setStatus(StatusEnum._0.getStatus())
-        .setCreateTime(new Date())
-        .setUpdateTime(new Date());
+                .setId(null)
+                .setAgentMerchantId(ams.getAgentMerchantId())
+                .setMerOrderId(poi.getMerOrderId())
+                .setPlatformOrderId(poi.getPlatformOrderId())
+                .setProductId(poi.getProductId())
+                .setAmount(new BigDecimal(0))
+                .setInAmount(new BigDecimal(0))
+                .setOutAmount(new BigDecimal(0))
+                .setRateFee(ams.getRateFee())
+                .setFee(agentMerFee)
+                .setTotalBalance(totalBalance)
+                .setTimestamp(System.currentTimeMillis())
+                .setStatus(StatusEnum._0.getStatus())
+                .setCreateTime(new Date())
+                .setUpdateTime(new Date());
         return new Tuple2<>(amw,amd);
+    }
+
+    @Override
+    public Tuple2<MerchantWalletTable, MerchantsDetailsTable> updateMerWalletByTransOrder(MerchantWalletTable mwt, TransOrderInfoTable toit, InnerPrintLogObject ipo) {
+
+
+
+//        mwt
+//        .setTotalAmount()
+//        .setIncomeAmount()
+//        .setOutAmount()
+//        .setTotalFee()
+//        .setFeeProfit()
+//        .setTotalMargin()
+//        .setTotalBalance()
+//        .setTotalAvailableAmount()
+//        .setTotalUnavailableAmount()
+//        .setTotalFreezeAmount()
+//        .setUpdateTime(new Date());
+//
+//
+//
+//        MerchantsDetailsTable mdt = new MerchantsDetailsTable()
+//                .setId(null)
+//                .setMerchantId(toit.getMerchantId())              .setProductId(toit.getProductId())
+//                .setMerOrderId(toit.getMerOrderId())              .setPlatformOrderId(toit.getPlatformOrderId())
+//                .setAmount(toit.getAmount())                      .setInAmount(null)
+//                .setOutAmount()
+//                .setRateFee()
+//                .setFee()
+//                .setFeeProfit()
+//                .setTotalBalance()
+//                .setTimestamp()
+//                .setStatus()
+//                .setCreateTime()
+//                .setUpdateTime()
+//                .setPageNum()
+//                .setPageSize()
+//                .setBeginTime()
+//                .setEndTime();
+
+
+        return null;
     }
 
 }

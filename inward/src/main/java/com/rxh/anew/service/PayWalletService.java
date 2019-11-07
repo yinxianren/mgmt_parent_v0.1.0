@@ -5,6 +5,7 @@ import com.rxh.anew.table.agent.AgentMerchantSettingTable;
 import com.rxh.anew.table.agent.AgentMerchantWalletTable;
 import com.rxh.anew.table.agent.AgentMerchantsDetailsTable;
 import com.rxh.anew.table.business.PayOrderInfoTable;
+import com.rxh.anew.table.business.TransOrderInfoTable;
 import com.rxh.anew.table.channel.ChannelDetailsTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.channel.ChannelWalletTable;
@@ -47,7 +48,7 @@ public interface PayWalletService {
      * @param mrt
      * @return
      */
-    Tuple2<MerchantWalletTable, MerchantsDetailsTable> updateMerWallet(MerchantWalletTable mwt, PayOrderInfoTable poi, MerchantRateTable mrt);
+    Tuple2<MerchantWalletTable, MerchantsDetailsTable> updateMerWalletByPayOrder(MerchantWalletTable mwt, PayOrderInfoTable poi, MerchantRateTable mrt);
 
     /**
      *
@@ -62,7 +63,7 @@ public interface PayWalletService {
      * @param poi
      * @return
      */
-    Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> updateTerMerWallet(TerminalMerchantsWalletTable tmw, PayOrderInfoTable poi, MerchantRateTable mrt);
+    Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> updateTerMerWalletByPayOrder(TerminalMerchantsWalletTable tmw, PayOrderInfoTable poi, MerchantRateTable mrt);
 
     /**
      *
@@ -87,7 +88,7 @@ public interface PayWalletService {
      * @param poi
      * @return
      */
-    Tuple2<ChannelWalletTable, ChannelDetailsTable> updateChannelWallet(ChannelWalletTable cwt, ChannelInfoTable cit, PayOrderInfoTable poi, MerchantRateTable mrt);
+    Tuple2<ChannelWalletTable, ChannelDetailsTable> updateChannelWalletByPayOrder(ChannelWalletTable cwt, ChannelInfoTable cit, PayOrderInfoTable poi, MerchantRateTable mrt);
 
     /**
      *
@@ -112,5 +113,14 @@ public interface PayWalletService {
      * @param poi
      * @return
      */
-    Tuple2<AgentMerchantWalletTable, AgentMerchantsDetailsTable> updateAgentMerWallet(AgentMerchantWalletTable amw, AgentMerchantSettingTable ams, PayOrderInfoTable poi);
+    Tuple2<AgentMerchantWalletTable, AgentMerchantsDetailsTable> updateAgentMerWalletByPayOrder(AgentMerchantWalletTable amw, AgentMerchantSettingTable ams, PayOrderInfoTable poi);
+
+    /**
+     *
+     * @param mwt
+     * @param toit
+     * @param ipo
+     * @return
+     */
+    Tuple2<MerchantWalletTable, MerchantsDetailsTable> updateMerWalletByTransOrder(MerchantWalletTable mwt, TransOrderInfoTable toit, InnerPrintLogObject ipo);
 }
