@@ -140,7 +140,6 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
                 crm.setCrossStatusCode(StatusEnum._0.getStatus());
                 crm.setCrossResponseMsg(StatusEnum._0.getRemark());
                 crm.setChannelOrderId("ORDER_ID-"+System.currentTimeMillis());
-                crm.setChannelStatusCode("S0000000");
                 crm.setChannelResponseTime(new Date());
                 crm.setChannelResponseMsg(StatusEnum._0.getRemark());
                 result = JSON.toJSONString(crm);
@@ -169,7 +168,6 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
                 crm.setCrossStatusCode(StatusEnum._0.getStatus());
                 crm.setCrossResponseMsg(StatusEnum._0.getRemark());
                 crm.setChannelOrderId("ORDER_ID-"+System.currentTimeMillis());
-                crm.setChannelStatusCode("S0000000");
                 crm.setChannelResponseTime(new Date());
                 crm.setChannelResponseMsg(StatusEnum._0.getRemark());
                 result = JSON.toJSONString(crm);
@@ -277,7 +275,7 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
             ResponseEntity responseEntity = new ResponseEntity()
                     .setMerId( null !=merInfoTable ? merInfoTable.getMerchantId() : null)
                     .setStatus( null != crossResponseMsgDTO ? crossResponseMsgDTO.getCrossStatusCode() :  StatusEnum._1.getStatus() )
-                    .setMsg( null != crossResponseMsgDTO ? StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()) : StatusEnum._1.getRemark())
+                    .setMsg( null != crossResponseMsgDTO ? crossResponseMsgDTO.getCrossStatusMsg() : StatusEnum._1.getRemark())
                     .setMerOrderId( args[0] )
                     .setPlatformOrderId( args[1] )
                     .setAmount(args[2])
@@ -309,6 +307,14 @@ public abstract class CommonServiceAbstract implements NewPayAssert, PayUtil {
                 throw  e;
         }
         return responseMsg;
+    }
+
+    public void isSuccess(CrossResponseMsgDTO crossResponseMsgDTO, InnerPrintLogObject ipo) throws NewPayException {
+        state(crossResponseMsgDTO.getCrossStatusCode() != StatusEnum._0.getStatus(),
+                crossResponseMsgDTO.getErrorCode(),
+                format("%s-->商户号：%s；终端号：%s；错误信息: %s ",
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(), crossResponseMsgDTO.getErrorMsg()),
+                crossResponseMsgDTO.getErrorMsg());
     }
 
 

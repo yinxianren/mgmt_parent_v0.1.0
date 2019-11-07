@@ -63,13 +63,14 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
     @PostMapping(value = "/addCusInfo" ,produces = "text/html;charset=UTF-8")
     public String intoPiecesOfInformation(HttpServletRequest request, @RequestBody(required = false) String param){
         final String bussType = "【基本信息登记】";
-        String errorMsg = null,errorCode = null,printErrorMsg,respResult=null;
+        String errorMsg,errorCode,printErrorMsg,respResult=null;
         SystemOrderTrackTable sotTable = null;
         MerBasicInfoRegDTO mbirDTO=null;
         MerchantInfoTable merInfoTable = null;
-        RequestCrossMsgDTO  requestCrossMsgDTO = null;
+        RequestCrossMsgDTO  requestCrossMsgDTO;
         CrossResponseMsgDTO crossResponseMsgDTO = null;
         InnerPrintLogObject ipo = null ;
+        String crossResponseMsg = null;
         Tuple2<RegisterInfoTable,RegisterCollectTable> tuple = null;
         try{
             //解析 以及 获取SystemOrderTrackTable对象
@@ -115,15 +116,14 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             CommonChannelHandlePortComponent commonChannelHandlePortComponent = (CommonChannelHandlePortComponent) SpringContextUtil.getBean(clz);
             //调用业务申请
             crossResponseMsgDTO = commonChannelHandlePortComponent.addCusInfo(requestCrossMsgDTO,ipo);
-//            //请求cross请求
-//            crossResponseMsg = newIntoPiecesOfInformationService.doPostJson(requestCrossMsgDTO,extraInfoTable,ipo);
-//            //将请求结果转为对象
-//            crossResponseMsgDTO = newIntoPiecesOfInformationService.jsonToPojo(crossResponseMsg,ipo);
+            crossResponseMsg =  null == crossResponseMsgDTO ? null : crossResponseMsgDTO.toString();
             //更新进件信息
-            newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsgDTO.toString(),tuple._2,ipo);
+            newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsg,tuple._2,ipo);
+            //crossResponseMsgDTO 状态码非成功则抛出异常
+            newIntoPiecesOfInformationService.isSuccess(crossResponseMsgDTO,ipo);
             //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
             respResult = newIntoPiecesOfInformationService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,mbirDTO.getMerOrderId(),sotTable.getPlatformOrderId(),null,null,null);
-            sotTable.setPlatformPrintLog( crossResponseMsgDTO.toString() )
+            sotTable.setPlatformPrintLog( crossResponseMsg )
                     .setTradeCode( null == crossResponseMsgDTO ? StatusEnum._1.getStatus(): crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
             if(e instanceof NewPayException){
@@ -139,7 +139,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
                 errorCode = ResponseCodeEnum.RXH99999.getCode();
             }
             if(!isNull(tuple))
-                newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,null == crossResponseMsgDTO ? null : crossResponseMsgDTO.toString() ,tuple._2,ipo);
+                newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsg ,tuple._2,ipo);
             // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
             respResult = newIntoPiecesOfInformationService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,
                     null != mbirDTO ? mbirDTO.getMerOrderId() : null, null != tuple ? tuple._2.getPlatformOrderId(): null,null,errorCode,errorMsg);
@@ -160,11 +160,11 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
     @PostMapping(value="/bankCardBind", produces = "text/html;charset=UTF-8")
     public String bankCardBinding(HttpServletRequest request, @RequestBody(required = false) String param){
         final String bussType = "【银行卡登记接口】";
-        String errorMsg = null,errorCode = null,printErrorMsg,respResult=null;
+        String errorMsg,errorCode,printErrorMsg,respResult=null;
         SystemOrderTrackTable sotTable = null;
-        MerBankCardBindDTO mbcbDTO = null;
+        MerBankCardBindDTO mbcbDTO;
         MerchantInfoTable merInfoTable = null;
-        RequestCrossMsgDTO  requestCrossMsgDTO = null;
+        RequestCrossMsgDTO  requestCrossMsgDTO;
         CrossResponseMsgDTO crossResponseMsgDTO = null;
         InnerPrintLogObject ipo = null ;
         RegisterCollectTable registerCollectTable = null;
@@ -198,14 +198,20 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             ChannelInfoTable channelInfoTable = newIntoPiecesOfInformationService.getChannelInfoByChannelId(tuple2._2.getChannelId(),ipo);
             //获取附属通道信息
             ChannelExtraInfoTable channelExtraInfoTable =  newIntoPiecesOfInformationService.getChannelExtraInfoByOrgId(channelInfoTable.getOrganizationId(), BussTypeEnum.ADDCUS.getBussType(),ipo);
+            //获取组织机构信息
+            OrganizationInfoTable organizationInfoTable = newIntoPiecesOfInformationService.getOrganizationInfo(channelInfoTable.getOrganizationId(),ipo);
+            Class  clz=Class.forName(organizationInfoTable.getApplicationClassObj().trim());
             //封装请求cross必要参数
             requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,channelExtraInfoTable,tuple2._1,tuple2._2));
-            //请求cross请求
-            crossResponseMsg = newIntoPiecesOfInformationService.doPostJson(requestCrossMsgDTO,channelExtraInfoTable,ipo);
-            //将请求结果转为对象
-            crossResponseMsgDTO = newIntoPiecesOfInformationService.jsonToPojo(crossResponseMsg,ipo);
+            //生成通道处理对象
+            CommonChannelHandlePortComponent commonChannelHandlePortComponent = (CommonChannelHandlePortComponent) SpringContextUtil.getBean(clz);
+            //调用业务申请
+            crossResponseMsgDTO = commonChannelHandlePortComponent.bankCardBind(requestCrossMsgDTO,ipo);
+            crossResponseMsg =  null == crossResponseMsgDTO ? null : crossResponseMsgDTO.toString();
             //更新进件信息
             newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsg,tuple2._2,ipo);
+            //crossResponseMsgDTO 状态码非成功则抛出异常
+            newIntoPiecesOfInformationService.isSuccess(crossResponseMsgDTO,ipo);
             //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
             respResult = newIntoPiecesOfInformationService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,registerCollectTable.getMerOrderId(),sotTable.getPlatformOrderId(),null,null,null);
             sotTable.setPlatformPrintLog(  null == crossResponseMsgDTO ? crossResponseMsg : StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()))
@@ -246,11 +252,11 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
     @PostMapping(value="/serviceFulfillment", produces = "text/html;charset=UTF-8")
     public String  serviceFulfillment(HttpServletRequest request, @RequestBody(required = false) String param){
         final String bussType = "【业务开通接口】";
-        String errorMsg = null,errorCode = null,printErrorMsg,respResult=null;
+        String errorMsg,errorCode,printErrorMsg,respResult=null;
         SystemOrderTrackTable sotTable = null;
-        MerServiceFulfillDTO msDTO = null;
+        MerServiceFulfillDTO msDTO;
         MerchantInfoTable merInfoTable = null;
-        RequestCrossMsgDTO  requestCrossMsgDTO = null;
+        RequestCrossMsgDTO  requestCrossMsgDTO;
         CrossResponseMsgDTO crossResponseMsgDTO = null;
         InnerPrintLogObject ipo = null ;
         RegisterCollectTable registerCollectTable =null;
@@ -285,14 +291,20 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             ChannelInfoTable channelInfoTable = newIntoPiecesOfInformationService.getChannelInfoByChannelId(registerCollectTable.getChannelId(),ipo);
             //获取附属通道信息
             ChannelExtraInfoTable channelExtraInfoTable =  newIntoPiecesOfInformationService.getChannelExtraInfoByOrgId(channelInfoTable.getOrganizationId(), BussTypeEnum.ADDCUS.getBussType(),ipo);
+            //获取组织机构信息
+            OrganizationInfoTable organizationInfoTable = newIntoPiecesOfInformationService.getOrganizationInfo(channelInfoTable.getOrganizationId(),ipo);
+            Class  clz=Class.forName(organizationInfoTable.getApplicationClassObj().trim());
             //封装请求cross必要参数
             requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,channelExtraInfoTable,registerInfoTable,registerCollectTable));
-            //请求cross请求
-             crossResponseMsg = newIntoPiecesOfInformationService.doPostJson(requestCrossMsgDTO,channelExtraInfoTable,ipo);
-            //将请求结果转为对象
-            crossResponseMsgDTO = newIntoPiecesOfInformationService.jsonToPojo(crossResponseMsg,ipo);
+            //生成通道处理对象
+            CommonChannelHandlePortComponent commonChannelHandlePortComponent = (CommonChannelHandlePortComponent) SpringContextUtil.getBean(clz);
+            //调用业务申请
+            crossResponseMsgDTO = commonChannelHandlePortComponent.serviceFulfillment(requestCrossMsgDTO,ipo);
+            crossResponseMsg =  null == crossResponseMsgDTO ? null : crossResponseMsgDTO.toString();
             //更新进件信息
             newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsg,registerCollectTable,ipo);
+            //crossResponseMsgDTO 状态码非成功则抛出异常
+            newIntoPiecesOfInformationService.isSuccess(crossResponseMsgDTO,ipo);
             //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
             respResult = newIntoPiecesOfInformationService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,registerCollectTable.getMerOrderId(),sotTable.getPlatformOrderId(),null,null,null);
             sotTable.setPlatformPrintLog(  null == crossResponseMsgDTO ? crossResponseMsg : StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()))

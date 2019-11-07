@@ -1,6 +1,7 @@
 package com.rxh.anew.controller.shortcut;
 
 import com.alibaba.dubbo.common.json.JSON;
+import com.rxh.anew.channel.CommonChannelHandlePortComponent;
 import com.rxh.anew.component.Md5Component;
 import com.rxh.anew.controller.NewAbstractCommonController;
 import com.rxh.anew.dto.*;
@@ -13,7 +14,9 @@ import com.rxh.anew.table.business.RegisterInfoTable;
 import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
+import com.rxh.anew.table.system.OrganizationInfoTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
+import com.rxh.anew.tools.SpringContextUtil;
 import com.rxh.enums.BusinessTypeEnum;
 import com.rxh.enums.BussTypeEnum;
 import com.rxh.enums.ResponseCodeEnum;
@@ -59,11 +62,11 @@ public class NewBondCardController extends NewAbstractCommonController {
     @PostMapping(value = "/bondCardApply", produces = "text/html;charset=UTF-8")
     public String bondCardApply(HttpServletRequest request, @RequestBody(required = false) String param){
         final String bussType = "【绑卡申请接口】";
-        String errorMsg = null,errorCode = null,printErrorMsg,respResult=null;
+        String errorMsg,errorCode,printErrorMsg,respResult=null;
         SystemOrderTrackTable sotTable = null;
         MerBondCardApplyDTO mbcaDTO=null;
         MerchantInfoTable merInfoTable = null;
-        RequestCrossMsgDTO requestCrossMsgDTO = null;
+        RequestCrossMsgDTO requestCrossMsgDTO;
         CrossResponseMsgDTO crossResponseMsgDTO = null;
         InnerPrintLogObject ipo = null ;
         String crossResponseMsg = null;
@@ -100,17 +103,23 @@ public class NewBondCardController extends NewAbstractCommonController {
             RegisterInfoTable registerInfoTable = newBondCardService.getRegisterInfoTable(registerCollectTable.getRitId(),ipo);
             //获取通道附属信息
             ChannelExtraInfoTable channelExtraInfoTable = newBondCardService.getChannelExtraInfoByOrgId(channelInfoTable.getOrganizationId(), BussTypeEnum.BONDCARD.getBussType(),ipo);
+            //获取组织机构信息
+            OrganizationInfoTable organizationInfoTable = newBondCardService.getOrganizationInfo(channelInfoTable.getOrganizationId(),ipo);
+            Class  clz=Class.forName(organizationInfoTable.getApplicationClassObj().trim());
             //保存绑卡申请记录
             merchantCardTable = newBondCardService.saveCardInfoByB4(mbcaDTO,channelInfoTable,registerCollectTable,ipo);
             sotTable.setPlatformOrderId(merchantCardTable.getPlatformOrderId());
             //封装请求cross必要参数
             requestCrossMsgDTO = newBondCardService.getRequestCrossMsgDTO(new Tuple5(registerInfoTable,registerCollectTable,channelInfoTable,channelExtraInfoTable,merchantCardTable));
-            //请求cross请求
-            crossResponseMsg = newBondCardService.doPostJson(requestCrossMsgDTO,channelExtraInfoTable,ipo);
-            //将请求结果转为对象
-            crossResponseMsgDTO = newBondCardService.jsonToPojo(crossResponseMsg,ipo);
+            //生成通道处理对象
+            CommonChannelHandlePortComponent commonChannelHandlePortComponent = (CommonChannelHandlePortComponent) SpringContextUtil.getBean(clz);
+            //调用业务申请
+            crossResponseMsgDTO = commonChannelHandlePortComponent.bondCardApply(requestCrossMsgDTO,ipo);
+            crossResponseMsg = null == crossResponseMsgDTO ? null : crossResponseMsgDTO.toString();
             //更新进件信息
             newBondCardService.updateByBondCardInfo(crossResponseMsgDTO,crossResponseMsg,merchantCardTable,ipo);
+            //crossResponseMsgDTO 状态码非成功则抛出异常
+            newBondCardService.isSuccess(crossResponseMsgDTO,ipo);
             //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
             respResult = newBondCardService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,mbcaDTO.getMerOrderId(),merchantCardTable.getPlatformOrderId(),null,null,null);
             sotTable.setPlatformPrintLog(  null == crossResponseMsgDTO ? crossResponseMsg : StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()))
@@ -151,11 +160,11 @@ public class NewBondCardController extends NewAbstractCommonController {
     @RequestMapping(value = "/reGetBondCode", produces = "text/html;charset=UTF-8")
     public String reGetBondCode(HttpServletRequest request, @RequestBody(required = false) String param){
         final String bussType = "【重新获取绑卡验证码】";
-        String errorMsg = null,errorCode = null,printErrorMsg,respResult=null;
+        String errorMsg,errorCode,printErrorMsg,respResult=null;
         SystemOrderTrackTable sotTable = null;
-        MerReGetBondCodeDTO mrgbcDTO=null;
+        MerReGetBondCodeDTO mrgbcDTO;
         MerchantInfoTable merInfoTable = null;
-        RequestCrossMsgDTO requestCrossMsgDTO = null;
+        RequestCrossMsgDTO requestCrossMsgDTO;
         CrossResponseMsgDTO crossResponseMsgDTO = null;
         InnerPrintLogObject ipo = null ;
         MerchantCardTable merchantCardTable =null;
@@ -187,17 +196,23 @@ public class NewBondCardController extends NewAbstractCommonController {
             ChannelInfoTable channelInfoTable = newBondCardService.getChannelInfoByChannelId(registerCollectTable.getChannelId(),ipo);
             //获取通道附属信息
             ChannelExtraInfoTable channelExtraInfoTable = newBondCardService.getChannelExtraInfoByOrgId(channelInfoTable.getOrganizationId(), BussTypeEnum.BONDCARD.getBussType(),ipo);
+            //获取组织机构信息
+            OrganizationInfoTable organizationInfoTable = newBondCardService.getOrganizationInfo(channelInfoTable.getOrganizationId(),ipo);
+            Class  clz=Class.forName(organizationInfoTable.getApplicationClassObj().trim());
             //保存绑卡申请记录
             merchantCardTable = newBondCardService.saveCardInfoByB5(merchantCardTable,mrgbcDTO,ipo);
             sotTable.setPlatformOrderId(merchantCardTable.getPlatformOrderId());
             //封装请求cross必要参数
             requestCrossMsgDTO = newBondCardService.getRequestCrossMsgDTO(new Tuple5(registerInfoTable,registerCollectTable,channelInfoTable,channelExtraInfoTable,merchantCardTable));
-            //请求cross请求
-            crossResponseMsg = newBondCardService.doPostJson(requestCrossMsgDTO,channelExtraInfoTable,ipo);
-            //将请求结果转为对象
-            crossResponseMsgDTO = newBondCardService.jsonToPojo(crossResponseMsg,ipo);
+            //生成通道处理对象
+            CommonChannelHandlePortComponent commonChannelHandlePortComponent = (CommonChannelHandlePortComponent) SpringContextUtil.getBean(clz);
+            //调用业务申请
+            crossResponseMsgDTO = commonChannelHandlePortComponent.reGetBondCode(requestCrossMsgDTO,ipo);
+            crossResponseMsg = null == crossResponseMsgDTO ? null : crossResponseMsgDTO.toString();
             //更新进件信息
             newBondCardService.updateByBondCardInfo(crossResponseMsgDTO,crossResponseMsg,merchantCardTable,ipo);
+            //crossResponseMsgDTO 状态码非成功则抛出异常
+            newBondCardService.isSuccess(crossResponseMsgDTO,ipo);
             //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
             respResult = newBondCardService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,merchantCardTable.getMerOrderId(),merchantCardTable.getPlatformOrderId(),null,null,null);
             sotTable.setPlatformPrintLog(  null == crossResponseMsgDTO ? crossResponseMsg : StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()))
@@ -238,15 +253,15 @@ public class NewBondCardController extends NewAbstractCommonController {
     @PostMapping(value = "/confirmBondCard", produces = "text/html;charset=UTF-8")
     public String confirmBondCard(HttpServletRequest request, @RequestBody(required = false) String param){
         final String bussType = "【确定绑定银行卡】";
-        String errorMsg = null,errorCode = null,printErrorMsg,respResult=null;
+        String errorMsg,errorCode,printErrorMsg,respResult=null;
         SystemOrderTrackTable sotTable = null;
-        MerConfirmBondCardDTO mcbcDTO=null;
+        MerConfirmBondCardDTO mcbcDTO;
         MerchantInfoTable merInfoTable = null;
-        RequestCrossMsgDTO requestCrossMsgDTO = null;
+        RequestCrossMsgDTO requestCrossMsgDTO;
         CrossResponseMsgDTO crossResponseMsgDTO = null;
         InnerPrintLogObject ipo = null ;
         MerchantCardTable merchantCardTable = null;
-        MerchantCardTable merchantCardTable_old =null;
+        MerchantCardTable merchantCardTable_old;
         String crossResponseMsg =null;
         try{
             //解析 以及 获取SystemOrderTrackTable对象
@@ -276,17 +291,23 @@ public class NewBondCardController extends NewAbstractCommonController {
             ChannelInfoTable channelInfoTable = newBondCardService.getChannelInfoByChannelId(registerCollectTable.getChannelId(),ipo);
             //获取通道附属信息
             ChannelExtraInfoTable channelExtraInfoTable = newBondCardService.getChannelExtraInfoByOrgId(channelInfoTable.getOrganizationId(), BussTypeEnum.BONDCARD.getBussType(),ipo);
+            //获取组织机构信息
+            OrganizationInfoTable organizationInfoTable = newBondCardService.getOrganizationInfo(channelInfoTable.getOrganizationId(),ipo);
+            Class  clz=Class.forName(organizationInfoTable.getApplicationClassObj().trim());
             //保存绑卡申请记录
             merchantCardTable = newBondCardService.saveCardInfoByB6(merchantCardTable,mcbcDTO,ipo);
             sotTable.setPlatformOrderId(merchantCardTable.getPlatformOrderId());
             //封装请求cross必要参数
             requestCrossMsgDTO = newBondCardService.getRequestCrossMsgDTO(new Tuple5(registerInfoTable,registerCollectTable,channelInfoTable,channelExtraInfoTable,merchantCardTable));
-            //请求cross请求
-            crossResponseMsg = newBondCardService.doPostJson(requestCrossMsgDTO,channelExtraInfoTable,ipo);
-            //将请求结果转为对象
-            crossResponseMsgDTO = newBondCardService.jsonToPojo(crossResponseMsg,ipo);
+            //生成通道处理对象
+            CommonChannelHandlePortComponent commonChannelHandlePortComponent = (CommonChannelHandlePortComponent) SpringContextUtil.getBean(clz);
+            //调用业务申请
+            crossResponseMsgDTO = commonChannelHandlePortComponent.confirmBondCard(requestCrossMsgDTO,ipo);
+            crossResponseMsg = null == crossResponseMsgDTO ? null : crossResponseMsgDTO.toString();
             //更新进件信息
             newBondCardService.updateByBondCardInfoByB6(crossResponseMsgDTO,crossResponseMsg,merchantCardTable,merchantCardTable_old,ipo);
+            //crossResponseMsgDTO 状态码非成功则抛出异常
+            newBondCardService.isSuccess(crossResponseMsgDTO,ipo);
             //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
             respResult = newBondCardService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,merchantCardTable.getMerOrderId(),merchantCardTable.getPlatformOrderId(),null,null,null);
             sotTable.setPlatformPrintLog(  null == crossResponseMsgDTO ? crossResponseMsg : StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()))

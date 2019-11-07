@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,7 +17,7 @@ import java.util.Date;
  * @Author  monkey
  * @Date 2019-10-22 
  */
-
+@ToString
 @TableName ( "7_merchant_card_table" )
 @Getter
 public class MerchantCardTable  implements Serializable,Cloneable{

@@ -1,6 +1,7 @@
 package com.rxh.anew.dto;
 
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Date;
 
@@ -15,13 +16,19 @@ import java.util.Date;
 @Getter
 public class CrossResponseMsgDTO {
     private Integer crossStatusCode ;//cross返回的状态码
-    private String  crossResponseMsg;//cross 方法信息
+    private String  crossStatusMsg;//cross返回的状态码信息
+    private String  crossResponseMsg;//cross返回信息信息
     private String  channelOrderId;//通道流水号
-    private String  channelStatusCode;//通道返回的状态码
     private Date    channelResponseTime;//通道响应返回的时间
     private String  channelResponseMsg;//通道返回信息
     private String  errorCode;
     private String  errorMsg;
+
+
+    public CrossResponseMsgDTO setCrossStatusMsg(String crossStatusMsg) {
+        this.crossStatusMsg = crossStatusMsg;
+        return this;
+    }
 
     public CrossResponseMsgDTO setCrossStatusCode(Integer crossStatusCode) {
         this.crossStatusCode = crossStatusCode;
@@ -38,10 +45,6 @@ public class CrossResponseMsgDTO {
         return this;
     }
 
-    public CrossResponseMsgDTO setChannelStatusCode(String channelStatusCode) {
-        this.channelStatusCode = channelStatusCode;
-        return this;
-    }
 
     public CrossResponseMsgDTO setChannelResponseTime(Date channelResponseTime) {
         this.channelResponseTime = channelResponseTime;
@@ -53,11 +56,13 @@ public class CrossResponseMsgDTO {
         return this;
     }
 
-    public void setErrorCode(String errorCode) {
+    public CrossResponseMsgDTO setErrorCode(String errorCode) {
         this.errorCode = errorCode;
+        return this;
     }
 
-    public void setErrorMsg(String errorMsg) {
+    public CrossResponseMsgDTO setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
+        return this;
     }
 }

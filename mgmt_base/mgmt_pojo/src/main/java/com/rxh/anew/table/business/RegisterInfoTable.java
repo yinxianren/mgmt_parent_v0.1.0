@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.Getter;
+import lombok.ToString;
 import org.apache.poi.ss.formula.functions.T;
 
 import java.io.Serializable;
@@ -17,6 +18,7 @@ import java.util.Date;
  * Time: 上午10:44
  * Description:
  */
+@ToString
 @TableName("6_register_info_table")
 @Getter
 public class RegisterInfoTable implements Serializable {

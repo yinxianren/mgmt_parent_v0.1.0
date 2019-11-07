@@ -1,6 +1,7 @@
 package com.rxh.anew.controller.shortcut;
 
 import com.alibaba.dubbo.common.json.JSON;
+import com.rxh.anew.channel.AllinPayChannelHandlePortComponent;
 import com.rxh.anew.channel.CommonChannelHandlePortComponent;
 import com.rxh.anew.component.Md5Component;
 import com.rxh.anew.controller.NewAbstractCommonController;
@@ -55,7 +56,7 @@ public class NewNoAuthenticationPayOrderController  extends NewAbstractCommonCon
 
     private  final Md5Component md5Component;
     private  final NewPayOrderService newPayOrderService;
-
+    private  final AllinPayChannelHandlePortComponent allinPayChannelHandlePortComponent;
     /**
      *  快捷免验证支付
      * @param request
@@ -63,13 +64,13 @@ public class NewNoAuthenticationPayOrderController  extends NewAbstractCommonCon
      * @return
      */
     @PostMapping(value = "/exemptCodePay", produces = "text/html;charset=UTF-8")
-    public String confirmPay(HttpServletRequest request, @RequestBody(required = false) String param){
+    public String exemptCodePay(HttpServletRequest request, @RequestBody(required = false) String param){
         final String bussType = "【快捷免验证支付】";
-        String errorMsg = null,errorCode = null,printErrorMsg,respResult=null;
+        String errorMsg,errorCode,printErrorMsg,respResult=null;
         SystemOrderTrackTable sotTable = null;
         MerNoAuthPayOrderApplyDTO merNoAuthPayOrderApplyDTO = null;
         MerchantInfoTable merInfoTable = null;
-        RequestCrossMsgDTO requestCrossMsgDTO = null;
+        RequestCrossMsgDTO requestCrossMsgDTO;
         CrossResponseMsgDTO crossResponseMsgDTO = null;
         InnerPrintLogObject ipo = null ;
         PayOrderInfoTable payOrderInfoTable = null;
@@ -103,11 +104,11 @@ public class NewNoAuthenticationPayOrderController  extends NewAbstractCommonCon
             //2.查询通道使用记录  MerchantId  TerminalMerId ProductId
             ChannelHistoryTable channelHistoryTable = newPayOrderService.getChannelHistoryInfo(ipo,merNoAuthPayOrderApplyDTO.getMerId(),merNoAuthPayOrderApplyDTO.getTerMerId(),merNoAuthPayOrderApplyDTO.getProductType());
             //通道信息
-            ChannelInfoTable channelInfoTable = null;
+            ChannelInfoTable channelInfoTable;
             //进件信息
-            RegisterCollectTable registerCollectTable = null;
+            RegisterCollectTable registerCollectTable;
             //绑卡信息
-            MerchantCardTable merchantCardTable = null;
+            MerchantCardTable merchantCardTable;
             //获取该通道历史统计交易量
             Tuple2<RiskQuotaTable,RiskQuotaTable> channelRiskQuota = null;
             //没有通道使用记录
@@ -187,10 +188,9 @@ public class NewNoAuthenticationPayOrderController  extends NewAbstractCommonCon
             CommonChannelHandlePortComponent commonChannelHandlePortComponent = (CommonChannelHandlePortComponent) SpringContextUtil.getBean(clz);
             //封装请求cross必要参数
             requestCrossMsgDTO = newPayOrderService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,payOrderInfoTable,registerCollectTable,merchantCardTable));
-            //请求cross请求
-            String crossResponseMsg = newPayOrderService.doPostJson(requestCrossMsgDTO,channelInfoTable,ipo);
-            //将请求结果转为对象
-            crossResponseMsgDTO = newPayOrderService.jsonToPojo(crossResponseMsg,ipo);
+            //调用业务申请
+            crossResponseMsgDTO = allinPayChannelHandlePortComponent.exemptCodePay(requestCrossMsgDTO,ipo);
+            String crossResponseMsg = null == crossResponseMsgDTO ? null : crossResponseMsgDTO.toString();
             //更新订单信息
             payOrderInfoTable = newPayOrderService.updateByPayOrderInfoByB9After(crossResponseMsgDTO,crossResponseMsg,payOrderInfoTable,ipo);
             //状态为成功是才执行以下操作
@@ -207,6 +207,8 @@ public class NewNoAuthenticationPayOrderController  extends NewAbstractCommonCon
             }
             //通道差异化处理
             commonChannelHandlePortComponent.channelDifferBusinessHandleByPayOrder(requestCrossMsgDTO,crossResponseMsgDTO);
+            //crossResponseMsgDTO 状态码非成功则抛出异常
+            newPayOrderService.isSuccess(crossResponseMsgDTO,ipo);
             //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg,channelTab
             respResult = newPayOrderService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,merNoAuthPayOrderApplyDTO.getMerOrderId(),payOrderInfoTable.getPlatformOrderId(),merNoAuthPayOrderApplyDTO.getAmount(),null,null,channelInfoTable.getChannelId());
             sotTable.setPlatformPrintLog(StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode())).setTradeCode( crossResponseMsgDTO.getCrossStatusCode() );

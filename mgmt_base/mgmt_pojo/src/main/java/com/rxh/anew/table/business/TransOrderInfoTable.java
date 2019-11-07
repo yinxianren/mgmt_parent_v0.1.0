@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -17,6 +18,7 @@ import java.util.Date;
  * Time: 上午11:26
  * Description:
  */
+@ToString
 @TableName("9_trans_order_info_table")
 @Getter
 public class TransOrderInfoTable implements Serializable {

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.rxh.anew.table.merchant.MerchantRateTable;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -19,7 +20,7 @@ import java.util.Date;
  * Time: 上午10:31
  * Description:
  */
-
+@ToString
 @TableName("6_register_collect_table")
 @Getter
 public class RegisterCollectTable implements Serializable {

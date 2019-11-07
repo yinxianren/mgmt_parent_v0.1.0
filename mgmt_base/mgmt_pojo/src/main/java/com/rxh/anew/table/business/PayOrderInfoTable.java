@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -18,6 +19,7 @@ import java.util.Date;
  * Time: 上午11:07
  * Description:
  */
+@ToString
 @TableName("8_pay_order_info_table")
 @Getter
 public class PayOrderInfoTable implements Serializable {

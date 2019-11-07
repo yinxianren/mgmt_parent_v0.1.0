@@ -64,13 +64,13 @@ public class NewTransOrderController extends NewAbstractCommonController {
      *
      */
     @PostMapping(value = "/payment", produces = "text/html;charset=UTF-8")
-    public String confirmPay(HttpServletRequest request, @RequestBody(required = false) String param){
+    public String payment(HttpServletRequest request, @RequestBody(required = false) String param){
         final String bussType = "【快捷免验证支付】";
-        String errorMsg = null,errorCode = null,printErrorMsg,respResult=null;
+        String errorMsg,errorCode,printErrorMsg,respResult=null;
         SystemOrderTrackTable sotTable = null;
         MerTransOrderApplyDTO merTransOrderApplyDTO=null;
         MerchantInfoTable merInfoTable = null;
-        RequestCrossMsgDTO requestCrossMsgDTO = null;
+        RequestCrossMsgDTO requestCrossMsgDTO;
         CrossResponseMsgDTO crossResponseMsgDTO = null;
         InnerPrintLogObject ipo = null ;
         TransOrderInfoTable transOrderInfoTable=null;
@@ -114,10 +114,9 @@ public class NewTransOrderController extends NewAbstractCommonController {
             CommonChannelHandlePortComponent commonChannelHandlePortComponent = (CommonChannelHandlePortComponent) SpringContextUtil.getBean(clz);
             //封装请求cross必要参数   TransOrderInfoTable,ChannelInfoTable,RegisterCollectTable,RegisterInfoTable,MerchantCardTable
             requestCrossMsgDTO = newTransOrderService.getRequestCrossMsgDTO(new Tuple5(transOrderInfoTable,tuple2._2,registerCollectTable,registerInfoTable,merchantCardTable));
-            //请求cross请求
-            String crossResponseMsg = newTransOrderService.doPostJson(requestCrossMsgDTO,tuple2._2,ipo);
-            //将请求结果转为对象
-            crossResponseMsgDTO = newTransOrderService.jsonToPojo(crossResponseMsg,ipo);
+            //调用业务申请
+            crossResponseMsgDTO = commonChannelHandlePortComponent.payment(requestCrossMsgDTO,ipo);
+            String crossResponseMsg = null == crossResponseMsgDTO ? null : crossResponseMsgDTO.toString();
             //更新订单信息
             transOrderInfoTable = newTransOrderService.updateOrder(transOrderInfoTable,crossResponseMsg,crossResponseMsgDTO,ipo);
             //状态为成功是才执行以下操作
@@ -132,6 +131,8 @@ public class NewTransOrderController extends NewAbstractCommonController {
             }
             //通道差异化处理
             commonChannelHandlePortComponent.channelDifferBusinessHandleByTransOrder(requestCrossMsgDTO,crossResponseMsgDTO);
+            //crossResponseMsgDTO 状态码非成功则抛出异常
+            newTransOrderService.isSuccess(crossResponseMsgDTO,ipo);
             //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg,channelTab
             respResult = newTransOrderService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,merTransOrderApplyDTO.getMerOrderId(),transOrderInfoTable.getPlatformOrderId(),merTransOrderApplyDTO.getAmount(),null,null);
             sotTable.setPlatformPrintLog(StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode())).setTradeCode( crossResponseMsgDTO.getCrossStatusCode() );

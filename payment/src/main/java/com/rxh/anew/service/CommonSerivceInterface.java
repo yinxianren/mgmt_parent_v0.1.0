@@ -135,4 +135,11 @@ public interface CommonSerivceInterface {
      * @return
      */
     RegisterCollectTable getRegCollectInfo(String regPlatformOrderId, String busiType, InnerPrintLogObject ipo) throws NewPayException;
+
+    /**
+     *
+     * @param crossResponseMsgDTO
+     * @param ipo
+     */
+    void isSuccess(CrossResponseMsgDTO crossResponseMsgDTO, InnerPrintLogObject ipo);
 }
