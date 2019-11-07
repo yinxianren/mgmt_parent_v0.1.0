@@ -1,7 +1,7 @@
 package com.rxh.anew.controller.shortcut;
 
 import com.alibaba.dubbo.common.json.JSON;
-import com.rxh.anew.channel.CommonChannelHandlePort;
+import com.rxh.anew.channel.CommonChannelHandlePortComponent;
 import com.rxh.anew.component.Md5Component;
 import com.rxh.anew.controller.NewAbstractCommonController;
 import com.rxh.anew.dto.CrossResponseMsgDTO;
@@ -111,7 +111,7 @@ public class NewTransOrderController extends NewAbstractCommonController {
             transOrderInfoTable = newTransOrderService.saveOrder(merTransOrderApplyDTO,tuple2._2,merInfoTable,ipo);
             Class  clz=Class.forName(tuple2._1.getApplicationClassObj().trim());
             //生成通道处理对象
-            CommonChannelHandlePort commonChannelHandlePort = (CommonChannelHandlePort) SpringContextUtil.getBean(clz);
+            CommonChannelHandlePortComponent commonChannelHandlePortComponent = (CommonChannelHandlePortComponent) SpringContextUtil.getBean(clz);
             //封装请求cross必要参数   TransOrderInfoTable,ChannelInfoTable,RegisterCollectTable,RegisterInfoTable,MerchantCardTable
             requestCrossMsgDTO = newTransOrderService.getRequestCrossMsgDTO(new Tuple5(transOrderInfoTable,tuple2._2,registerCollectTable,registerInfoTable,merchantCardTable));
             //请求cross请求
@@ -131,7 +131,7 @@ public class NewTransOrderController extends NewAbstractCommonController {
                 newTransOrderService.batchUpdateTransOderCorrelationInfo(transOrderInfoTable,payOrderInfoTableList,ipo);
             }
             //通道差异化处理
-            commonChannelHandlePort.channelDifferBusinessHandleByTransOrder(requestCrossMsgDTO,crossResponseMsgDTO);
+            commonChannelHandlePortComponent.channelDifferBusinessHandleByTransOrder(requestCrossMsgDTO,crossResponseMsgDTO);
             //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg,channelTab
             respResult = newTransOrderService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,merTransOrderApplyDTO.getMerOrderId(),transOrderInfoTable.getPlatformOrderId(),merTransOrderApplyDTO.getAmount(),null,null);
             sotTable.setPlatformPrintLog(StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode())).setTradeCode( crossResponseMsgDTO.getCrossStatusCode() );

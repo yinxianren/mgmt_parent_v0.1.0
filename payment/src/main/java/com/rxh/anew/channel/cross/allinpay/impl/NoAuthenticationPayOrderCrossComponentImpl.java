@@ -14,8 +14,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class NoAuthenticationPayOrderCrossComponentImpl implements NoAuthenticationPayOrderCrossComponent {
+
     @Override
-    public CrossResponseMsgDTO payment(RequestCrossMsgDTO requestCrossMsgDTO) {
+    public CrossResponseMsgDTO exemptCodePay(RequestCrossMsgDTO requestCrossMsgDTO) {
         return null;
     }
 }
