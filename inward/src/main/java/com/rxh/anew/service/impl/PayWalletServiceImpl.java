@@ -508,6 +508,15 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
     public Tuple2<MerchantWalletTable, MerchantsDetailsTable> updateMerWalletByTransOrder(MerchantWalletTable mwt, TransOrderInfoTable toit, MerchantRateTable mrt) throws Exception {
         //订单金额
         BigDecimal amount = toit.getAmount();
+
+        //总余额
+        BigDecimal totalBalance = mwt.getTotalBalance();
+        if(amount.compareTo(totalBalance) == 1)
+            throw  new Exception(format("快捷MQ队列--->代付业务钱包更新: 订单金额(%s)>商户钱包总余额(%s)",amount,totalBalance));
+        //总可用余额
+        BigDecimal totalAvailableAmount = mwt.getTotalAvailableAmount();
+        if(amount.compareTo(totalAvailableAmount) == 1)
+            throw  new Exception(format("快捷MQ队列--->代付业务钱包更新: 订单金额(%s)>商户钱包总可用余额(%s)",amount,totalAvailableAmount));
         //商户费率
         BigDecimal rateFee = mrt.getRateFee();
         rateFee = null == rateFee ? new BigDecimal(0 ) : rateFee.divide(new BigDecimal(100));
@@ -536,37 +545,27 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         BigDecimal outAmount = mwt.getOutAmount();
         outAmount = null == outAmount ? new BigDecimal(0) : outAmount ;
         outAmount = outAmount.add(singleOutAmount);
-
-        //总余额
-        BigDecimal totalBalance = mwt.getTotalBalance();
-
         //总不可用余额
         BigDecimal totalUnavailableAmount = mwt.getTotalUnavailableAmount();
-        //总可用余额
-        BigDecimal totalAvailableAmount = mwt.getTotalAvailableAmount();
-
+        //冻结资金
         BigDecimal totalFreezeAmount = mwt.getTotalFreezeAmount();
+        totalFreezeAmount = null == totalFreezeAmount ? new BigDecimal(0) : totalFreezeAmount;
         //判断结算周期
         List<String>  settleCycleList= Arrays.asList("d0","D0","t0","T0");
         String settleCycle = isBlank(mrt.getSettleCycle()) ? "T7"  :  mrt.getSettleCycle().trim() ;
         if( !settleCycleList.contains(settleCycle) ){
-//            totalUnavailableAmount = totalUnavailableAmount.subtract(amount);
+            totalFreezeAmount = totalFreezeAmount.add(amount);
+            totalAvailableAmount = totalAvailableAmount.subtract(amount);
         }else{
             totalAvailableAmount = totalAvailableAmount.subtract(amount);
             totalBalance = totalBalance.subtract(amount);
         }
-
         mwt
-        .setOutAmount(outAmount)
-        .setTotalFee(totalMerFee)
-        .setFeeProfit(totalFeeProfit)
-        .setTotalMargin(mwt.getTotalMargin())
-        .setTotalBalance(totalBalance)
-        .setTotalAvailableAmount(totalAvailableAmount)
-        .setTotalUnavailableAmount(totalUnavailableAmount)
-        .setTotalFreezeAmount(mwt.getTotalFreezeAmount())
-        .setUpdateTime(new Date());
-
+                .setOutAmount(outAmount)                        .setTotalFee(totalMerFee)
+                .setFeeProfit(totalFeeProfit)                   .setTotalMargin(mwt.getTotalMargin())
+                .setTotalBalance(totalBalance)                  .setTotalAvailableAmount(totalAvailableAmount)
+                .setTotalUnavailableAmount(totalUnavailableAmount)
+                .setTotalFreezeAmount(totalFreezeAmount)        .setUpdateTime(new Date());
         MerchantsDetailsTable mdt = new MerchantsDetailsTable()
                 .setId(null)
                 .setMerchantId(toit.getMerchantId())              .setProductId(toit.getProductId())
@@ -578,6 +577,47 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
                 .setTimestamp(System.currentTimeMillis())         .setStatus(StatusEnum._0.getStatus())
                 .setCreateTime(new Date())                        .setUpdateTime(new Date());
 
+        return new Tuple2(mwt,mdt);
+    }
+
+    @Override
+    public Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> updateTerMerWalletByTransOrder(TerminalMerchantsWalletTable tmw, TransOrderInfoTable toit, MerchantRateTable mrt) {
+        //订单金额
+        BigDecimal amount = toit.getAmount();
+        //终端费用
+        BigDecimal backFee = toit.getBackFee();
+        //单笔出账金额
+        BigDecimal singleOutAmount = amount.subtract(backFee);
+        //总出账金额
+
+
+        tmw
+                .setOutAmount()
+                .setTotalBalance()
+                .setTotalAvailableAmount()
+                .setTotalUnavailableAmount()
+                .setTotalFee()
+                .setTotalMargin()
+                .setTotalFreezeAmount()
+                .setUpdateTime(new Date());
+
+        TerminalMerchantsDetailsTable tmd = new TerminalMerchantsDetailsTable()
+                .setId(null)
+                .setMerchantId(toit.getMerchantId())
+                .setTerminalMerId(toit.getTerminalMerId())
+                .setProductId(toit.getProductId())
+                .setMerOrderId(toit.getMerOrderId())
+                .setPlatformOrderId(toit.getPlatformOrderId())
+                .setAmount(amount)
+                .setInAmount(null)
+                .setOutAmount(singleOutAmount)
+                .setRateFee(null)
+                .setFee(backFee)
+                .setTotalBalance()
+                .setTimestamp(System.currentTimeMillis())
+                .setStatus(StatusEnum._0.getStatus())
+                .setCreateTime(new Date())
+                .setUpdateTime(new Date());
 
         return null;
     }

@@ -124,4 +124,13 @@ public interface PayWalletService {
      * @return
      */
     Tuple2<MerchantWalletTable, MerchantsDetailsTable> updateMerWalletByTransOrder(MerchantWalletTable mwt, TransOrderInfoTable toit,MerchantRateTable mrt) throws Exception;
+
+    /**
+     *
+     * @param tmw
+     * @param toit
+     * @param mrt
+     * @return
+     */
+    Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> updateTerMerWalletByTransOrder(TerminalMerchantsWalletTable tmw, TransOrderInfoTable toit, MerchantRateTable mrt);
 }

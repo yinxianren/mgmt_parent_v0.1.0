@@ -124,6 +124,11 @@ public class PayWalletComponentComponentImpl implements PayWalletComponent, NewP
             MerchantWalletTable mwt = payWalletService.getMerWallet(ipo);
             //更新商户钱包 ,保存商户钱包明细
             Tuple2<MerchantWalletTable, MerchantsDetailsTable>  merWalletTuple = payWalletService.updateMerWalletByTransOrder(mwt,toit,mrt);
+            //获取终端商户钱包
+            TerminalMerchantsWalletTable tmw = payWalletService.getTerMerWallet(ipo);
+            //更新终端商户钱包 保存终端商户钱包明细
+            Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> terMerWalletTuple = payWalletService.updateTerMerWalletByTransOrder(tmw,toit,mrt);
+
 
 
         }catch (Exception e){
