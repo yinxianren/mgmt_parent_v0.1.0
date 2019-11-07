@@ -66,7 +66,8 @@ public class PayOrderInfoTable implements Serializable {
     private Integer status;// 状态 0：success,1:fail,
     private Date createTime;// 创建时间,
     private Date updateTime;// 更新时间,
-
+    @TableField(exist = false)
+    private String smsCode;
     @TableField(exist = false)
     private Collection<String> merOrderIdCollect; //支持多订单查找
     @TableField(exist = false)
@@ -80,9 +81,14 @@ public class PayOrderInfoTable implements Serializable {
     private Date beginTime;
     @TableField(exist = false)
     private Date endTime;
-
     @TableField(exist = false)
     private String organizationId;
+
+
+    public PayOrderInfoTable setSmsCode(String smsCode) {
+        this.smsCode = smsCode;
+        return this;
+    }
 
     public PayOrderInfoTable setStatusCollect(Collection<Integer> statusCollect) {
         this.statusCollect = statusCollect;
