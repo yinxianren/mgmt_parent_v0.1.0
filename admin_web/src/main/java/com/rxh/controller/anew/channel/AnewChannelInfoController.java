@@ -2,14 +2,12 @@ package com.rxh.controller.anew.channel;
 
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.system.ProductSettingTable;
-import com.rxh.cache.RedisCacheCommonCompoment;
+import com.rxh.enums.StatusEnum;
 import com.rxh.service.AnewChannelService;
 import com.rxh.service.ConstantService;
 import com.rxh.service.ProductTypeSettingService;
-import com.rxh.service.square.ChannelInfoService;
 import com.rxh.service.square.OrganizationService;
 import com.rxh.spring.annotation.SystemLogInfo;
-import com.rxh.square.pojo.ChannelInfo;
 import com.rxh.square.pojo.OrganizationInfo;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
@@ -44,30 +42,65 @@ public class AnewChannelInfoController {
     public ResponseVO getAll(){
         return anewChannelService.getAll(new ChannelInfoTable());
     }
+
     @SystemLogInfo(description = "支付通道增加")
     @RequestMapping("/insert")
     public ResponseVO insert(@RequestBody ChannelInfoTable channelInfo){
-        channelInfo.setCreateTime(new Date());
-        channelInfo.setUpdateTime(new Date());
-        channelInfo.setChannelId("CH"+System.currentTimeMillis());
-        return anewChannelService.saveOrUpdate(channelInfo);
+        try {
+            channelInfo.setCreateTime(new Date());
+            channelInfo.setUpdateTime(new Date());
+            channelInfo.setChannelId("CH"+System.currentTimeMillis());
+            return anewChannelService.saveOrUpdate(channelInfo);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
+
     }
     @SystemLogInfo(description = "支付通道删除")
     @RequestMapping("/delete")
     public ResponseVO delete(@RequestBody List<String> ids){
-        return anewChannelService.delByIds(ids);
+        try {
+            return anewChannelService.delByIds(ids);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
     }
 
     @SystemLogInfo(description = "支付通道修改")
     @RequestMapping("/update")
     public ResponseVO update(@RequestBody ChannelInfoTable channelInfo){
-        channelInfo.setUpdateTime(new Date());
-        return anewChannelService.saveOrUpdate(channelInfo);
+        try {
+            channelInfo.setUpdateTime(new Date());
+            return anewChannelService.saveOrUpdate(channelInfo);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
     }
+
     @SystemLogInfo(description = "支付通道查询")
     @RequestMapping("/search")
     public ResponseVO search(@RequestBody ChannelInfoTable channelInfo){
-        return anewChannelService.getAll(channelInfo);
+        try {
+            return anewChannelService.getAll(channelInfo);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
     }
 
     @RequestMapping(value = "/getInit")

@@ -2,23 +2,22 @@ function merchantsDetailsCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc
     $scope.searchInfo = {};
     $scope.merchantsDetailsTable = null;
     $timeout(function () {
-        httpSvc.getData('post', '/merchantsDetails/init').then(function (value) {
-            $scope.payTypes = value.payTypes;
+        httpSvc.getData('post', '/merchantWallet/init').then(function (value) {
+            $scope.productTypes = value.productTypes;
             $scope.merchants = value.merchants;
             $scope.detailsTypes = value.detailsTypes;
             $scope.merchantsDetailsTable = new NgTableParams({}, {
                 getData: function (params) {
                     angular.element('.ibox-content').addClass('sk-loading');
-                    return httpSvc.getData('post', '/merchantsDetails/findMerchantsDetails', {
-                        pageNum: params.page()-1,
+                    return httpSvc.getData('post', '/merchantWallet/findMerchantsDetails', {
+                        pageNum: params.page(),
                         pageSize: params.count(),
                         orderBy: params.sorting(),
                         searchInfo: $scope.searchInfo
                     }).then(function (value) {
-                        console.log("value============="+value);
-                        params.total(value.total);
+                        params.total(value.data.total);
                         angular.element('.ibox-content').removeClass('sk-loading');
-                        return value.rows;
+                        return value.data.records;
                     });
                 }
             });
@@ -89,15 +88,15 @@ function merchantsDetailsCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc
         $scope.merchantsDetailsTable = new NgTableParams({}, {
             getData: function (params) {
                 angular.element('.ibox-content').addClass('sk-loading');
-                return httpSvc.getData('post', '/merchantsDetails/findMerchantsDetails', {
-                    pageNum: params.page()-1,
+                return httpSvc.getData('post', '/merchantWallet/findMerchantsDetails', {
+                    pageNum: params.page(),
                     pageSize: params.count(),
                     orderBy: params.sorting(),
                     searchInfo: $scope.searchInfo
                 }).then(function (value) {
-                    params.total(value.total);
+                    params.total(value.data.total);
                     angular.element('.ibox-content').removeClass('sk-loading');
-                    return value.rows;
+                    return value.data.records;
                 });
             }
         });

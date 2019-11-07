@@ -1,6 +1,7 @@
 package com.rxh.anew.table.merchant;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import java.io.Serializable;
 import java.util.Date;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @Description
@@ -35,6 +37,12 @@ public class MerchantWalletTable  implements Serializable {
 	private Integer status;//状态 0：启用,1:禁用
 	private Date createTime;//创建时间
 	private Date updateTime;//更新时间
+
+	@TableField(exist = false)
+	private String agentMerchantId;
+
+	@TableField(exist = false)
+	private List<String> merchantIds;
 
 	public MerchantWalletTable setId(Long id) {
 		this.id = id;
@@ -109,5 +117,13 @@ public class MerchantWalletTable  implements Serializable {
 	public MerchantWalletTable setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 		return this;
+	}
+
+	public void setMerchantIds(List<String> merchantIds) {
+		this.merchantIds = merchantIds;
+	}
+
+	public void setAgentMerchantId(String agentMerchantId) {
+		this.agentMerchantId = agentMerchantId;
 	}
 }

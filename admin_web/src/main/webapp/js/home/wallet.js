@@ -10,7 +10,7 @@ function merchantWalletCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$
     });
     httpSvc.getData('post', '/merchantWallet/search',$scope.searchInfo).then(function (value) {
         $scope.merchantWalletTable = new NgTableParams({}, {
-            dataset: value
+            dataset: value.data
         });
         angular.element('.ibox-content').removeClass('sk-loading');
     });
@@ -20,7 +20,7 @@ function merchantWalletCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$
         httpSvc.getData('post', '/merchantWallet/search',$scope.searchInfo
         ).then(function (value) {
             $scope.merchantWalletTable = new NgTableParams({}, {
-                dataset: value
+                dataset: value.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
@@ -35,7 +35,7 @@ function merchantWalletCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$
         httpSvc.getData('post', '/merchantWallet/search',$scope.searchInfo
         ).then(function (value) {
             $scope.merchantWalletTable = new NgTableParams({}, {
-                dataset: value
+                dataset: value.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
@@ -71,7 +71,7 @@ function merchantWalletCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$
         });
         modalInstance.result.then(function () {
             httpSvc.getData('post', '/merchantWallet/batchDel', ids).then(function (value) {
-                if (value.code == 1) {
+                if (value.code == 0) {
                     toaster.pop({
                         type: 'success',
                         title: '商户钱包删除',
@@ -104,7 +104,7 @@ function agentWalletCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
         httpSvc.getData('post', '/agentWallet/search',$scope.searchInfo
         ).then(function (value) {
             $scope.AgentWalletTable = new NgTableParams({}, {
-                dataset: value
+                dataset: value.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
@@ -113,7 +113,7 @@ function agentWalletCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
         httpSvc.getData('post', '/agentWallet/search',$scope.searchInfo
         ).then(function (value) {
             $scope.AgentWalletTable = new NgTableParams({}, {
-                dataset: value
+                dataset: value.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
@@ -124,7 +124,7 @@ function agentWalletCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
         httpSvc.getData('post', '/agentWallet/search',$scope.searchInfo
         ).then(function (value) {
             $scope.AgentWalletTable = new NgTableParams({}, {
-                dataset: value
+                dataset: value.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
@@ -163,7 +163,7 @@ function agentWalletCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
         });
         modalInstance.result.then(function () {
             httpSvc.getData('post', '/agentWallet/batchDel', ids).then(function (value) {
-                if (value.code == 1) {
+                if (value.code == 0) {
                     toaster.pop({
                         type: 'success',
                         title: '代理商钱包删除',
@@ -198,7 +198,7 @@ function channelWalletCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$f
         $scope.organizations = value.organizations;
         httpSvc.getData('post', '/channelWallet/search',$scope.searchInfo).then(function (result) {
             $scope.ChannelWalletTable = new NgTableParams({}, {
-                dataset: result
+                dataset: result.data
             });
             console.log(value.length);
             angular.element('.ibox-content').removeClass('sk-loading');
@@ -210,7 +210,7 @@ function channelWalletCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$f
         httpSvc.getData('post', '/channelWallet/search',$scope.searchInfo
         ).then(function (value) {
             $scope.ChannelWalletTable = new NgTableParams({}, {
-                dataset: value
+                dataset: value.data
             });
             console.log($scope.ChannelWalletTable);
             angular.element('.ibox-content').removeClass('sk-loading');
@@ -221,7 +221,7 @@ function channelWalletCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$f
         $scope.searchInfo = {};
         httpSvc.getData('post', '/channelWallet/search',$scope.searchInfo).then(function (value) {
             $scope.ChannelWalletTable = new NgTableParams({}, {
-                dataset: value
+                dataset: value.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
@@ -300,7 +300,7 @@ function terminalwalletCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$
         httpSvc.getData('post', '/terminalMerchantsWallet/search',$scope.searchInfo
         ).then(function (value) {
             $scope.terminalwalletTable = new NgTableParams({}, {
-                dataset: value
+                dataset: value.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
@@ -311,7 +311,7 @@ function terminalwalletCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$
         httpSvc.getData('post', '/terminalMerchantsWallet/search',$scope.searchInfo
         ).then(function (value) {
             $scope.terminalwalletTable = new NgTableParams({}, {
-                dataset: value
+                dataset: value.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
@@ -322,7 +322,7 @@ function terminalwalletCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$
         httpSvc.getData('post', '/terminalMerchantsWallet/search',$scope.searchInfo
         ).then(function (value) {
             $scope.terminalwalletTable = new NgTableParams({}, {
-                dataset: value
+                dataset: value.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
@@ -407,14 +407,14 @@ function agentWalletDetailsCtrl($scope, $uibModal, toaster, NgTableParams, httpS
                 getData: function (params) {
                     angular.element('.ibox-content').addClass('sk-loading');
                     return httpSvc.getData('post', '/agentWallet/findAgentWallteDetailsPage', {
-                        pageNum: params.page()-1,
+                        pageNum: params.page(),
                         pageSize: params.count(),
                         orderBy: params.sorting(),
                         searchInfo: $scope.searchInfo
                     }).then(function (value) {
-                        params.total(value.total);
+                        params.total(value.data.total);
                         angular.element('.ibox-content').removeClass('sk-loading');
-                        return value.rows;
+                        return value.data.records;
                     });
                 }
             });
@@ -490,9 +490,9 @@ function agentWalletDetailsCtrl($scope, $uibModal, toaster, NgTableParams, httpS
                     orderBy: params.sorting(),
                     searchInfo: $scope.searchInfo
                 }).then(function (value) {
-                    params.total(value.total);
+                    params.total(value.data.total);
                     angular.element('.ibox-content').removeClass('sk-loading');
-                    return value.rows;
+                    return value.data.records;
                 });
             }
         });
@@ -517,8 +517,8 @@ function channelWalletDetailsCtrl($scope, $uibModal, toaster, NgTableParams, htt
     // 初始化数据
     $timeout(function () {
         httpSvc.getData('post', '/channelWallet/init').then(function (value) {
-            $scope.payTypes  = value.payTypes;
-            $scope.detailsTypes = value.detailsTypes;
+            $scope.productTypes  = value.productTypes;
+            $scope.channels = value.channels;
             $scope.channelWalletDetailsTable = new NgTableParams({}, {
                 getData: function (params) {
                     angular.element('.ibox-content').addClass('sk-loading');
@@ -528,9 +528,9 @@ function channelWalletDetailsCtrl($scope, $uibModal, toaster, NgTableParams, htt
                         orderBy: params.sorting(),
                         searchInfo: $scope.searchInfo
                     }).then(function (value) {
-                        params.total(value.total);
+                        params.total(value.data.total);
                         angular.element('.ibox-content').removeClass('sk-loading');
-                        return value.rows;
+                        return value.data.records;
                     });
                 }
             });
@@ -606,9 +606,9 @@ function channelWalletDetailsCtrl($scope, $uibModal, toaster, NgTableParams, htt
                     orderBy: params.sorting(),
                     searchInfo: $scope.searchInfo
                 }).then(function (value) {
-                    params.total(value.total);
+                    params.total(value.data.total);
                     angular.element('.ibox-content').removeClass('sk-loading');
-                    return value.rows;
+                    return value.data.records;
                 });
             }
         });

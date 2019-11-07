@@ -21,7 +21,7 @@
                                     <div class="form-group form-group-sm">
                                         <div class="input-group">
                                             <span class="input-group-addon">代理商：</span>
-                                            <select class="form-control b-r-sm" ng-model="searchInfo.parentId"
+                                            <select class="form-control b-r-sm" ng-model="searchInfo.agentMerchantId"
                                                     ng-options="x.agentMerchantId as x.agentMerchantName for x in agents">
                                                 <option value=""></option>
                                             </select>
@@ -31,15 +31,15 @@
                                 <div class="col-sm-6 col-md-6 col-lg-3 form-group form-group-sm">
                                     <div class="input-group">
                                         <span class="input-group-addon">商户：</span>
-                                        <input class="form-control b-r-sm" type="text" ng-model="searchInfo.merId"
-                                               uib-typeahead="x.merId as x.merId + '(' + x.merchantName + ')' for x in merchants | filter: {merId : $viewValue}"
+                                        <input class="form-control b-r-sm" type="text" ng-model="searchInfo.merchantId"
+                                               uib-typeahead="x.merchantId as x.merchantId + '(' + x.merchantName + ')' for x in merchants | filter: {merchantId : $viewValue}"
                                                typeahead-min-length="0"
                                         >
                                     </div>
                                 </div>
                                 <div class="form-group form-group-sm">
                                     <button class="btn btn-sm btn-w-m btn-primary"
-                                            ng-click="search()" ng-disabled="searchInfo.merId==null&&searchInfo.parentId==null">
+                                            ng-click="search()" ng-disabled="searchInfo.merchantId==null&&searchInfo.agentMerchantId==null">
                                         查询
                                     </button>
                                     <button class="btn btn-sm btn-w-m btn-info"
@@ -55,7 +55,7 @@
                                 <tr ng-repeat="row in $data">
 
                                     <td class="text-center" data-title="'商户'">
-                                        {{row.merId}}({{row.merId  | getValueByList : merchants : 'merId':'merchantName'}})
+                                        {{row.merchantId}}({{row.merchantId  | getValueByList : merchants : 'merchantId':'merchantName'}})
                                     </td>
                                     <td class="text-center" data-title="'订单金额'">
                                         {{row.totalAmount == null?"--":(row.totalAmount | number: 2)}}
@@ -85,7 +85,7 @@
                                         {{row.totalFreezeAmount == null?"--":(row.totalFreezeAmount | number: 2) }}
                                     </td>
                                     <td class="text-center" data-title="'保证金'">
-                                        {{row.totalBond == null?"--":(row.totalBond | number: 2)  }}
+                                        {{row.totalMargin == null?"--":(row.totalMargin | number: 2)  }}
                                     </td>
                                     <td class="text-center" data-title="'更新时间'">
                                         {{row.updateTime| date : 'yyyy/MM/dd HH:mm:ss'}}

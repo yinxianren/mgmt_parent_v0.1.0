@@ -9,6 +9,8 @@ import com.rxh.service.anew.channel.ApiChannelWalletService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: panda
@@ -36,5 +38,13 @@ public class ApiChannelWalletServiceImpl implements ApiChannelWalletService , Ne
     public boolean updateOrSave(ChannelWalletTable cwt) {
         if(isNull(cwt)) return  false;
         return channelWalletDbService.saveOrUpdate(cwt);
+    }
+
+    @Override
+    public List<ChannelWalletTable> getList(ChannelWalletTable cwt) {
+        if(isNull(cwt)) return  channelWalletDbService.list();
+        LambdaQueryWrapper<ChannelWalletTable> queryWrapper = new LambdaQueryWrapper<>();
+        if (!isBlank(cwt.getChannelId())) queryWrapper.eq(ChannelWalletTable::getChannelId,cwt.getChannelId());
+        return channelWalletDbService.list(queryWrapper);
     }
 }

@@ -1,8 +1,8 @@
 package com.rxh.controller.anew.order;
 
+import com.rxh.enums.StatusEnum;
 import com.rxh.pojo.Result;
 import com.rxh.pojo.base.Page;
-import com.rxh.pojo.base.PageResult;
 import com.rxh.service.AnewMerchantInfoService;
 import com.rxh.service.AnewPayOrderService;
 import com.rxh.service.ConstantService;
@@ -17,7 +17,6 @@ import com.rxh.vo.ResponseVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
@@ -33,8 +32,6 @@ public class AnewPayOrderController {
     @Resource
     private ConstantService constantService;
     @Resource
-    private OrganizationService organizationService;
-    @Resource
     private ChannelInfoService channelInfoService;
     @Autowired
     private AnewPayOrderService anewPayOrderService;
@@ -47,7 +44,16 @@ public class AnewPayOrderController {
     @RequestMapping(value="/findPayOrderPage")
     @ResponseBody
     public ResponseVO findPayOrderPage(@RequestBody Page page ) {
-        return anewPayOrderService.getList(page);
+        try {
+            return anewPayOrderService.getList(page);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
+
     }
 
     @RequestMapping("/init")
@@ -69,7 +75,16 @@ public class AnewPayOrderController {
 
     @RequestMapping("/getCardHolderInfo")
     public ResponseVO getCardHolderInfo(@RequestParam(value = "payId") String payId) {
-        return anewPayOrderService.getCardHolderInfo(payId);
+        try {
+            return anewPayOrderService.getCardHolderInfo(payId);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
+
     }
     @RequestMapping(value = "/getProductInfo",method = RequestMethod.POST)
     public Result getProductInfo(@RequestBody String payId) {

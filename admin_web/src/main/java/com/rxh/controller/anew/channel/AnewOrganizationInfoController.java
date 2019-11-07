@@ -2,6 +2,7 @@ package com.rxh.controller.anew.channel;
 
 
 import com.rxh.anew.table.system.OrganizationInfoTable;
+import com.rxh.enums.StatusEnum;
 import com.rxh.service.ConstantService;
 import com.rxh.service.OrganizationInfoService;
 import com.rxh.spring.annotation.SystemLogInfo;
@@ -27,28 +28,64 @@ public class AnewOrganizationInfoController {
     @SystemLogInfo(description = "支付机构查询")
     @RequestMapping("/getAll")
     public ResponseVO getAllOrganization(@RequestBody OrganizationInfoTable organizationInfo){
-        return organizationInfoService.getAll(organizationInfo);
+        try {
+            return organizationInfoService.getAll(organizationInfo);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
+
     }
     @SystemLogInfo(description = "支付机构增加")
     @RequestMapping("/insert")
     public ResponseVO insert(@RequestBody OrganizationInfoTable record){
-        record.setCreator(SecurityContextHolder.getContext().getAuthentication().getName());
-        record.setCreateTime(new Date());
-        record.setUpdateTime(new Date());
-        record.setOrganizationId("ORG"+System.currentTimeMillis());
-        return organizationInfoService.savaOrUpdate(record);
+        try {
+            record.setCreator(SecurityContextHolder.getContext().getAuthentication().getName());
+            record.setCreateTime(new Date());
+            record.setUpdateTime(new Date());
+            record.setOrganizationId("ORG"+System.currentTimeMillis());
+            return organizationInfoService.savaOrUpdate(record);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
+
     }
     @SystemLogInfo(description = "支付机构删除")
     @RequestMapping("/delete")
     public ResponseVO delete (@RequestBody List<String> idList){
-        return organizationInfoService.removeByIds(idList);
+        try {
+            return organizationInfoService.removeByIds(idList);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
+
     }
 
     @SystemLogInfo(description = "支付机构修改")
     @RequestMapping("/update")
     public ResponseVO update(@RequestBody OrganizationInfoTable record){
-        record.setUpdateTime(new Date());
-        return organizationInfoService.savaOrUpdate(record);
+        try {
+            record.setUpdateTime(new Date());
+            return organizationInfoService.savaOrUpdate(record);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
+
     }
     @RequestMapping("/init")
     public Map<String, Object> init(){

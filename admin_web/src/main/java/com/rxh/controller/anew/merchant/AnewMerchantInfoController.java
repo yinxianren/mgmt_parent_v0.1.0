@@ -1,17 +1,13 @@
 package com.rxh.controller.anew.merchant;
 
 import com.rxh.anew.table.merchant.MerchantInfoTable;
-import com.rxh.cache.RedisCacheCommonCompoment;
-import com.rxh.pojo.Result;
+import com.rxh.enums.StatusEnum;
 import com.rxh.service.*;
 import com.rxh.service.square.*;
 import com.rxh.spring.annotation.SystemLogInfo;
-import com.rxh.square.pojo.MerchantInfo;
-import com.rxh.util.UserInfoUtils;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -43,40 +39,92 @@ public class AnewMerchantInfoController {
     @ResponseBody
     @RequestMapping("/getOne")
     public ResponseVO getOne(MerchantInfoTable merchantInfo){
-        return anewMerchantInfoService.getMerchants(merchantInfo);
+        try {
+            return anewMerchantInfoService.getMerchants(merchantInfo);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
     }
-
-
 
     @SystemLogInfo(description = "商户新增")
     @RequestMapping("/addMerchantInfo")
     public ResponseVO insert(@RequestBody  MerchantInfoTable record){
-        record.setCreateTime(new Date());
-        record.setUpdateTime(new Date());
-        record.setMerchantId("M"+System.currentTimeMillis());
-        return anewMerchantInfoService.saveOrUpdate(record);
+        try {
+            record.setCreateTime(new Date());
+            record.setUpdateTime(new Date());
+            record.setMerchantId("M"+System.currentTimeMillis());
+            return anewMerchantInfoService.saveOrUpdate(record);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
+
     }
     @SystemLogInfo(description = "商户删除")
     @RequestMapping("/batchDel")
     public ResponseVO delete(@RequestBody List<String> ids){
-        return anewMerchantInfoService.delByIds(ids);
+        try {
+            return anewMerchantInfoService.delByIds(ids);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
+
     }
+
     @SystemLogInfo(description = "商户更新")
     @RequestMapping("/updateMerchantInfo")
     public ResponseVO update(@RequestBody MerchantInfoTable record){
-        record.setUpdateTime(new Date());
-        return anewMerchantInfoService.saveOrUpdate(record);
+        try {
+            record.setUpdateTime(new Date());
+            return anewMerchantInfoService.saveOrUpdate(record);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
+
     }
     @SystemLogInfo(description = "商户查询")
     @RequestMapping("/getAllMerchantInfo")
     ResponseVO getAll(){
-        return anewMerchantInfoService.getMerchants(null);
+        try {
+            return anewMerchantInfoService.getMerchants(null);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
+
     }
 
     @SystemLogInfo(description = "商户查询")
     @RequestMapping("/getMerchantInfoListByMerchantInfo")
     ResponseVO search(@RequestBody MerchantInfoTable merchantInfo){
-        return anewMerchantInfoService.getMerchants(merchantInfo);
+        try {
+            return anewMerchantInfoService.getMerchants(merchantInfo);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseVO responseVO = new ResponseVO();
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("失败");
+            return responseVO;
+        }
+
     }
 
     @RequestMapping("/getRandomSecretkey")

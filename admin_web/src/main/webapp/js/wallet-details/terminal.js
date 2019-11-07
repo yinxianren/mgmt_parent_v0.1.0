@@ -2,23 +2,29 @@ function terminalMerchantsDetailsCtrl($scope, $uibModal, toaster, NgTableParams,
     $scope.searchInfo = {};
     $scope.terminalMerchantsDetailsTable = null;
     $timeout(function () {
-        httpSvc.getData('post', '/terminalMerchantsDetails/init').then(function (value) {
+        httpSvc.getData('post', '/terminalMerchantsWallet/init').then(function (value) {
             $scope.merchants = value.merchants;
             $scope.terminalMerIds = value.terminalMerIds;
             // $scope.payTypes = value.payTypes;
-            $scope.detailsTypes = value.detailsTypes;
+            $scope.productTypes = value.productTypes;
             $scope.terminalMerchantsDetailsTable = new NgTableParams({}, {
                 getData: function (params) {
                     angular.element('.ibox-content').addClass('sk-loading');
-                    return httpSvc.getData('post', '/terminalMerchantsDetails/findTerminalMerchantsDetails', {
-                        pageNum: params.page()-1,
+                    return httpSvc.getData('post', '/terminalMerchantsWallet/findTerminalMerchantsDetails', {
+                        pageNum: params.page(),
                         pageSize: params.count(),
                         orderBy: params.sorting(),
                         searchInfo: $scope.searchInfo
                     }).then(function (value) {
-                        params.total(value.total);
-                        angular.element('.ibox-content').removeClass('sk-loading');
-                        return value.rows;
+                        if (value.code == 0){
+                            params.total(value.data.total);
+                            angular.element('.ibox-content').removeClass('sk-loading');
+                            return value.data.records;
+                        }else {
+                            params.total(0);
+                            angular.element('.ibox-content').removeClass('sk-loading');
+                            return [];
+                        }
                     });
                 }
             });
@@ -89,16 +95,15 @@ function terminalMerchantsDetailsCtrl($scope, $uibModal, toaster, NgTableParams,
         $scope.terminalMerchantsDetailsTable = new NgTableParams({}, {
             getData: function (params) {
                 angular.element('.ibox-content').addClass('sk-loading');
-                return httpSvc.getData('post', '/terminalMerchantsDetails/findTerminalMerchantsDetails', {
-                    pageNum: params.page()-1,
+                return httpSvc.getData('post', '/terminalMerchantsWallet/findTerminalMerchantsDetails', {
+                    pageNum: params.page(),
                     pageSize: params.count(),
                     orderBy: params.sorting(),
                     searchInfo: $scope.searchInfo
                 }).then(function (value) {
-                    console.log("----------------------"+value);
-                    params.total(value.total);
+                    params.total(value.data.total);
                     angular.element('.ibox-content').removeClass('sk-loading');
-                    return value.rows;
+                    return value.data.records;
                 });
             }
         });
