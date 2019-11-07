@@ -2,6 +2,10 @@ package com.rxh.allinpay;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.rxh.anew.dto.RequestCrossMsgDTO;
+import com.rxh.anew.table.business.RegisterCollectTable;
+import com.rxh.anew.table.business.TransOrderInfoTable;
+import com.rxh.enums.StatusEnum;
 import com.rxh.exception.PayException;
 import com.rxh.pojo.cross.BankResult;
 import com.rxh.pojo.merchant.MerchantRegisterInfo;
@@ -30,13 +34,10 @@ import java.util.TreeMap;
 @RequestMapping("/allinPay")
 public class AllinPayQuickQuery {
 	
-	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-    private final static Logger logger = LoggerFactory.getLogger(AllinPayQuickQuery.class);
-    
     @RequestMapping("/query")
-    public BankResult trade(@RequestBody SquareTrade trade) throws UnsupportedEncodingException, PayException {
+    public BankResult trade(@RequestBody RequestCrossMsgDTO trade) throws UnsupportedEncodingException, PayException {
     	TreeMap<String, Object> params = getTradeParam(trade);
-    	String other = trade.getExtraChannelInfo().getData();
+    	String other = trade.getChannelInfoTable().getChannelParam();
     	JSONObject json = JSON.parseObject(other);
     	String content = HttpClientUtils.doPost(HttpClientUtils.getHttpsClient(), json.getString("queryUrl"), params);
     	return checkResult(content, trade);
@@ -48,12 +49,12 @@ public class AllinPayQuickQuery {
      * @return
      * @throws UnsupportedEncodingException
      */
-    private TreeMap<String, Object> getTradeParam(SquareTrade trade) throws UnsupportedEncodingException {
-    	TransOrder transOrder = trade.getTransOrder();
-    	String other = trade.getExtraChannelInfo().getData();
+    private TreeMap<String, Object> getTradeParam(RequestCrossMsgDTO trade) throws UnsupportedEncodingException {
+    	TransOrderInfoTable transOrder = trade.getTransOrderInfoTable();
+    	String other = trade.getChannelInfoTable().getChannelParam();
     	JSONObject json = JSON.parseObject(other);
-		MerchantRegisterInfo merchantRegisterInfo = trade.getMerchantRegisterInfo();
-		JSONObject registerInfo = JSON.parseObject(merchantRegisterInfo.getBackData());
+		RegisterCollectTable merchantRegisterInfo = trade.getRegisterCollectTable();
+		JSONObject registerInfo = JSON.parseObject(merchantRegisterInfo.getChannelRespResult());
     	//公共参数
     	String orgid = json.get("orgid").toString();//机构号
     	String appid = json.get("appid").toString();//APPID
@@ -95,7 +96,7 @@ public class AllinPayQuickQuery {
      * @throws UnsupportedEncodingException 
      */
     @SuppressWarnings("unchecked")
-	private BankResult checkResult(String content, SquareTrade trade) throws PayException, UnsupportedEncodingException {
+	private BankResult checkResult(String content, RequestCrossMsgDTO trade) throws PayException, UnsupportedEncodingException {
     	BankResult bankResult = new BankResult();
     	if(StringUtils.isNotBlank(content)) {
     		JSONObject json = JSON.parseObject(content);
@@ -108,39 +109,39 @@ public class AllinPayQuickQuery {
                     	TreeMap<String,Object> result = JSON.parseObject(content, TreeMap.class);
             			String resultSign = result.get("sign").toString();
             			result.remove("sign");
-            			String other = trade.getExtraChannelInfo().getData();
+            			String other = trade.getChannelExtraInfoTable().getChannelParam();
             	    	JSONObject param = JSON.parseObject(other);
             	    	result.put("key", param.getString("key"));
             			String sign = AlinPayUtils.getMd5Sign(result);
             			if(sign.equalsIgnoreCase(resultSign)) {
-            				bankResult.setStatus(SystemConstant.BANK_STATUS_SUCCESS);
+            				bankResult.setStatus(StatusEnum._0.getStatus());
                             bankResult.setBankResult("交易成功");
                             bankResult.setParam(content);
             			}else {
-            				bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
+            				bankResult.setStatus(StatusEnum._1.getStatus());
                             bankResult.setBankResult("交易查询异常:签名验证失败");
                             bankResult.setParam(content);
             			}
                         break;
                     case "2000":
-                        bankResult.setStatus(SystemConstant.BANK_STATUS_SUCCESS);
+                        bankResult.setStatus(StatusEnum._3.getStatus());
                         bankResult.setBankResult("交易处理中。");
                         bankResult.setParam(content);
                         break;
                     default:
-                        bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
+                        bankResult.setStatus(StatusEnum._1.getStatus());
                         bankResult.setBankResult("交易查询异常:" + json.get("errmsg"));
                         bankResult.setParam(content);
                         break;
                 }
     			
     		}else {
-    			 bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
+    			 bankResult.setStatus(StatusEnum._1.getStatus());
                  bankResult.setBankResult("交易查询失败:" + json.get("retmsg"));
                  bankResult.setParam(content);
     		}
     	}else {
-    		bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
+    		bankResult.setStatus(StatusEnum._1.getStatus());
             bankResult.setBankResult("交易查询失败：支付返回结果为空！");
             bankResult.setParam(content);
     	}

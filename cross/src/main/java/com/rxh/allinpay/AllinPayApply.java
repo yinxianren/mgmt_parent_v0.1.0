@@ -2,6 +2,11 @@ package com.rxh.allinpay;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.rxh.anew.dto.RequestCrossMsgDTO;
+import com.rxh.anew.table.business.PayOrderInfoTable;
+import com.rxh.anew.table.business.RegisterCollectTable;
+import com.rxh.anew.table.business.RegisterInfoTable;
+import com.rxh.enums.StatusEnum;
 import com.rxh.exception.PayException;
 import com.rxh.pojo.cross.BankResult;
 import com.rxh.pojo.payment.SquareTrade;
@@ -46,12 +51,11 @@ public class AllinPayApply {
 
     @RequestMapping("/apply")
     @ResponseBody
-    public BankResult trade(@RequestBody SquareTrade trade) throws UnsupportedEncodingException, PayException, ParseException, InterruptedException {
+    public BankResult trade(@RequestBody RequestCrossMsgDTO trade) throws UnsupportedEncodingException, PayException, ParseException, InterruptedException {
     	TreeMap<String, Object> params = getTradeParam(trade);
-    	String other = trade.getChannelInfo().getOthers();
+    	String other = trade.getChannelInfoTable().getChannelParam();
     	logger.info("收单请求参数："+ JsonUtils.objectToJsonNonNull(params));
     	JSONObject json = JSON.parseObject(other);
-		logger.info("请求json："+ other);
 		logger.info("请求URL："+ json.getString("payApplyUrl"));
 		String content = HttpClientUtils.doPost(HttpClientUtils.getHttpsClient(), json.getString("payApplyUrl"), params);
 //		String content ="{\"appid\":\"6666678\",\"fintime\":\"20190628100547\",\"retcode\":\"SUCCESS\",\"retmsg\":\"处理成功\",\"sign\":\"B64DFBAD0AFEEC07EBF5F88D7AF04677\",\"trxid\":\"19060000001375\",\"trxstatus\":\"1999\"}";
@@ -66,11 +70,11 @@ public class AllinPayApply {
      * @return
      * @throws UnsupportedEncodingException
      */
-    private TreeMap<String, Object> getTradeParam(SquareTrade trade) throws UnsupportedEncodingException {
-    	MerchantRegisterCollect merchantRegisterCollect = trade.getMerchantRegisterCollect();
-		JSONObject registerInfo = JSON.parseObject(merchantRegisterCollect.getBackData());
-    	PayOrder payOrder = trade.getPayOrder();
-    	String other = trade.getChannelInfo().getOthers();
+    private TreeMap<String, Object> getTradeParam(RequestCrossMsgDTO trade) throws UnsupportedEncodingException {
+    	RegisterCollectTable merchantRegisterCollect = trade.getRegisterCollectTable();
+		JSONObject registerInfo = JSON.parseObject(merchantRegisterCollect.getChannelRespResult());
+    	PayOrderInfoTable payOrder = trade.getPayOrderInfoTable();
+    	String other = trade.getChannelInfoTable().getChannelParam();
     	JSONObject json = JSON.parseObject(other);
 
     	//公共参数
@@ -80,9 +84,9 @@ public class AllinPayApply {
     	String randomstr = AlinPayUtils.getRandomSecretkey();//随机字符串
     	String key = json.get("key").toString();
     	//私有参数
-    	String orderid = payOrder.getPayId();//商户订单号
+    	String orderid = payOrder.getPlatformOrderId();//商户订单号
     	String cusid = registerInfo.get("cusid").toString();//商户号
-    	String agreeid = trade.getMerchantCard().getResult();//协议编号
+    	String agreeid = trade.getMerchantCardTable().getCrossRespResult();//协议编号
     	String trxcode = json.getString("trxcode");//交易类型
 //		[{'trxcode':'QUICKPAY_OF_HP','feerate':'0.50'},  产品1	<=1000元/笔
 //		{'trxcode':'QUICKPAY_OF_NP','feerate':'0.45'},   产品2	<=50000元/笔	city、mccid不可上送
@@ -107,8 +111,8 @@ public class AllinPayApply {
 
     	treeMap.put("currency", currency);
     	treeMap.put("subject", subject);
-        if(trade.getTradeObjectSquare()!=null){
-            TradeObjectSquare tradeObjectSquare = trade.getTradeObjectSquare();
+        if(trade.getRegisterInfoTable()!=null){
+            RegisterInfoTable tradeObjectSquare = trade.getRegisterInfoTable();
             if(StringUtils.isNotBlank(tradeObjectSquare.getCity()) && payOrder.getAmount().compareTo(new BigDecimal(1000)) == -1){
                 treeMap.put("city", tradeObjectSquare.getCity());
             }
@@ -129,7 +133,7 @@ public class AllinPayApply {
      * @throws UnsupportedEncodingException
      */
     @SuppressWarnings("unchecked")
-	private BankResult checkResult(String content, SquareTrade trade) throws PayException, UnsupportedEncodingException, ParseException {
+	private BankResult checkResult(String content, RequestCrossMsgDTO trade) throws PayException, UnsupportedEncodingException, ParseException {
     	BankResult bankResult = new BankResult();
     	if(StringUtils.isNotBlank(content)) {
     		JSONObject json = JSON.parseObject(content);
@@ -142,7 +146,7 @@ public class AllinPayApply {
                     case "0000":
             			String resultSign = result.get("sign").toString();
             			result.remove("sign");
-            			String other = trade.getExtraChannelInfo().getData();
+            			String other = trade.getChannelInfoTable().getChannelParam();
             	    	JSONObject param = JSON.parseObject(other);
             	    	result.put("key", param.getString("key"));
             			String sign = AlinPayUtils.getMd5Sign(result);
@@ -150,55 +154,55 @@ public class AllinPayApply {
 							String trxid = result.get("trxid").toString();
 							String fintime = result.get("fintime").toString();
 							Date banktime = dateFormat.parse(fintime);
-							bankResult.setStatus(SystemConstant.BANK_STATUS_SUCCESS);
+							bankResult.setStatus(StatusEnum._0.getStatus());
                             bankResult.setBankResult("交易成功");
 							bankResult.setBankTime(banktime);
 							bankResult.setBankOrderId(trxid);
                             bankResult.setParam(content);
             			}else {
-            				bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
+            				bankResult.setStatus(StatusEnum._1.getStatus());
                             bankResult.setBankResult("交易异常:签名验证不一致");
                             bankResult.setParam(content);
             			}
                         break;
                     case "1999":
-                        bankResult.setStatus(SystemConstant.BANK_STATUS_PENDING_PAYMENT);
+                        bankResult.setStatus(StatusEnum._3.getStatus());
                         bankResult.setBankResult("需获取短信验证码,进行下一步确认操作");
                         bankResult.setParam(content);
                         break;
                     case "2000":
-                        bankResult.setStatus(SystemConstant.BANK_STATUS_PENDING_PAYMENT);
+                        bankResult.setStatus(StatusEnum._3.getStatus());
                         bankResult.setBankResult("交易已受理");
                         bankResult.setParam(content);
                         break;
 					case "3059":
-						bankResult.setStatus(SystemConstant.BANK_STATUS_PENDING_PAYMENT);
+						bankResult.setStatus(StatusEnum._3.getStatus());
 						bankResult.setBankResult("短信验证码发送失败");
 						bankResult.setParam(content);
 						break;
 					case "3057":
-						bankResult.setStatus(SystemConstant.BANK_STATUS_PENDING_PAYMENT);
+						bankResult.setStatus(StatusEnum._3.getStatus());
 						bankResult.setBankResult("请重新获取验证码");
 						bankResult.setParam(content);
 						break;
 					case "3058":
-						bankResult.setStatus(SystemConstant.BANK_STATUS_PENDING_PAYMENT);
+						bankResult.setStatus(StatusEnum._3.getStatus());
 						bankResult.setBankResult("短信验证码错误");
 						bankResult.setParam(content);
 						break;
                     default:
-						bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
+						bankResult.setStatus(StatusEnum._3.getStatus());
                         bankResult.setBankResult("交易失败:" + json.get("errmsg"));
                         bankResult.setParam(content);
                         break;
                 }
     		}else {
-    			 bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
+    			 bankResult.setStatus(StatusEnum._1.getStatus());
                  bankResult.setBankResult("交易失败:" + json.get("retmsg"));
                  bankResult.setParam(content);
     		}
     	}else {
-    		bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
+    		bankResult.setStatus(StatusEnum._1.getStatus());
             bankResult.setBankResult("交易失败：支付返回结果为空！");
             bankResult.setParam(content);
     	}
@@ -209,23 +213,23 @@ public class AllinPayApply {
 
     @RequestMapping("/queryOrder")
     @ResponseBody
-    public BankResult queryOrder(@RequestBody SquareTrade trade) throws UnsupportedEncodingException, ParseException {
-        MerchantRegisterCollect merchantRegisterCollect = trade.getMerchantRegisterCollect();
-        PayOrder payOrder = trade.getPayOrder();
-        JSONObject registerInfo = JSON.parseObject(merchantRegisterCollect.getBackData());
-        String other = trade.getChannelInfo().getOthers();
+    public BankResult queryOrder(@RequestBody RequestCrossMsgDTO trade) throws UnsupportedEncodingException, ParseException {
+        RegisterCollectTable merchantRegisterCollect = trade.getRegisterCollectTable();
+        PayOrderInfoTable payOrder = trade.getPayOrderInfoTable();
+        JSONObject registerInfo = JSON.parseObject(merchantRegisterCollect.getChannelRespResult());
+        String other = trade.getChannelInfoTable().getChannelParam();
         JSONObject json = JSON.parseObject(other);
-        String tradeResult = payOrder.getTradeResult();
+        String tradeResult = payOrder.getChannelRespResult();
         JSONObject bankInfo = JSON.parseObject(tradeResult);
         //公共参数
         String orgid = json.get("orgid").toString();//机构号
         String appid = json.get("appid").toString();//APPID
         String key = json.get("key").toString();
         String cusid = registerInfo.get("cusid").toString();//商户号
-        String orderid = payOrder.getPayId();//商户订单号
+        String orderid = payOrder.getPlatformOrderId();//商户订单号
         Date bankTime = new Date();
-        if (payOrder.getBankTime() != null){
-            bankTime = payOrder.getBankTime();
+        if (payOrder.getUpdateTime() != null){
+            bankTime = payOrder.getUpdateTime();
         }
         String date = dateFormat2.format(bankTime);
         String trxid = bankInfo.get("trxid").toString();//银行流水号
@@ -267,7 +271,7 @@ public class AllinPayApply {
         return checkQueryResult(content,trade);
     }
 
-    private BankResult checkQueryResult(String content, SquareTrade trade) throws ParseException {
+    private BankResult checkQueryResult(String content, RequestCrossMsgDTO trade) throws ParseException {
         BankResult bankResult = new BankResult();
         if (StringUtils.isNotBlank(content)) {
             JSONObject json = JSON.parseObject(content);
@@ -284,49 +288,49 @@ public class AllinPayApply {
                         BigDecimal amount= new BigDecimal(trxamt).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_UP);
                         String fintime = result.get("fintime").toString();
                         Date banktime = dateFormat.parse(fintime);
-                        bankResult.setStatus(SystemConstant.BANK_STATUS_SUCCESS);
+                        bankResult.setStatus(StatusEnum._0.getStatus());
                         bankResult.setBankResult("交易成功,交易流程完成");
                         bankResult.setBankTime(banktime);
                         bankResult.setBankOrderId(trxid);
                         bankResult.setOrderAmount(amount);
-                        bankResult.setOrderId(Long.valueOf(orderid));
+                        bankResult.setOrderId( (orderid));
                         bankResult.setParam(content);
                         break;
 
                     case "2000":
-                        bankResult.setStatus(SystemConstant.BANK_STATUS_PENDING_PAYMENT);
+                        bankResult.setStatus(StatusEnum._3.getStatus());
                         bankResult.setBankResult("交易处理中，请查询交易");
-                        bankResult.setOrderId(Long.valueOf(trade.getPayOrder().getPayId()));
+                        bankResult.setOrderId( (trade.getPayOrderInfoTable().getPlatformOrderId()));
                         bankResult.setParam(content);
                         break;
                     case "0003":
-                        bankResult.setStatus(SystemConstant.BANK_STATUS_PENDING_PAYMENT);
+                        bankResult.setStatus(StatusEnum._3.getStatus());
                         bankResult.setBankResult("交易处理中，请查询交易");
-                        bankResult.setOrderId(Long.valueOf(trade.getPayOrder().getPayId()));
+                        bankResult.setOrderId( (trade.getPayOrderInfoTable().getPlatformOrderId()));
                         bankResult.setParam(content);
                         break;
                     case "3054":
-                        bankResult.setStatus(SystemConstant.BANK_STATUS_PENDING_PAYMENT);
+                        bankResult.setStatus(StatusEnum._3.getStatus());
                         bankResult.setBankResult("交易处理中，请查询交易");
-                        bankResult.setOrderId(Long.valueOf(trade.getPayOrder().getPayId()));
+                        bankResult.setOrderId( (trade.getPayOrderInfoTable().getPlatformOrderId()));
                         bankResult.setParam(content);
                         break;
                     default:
-                        bankResult.setStatus(SystemConstant.BANK_STATUS_PENDING_PAYMENT);
-                        bankResult.setOrderId(Long.valueOf(trade.getPayOrder().getPayId()));
+                        bankResult.setStatus(StatusEnum._3.getStatus());
+                        bankResult.setOrderId( (trade.getPayOrderInfoTable().getPlatformOrderId()));
                         bankResult.setBankResult("交易结果未知:" + json.get("errmsg"));
                         bankResult.setParam(content);
                         break;
                 }
             } else {
-                bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-                bankResult.setOrderId(Long.valueOf(trade.getPayOrder().getPayId()));
+                bankResult.setStatus(StatusEnum._1.getStatus());
+                bankResult.setOrderId( (trade.getPayOrderInfoTable().getPlatformOrderId()));
                 bankResult.setBankResult("快捷交易查询失败:" + json.get("retmsg"));
                 bankResult.setParam(content);
             }
         } else {
-            bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-            bankResult.setOrderId(Long.valueOf(trade.getPayOrder().getPayId()));
+            bankResult.setStatus(StatusEnum._1.getStatus());
+            bankResult.setOrderId( (trade.getPayOrderInfoTable().getPlatformOrderId()));
             bankResult.setBankResult("快捷交易查询失败：支付返回结果为空！");
             bankResult.setParam(content);
         }
@@ -338,12 +342,4 @@ public class AllinPayApply {
         return bankResult;
     }
 
-    @RequestMapping("/test")
-    @ResponseBody
-    public BankResult test() throws UnsupportedEncodingException, ParseException {
-        SquareTrade trade = new SquareTrade();
-
-
-        return queryOrder(trade);
-    }
 }
