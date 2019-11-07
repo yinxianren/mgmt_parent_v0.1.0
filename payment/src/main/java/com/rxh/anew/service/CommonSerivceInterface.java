@@ -11,6 +11,7 @@ import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.merchant.MerchantQuotaRiskTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
+import com.rxh.anew.table.system.OrganizationInfoTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
 import com.rxh.exception.NewPayException;
 import com.rxh.tuple.Tuple2;
@@ -26,6 +27,13 @@ public interface CommonSerivceInterface {
      */
     MerchantInfoTable  getOneMerInfo(InnerPrintLogObject ipo) throws NewPayException;
 
+    /**
+     *
+     * @param organizationId
+     * @param ipo
+     * @return
+     */
+    OrganizationInfoTable getOrganizationInfo(String organizationId, InnerPrintLogObject ipo) throws NewPayException;
 
 
     /**

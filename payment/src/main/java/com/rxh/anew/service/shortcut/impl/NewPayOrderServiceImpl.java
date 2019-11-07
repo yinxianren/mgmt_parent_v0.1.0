@@ -1124,36 +1124,7 @@ signMsg
         }
         return chann;
     }
-    @Override
-    public OrganizationInfoTable getOrganizationInfo(String organizationId, InnerPrintLogObject ipo) throws NewPayException {
-        final String localPoint="OrganizationInfoTable";
-        OrganizationInfoTable organizationInfoTable = null;
-        try{
-            organizationInfoTable = commonRPCComponent.apiOrganizationInfoService.getOne(new OrganizationInfoTable().setOrganizationId(organizationId));
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new NewPayException(
-                    ResponseCodeEnum.RXH99999.getCode(),
-                    format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,异常根源：获取组织机构信息发生异常,异常信息：%s",
-                            ipo.getBussType(), ipo.getMerId(), ipo.getTerMerId(), ResponseCodeEnum.RXH99999.getMsg(), localPoint,e.getMessage()),
-                    format(" %s", ResponseCodeEnum.RXH99999.getMsg())
-            );
-        }
-        isNull(organizationInfoTable,
-                ResponseCodeEnum.RXH99996.getCode(),
-                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,错误根源：根据机构ID(%s),获取组织信息为null",
-                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(), ResponseCodeEnum.RXH99996.getMsg(),localPoint,organizationId),
-                format(" %s",ResponseCodeEnum.RXH99996.getMsg()));
 
-
-        isNull(organizationInfoTable.getApplicationClassObj(),
-                ResponseCodeEnum.RXH99996.getCode(),
-                format("%s-->商户号：%s；终端号：%s；错误信息: %s ；代码所在位置：%s,错误根源：组织机构中有字段未配置：ApplicationClassObj==null",
-                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(), ResponseCodeEnum.RXH99996.getMsg(),localPoint,organizationId),
-                format(" %s",ResponseCodeEnum.RXH99996.getMsg()));
-
-        return organizationInfoTable;
-    }
 
     @Override
     public PayOrderInfoTable updateByPayOrderInfoByB9Before(PayOrderInfoTable payOrderInfoTable, String busiType, InnerPrintLogObject ipo) throws NewPayException {

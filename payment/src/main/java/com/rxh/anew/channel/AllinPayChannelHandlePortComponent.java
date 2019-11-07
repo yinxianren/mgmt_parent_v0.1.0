@@ -2,6 +2,7 @@ package com.rxh.anew.channel;
 
 import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
+import com.rxh.anew.inner.InnerPrintLogObject;
 
 public interface AllinPayChannelHandlePortComponent extends  CommonChannelHandlePortComponent{
 
@@ -10,6 +11,6 @@ public interface AllinPayChannelHandlePortComponent extends  CommonChannelHandle
      * @param requestCrossMsgDTO
      * @return
      */
-    CrossResponseMsgDTO exemptCodePay(RequestCrossMsgDTO requestCrossMsgDTO);
+    CrossResponseMsgDTO exemptCodePay(RequestCrossMsgDTO requestCrossMsgDTO, InnerPrintLogObject ipo);
 
 }

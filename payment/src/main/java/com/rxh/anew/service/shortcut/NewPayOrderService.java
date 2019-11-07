@@ -310,13 +310,6 @@ public interface NewPayOrderService extends CommonSerivceInterface {
      */
     PayOrderInfoTable savePayOrder(MerchantInfoTable merInfoTable, MerPayOrderApplyDTO merPayOrderApplyDTO, ChannelInfoTable channelInfoTable, RegisterCollectTable registerCollectTable, MerchantCardTable merchantCardTable, InnerPrintLogObject ipo) throws NewPayException;
 
-    /**
-     *
-     * @param organizationId
-     * @param ipo
-     * @return
-     */
-    OrganizationInfoTable getOrganizationInfo(String organizationId, InnerPrintLogObject ipo) throws NewPayException;
 
     /**
      *

@@ -1,6 +1,7 @@
 package com.rxh.anew.controller.shortcut;
 
 import com.alibaba.dubbo.common.json.JSON;
+import com.rxh.anew.channel.CommonChannelHandlePortComponent;
 import com.rxh.anew.component.Md5Component;
 import com.rxh.anew.controller.NewAbstractCommonController;
 import com.rxh.anew.dto.*;
@@ -13,8 +14,10 @@ import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.anew.table.merchant.MerchantInfoTable;
 import com.rxh.anew.table.system.MerchantSettingTable;
+import com.rxh.anew.table.system.OrganizationInfoTable;
 import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.anew.table.system.SystemOrderTrackTable;
+import com.rxh.anew.tools.SpringContextUtil;
 import com.rxh.enums.BusinessTypeEnum;
 import com.rxh.enums.BussTypeEnum;
 import com.rxh.enums.ResponseCodeEnum;
@@ -68,7 +71,6 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
         CrossResponseMsgDTO crossResponseMsgDTO = null;
         InnerPrintLogObject ipo = null ;
         Tuple2<RegisterInfoTable,RegisterCollectTable> tuple = null;
-        String crossResponseMsg = null;
         try{
             //解析 以及 获取SystemOrderTrackTable对象
             sotTable = this.getSystemOrderTrackTable(request,param,bussType);
@@ -101,20 +103,27 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
             ChannelInfoTable channelInfoTable = newIntoPiecesOfInformationService.filtrationChannelInfoByLevel(channelInfoTablesList,ipo);
             //获取进件附属通道
             ChannelExtraInfoTable extraInfoTable = newIntoPiecesOfInformationService.getAddCusChannelExtraInfo(channelInfoTable,ipo);
+            //获取组织机构信息
+            OrganizationInfoTable organizationInfoTable = newIntoPiecesOfInformationService.getOrganizationInfo(channelInfoTable.getOrganizationId(),ipo);
+            Class  clz=Class.forName(organizationInfoTable.getApplicationClassObj().trim());
             //保存进件信息
             tuple = newIntoPiecesOfInformationService.saveByRegister(mbirDTO,channelInfoTable,ipo);
             sotTable.setPlatformOrderId(tuple._2.getPlatformOrderId());
             //封装请求cross必要参数
             requestCrossMsgDTO = newIntoPiecesOfInformationService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,extraInfoTable,tuple._1,tuple._2));
-            //请求cross请求
-            crossResponseMsg = newIntoPiecesOfInformationService.doPostJson(requestCrossMsgDTO,extraInfoTable,ipo);
-            //将请求结果转为对象
-            crossResponseMsgDTO = newIntoPiecesOfInformationService.jsonToPojo(crossResponseMsg,ipo);
+            //生成通道处理对象
+            CommonChannelHandlePortComponent commonChannelHandlePortComponent = (CommonChannelHandlePortComponent) SpringContextUtil.getBean(clz);
+            //调用业务申请
+            crossResponseMsgDTO = commonChannelHandlePortComponent.addCusInfo(requestCrossMsgDTO,ipo);
+//            //请求cross请求
+//            crossResponseMsg = newIntoPiecesOfInformationService.doPostJson(requestCrossMsgDTO,extraInfoTable,ipo);
+//            //将请求结果转为对象
+//            crossResponseMsgDTO = newIntoPiecesOfInformationService.jsonToPojo(crossResponseMsg,ipo);
             //更新进件信息
-            newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsg,tuple._2,ipo);
+            newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsgDTO.toString(),tuple._2,ipo);
             //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
             respResult = newIntoPiecesOfInformationService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,mbirDTO.getMerOrderId(),sotTable.getPlatformOrderId(),null,null,null);
-            sotTable.setPlatformPrintLog(  null == crossResponseMsgDTO ? crossResponseMsg : StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode()))
+            sotTable.setPlatformPrintLog( crossResponseMsgDTO.toString() )
                     .setTradeCode( null == crossResponseMsgDTO ? StatusEnum._1.getStatus(): crossResponseMsgDTO.getCrossStatusCode() );
         }catch (Exception e){
             if(e instanceof NewPayException){
@@ -130,7 +139,7 @@ public class NewIntoPiecesOfInformationController extends NewAbstractCommonContr
                 errorCode = ResponseCodeEnum.RXH99999.getCode();
             }
             if(!isNull(tuple))
-                newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,crossResponseMsg,tuple._2,ipo);
+                newIntoPiecesOfInformationService.updateByRegisterCollectTable(crossResponseMsgDTO,null == crossResponseMsgDTO ? null : crossResponseMsgDTO.toString() ,tuple._2,ipo);
             // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg
             respResult = newIntoPiecesOfInformationService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,
                     null != mbirDTO ? mbirDTO.getMerOrderId() : null, null != tuple ? tuple._2.getPlatformOrderId(): null,null,errorCode,errorMsg);

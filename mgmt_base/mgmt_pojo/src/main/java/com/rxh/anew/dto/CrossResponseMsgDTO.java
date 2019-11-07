@@ -1,6 +1,7 @@
 package com.rxh.anew.dto;
 
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Date;
 
@@ -11,6 +12,7 @@ import java.util.Date;
  * Time: 下午2:19
  * Description:
  */
+@ToString
 @Getter
 public class CrossResponseMsgDTO {
     private Integer crossStatusCode ;//cross返回的状态码
@@ -49,4 +51,6 @@ public class CrossResponseMsgDTO {
         this.channelResponseMsg = channelResponseMsg;
         return this;
     }
+
+
 }
