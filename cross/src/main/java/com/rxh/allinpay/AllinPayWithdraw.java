@@ -2,6 +2,8 @@ package com.rxh.allinpay;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.rxh.anew.dto.RequestCrossMsgDTO;
+import com.rxh.enums.StatusEnum;
 import com.rxh.pojo.Result;
 import com.rxh.pojo.cross.AlinTradeObject;
 import com.rxh.pojo.cross.BankResult;
@@ -65,33 +67,33 @@ public class AllinPayWithdraw {
             String trxstatus = result.getString("trxstatus");
             switch (trxstatus){
                 case "0000":
-                    bankResult.setStatus(SystemConstant.BANK_STATUS_SUCCESS);
+                    bankResult.setStatus(StatusEnum._0.getStatus());
                     bankResult.setBankResult("提现成功");
                     bankResult.setParam(content);
                     break;
                 case "2000":
-                    bankResult.setStatus(SystemConstant.CHANGE_BANK_STATUS_FAIL);
+                    bankResult.setStatus(StatusEnum._1.getStatus());
                     bankResult.setBankResult("交易已受理");
                     bankResult.setParam(content);
                     break;
                 case "0003":
-                    bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
+                    bankResult.setStatus(StatusEnum._3.getStatus());
                     bankResult.setBankResult("交易异常,请查询交易");
                     bankResult.setParam(content);
                     break;
                 case "3999":
-                    bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
+                    bankResult.setStatus(StatusEnum._1.getStatus());
                     bankResult.setBankResult("其他错误");
                     bankResult.setParam(content);
                     break;
                 default:
-                    bankResult = new BankResult(SystemConstant.BANK_STATUS_TIME_OUT, "error.5001");
+                    bankResult = new BankResult(StatusEnum._1.getStatus(), "error.5001");
                     bankResult.setBankResult("提现失败");
                     bankResult.setParam(content);
                     break;
             }
         }else {
-            bankResult = new BankResult(SystemConstant.BANK_STATUS_TIME_OUT, "error.5001");
+            bankResult = new BankResult(StatusEnum._1.getStatus(), "error.5001");
             bankResult.setBankResult("提现失败");
             bankResult.setParam(content);
         }
@@ -168,11 +170,11 @@ public class AllinPayWithdraw {
             Date date = DateUtils.dateFormat(dateFormat, alinTradeObject.getPaytime());
             bankResult.setBankTime(date == null ? new Date() : date);
             if ("0000".equals(alinTradeObject.getTrxstatus())) {// 支付成功
-                bankResult.setStatus(SystemConstant.BANK_STATUS_SUCCESS);
+                bankResult.setStatus(StatusEnum._0.getStatus());
                 bankResult.setBankResult("付款成功");
                 bankResult.setParam(JsonUtils.objectToJson(alinTradeObject));
             } else {
-                bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
+                bankResult.setStatus(StatusEnum._1.getStatus());
                 try {
                     bankResult.setBankCode(BankResultInfoCode.CommunicateCodeTwo.valueOf("A" + alinTradeObject.getTrxstatus()).getStatusMsg());
                 } catch (Exception e) {

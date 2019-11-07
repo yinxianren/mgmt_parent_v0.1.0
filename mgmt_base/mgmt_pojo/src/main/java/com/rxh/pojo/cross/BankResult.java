@@ -9,9 +9,9 @@ import java.util.Date;
 
 public class BankResult implements Serializable {
     // 银行状态
-    private Short status;
+    private Integer status;
     // 本订单ID
-    private Long orderId;
+    private String orderId;
     // 商户订单号
     private String merchantOrderId;
     // 银行订单号（流水号）
@@ -78,7 +78,7 @@ public class BankResult implements Serializable {
     public BankResult() {
     }
 
-    public BankResult(Short status, String bankCode) {
+    public BankResult(Integer status, String bankCode) {
         this.status = status;
         this.bankCode = bankCode;
     }
@@ -91,19 +91,19 @@ public class BankResult implements Serializable {
         this.param = param;
     }
 
-    public Short getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Short status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public Long getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 
