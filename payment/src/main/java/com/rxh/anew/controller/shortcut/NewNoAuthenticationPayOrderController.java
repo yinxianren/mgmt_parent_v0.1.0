@@ -1,7 +1,7 @@
 package com.rxh.anew.controller.shortcut;
 
 import com.alibaba.dubbo.common.json.JSON;
-import com.rxh.anew.channel.CommonChannelHandlePort;
+import com.rxh.anew.channel.CommonChannelHandlePortComponent;
 import com.rxh.anew.component.Md5Component;
 import com.rxh.anew.controller.NewAbstractCommonController;
 import com.rxh.anew.dto.*;
@@ -184,7 +184,7 @@ public class NewNoAuthenticationPayOrderController  extends NewAbstractCommonCon
             OrganizationInfoTable organizationInfoTable = newPayOrderService.getOrganizationInfo(channelInfoTable.getOrganizationId(),ipo);
             Class  clz=Class.forName(organizationInfoTable.getApplicationClassObj().trim());
             //生成通道处理对象
-            CommonChannelHandlePort commonChannelHandlePort = (CommonChannelHandlePort) SpringContextUtil.getBean(clz);
+            CommonChannelHandlePortComponent commonChannelHandlePortComponent = (CommonChannelHandlePortComponent) SpringContextUtil.getBean(clz);
             //封装请求cross必要参数
             requestCrossMsgDTO = newPayOrderService.getRequestCrossMsgDTO(new Tuple4(channelInfoTable,payOrderInfoTable,registerCollectTable,merchantCardTable));
             //请求cross请求
@@ -206,7 +206,7 @@ public class NewNoAuthenticationPayOrderController  extends NewAbstractCommonCon
                 newPayOrderService.batchUpdatePayOderCorrelationInfo(payOrderInfoTable,cht,rqtSet,ipo);
             }
             //通道差异化处理
-            commonChannelHandlePort.channelDifferBusinessHandleByPayOrder(requestCrossMsgDTO,crossResponseMsgDTO);
+            commonChannelHandlePortComponent.channelDifferBusinessHandleByPayOrder(requestCrossMsgDTO,crossResponseMsgDTO);
             //封装放回结果  // merInfoTable, ipo, crossResponseMsgDTO,merOrderId,platformOrderId,amount,errorCode,errorMsg,channelTab
             respResult = newPayOrderService.responseMsg(merInfoTable,ipo,crossResponseMsgDTO,merNoAuthPayOrderApplyDTO.getMerOrderId(),payOrderInfoTable.getPlatformOrderId(),merNoAuthPayOrderApplyDTO.getAmount(),null,null,channelInfoTable.getChannelId());
             sotTable.setPlatformPrintLog(StatusEnum.remark(crossResponseMsgDTO.getCrossStatusCode())).setTradeCode( crossResponseMsgDTO.getCrossStatusCode() );
