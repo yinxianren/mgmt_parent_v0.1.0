@@ -56,7 +56,7 @@ public class PayWalletComponentComponentImpl implements PayWalletComponent, NewP
             //获取商户信息
             MerchantInfoTable mit = payWalletService.getMerInfo(ipo);
             //获取商户产品费率
-            MerchantRateTable mrt = payWalletService.getMerRate(poi,ipo);
+            MerchantRateTable mrt = payWalletService.getMerRate(ipo,poi.getProductId());
             //获取商户钱包
             MerchantWalletTable mwt = payWalletService.getMerWallet(ipo);
             //更新商户钱包 ,保存商户钱包明细
@@ -118,10 +118,12 @@ public class PayWalletComponentComponentImpl implements PayWalletComponent, NewP
             ipo = new InnerPrintLogObject(toit.getMerchantId(), toit.getTerminalMerId(),bussType);
             //获取商户信息
             MerchantInfoTable mit = payWalletService.getMerInfo(ipo);
+            //获取商户产品费率
+            MerchantRateTable mrt = payWalletService.getMerRate(ipo,toit.getProductId());
             //获取商户钱包
             MerchantWalletTable mwt = payWalletService.getMerWallet(ipo);
             //更新商户钱包 ,保存商户钱包明细
-            Tuple2<MerchantWalletTable, MerchantsDetailsTable>  merWalletTuple = payWalletService.updateMerWalletByTransOrder(mwt,toit,ipo);
+            Tuple2<MerchantWalletTable, MerchantsDetailsTable>  merWalletTuple = payWalletService.updateMerWalletByTransOrder(mwt,toit,mrt);
 
 
         }catch (Exception e){

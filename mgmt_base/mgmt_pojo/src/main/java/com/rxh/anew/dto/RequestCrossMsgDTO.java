@@ -24,6 +24,12 @@ public class RequestCrossMsgDTO  implements Serializable {
     private TransOrderInfoTable transOrderInfoTable;
     private ChannelInfoTable channelInfoTable;
     private ChannelExtraInfoTable channelExtraInfoTable;
+    private String IP;
+
+    public RequestCrossMsgDTO setIP(String IP) {
+        this.IP = IP;
+        return this;
+    }
 
     public RequestCrossMsgDTO setRegisterCollectTable(RegisterCollectTable registerCollectTable) {
         this.registerCollectTable = registerCollectTable;

@@ -63,12 +63,12 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
     }
 
     @Override
-    public MerchantRateTable getMerRate(PayOrderInfoTable poi, InnerPrintLogObject ipo) throws NewPayException {
+    public MerchantRateTable getMerRate(InnerPrintLogObject ipo,String ...args) throws NewPayException {
         final String localPoint="getMerRate(PayOrderInfoTable poi, InnerPrintLogObject ipo)";
         MerchantRateTable mrt = null;
         try{
             mrt = commonRPCComponent.apiMerchantRateService.getOne(new MerchantRateTable()
-                    .setProductId(poi.getProductId())
+                    .setProductId(args[0])
                     .setMerchantId(ipo.getMerId())
                     .setStatus(StatusEnum._0.getStatus()));
         }catch (Exception e){
@@ -83,7 +83,7 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         isNull(mrt,
                 ResponseCodeEnum.RXH00041.getCode(),
                 format("%s-->商户号：%s；终端号：%s；错误信息: %s ；产品类型：%s,代码所在位置：%s;",
-                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00041.getMsg(),poi.getProductId(),localPoint),
+                        ipo.getBussType(),ipo.getMerId(),ipo.getTerMerId(),ResponseCodeEnum.RXH00041.getMsg(),args[0],localPoint),
                 format(" %s",ResponseCodeEnum.RXH00041.getMsg()));
         return mrt;
     }
@@ -505,43 +505,78 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
     }
 
     @Override
-    public Tuple2<MerchantWalletTable, MerchantsDetailsTable> updateMerWalletByTransOrder(MerchantWalletTable mwt, TransOrderInfoTable toit, InnerPrintLogObject ipo) {
+    public Tuple2<MerchantWalletTable, MerchantsDetailsTable> updateMerWalletByTransOrder(MerchantWalletTable mwt, TransOrderInfoTable toit, MerchantRateTable mrt) throws Exception {
+        //订单金额
+        BigDecimal amount = toit.getAmount();
+        //商户费率
+        BigDecimal rateFee = mrt.getRateFee();
+        rateFee = null == rateFee ? new BigDecimal(0 ) : rateFee.divide(new BigDecimal(100));
+        BigDecimal singleFee = mrt.getSingleFee();
+        singleFee = null == singleFee ? new BigDecimal(0) : singleFee;
+        BigDecimal merFee = amount.multiply(rateFee);
+        //商户费用
+        merFee = merFee.add(singleFee).setScale(2,BigDecimal.ROUND_UP);
+        //商户总费用
+        BigDecimal totalMerFee = mwt.getTotalFee();
+        totalMerFee = null == totalMerFee ? new BigDecimal(0) : totalMerFee;
+        totalMerFee = totalMerFee.add(merFee);
+        //终端商户费用
+        BigDecimal terFee = toit.getBackFee();
+        if(isNull(terFee))
+            throw  new Exception("快捷MQ队列--->代付业务钱包更新: backFee 为空");
+        //商户单笔利润
+        BigDecimal feeProfit = terFee.subtract(terFee);
+        //商户总利润
+        BigDecimal totalFeeProfit = mwt.getFeeProfit();
+        totalFeeProfit = null == totalFeeProfit ? new BigDecimal(0) : totalFeeProfit ;
+        totalFeeProfit = totalFeeProfit.add(terFee);
+        //单笔出账金额
+        BigDecimal singleOutAmount = amount.subtract(merFee);
+        //总出帐金额
+        BigDecimal outAmount = mwt.getOutAmount();
+        outAmount = null == outAmount ? new BigDecimal(0) : outAmount ;
+        outAmount = outAmount.add(singleOutAmount);
 
+        //总余额
+        BigDecimal totalBalance = mwt.getTotalBalance();
 
+        //总不可用余额
+        BigDecimal totalUnavailableAmount = mwt.getTotalUnavailableAmount();
+        //总可用余额
+        BigDecimal totalAvailableAmount = mwt.getTotalAvailableAmount();
 
-//        mwt
-//        .setTotalAmount()
-//        .setIncomeAmount()
-//        .setOutAmount()
-//        .setTotalFee()
-//        .setFeeProfit()
-//        .setTotalMargin()
-//        .setTotalBalance()
-//        .setTotalAvailableAmount()
-//        .setTotalUnavailableAmount()
-//        .setTotalFreezeAmount()
-//        .setUpdateTime(new Date());
-//
-//
-//
-//        MerchantsDetailsTable mdt = new MerchantsDetailsTable()
-//                .setId(null)
-//                .setMerchantId(toit.getMerchantId())              .setProductId(toit.getProductId())
-//                .setMerOrderId(toit.getMerOrderId())              .setPlatformOrderId(toit.getPlatformOrderId())
-//                .setAmount(toit.getAmount())                      .setInAmount(null)
-//                .setOutAmount()
-//                .setRateFee()
-//                .setFee()
-//                .setFeeProfit()
-//                .setTotalBalance()
-//                .setTimestamp()
-//                .setStatus()
-//                .setCreateTime()
-//                .setUpdateTime()
-//                .setPageNum()
-//                .setPageSize()
-//                .setBeginTime()
-//                .setEndTime();
+        BigDecimal totalFreezeAmount = mwt.getTotalFreezeAmount();
+        //判断结算周期
+        List<String>  settleCycleList= Arrays.asList("d0","D0","t0","T0");
+        String settleCycle = isBlank(mrt.getSettleCycle()) ? "T7"  :  mrt.getSettleCycle().trim() ;
+        if( !settleCycleList.contains(settleCycle) ){
+//            totalUnavailableAmount = totalUnavailableAmount.subtract(amount);
+        }else{
+            totalAvailableAmount = totalAvailableAmount.subtract(amount);
+            totalBalance = totalBalance.subtract(amount);
+        }
+
+        mwt
+        .setOutAmount(outAmount)
+        .setTotalFee(totalMerFee)
+        .setFeeProfit(totalFeeProfit)
+        .setTotalMargin(mwt.getTotalMargin())
+        .setTotalBalance(totalBalance)
+        .setTotalAvailableAmount(totalAvailableAmount)
+        .setTotalUnavailableAmount(totalUnavailableAmount)
+        .setTotalFreezeAmount(mwt.getTotalFreezeAmount())
+        .setUpdateTime(new Date());
+
+        MerchantsDetailsTable mdt = new MerchantsDetailsTable()
+                .setId(null)
+                .setMerchantId(toit.getMerchantId())              .setProductId(toit.getProductId())
+                .setMerOrderId(toit.getMerOrderId())              .setPlatformOrderId(toit.getPlatformOrderId())
+                .setAmount(toit.getAmount())                      .setInAmount(null)
+                .setOutAmount(singleOutAmount)                    .setRateFee(mrt.getRateFee())
+                .setFee(merFee)                                   .setFeeProfit(feeProfit)
+                .setTotalBalance(totalBalance)
+                .setTimestamp(System.currentTimeMillis())         .setStatus(StatusEnum._0.getStatus())
+                .setCreateTime(new Date())                        .setUpdateTime(new Date());
 
 
         return null;

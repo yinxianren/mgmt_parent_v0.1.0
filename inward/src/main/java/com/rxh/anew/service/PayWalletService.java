@@ -28,11 +28,12 @@ public interface PayWalletService {
 
     /**
      *
-     * @param poi
      * @param ipo
+     * @param args
      * @return
+     * @throws NewPayException
      */
-    MerchantRateTable getMerRate(PayOrderInfoTable poi, InnerPrintLogObject ipo) throws NewPayException;
+    MerchantRateTable getMerRate(InnerPrintLogObject ipo,String ...args) throws NewPayException;
 
     /**
      *
@@ -119,8 +120,8 @@ public interface PayWalletService {
      *
      * @param mwt
      * @param toit
-     * @param ipo
+     * @param mrt
      * @return
      */
-    Tuple2<MerchantWalletTable, MerchantsDetailsTable> updateMerWalletByTransOrder(MerchantWalletTable mwt, TransOrderInfoTable toit, InnerPrintLogObject ipo);
+    Tuple2<MerchantWalletTable, MerchantsDetailsTable> updateMerWalletByTransOrder(MerchantWalletTable mwt, TransOrderInfoTable toit,MerchantRateTable mrt) throws Exception;
 }
