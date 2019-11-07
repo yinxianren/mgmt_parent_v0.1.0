@@ -59,7 +59,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
                 put("productType", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 64));//产品类型		否	64
                 put("merId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));//商户号
                 put("productCategory", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));// 商品类别	参考附件：商户入住字典表	否	32
-                put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 商户订单号
+                put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));// 商户订单号
                 put("currency", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 3));// 交易的币种
                 put("amount", new ParamRule(ParamTypeEnum.AMOUNT.getType(), 2, 12));// 支付金额
                 put("identityType", new ParamRule(ParamTypeEnum.STRING.getType(), 1, 1));//证件类型	1身份证、2护照、3港澳回乡证、4台胞证、5军官证、	否	1
@@ -125,7 +125,7 @@ public class NewPayOrderServiceImpl  extends CommonServiceAbstract  implements N
                 put("terMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id	商户系统中商户的编码，要求唯一	否	64
                 put("terMerName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));//子商户名称	商户系统中商户的名称	否	32
                 put("productCategory", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));// 商品类别	参考附件：商户入住字典表	否	32
-                put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 商户订单号
+                put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));// 商户订单号
                 put("currency", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 3));// 交易的币种
                 put("amount", new ParamRule(ParamTypeEnum.AMOUNT.getType(), 2, 12));// 支付金额
                 put("identityType", new ParamRule(ParamTypeEnum.STRING.getType(), 1, 1));//证件类型	1身份证、2护照、3港澳回乡证、4台胞证、5军官证、	否	1

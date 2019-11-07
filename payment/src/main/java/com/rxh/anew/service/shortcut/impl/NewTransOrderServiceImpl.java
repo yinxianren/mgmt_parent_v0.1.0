@@ -57,7 +57,7 @@ public class NewTransOrderServiceImpl extends CommonServiceAbstract implements N
                 put("terMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id	商户系统中商户的编码，要求唯一	否	64
                 put("terMerName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));//子商户名称	商户系统中商户的名称	否	32
                 put("productCategory", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));// 商品类别	参考附件：商户入住字典表	否	32
-                put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 商户订单号
+                put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));// 商户订单号
                 put("orgMerOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 12, 640));//原交易商户订单号	可传多笔,最多10笔，用”| ”隔开
                 put("currency", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 3));// 交易的币种
 //                put("amount", new ParamRule(ParamTypeEnum.AMOUNT.getType(), 2, 12));// 代付金额	代付金额≤原订单总金额-代付手续费

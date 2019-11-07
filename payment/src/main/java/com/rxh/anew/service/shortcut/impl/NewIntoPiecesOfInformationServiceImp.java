@@ -468,7 +468,7 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
                 put("signType", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 3));//固定为MD5
                 put("productType", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 64));//产品类型
                 put("merId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));//商户号
-                put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 64));// 商户订单号
+                put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 16, 32));// 商户订单号
                 put("merType", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 2));//商户类型 商户类型	00公司商户，01个体商户
                 put("terMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id
                 put("terMerName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));//终端客户名称
@@ -514,7 +514,7 @@ public class NewIntoPiecesOfInformationServiceImp extends CommonServiceAbstract 
                 put("charset", new ParamRule(ParamTypeEnum.STRING.getType(), 5, 5));//参数字符集编码 固定UTF-8
                 put("signType", new ParamRule(ParamTypeEnum.STRING.getType(), 3, 3));//签名类型	固定为MD5
                 put("merId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));//商户号
-//                put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 商户订单号
+//                put("merOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 32));// 商户订单号
                 put("platformOrderId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));// 平台流水号
                 put("merchantType", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 2));//商户类型
                 put("terMerId", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//子商户id
