@@ -125,19 +125,6 @@
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-spring</artifactId>
         </dependency>
-
-        <!--redis相关 -->
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-redis</artifactId>
-            <version>1.8.14.RELEASE</version>
-        </dependency>
-
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>2.9.0</version>
-        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

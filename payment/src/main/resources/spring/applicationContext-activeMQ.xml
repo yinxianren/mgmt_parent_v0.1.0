@@ -41,13 +41,13 @@
     </bean>
 
     <!-- 消息监听对象 -->
-    <bean id="messageListener" class="com.rxh.anew.mq.PayMessageListener"  />
+<!--    <bean id="messageListener" class="com.rxh.anew.mq.PayMessageListener"  />-->
 
     <!-- 使用Spring监听订阅消息 -->
     <bean id="topicListener" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
         <property name="connectionFactory" ref="jmsFactory"/>
         <property name="destination" ref="activeMQTopic"/>
-        <property name="messageListener" ref="messageListener"/>
+<!--        <property name="messageListener" ref="messageListener"/>-->
         <property name="pubSubDomain" value="true"/>
     </bean>
 
@@ -55,6 +55,6 @@
     <bean id="queueListener" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
         <property name="connectionFactory" ref="jmsFactory"/>
         <property name="destination" ref="activeMQQueue"/>
-        <property name="messageListener" ref="messageListener"/>
+<!--        <property name="messageListener" ref="messageListener"/>-->
     </bean>
 </beans>

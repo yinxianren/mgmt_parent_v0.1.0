@@ -99,18 +99,15 @@
             <groupId>org.dom4j</groupId>
             <artifactId>dom4j</artifactId>
         </dependency>
-        <dependency>
-            <groupId>jaxen</groupId>
-            <artifactId>jaxen</artifactId>
-        </dependency>
 <!--        <dependency>-->
-<!--            <groupId>net.sf.ehcache</groupId>-->
-<!--            <artifactId>ehcache</artifactId>-->
+<!--            <groupId>jaxen</groupId>-->
+<!--            <artifactId>jaxen</artifactId>-->
 <!--        </dependency>-->
-        <dependency>
-            <groupId>com.maxmind.geoip2</groupId>
-            <artifactId>geoip2</artifactId>
-        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>com.maxmind.geoip2</groupId>-->
+<!--            <artifactId>geoip2</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-client</artifactId>
@@ -125,26 +122,12 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.49</version>
         </dependency>
-        <!--redis相关 -->
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-redis</artifactId>
-            <version>1.8.14.RELEASE</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.8</version>
+            <scope>provided</scope>
         </dependency>
-
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>2.9.0</version>
-        </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.quartz-scheduler</groupId>-->
-<!--            <artifactId>quartz</artifactId>-->
-<!--        </dependency>-->
-
-
-
     </dependencies>
 
     <build>

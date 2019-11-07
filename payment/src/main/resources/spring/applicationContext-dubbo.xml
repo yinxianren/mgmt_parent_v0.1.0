@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
     <!-- 引用Dubbo服务 -->
-    <dubbo:application name="rxh-payment"/>
+    <dubbo:application name="payment"/>
     <!-- 注册中心地址 -->
     <dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}"/>
 
