@@ -230,7 +230,7 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
                     format(" %s", ResponseCodeEnum.RXH99999.getMsg())
             );
         }
-        return merchantCardTable;
+        return merchantCardTable.setSmsCode(mcbcDTO.getSmsCode());
     }
 
     @Override
