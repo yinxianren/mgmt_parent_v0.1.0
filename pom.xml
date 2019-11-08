@@ -17,10 +17,6 @@
         <module>merchant_web</module>
 
 		<module>agment_web</module>
-        <module>inward</module>
-        <module>cross</module>
-        <module>payment</module>
-
     </modules>
 
     <properties>

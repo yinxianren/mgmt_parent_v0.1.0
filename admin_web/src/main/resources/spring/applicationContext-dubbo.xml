@@ -9,9 +9,25 @@
     <!-- 注册中心地址 -->
     <dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}"/>
 
-    <dubbo:reference interface="com.rxh.service.anew.channel.ApiProductTypeSettingService" id="apiProductTypeSettingService"/>
-
-
+    <dubbo:reference interface="com.internal.playment.api.db.channel.ApiProductTypeSettingService" id="apiProductTypeSettingService"/>
+    <dubbo:reference interface="com.internal.playment.api.db.system.ApiOrganizationInfoService" id="apiOrganizationInfoService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.channel.ApiChannelExtraInfoService" id="apiChannelExtraInfoService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.channel.ApiChannelInfoService" id="apiChannelInfoService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.merchant.ApiMerchantInfoService" id="apiMerchantInfoService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.agent.ApiAgentMerchantInfoService" id="apiAgentMerchantInfoService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.agent.ApiAgentMerchantSettingService" id="apiAgentMerchantSettingService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.system.ApiMerchantSettingService" id="apiMerchantSettingService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.merchant.ApiMerchantRateService"  id="apiMerchantRateService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.merchant.ApiMerchantQuotaRiskService" id="apiMerchantQuotaRiskService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.business.ApiPayOrderInfoService" id="apiPayOrderInfoService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.merchant.ApiMerchantWalletService" id="apiMerchantWalletService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.merchant.ApiMerchantsDetailsService" id="apiMerchantsDetailsService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.agent.ApiAgentMerchantWalletService" id="apiAgentMerchantWalletService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.agent.ApiAgentMerchantsDetailsService" id="apiAgentMerchantsDetailsService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.channel.ApiChannelDetailsService" id="apiChannelDetailsService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.channel.ApiChannelWalletService" id="apiChannelWalletService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.terminal.ApiTerminalMerchantsDetailsService" id="apiTerminalMerchantsDetailsService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.terminal.ApiTerminalMerchantsWalletService" id="apiTerminalMerchantsWalletService" version="1.0.0" />
 
     <!--四方支付调用接口-->
     <dubbo:reference interface="com.rxh.service.square.RiskQuotaDataService" id="riskQuotaDataService"/>
@@ -55,24 +71,7 @@
     <dubbo:reference interface="com.rxh.service.AgentSystemService" id="agentSystemService"/>
     <dubbo:reference interface="com.rxh.service.sys.SysConstantService" id="sysConstantService" />
 
-    <dubbo:reference interface="com.rxh.service.anew.system.ApiOrganizationInfoService" id="apiOrganizationInfoService" version="1.0.0" />
-    <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelExtraInfoService" id="apiChannelExtraInfoService" version="1.0.0" />
-    <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelInfoService" id="apiChannelInfoService" version="1.0.0" />
-    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantInfoService" id="apiMerchantInfoService" version="1.0.0" />
-    <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantInfoService" id="apiAgentMerchantInfoService" version="1.0.0" />
-    <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantSettingService" id="apiAgentMerchantSettingService" version="1.0.0" />
-    <dubbo:reference interface="com.rxh.service.anew.system.ApiMerchantSettingService" id="apiMerchantSettingService" version="1.0.0" />
-    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantRateService"  id="apiMerchantRateService" version="1.0.0" />
-    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantQuotaRiskService" id="apiMerchantQuotaRiskService" version="1.0.0" />
+
     <dubbo:reference interface="com.rxh.service.merchant.MerchantPrivilegesService" id="merchantPrivilegesService" />
     <dubbo:reference interface="com.rxh.service.merchant.MerchantRoleService" id="merchantRoleService" />
-    <dubbo:reference interface="com.rxh.service.anew.business.ApiPayOrderInfoService" id="apiPayOrderInfoService" version="1.0.0" />
-    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantWalletService" id="apiMerchantWalletService" version="1.0.0" />
-    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantsDetailsService" id="apiMerchantsDetailsService" version="1.0.0" />
-    <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantWalletService" id="apiAgentMerchantWalletService" version="1.0.0" />
-    <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantsDetailsService" id="apiAgentMerchantsDetailsService" version="1.0.0" />
-    <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelDetailsService" id="apiChannelDetailsService" version="1.0.0" />
-    <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelWalletService" id="apiChannelWalletService" version="1.0.0" />
-    <dubbo:reference interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsDetailsService" id="apiTerminalMerchantsDetailsService" version="1.0.0" />
-    <dubbo:reference interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsWalletService" id="apiTerminalMerchantsWalletService" version="1.0.0" />
 </beans>

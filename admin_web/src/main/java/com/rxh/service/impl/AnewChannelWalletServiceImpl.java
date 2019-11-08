@@ -1,13 +1,13 @@
 package com.rxh.service.impl;
 
-import com.rxh.anew.table.channel.ChannelDetailsTable;
-import com.rxh.anew.table.channel.ChannelWalletTable;
-import com.rxh.enums.StatusEnum;
+import com.internal.playment.api.db.channel.ApiChannelDetailsService;
+import com.internal.playment.api.db.channel.ApiChannelWalletService;
+import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.table.channel.ChannelDetailsTable;
+import com.internal.playment.common.table.channel.ChannelWalletTable;
 import com.rxh.pojo.base.Page;
 import com.rxh.pojo.base.SearchInfo;
 import com.rxh.service.AnewChannelWalletService;
-import com.rxh.service.anew.channel.ApiChannelDetailsService;
-import com.rxh.service.anew.channel.ApiChannelWalletService;
 import com.rxh.vo.ResponseVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

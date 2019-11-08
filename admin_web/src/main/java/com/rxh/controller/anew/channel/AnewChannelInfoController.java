@@ -1,8 +1,8 @@
 package com.rxh.controller.anew.channel;
 
-import com.rxh.anew.table.channel.ChannelInfoTable;
-import com.rxh.anew.table.system.ProductSettingTable;
-import com.rxh.enums.StatusEnum;
+import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.table.channel.ChannelInfoTable;
+import com.internal.playment.common.table.system.ProductSettingTable;
 import com.rxh.service.AnewChannelService;
 import com.rxh.service.ConstantService;
 import com.rxh.service.ProductTypeSettingService;

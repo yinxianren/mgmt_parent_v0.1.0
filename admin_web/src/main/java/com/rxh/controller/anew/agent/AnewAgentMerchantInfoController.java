@@ -1,7 +1,7 @@
 package com.rxh.controller.anew.agent;
 
-import com.rxh.anew.table.agent.AgentMerchantInfoTable;
-import com.rxh.enums.StatusEnum;
+import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.table.agent.AgentMerchantInfoTable;
 import com.rxh.service.AnewAgentMerchantService;
 import com.rxh.service.ConstantService;
 import com.rxh.service.square.AgentMerchantInfoService;

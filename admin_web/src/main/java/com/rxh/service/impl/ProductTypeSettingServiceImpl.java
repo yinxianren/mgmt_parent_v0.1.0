@@ -1,11 +1,11 @@
 package com.rxh.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.rxh.anew.table.system.ProductSettingTable;
+import com.internal.playment.api.db.channel.ApiProductTypeSettingService;
+import com.internal.playment.common.table.system.ProductSettingTable;
 import com.rxh.pojo.sys.SysConstant;
 import com.rxh.service.ConstantService;
 import com.rxh.service.ProductTypeSettingService;
-import com.rxh.service.anew.channel.ApiProductTypeSettingService;
 import com.rxh.service.sys.SysConstantService;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;

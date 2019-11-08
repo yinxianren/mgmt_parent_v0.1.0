@@ -1,6 +1,6 @@
 package com.rxh.service;
 
-import com.rxh.anew.table.agent.AgentMerchantInfoTable;
+import com.internal.playment.common.table.agent.AgentMerchantInfoTable;
 import com.rxh.square.pojo.AgentMerchantInfo;
 import com.rxh.vo.ResponseVO;
 

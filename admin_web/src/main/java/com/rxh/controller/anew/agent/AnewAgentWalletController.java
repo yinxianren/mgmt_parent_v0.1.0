@@ -1,7 +1,7 @@
 package com.rxh.controller.anew.agent;
 
-import com.rxh.anew.table.agent.AgentMerchantWalletTable;
-import com.rxh.enums.StatusEnum;
+import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.table.agent.AgentMerchantWalletTable;
 import com.rxh.pojo.Result;
 import com.rxh.pojo.base.Page;
 import com.rxh.pojo.base.PageResult;

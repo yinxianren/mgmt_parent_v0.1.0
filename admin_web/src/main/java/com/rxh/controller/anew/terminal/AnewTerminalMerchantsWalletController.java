@@ -1,7 +1,7 @@
 package com.rxh.controller.anew.terminal;
 
-import com.rxh.anew.table.terminal.TerminalMerchantsWalletTable;
-import com.rxh.enums.StatusEnum;
+import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.table.terminal.TerminalMerchantsWalletTable;
 import com.rxh.pojo.base.Page;
 import com.rxh.pojo.base.PageResult;
 import com.rxh.service.AnewMerchantInfoService;

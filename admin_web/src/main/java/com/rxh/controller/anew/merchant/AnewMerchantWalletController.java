@@ -1,8 +1,8 @@
 package com.rxh.controller.anew.merchant;
 
 
-import com.rxh.anew.table.merchant.MerchantWalletTable;
-import com.rxh.enums.StatusEnum;
+import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.table.merchant.MerchantWalletTable;
 import com.rxh.pojo.Result;
 import com.rxh.pojo.base.Page;
 import com.rxh.pojo.base.PageResult;

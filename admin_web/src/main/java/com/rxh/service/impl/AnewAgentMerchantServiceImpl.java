@@ -1,10 +1,10 @@
 package com.rxh.service.impl;
 
-import com.rxh.anew.table.agent.AgentMerchantInfoTable;
-import com.rxh.anew.table.agent.AgentMerchantSettingTable;
+import com.internal.playment.api.db.agent.ApiAgentMerchantInfoService;
+import com.internal.playment.common.table.agent.AgentMerchantInfoTable;
+import com.internal.playment.common.table.agent.AgentMerchantSettingTable;
 import com.rxh.pojo.sys.SysConstant;
 import com.rxh.service.*;
-import com.rxh.service.anew.agent.ApiAgentMerchantInfoService;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;

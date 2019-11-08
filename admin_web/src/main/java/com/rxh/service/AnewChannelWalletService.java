@@ -1,6 +1,6 @@
 package com.rxh.service;
 
-import com.rxh.anew.table.channel.ChannelWalletTable;
+import com.internal.playment.common.table.channel.ChannelWalletTable;
 import com.rxh.pojo.base.Page;
 import com.rxh.vo.ResponseVO;
 

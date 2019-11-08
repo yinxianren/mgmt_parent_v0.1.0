@@ -1,8 +1,8 @@
 package com.rxh.controller.anew.channel;
 
 
-import com.rxh.anew.table.system.OrganizationInfoTable;
-import com.rxh.enums.StatusEnum;
+import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.table.system.OrganizationInfoTable;
 import com.rxh.service.ConstantService;
 import com.rxh.service.OrganizationInfoService;
 import com.rxh.spring.annotation.SystemLogInfo;

@@ -1,12 +1,12 @@
 package com.rxh.service.impl;
 
-import com.rxh.anew.table.system.OrganizationInfoTable;
-import com.rxh.anew.table.system.ProductSettingTable;
+import com.internal.playment.api.db.channel.ApiProductTypeSettingService;
+import com.internal.playment.api.db.system.ApiOrganizationInfoService;
+import com.internal.playment.common.table.system.OrganizationInfoTable;
+import com.internal.playment.common.table.system.ProductSettingTable;
 import com.rxh.cache.RedisCacheCommonCompoment;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.service.OrganizationInfoService;
-import com.rxh.service.anew.channel.ApiProductTypeSettingService;
-import com.rxh.service.anew.system.ApiOrganizationInfoService;
 import com.rxh.vo.ResponseVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

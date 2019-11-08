@@ -1,7 +1,7 @@
 package com.rxh.service;
 
-import com.rxh.anew.table.terminal.TerminalMerchantsDetailsTable;
-import com.rxh.anew.table.terminal.TerminalMerchantsWalletTable;
+import com.internal.playment.common.table.terminal.TerminalMerchantsDetailsTable;
+import com.internal.playment.common.table.terminal.TerminalMerchantsWalletTable;
 import com.rxh.pojo.base.Page;
 import com.rxh.vo.ResponseVO;
 

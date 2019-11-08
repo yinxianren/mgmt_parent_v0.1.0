@@ -1,7 +1,7 @@
 package com.rxh.controller.anew.merchant;
 
-import com.rxh.anew.table.merchant.MerchantInfoTable;
-import com.rxh.enums.StatusEnum;
+import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.table.merchant.MerchantInfoTable;
 import com.rxh.service.*;
 import com.rxh.service.square.*;
 import com.rxh.spring.annotation.SystemLogInfo;

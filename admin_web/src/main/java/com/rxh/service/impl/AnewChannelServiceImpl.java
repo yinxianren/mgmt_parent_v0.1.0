@@ -1,8 +1,8 @@
 package com.rxh.service.impl;
 
-import com.rxh.anew.table.channel.ChannelInfoTable;
+import com.internal.playment.api.db.channel.ApiChannelInfoService;
+import com.internal.playment.common.table.channel.ChannelInfoTable;
 import com.rxh.service.AnewChannelService;
-import com.rxh.service.anew.channel.ApiChannelInfoService;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;

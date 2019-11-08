@@ -1,7 +1,7 @@
 package com.rxh.controller.anew.merchant;
 
-import com.rxh.anew.table.merchant.MerchantRateTable;
-import com.rxh.enums.StatusEnum;
+import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.table.merchant.MerchantRateTable;
 import com.rxh.service.AnewMerchantRateService;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;

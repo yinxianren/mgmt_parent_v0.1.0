@@ -1,6 +1,6 @@
 package com.rxh.service;
 
-import com.rxh.anew.table.channel.ChannelInfoTable;
+import com.internal.playment.common.table.channel.ChannelInfoTable;
 import com.rxh.vo.ResponseVO;
 
 import java.util.List;

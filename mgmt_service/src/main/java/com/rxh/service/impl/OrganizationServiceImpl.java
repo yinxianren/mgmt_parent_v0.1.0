@@ -1,11 +1,9 @@
 package com.rxh.service.impl;
 
-import com.rxh.anew.table.system.ProductSettingTable;
 import com.rxh.mapper.square.ChannelInfoMapper;
 import com.rxh.mapper.square.OrganizationInfoMapper;
 import com.rxh.mapper.sys.SysConstantMapper;
 import com.rxh.pojo.sys.SysConstant;
-import com.rxh.service.anew.channel.ApiProductTypeSettingService;
 import com.rxh.service.square.OrganizationService;
 import com.rxh.spring.annotation.RedisCacheDeleteByHashKey;
 import com.rxh.square.pojo.OrganizationInfo;
@@ -28,8 +26,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     private ChannelInfoMapper channelInfoMapper;
     @Resource
     private SysConstantMapper sysConstantMapper;
-    @Autowired
-    private ApiProductTypeSettingService apiProductTypeSettingService;
+//    @Autowired
+//    private ApiProductTypeSettingService apiProductTypeSettingService;
 
     @RedisCacheDeleteByHashKey(hashKey = "organization_info")
     @Override
@@ -68,23 +66,23 @@ public class OrganizationServiceImpl implements OrganizationService {
     @RedisCacheDeleteByHashKey(hashKey = "organization_info")
     @Override
     public int updateByPrimaryKeySelective( OrganizationInfo record) {
-        int updateSuccess = organizationInfoMapper.updateByPrimaryKeySelective(record);
-        ProductSettingTable table = new ProductSettingTable();
-        table.setOrganizationId(record.getOrganizationId());
-        List<ProductSettingTable> list = apiProductTypeSettingService.list(table);
-        List<String> ids = Arrays.asList(record.getProductIds().split(","));
-        for (ProductSettingTable productSettingTable : list){
-            if (ids.contains(productSettingTable.getProductId())){
-                if (productSettingTable.getStatus() == 1)
-                    continue;
-                productSettingTable.setStatus(1);
-            }else {
-                productSettingTable.setStatus(0);
-            }
-        }
-        Boolean b = apiProductTypeSettingService.batchUpdate(list);
-        if (b) updateSuccess+=1;
-        return updateSuccess;
+//        int updateSuccess = organizationInfoMapper.updateByPrimaryKeySelective(record);
+//        ProductSettingTable table = new ProductSettingTable();
+//        table.setOrganizationId(record.getOrganizationId());
+//        List<ProductSettingTable> list = apiProductTypeSettingService.list(table);
+//        List<String> ids = Arrays.asList(record.getProductIds().split(","));
+//        for (ProductSettingTable productSettingTable : list){
+//            if (ids.contains(productSettingTable.getProductId())){
+//                if (productSettingTable.getStatus() == 1)
+//                    continue;
+//                productSettingTable.setStatus(1);
+//            }else {
+//                productSettingTable.setStatus(0);
+//            }
+//        }
+//        Boolean b = apiProductTypeSettingService.batchUpdate(list);
+//        if (b) updateSuccess+=1;
+        return 0;
     }
 
 

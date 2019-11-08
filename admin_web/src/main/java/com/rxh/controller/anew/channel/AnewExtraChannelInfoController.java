@@ -1,7 +1,7 @@
 package com.rxh.controller.anew.channel;
 
-import com.rxh.anew.table.channel.ChannelExtraInfoTable;
-import com.rxh.enums.StatusEnum;
+import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.table.channel.ChannelExtraInfoTable;
 import com.rxh.service.AnewExtraChannelInfoService;
 import com.rxh.service.ConstantService;
 import com.rxh.service.square.ChannelWalletService;

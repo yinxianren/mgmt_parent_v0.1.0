@@ -1,11 +1,9 @@
 package com.rxh.square.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.rxh.anew.table.system.ProductSettingTable;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /*
 lin
@@ -30,9 +28,6 @@ public class OrganizationInfo implements Serializable {
     @TableField(exist = false)
     //启用产品
     private String productIds;
-    @TableField(exist = false)
-    //所有产品
-    private List<ProductSettingTable> productTypes;
 
 
     public Integer getStatus() {
@@ -91,11 +86,4 @@ public class OrganizationInfo implements Serializable {
         this.productIds = productIds;
     }
 
-    public List<ProductSettingTable> getProductTypes() {
-        return productTypes;
-    }
-
-    public void setProductTypes(List<ProductSettingTable> productTypes) {
-        this.productTypes = productTypes;
-    }
 }

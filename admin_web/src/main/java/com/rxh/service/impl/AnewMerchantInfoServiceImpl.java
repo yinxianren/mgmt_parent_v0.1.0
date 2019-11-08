@@ -1,11 +1,11 @@
 package com.rxh.service.impl;
 
-import com.rxh.anew.table.merchant.MerchantInfoTable;
+import com.internal.playment.api.db.merchant.ApiMerchantInfoService;
+import com.internal.playment.common.table.merchant.MerchantInfoTable;
 import com.rxh.payInterface.NewPayAssert;
 import com.rxh.pojo.merchant.MerchantPrivileges;
 import com.rxh.pojo.merchant.MerchantRole;
 import com.rxh.service.AnewMerchantInfoService;
-import com.rxh.service.anew.merchant.ApiMerchantInfoService;
 import com.rxh.service.merchant.MerchantPrivilegesService;
 import com.rxh.service.merchant.MerchantRoleService;
 import com.rxh.utils.SystemConstant;

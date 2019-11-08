@@ -1,14 +1,13 @@
 package com.rxh.service.impl;
 
-import com.rxh.anew.table.agent.AgentMerchantInfoTable;
-import com.rxh.anew.table.agent.AgentMerchantWalletTable;
-import com.rxh.anew.table.agent.AgentMerchantsDetailsTable;
-import com.rxh.enums.StatusEnum;
+import com.internal.playment.api.db.agent.ApiAgentMerchantWalletService;
+import com.internal.playment.api.db.agent.ApiAgentMerchantsDetailsService;
+import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.table.agent.AgentMerchantWalletTable;
+import com.internal.playment.common.table.agent.AgentMerchantsDetailsTable;
 import com.rxh.pojo.base.Page;
 import com.rxh.pojo.base.SearchInfo;
 import com.rxh.service.AnewAgentWalletService;
-import com.rxh.service.anew.agent.ApiAgentMerchantWalletService;
-import com.rxh.service.anew.agent.ApiAgentMerchantsDetailsService;
 import com.rxh.vo.ResponseVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

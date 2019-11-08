@@ -1,12 +1,11 @@
 package com.rxh.service.impl;
 
-import com.rxh.anew.table.merchant.MerchantRateTable;
-import com.rxh.anew.table.merchant.MerchantWalletTable;
-import com.rxh.enums.StatusEnum;
+import com.internal.playment.api.db.merchant.ApiMerchantRateService;
+import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.table.merchant.MerchantRateTable;
 import com.rxh.pojo.sys.SysConstant;
 import com.rxh.service.AnewMerchantRateService;
 import com.rxh.service.ConstantService;
-import com.rxh.service.anew.merchant.ApiMerchantRateService;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
 package com.rxh.service.impl;
 
-import com.rxh.anew.table.agent.AgentMerchantSettingTable;
+import com.internal.playment.api.db.agent.ApiAgentMerchantSettingService;
+import com.internal.playment.common.table.agent.AgentMerchantSettingTable;
 import com.rxh.service.AnewAgentMerchantSettingService;
-import com.rxh.service.anew.agent.ApiAgentMerchantSettingService;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

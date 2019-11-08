@@ -1,6 +1,6 @@
 package com.rxh.service;
 
-import com.rxh.anew.table.merchant.MerchantInfoTable;
+import com.internal.playment.common.table.merchant.MerchantInfoTable;
 import com.rxh.vo.ResponseVO;
 
 import java.util.List;
