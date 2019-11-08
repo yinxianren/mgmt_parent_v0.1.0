@@ -2,7 +2,15 @@ package com.rxh.yacolpay;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.rxh.pojo.cross.BankResult;
+import com.rxh.anew.dto.CrossResponseMsgDTO;
+import com.rxh.anew.dto.RequestCrossMsgDTO;
+import com.rxh.anew.table.business.MerchantCardTable;
+import com.rxh.anew.table.business.RegisterCollectTable;
+import com.rxh.anew.table.business.RegisterInfoTable;
+import com.rxh.anew.table.channel.ChannelExtraInfoTable;
+import com.rxh.enums.ResponseCodeEnum;
+import com.rxh.enums.StatusEnum;
+import com.rxh.pojo.cross.CrossResponseMsgDTO;
 import com.rxh.pojo.merchant.MerchantRegisterInfo;
 import com.rxh.pojo.payment.SquareTrade;
 import com.rxh.square.pojo.ExtraChannelInfo;
@@ -42,44 +50,24 @@ public class YaColTiedBankCardFastPay extends AbstractYaColIPay{
     @Autowired
     private YaColBindingBankSMSSignFastPay yaColBindingBankSMSSignFastPay;
 
-
-    @RequestMapping("/bindCard")
-    public BankResult yaColBankCardController(@RequestBody SquareTrade squareTrade){
-
-        switch (squareTrade.getTradeObjectSquare().getInnerType()){
-            case SystemConstant.BONDCARD_APPLY: //绑卡
-                return this.tiedBankCard(squareTrade);
-            case  SystemConstant.BONDCARD_CONFIRM://确认绑卡
-                return yaColBindingBankCardAdvanceFastPay.bindingBankCardAdvance(squareTrade);
-            case  SystemConstant.BONDCARD_SMS://短信重发
-                return yaColBindingBankSMSSignFastPay.bindingBankSMSSign(squareTrade);
-            default:
-                BankResult bankResult = new BankResult();
-                bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-                bankResult.setBankResult("参数请求错误");
-                return bankResult;
-
-        }
-
-    }
-
     /**
      *  绑定银行卡
      * @param squareTrade
      * @return
      */
 
-    protected BankResult tiedBankCard(SquareTrade squareTrade){
-        BankResult bankResult = new BankResult();
+    protected CrossResponseMsgDTO tiedBankCard(RequestCrossMsgDTO squareTrade){
+        CrossResponseMsgDTO bankResult = new CrossResponseMsgDTO();
         try {
-            ExtraChannelInfo extraChannelInfo = squareTrade.getExtraChannelInfo();
-            JSONObject param = JSON.parseObject(extraChannelInfo.getData());
+            ChannelExtraInfoTable extraChannelInfo = squareTrade.getChannelExtraInfoTable();
+            JSONObject param = JSON.parseObject(extraChannelInfo.getChannelParam());
             Map<String, String> bondParam = getBondParam(squareTrade);
             if(null == bondParam){
-                bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-                bankResult.setBankResult("cross 工程封装参数异常");
-                bankResult.setParam(null);
-                bankResult.setBankData(null);
+                bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                bankResult.setCrossResponseMsg("cross 工程封装参数异常");
+                bankResult.setChannelResponseMsg(null);
+                bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
+                bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
                 logger.info("【酷宝支付-绑定银行卡】响应给peayment工程信息：{}", JsonUtils.objectToJson(bankResult));
                 return bankResult;
             }
@@ -98,33 +86,31 @@ public class YaColTiedBankCardFastPay extends AbstractYaColIPay{
             if(verificationParam(content,publicCheckKey)){
                 if("APPLY_SUCCESS".equalsIgnoreCase(content.get("response_code").toString())){
                     if (content.get("card_id") == null){
-                        String ticket=content.get("ticket").toString();
-                        String bankData="{\"ticket\":\""+ticket+"\"}";
-                        bankResult.setBankData(bankData);
-                        bankResult.setStatus(SystemConstant.BANK_STATUS_PENDING_PAYMENT);
+                        bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                        bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
+                        bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
                     }else {
-                        String card_id= content.get("card_id").toString();
-                        String bankData="{\"card_id\":\""+card_id+"\"}";
-                        bankResult.setBankData(bankData);
-                        bankResult.setStatus(SystemConstant.BANK_STATUS_SUCCESS);
+                        bankResult.setCrossStatusCode(StatusEnum._0.getStatus());
                     }
-                    bankResult.setBankResult("绑卡申请提交成功");
-                    bankResult.setParam(result);
+                    bankResult.setCrossResponseMsg("绑卡申请提交成功");
+                    bankResult.setChannelResponseMsg(result);
                     logger.info("【酷宝支付-绑定银行卡】响应给peayment工程信息：{}",JsonUtils.objectToJson(bankResult));
                     return bankResult;
                 }else {
-                    bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-                    bankResult.setBankResult("绑卡失败："+content.get("error_message")==null?content.get("errorMessage").toString():content.get("error_message").toString());
-                    bankResult.setParam(result);
-                    bankResult.setBankData(null);
+                    bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                    bankResult.setCrossResponseMsg("绑卡失败："+content.get("error_message")==null?content.get("errorMessage").toString():content.get("error_message").toString());
+                    bankResult.setChannelResponseMsg(result);
+                    bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
+                    bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
                     logger.info("【酷宝支付-绑定银行卡】响应给peayment工程信息：{}",JsonUtils.objectToJson(bankResult));
                     return bankResult;
                 }
             }else{
-                bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-                bankResult.setBankResult("绑卡失败：验证酷宝返回参数不通过");
-                bankResult.setParam(result);
-                bankResult.setBankData(result);
+                bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                bankResult.setCrossResponseMsg("绑卡失败：验证酷宝返回参数不通过");
+                bankResult.setChannelResponseMsg(result);
+                bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
+                bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
                 logger.info("【酷宝支付-绑定银行卡】响应给peayment工程信息：{}",JsonUtils.objectToJson(bankResult));
                 return bankResult;
             }
@@ -132,10 +118,11 @@ public class YaColTiedBankCardFastPay extends AbstractYaColIPay{
         } catch (Exception e) {
             e.printStackTrace();
             e.printStackTrace();
-            bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-            bankResult.setBankResult("绑卡失败：请求过程中发生异常");
-            bankResult.setParam(e.getMessage());
-            bankResult.setBankData(null);
+            bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+            bankResult.setCrossResponseMsg("绑卡失败：请求过程中发生异常");
+            bankResult.setChannelResponseMsg(e.getMessage());
+            bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
+            bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
             logger.info("【酷宝支付-绑定银行卡】响应给peayment工程信息：{}",JsonUtils.objectToJson(bankResult));
             return bankResult;
         }
@@ -148,12 +135,12 @@ public class YaColTiedBankCardFastPay extends AbstractYaColIPay{
      * @param trade
      * @return
      */
-    private Map<String, String> getBondParam(SquareTrade trade){
-        MerchantRegisterCollect merchantRegisterCollect = trade.getMerchantRegisterCollect();
-        MerchantCard merchantCard = trade.getMerchantCard();
-        ExtraChannelInfo extraChannelInfo = trade.getExtraChannelInfo();
-        JSONObject extraChannelInfoData = JSON.parseObject(extraChannelInfo.getData());
-        MerchantRegisterInfo merchantRegisterInfo = trade.getMerchantRegisterInfo();
+    private Map<String, String> getBondParam(RequestCrossMsgDTO trade){
+        RegisterCollectTable merchantRegisterCollect = trade.getRegisterCollectTable();
+        MerchantCardTable merchantCard = trade.getMerchantCardTable();
+        ChannelExtraInfoTable extraChannelInfo = trade.getChannelExtraInfoTable();
+        JSONObject extraChannelInfoData = JSON.parseObject(extraChannelInfo.getChannelParam());
+        RegisterInfoTable merchantRegisterInfo = trade.getRegisterInfoTable();
 //        JSONObject registerInfo = JSON.parseObject(merchantRegisterCollect.getBackData());
 //        Integer bankCardType = Integer.valueOf(merchantCard.getCardType());
 
@@ -178,12 +165,12 @@ public class YaColTiedBankCardFastPay extends AbstractYaColIPay{
         //银行编号
         String bank_code=merchantCard.getBankCode();
         //银行卡号	String	密文，使用酷宝RSA公钥加密。明文长度：50
-        String bank_account_no=merchantCard.getCardNum();
+        String bank_account_no=merchantCard.getBankCardNum();
         //持卡人姓名	String	密文，使用酷宝RSA公钥加密。明文长度：64
-        String account_name=merchantCard.getName();
+        String account_name=merchantCard.getCardHolderName();
         // DEBIT-借记   CREDIT-贷记（信用卡）
         //        1借记卡  2信用卡
-        String card_type=merchantCard.getCardType();
+        String card_type=merchantCard.getBankCardType().toString();
         //有效期	String	密文，使用酷宝RSA公钥加密。明文长度：10；信用卡专用，有效期(10/13)，（月份/年份）	可空	XAIDFJAASDF
         String validity_period=null;
         // 	CVV2	String	密文，使用酷宝RSA公钥加密。明文长度：10；信用卡专用	可空	XAIDFJAASDF
@@ -194,13 +181,13 @@ public class YaColTiedBankCardFastPay extends AbstractYaColIPay{
         else if(card_type.equals("2")) {
             card_type="CREDIT";
             //有效期	String	密文，使用酷宝RSA公钥加密。明文长度：10；信用卡专用，有效期(10/13)，（月份/年份）	可空	XAIDFJAASDF
-            validity_period=merchantCard.getExpireDate().substring(0,2)+"/"+merchantCard.getExpireDate().substring(2,4);
+            validity_period=merchantCard.getValidDate().substring(0,2)+"/"+merchantCard.getValidDate().substring(2,4);
             // 	CVV2	String	密文，使用酷宝RSA公钥加密。明文长度：10；信用卡专用	可空	XAIDFJAASDF
-            verification_value=merchantCard.getCvv();
+            verification_value=merchantCard.getSecurityCode();
         }
         // C	对私   B	对公
         //卡属性	String(10)	见附录
-        String card_attribute= merchantRegisterCollect.getCardProp();//账户属性0：私人，1：公司
+        String card_attribute= merchantRegisterCollect.getBankAccountProp().toString();//账户属性0：私人，1：公司
         if(card_attribute.equals("0")) card_attribute="C";
         else if(card_attribute.equals("1")) card_attribute="B";
         //证件类型	String	见附录，目前只支持身份证
@@ -215,16 +202,16 @@ public class YaColTiedBankCardFastPay extends AbstractYaColIPay{
         //证件号码	String	密文，使用酷宝RSA公钥加密。明文长度：50
         String cert_no=  merchantCard.getIdentityNum();
         //银行预留手机号	String	密文，使用酷宝RSA公钥加密。明文长度：16。如认证方式不为空，则要求此信息也不能为空。
-        String phone_no=merchantCard.getPhone();
+        String phone_no=merchantCard.getBankCardPhone();
         //请求者IP	String(50)	用户在商户平台操作时候的IP地址，公网IP，不是内网IP 用于风控校验，请填写用户真实IP，否则容易风控拦截	非空	127.0.0.1
-        String client_ip=trade.getIp();
+        String client_ip=trade.getIP();
         //一下参数可空
         //省份	String(20)	省份	可空	上海市，江苏省
         String province=merchantRegisterInfo.getProvince();
         //城市	String(20)	城市	可空	上海市，南京市
         String city=merchantRegisterInfo.getCity();
         // 支行名称	String(60)	银行支行名称	可空	中国农业银行深圳南山支行
-        String bank_branch=merchantRegisterCollect.getSettleBankBranchName();
+        String bank_branch=merchantCard.getSubBankName();
         //扩展信息	String(200)	业务扩展信息， 参数格式：参数名1^参数值1|参数名2^参数值2|……	可空	test^true|notify_type^sync
         String extend_param="";
 

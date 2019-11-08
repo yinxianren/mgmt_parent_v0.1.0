@@ -54,24 +54,25 @@
     <dubbo:reference interface="com.rxh.service.MerchantSystemService" id="merchantSystemService"/>
     <dubbo:reference interface="com.rxh.service.AgentSystemService" id="agentSystemService"/>
     <dubbo:reference interface="com.rxh.service.sys.SysConstantService" id="sysConstantService" />
-    <dubbo:reference interface="com.rxh.service.anew.system.ApiOrganizationInfoService" id="apiOrganizationInfoService" />
-    <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelExtraInfoService" id="apiChannelExtraInfoService" />
-    <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelInfoService" id="apiChannelInfoService" />
-    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantInfoService" id="apiMerchantInfoService" />
-    <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantInfoService" id="apiAgentMerchantInfoService" />
-    <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantSettingService" id="apiAgentMerchantSettingService" />
-    <dubbo:reference interface="com.rxh.service.anew.system.ApiMerchantSettingService" id="apiMerchantSettingService" />
-    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantRateService"  id="apiMerchantRateService" />
-    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantQuotaRiskService" id="apiMerchantQuotaRiskService" />
+
+    <dubbo:reference interface="com.rxh.service.anew.system.ApiOrganizationInfoService" id="apiOrganizationInfoService" version="1.0.0" />
+    <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelExtraInfoService" id="apiChannelExtraInfoService" version="1.0.0" />
+    <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelInfoService" id="apiChannelInfoService" version="1.0.0" />
+    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantInfoService" id="apiMerchantInfoService" version="1.0.0" />
+    <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantInfoService" id="apiAgentMerchantInfoService" version="1.0.0" />
+    <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantSettingService" id="apiAgentMerchantSettingService" version="1.0.0" />
+    <dubbo:reference interface="com.rxh.service.anew.system.ApiMerchantSettingService" id="apiMerchantSettingService" version="1.0.0" />
+    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantRateService"  id="apiMerchantRateService" version="1.0.0" />
+    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantQuotaRiskService" id="apiMerchantQuotaRiskService" version="1.0.0" />
     <dubbo:reference interface="com.rxh.service.merchant.MerchantPrivilegesService" id="merchantPrivilegesService" />
     <dubbo:reference interface="com.rxh.service.merchant.MerchantRoleService" id="merchantRoleService" />
-    <dubbo:reference interface="com.rxh.service.anew.business.ApiPayOrderInfoService" id="apiPayOrderInfoService" />
-    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantWalletService" id="apiMerchantWalletService" />
-    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantsDetailsService" id="apiMerchantsDetailsService" />
-    <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantWalletService" id="apiAgentMerchantWalletService" />
-    <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantsDetailsService" id="apiAgentMerchantsDetailsService" />
-    <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelDetailsService" id="apiChannelDetailsService" />
-    <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelWalletService" id="apiChannelWalletService" />
-    <dubbo:reference interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsDetailsService" id="apiTerminalMerchantsDetailsService" />
-    <dubbo:reference interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsWalletService" id="apiTerminalMerchantsWalletService" />
+    <dubbo:reference interface="com.rxh.service.anew.business.ApiPayOrderInfoService" id="apiPayOrderInfoService" version="1.0.0" />
+    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantWalletService" id="apiMerchantWalletService" version="1.0.0" />
+    <dubbo:reference interface="com.rxh.service.anew.merchant.ApiMerchantsDetailsService" id="apiMerchantsDetailsService" version="1.0.0" />
+    <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantWalletService" id="apiAgentMerchantWalletService" version="1.0.0" />
+    <dubbo:reference interface="com.rxh.service.anew.agent.ApiAgentMerchantsDetailsService" id="apiAgentMerchantsDetailsService" version="1.0.0" />
+    <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelDetailsService" id="apiChannelDetailsService" version="1.0.0" />
+    <dubbo:reference interface="com.rxh.service.anew.channel.ApiChannelWalletService" id="apiChannelWalletService" version="1.0.0" />
+    <dubbo:reference interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsDetailsService" id="apiTerminalMerchantsDetailsService" version="1.0.0" />
+    <dubbo:reference interface="com.rxh.service.anew.terminal.ApiTerminalMerchantsWalletService" id="apiTerminalMerchantsWalletService" version="1.0.0" />
 </beans>

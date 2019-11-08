@@ -37,8 +37,6 @@ import java.util.*;
 @RequestMapping("/sicPay")
 public class SicEpos {
 
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-    private final static Logger logger = LoggerFactory.getLogger(SicPayApply.class);
 
     @RequestMapping("/ePOS")
     @ResponseBody

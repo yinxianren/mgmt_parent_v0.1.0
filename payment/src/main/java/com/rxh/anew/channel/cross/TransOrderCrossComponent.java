@@ -9,6 +9,6 @@ public interface TransOrderCrossComponent {
      * @param requestCrossMsgDTO
      * @return
      */
-    CrossResponseMsgDTO payment(RequestCrossMsgDTO requestCrossMsgDTO);
+    CrossResponseMsgDTO payment(RequestCrossMsgDTO requestCrossMsgDTO) throws Exception;
 
 }

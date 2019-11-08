@@ -11,7 +11,7 @@ import java.util.Random;
 public class AllinPayUtils {
 
 
-    public static String getMd5Sign(Map<String,Object> postData) throws UnsupportedEncodingException {
+    public static String getMd5Sign(Map<String,Object> postData){
         StringBuffer sb = new StringBuffer();
         for (String key : postData.keySet()){
             String value = postData.get(key) != null ? postData.get(key).toString() : null;
