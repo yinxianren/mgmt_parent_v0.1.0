@@ -21,6 +21,7 @@ import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.enums.StatusEnum;
 import com.rxh.exception.NewPayException;
 import com.rxh.tuple.Tuple2;
+import com.rxh.tuple.Tuple3;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -581,24 +582,54 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
     }
 
     @Override
-    public Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> updateTerMerWalletByTransOrder(TerminalMerchantsWalletTable tmw, TransOrderInfoTable toit, MerchantRateTable mrt) {
+    public Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> updateTerMerWalletByTransOrder(TerminalMerchantsWalletTable tmw, TransOrderInfoTable toit, MerchantRateTable mrt) throws Exception {
         //订单金额
         BigDecimal amount = toit.getAmount();
+        //总余额
+        BigDecimal totalBalance = tmw.getTotalBalance();
+        if(amount.compareTo(totalBalance) == 1 )
+            throw new Exception(format("快捷MQ队列--->代付业务钱包更新: 订单金额(%s)>商户钱包总余额(%s)",amount,totalBalance));
+
+        //总可用余额
+        BigDecimal totalAvailableAmount = tmw.getTotalAvailableAmount();
+        if(amount.compareTo(totalAvailableAmount) == 1)
+            throw  new Exception(format("快捷MQ队列--->代付业务钱包更新: 订单金额(%s)>商户钱包总可用余额(%s)",amount,totalAvailableAmount));
+
         //终端费用
         BigDecimal backFee = toit.getBackFee();
+        //总的终端费用
+        BigDecimal totalFee = tmw.getTotalFee();
+        totalFee = null == totalFee ? backFee :  totalFee.add(backFee);
         //单笔出账金额
         BigDecimal singleOutAmount = amount.subtract(backFee);
         //总出账金额
-
+        BigDecimal totalOutAmount = tmw.getOutAmount();
+        totalOutAmount = null == totalOutAmount ? new BigDecimal(0) : totalOutAmount;
+        totalOutAmount = totalOutAmount.add(singleOutAmount);
+        //总不可用余额
+        BigDecimal totalUnavailableAmount = tmw.getTotalUnavailableAmount();
+        //冻结资金
+        BigDecimal totalFreezeAmount = tmw.getTotalFreezeAmount();
+        totalFreezeAmount = null == totalFreezeAmount ? new BigDecimal(0) : totalFreezeAmount;
+        //判断结算周期
+        List<String>  settleCycleList= Arrays.asList("d0","D0","t0","T0");
+        String settleCycle = isBlank(mrt.getSettleCycle()) ? "T7"  :  mrt.getSettleCycle().trim() ;
+        if( !settleCycleList.contains(settleCycle) ){
+            totalFreezeAmount = totalFreezeAmount.add(amount);
+            totalAvailableAmount = totalAvailableAmount.subtract(amount);
+        }else{
+            totalAvailableAmount = totalAvailableAmount.subtract(amount);
+            totalBalance = totalBalance.subtract(amount);
+        }
 
         tmw
-                .setOutAmount()
-                .setTotalBalance()
-                .setTotalAvailableAmount()
-                .setTotalUnavailableAmount()
-                .setTotalFee()
-                .setTotalMargin()
-                .setTotalFreezeAmount()
+                .setOutAmount(totalOutAmount)
+                .setTotalBalance(totalBalance)
+                .setTotalAvailableAmount(totalAvailableAmount)
+                .setTotalUnavailableAmount(totalUnavailableAmount)
+                .setTotalFee(totalFee)
+                .setTotalMargin(tmw.getTotalMargin())
+                .setTotalFreezeAmount(totalFreezeAmount)
                 .setUpdateTime(new Date());
 
         TerminalMerchantsDetailsTable tmd = new TerminalMerchantsDetailsTable()
@@ -613,11 +644,38 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
                 .setOutAmount(singleOutAmount)
                 .setRateFee(null)
                 .setFee(backFee)
-                .setTotalBalance()
+                .setTotalBalance(totalBalance)
                 .setTimestamp(System.currentTimeMillis())
                 .setStatus(StatusEnum._0.getStatus())
                 .setCreateTime(new Date())
                 .setUpdateTime(new Date());
+
+        return new Tuple2(tmw,tmd);
+    }
+
+
+    @Override
+    public Tuple2<ChannelWalletTable, ChannelDetailsTable> updateChannelWalletByTransOrder(ChannelWalletTable cwt, ChannelInfoTable cit, TransOrderInfoTable toit, MerchantRateTable mrt) {
+//        ChannelWalletTable cwt = new ChannelWalletTable();
+//        cwt.setId();
+//        cwt.setChannelId();
+//        cwt.setOrganizationId();
+//        cwt.setProductId();
+//        cwt.setTotalAmount();
+//        cwt.setIncomeAmount();
+//        cwt.setOutAmount();
+//        cwt.setTotalFee();
+//        cwt.setFeeProfit();
+//        cwt.setTotalBalance();
+//        cwt.setTotalAvailableAmount();
+//        cwt.setTotalUnavailableAmount();
+//        cwt.setTotalMargin();
+//        cwt.setTotalFreezeAmount();
+//        cwt.setStatus();
+//        cwt.setCreateTime();
+//        cwt.setUpdateTime();
+
+
 
         return null;
     }

@@ -128,7 +128,12 @@ public class PayWalletComponentComponentImpl implements PayWalletComponent, NewP
             TerminalMerchantsWalletTable tmw = payWalletService.getTerMerWallet(ipo);
             //更新终端商户钱包 保存终端商户钱包明细
             Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> terMerWalletTuple = payWalletService.updateTerMerWalletByTransOrder(tmw,toit,mrt);
-
+            //获取通道信息
+            ChannelInfoTable  cit = payWalletService.getChannelInfo(toit.getChannelId(),ipo);
+            //获取通道钱包
+            ChannelWalletTable cwt = payWalletService.getChanWallet(toit.getChannelId(),ipo);
+            //更新通道钱包 保存通道钱包明细
+            Tuple2<ChannelWalletTable, ChannelDetailsTable> chanWalletTuple = payWalletService.updateChannelWalletByTransOrder(cwt,cit,toit,mrt);
 
 
         }catch (Exception e){
