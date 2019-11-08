@@ -9,6 +9,7 @@ import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.business.RegisterInfoTable;
 import com.rxh.anew.table.channel.ChannelExtraInfoTable;
 import com.rxh.anew.table.merchant.MerchantRateTable;
+import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.enums.StatusEnum;
 import com.rxh.exception.PayException;
 import com.rxh.utils.*;
@@ -51,6 +52,8 @@ public class Addcus {
 			default:
 				bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
 				bankResult.setCrossResponseMsg("进件失败，接口编码错误");
+				bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+				bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
 				break;
 		}
 
@@ -100,16 +103,22 @@ public class Addcus {
     				bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
                     bankResult.setCrossResponseMsg("进件异常:签名验证不一致");
                     bankResult.setChannelResponseMsg(content);
+                    bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
+                    bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
     			}
     		}else {
     			 bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
                  bankResult.setCrossResponseMsg("进件失败:" + json.get("retmsg"));
                  bankResult.setChannelResponseMsg(content);
+				 bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
+				 bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
     		}
     	}else {
     		bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
             bankResult.setCrossResponseMsg("进件失败：返回结果为空！");
             bankResult.setChannelResponseMsg(content);
+			bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
+			bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
     	}
 		logger.info("進件请求返回payment："+ JsonUtils.objectToJsonNonNull(bankResult));
     	return bankResult;

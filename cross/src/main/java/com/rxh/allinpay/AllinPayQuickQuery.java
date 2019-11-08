@@ -2,27 +2,20 @@ package com.rxh.allinpay;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.business.TransOrderInfoTable;
 import com.rxh.enums.StatusEnum;
 import com.rxh.exception.PayException;
-import com.rxh.pojo.cross.BankResult;
-import com.rxh.pojo.merchant.MerchantRegisterInfo;
-import com.rxh.pojo.payment.SquareTrade;
-import com.rxh.square.pojo.TransOrder;
 import com.rxh.utils.AlinPayUtils;
 import com.rxh.utils.HttpClientUtils;
 import com.rxh.utils.StringUtils;
-import com.rxh.utils.SystemConstant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.util.TreeMap;
 
 /**
@@ -35,7 +28,7 @@ import java.util.TreeMap;
 public class AllinPayQuickQuery {
 	
     @RequestMapping("/query")
-    public BankResult trade(@RequestBody RequestCrossMsgDTO trade) throws UnsupportedEncodingException, PayException {
+    public CrossResponseMsgDTO trade(@RequestBody RequestCrossMsgDTO trade) throws UnsupportedEncodingException, PayException {
     	TreeMap<String, Object> params = getTradeParam(trade);
     	String other = trade.getChannelInfoTable().getChannelParam();
     	JSONObject json = JSON.parseObject(other);
@@ -55,6 +48,7 @@ public class AllinPayQuickQuery {
     	JSONObject json = JSON.parseObject(other);
 		RegisterCollectTable merchantRegisterInfo = trade.getRegisterCollectTable();
 		JSONObject registerInfo = JSON.parseObject(merchantRegisterInfo.getChannelRespResult());
+		JSONObject order = JSONObject.parseObject(trade.getPayOrderInfoTable().getChannelRespResult());
     	//公共参数
     	String orgid = json.get("orgid").toString();//机构号
     	String appid = json.get("appid").toString();//APPID
@@ -65,7 +59,7 @@ public class AllinPayQuickQuery {
     	//私有参数
     	String cusid = registerInfo.get("cusid").toString();//商户号
     	String orderid = transOrder.getMerOrderId();//商户订单号
-    	String trxid = json.get("trxid").toString();//平台交易流水号
+    	String trxid = order.get("trxid").toString();//平台交易流水号
     	String date = "";//交易日期
     	
     	TreeMap<String, Object> treeMap = new TreeMap<String, Object>();
@@ -96,8 +90,8 @@ public class AllinPayQuickQuery {
      * @throws UnsupportedEncodingException 
      */
     @SuppressWarnings("unchecked")
-	private BankResult checkResult(String content, RequestCrossMsgDTO trade) throws PayException, UnsupportedEncodingException {
-    	BankResult bankResult = new BankResult();
+	private CrossResponseMsgDTO checkResult(String content, RequestCrossMsgDTO trade) throws PayException, UnsupportedEncodingException {
+    	CrossResponseMsgDTO bankResult = new CrossResponseMsgDTO();
     	if(StringUtils.isNotBlank(content)) {
     		JSONObject json = JSON.parseObject(content);
     		String retcode = json.getString("retcode");
@@ -114,36 +108,36 @@ public class AllinPayQuickQuery {
             	    	result.put("key", param.getString("key"));
             			String sign = AlinPayUtils.getMd5Sign(result);
             			if(sign.equalsIgnoreCase(resultSign)) {
-            				bankResult.setStatus(StatusEnum._0.getStatus());
-                            bankResult.setBankResult("交易成功");
-                            bankResult.setParam(content);
+            				bankResult.setCrossStatusCode(StatusEnum._0.getStatus());
+                            bankResult.setCrossResponseMsg("交易成功");
+                            bankResult.setChannelResponseMsg(content);
             			}else {
-            				bankResult.setStatus(StatusEnum._1.getStatus());
-                            bankResult.setBankResult("交易查询异常:签名验证失败");
-                            bankResult.setParam(content);
+            				bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                            bankResult.setCrossResponseMsg("交易查询异常:签名验证失败");
+                            bankResult.setChannelResponseMsg(content);
             			}
                         break;
                     case "2000":
-                        bankResult.setStatus(StatusEnum._3.getStatus());
-                        bankResult.setBankResult("交易处理中。");
-                        bankResult.setParam(content);
+                        bankResult.setCrossStatusCode(StatusEnum._3.getStatus());
+                        bankResult.setCrossResponseMsg("交易处理中。");
+                        bankResult.setChannelResponseMsg(content);
                         break;
                     default:
-                        bankResult.setStatus(StatusEnum._1.getStatus());
-                        bankResult.setBankResult("交易查询异常:" + json.get("errmsg"));
-                        bankResult.setParam(content);
+                        bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                        bankResult.setCrossResponseMsg("交易查询异常:" + json.get("errmsg"));
+                        bankResult.setChannelResponseMsg(content);
                         break;
                 }
     			
     		}else {
-    			 bankResult.setStatus(StatusEnum._1.getStatus());
-                 bankResult.setBankResult("交易查询失败:" + json.get("retmsg"));
-                 bankResult.setParam(content);
+    			 bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                 bankResult.setCrossResponseMsg("交易查询失败:" + json.get("retmsg"));
+                 bankResult.setChannelResponseMsg(content);
     		}
     	}else {
-    		bankResult.setStatus(StatusEnum._1.getStatus());
-            bankResult.setBankResult("交易查询失败：支付返回结果为空！");
-            bankResult.setParam(content);
+    		bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+            bankResult.setCrossResponseMsg("交易查询失败：支付返回结果为空！");
+            bankResult.setChannelResponseMsg(content);
     	}
     	return bankResult;
     }

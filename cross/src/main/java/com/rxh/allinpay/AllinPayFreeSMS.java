@@ -2,22 +2,18 @@ package com.rxh.allinpay;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.table.business.MerchantCardTable;
 import com.rxh.anew.table.business.PayOrderInfoTable;
 import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.business.RegisterInfoTable;
+import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.enums.StatusEnum;
 import com.rxh.exception.PayException;
-import com.rxh.pojo.cross.BankResult;
-import com.rxh.pojo.merchant.MerchantRegisterInfo;
-import com.rxh.pojo.payment.SquareTrade;
-import com.rxh.pojo.payment.TradeObjectSquare;
-import com.rxh.square.pojo.*;
 import com.rxh.utils.AlinPayUtils;
 import com.rxh.utils.HttpClientUtils;
 import com.rxh.utils.StringUtils;
-import com.rxh.utils.SystemConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -29,9 +25,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
 
@@ -47,7 +41,7 @@ public class AllinPayFreeSMS {
 	private final static Logger logger = LoggerFactory.getLogger(AllinPayFreeSMS.class);
 
 	@RequestMapping("/freeSMS")
-	public BankResult trade(@RequestBody RequestCrossMsgDTO trade) throws UnsupportedEncodingException, PayException {
+	public CrossResponseMsgDTO trade(@RequestBody RequestCrossMsgDTO trade) throws UnsupportedEncodingException, PayException {
 		TreeMap<String, Object> params = getTradeParam(trade);
 		String other = trade.getChannelInfoTable().getChannelParam();
 		JSONObject json = JSON.parseObject(other);
@@ -133,9 +127,9 @@ public class AllinPayFreeSMS {
 	 * @throws UnsupportedEncodingException
 	 */
 	@SuppressWarnings("unchecked")
-	private BankResult checkResult(String content, RequestCrossMsgDTO trade) throws PayException, UnsupportedEncodingException {
-		BankResult bankResult = new BankResult();
-		bankResult.setBankTime(new Date());
+	private CrossResponseMsgDTO checkResult(String content, RequestCrossMsgDTO trade) throws PayException, UnsupportedEncodingException {
+		CrossResponseMsgDTO bankResult = new CrossResponseMsgDTO();
+		bankResult.setChannelResponseTime(new Date());
 		if(StringUtils.isNotBlank(content)) {
 			JSONObject json = JSON.parseObject(content);
 			String retcode = json.getString("retcode");
@@ -152,37 +146,45 @@ public class AllinPayFreeSMS {
 						result.put("key", param.getString("key"));
 						String sign = AlinPayUtils.getMd5Sign(result);
 						if(sign.equalsIgnoreCase(resultSign)) {
-							bankResult.setStatus(StatusEnum._0.getStatus());
-							bankResult.setBankResult("交易成功");
-							bankResult.setParam(content);
-							bankResult.setBankOrderId(result.get("trxid").toString());
+							bankResult.setCrossStatusCode(StatusEnum._0.getStatus());
+							bankResult.setCrossResponseMsg("交易成功");
+							bankResult.setChannelResponseMsg(content);
+							bankResult.setChannelOrderId(result.get("trxid").toString());
 						}else {
-							bankResult.setStatus(StatusEnum._1.getStatus());
-							bankResult.setBankResult("交易异常:签名验证失败");
-							bankResult.setParam(content);
+							bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+							bankResult.setCrossResponseMsg("交易异常:签名验证失败");
+							bankResult.setChannelResponseMsg(content);
+							bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+							bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
 						}
 						break;
 					case "2000":
-						bankResult.setStatus(StatusEnum._0.getStatus());
-						bankResult.setBankResult("支付交易请求已接受,等待交易结果通知。");
-						bankResult.setParam(content);
+						bankResult.setCrossStatusCode(StatusEnum._0.getStatus());
+						bankResult.setCrossResponseMsg("支付交易请求已接受,等待交易结果通知。");
+						bankResult.setChannelResponseMsg(content);
 						break;
 					default:
-						bankResult.setStatus(StatusEnum._1.getStatus());
-						bankResult.setBankResult("交易异常:" + json.get("errmsg"));
-						bankResult.setParam(content);
+						bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+						bankResult.setCrossResponseMsg("交易异常:" + json.get("errmsg"));
+						bankResult.setChannelResponseMsg(content);
+						bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+						bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
 						break;
 				}
 
 			}else {
-				bankResult.setStatus(StatusEnum._1.getStatus());
-				bankResult.setBankResult("交易失败:" + json.get("retmsg"));
-				bankResult.setParam(content);
+				bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+				bankResult.setCrossResponseMsg("交易失败:" + json.get("retmsg"));
+				bankResult.setChannelResponseMsg(content);
+				bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+				bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
 			}
 		}else {
-			bankResult.setStatus(StatusEnum._1.getStatus());
-			bankResult.setBankResult("交易失败：支付返回结果为空！");
-			bankResult.setParam(content);
+			bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+			bankResult.setCrossResponseMsg("交易失败：支付返回结果为空！");
+			bankResult.setChannelResponseMsg(content);
+			bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+			bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
 		}
 		return bankResult;
 	}

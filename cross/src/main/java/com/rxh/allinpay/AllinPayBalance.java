@@ -2,17 +2,13 @@ package com.rxh.allinpay;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
 import com.rxh.enums.StatusEnum;
-import com.rxh.pojo.cross.BankResult;
-import com.rxh.pojo.merchant.MerchantRegisterInfo;
-import com.rxh.pojo.payment.SquareTrade;
-import com.rxh.square.pojo.ChannelInfo;
 import com.rxh.utils.AlinPayUtils;
 import com.rxh.utils.HttpClientUtils;
-import com.rxh.utils.SystemConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -35,8 +31,8 @@ public class AllinPayBalance {
 
     @RequestMapping("/balanceQuery")
     @ResponseBody
-    public BankResult balance(@RequestBody RequestCrossMsgDTO trade) throws UnsupportedEncodingException {
-        BankResult bankResult = new BankResult();
+    public CrossResponseMsgDTO balance(@RequestBody RequestCrossMsgDTO trade) throws UnsupportedEncodingException {
+        CrossResponseMsgDTO bankResult = new CrossResponseMsgDTO();
         Map<String, Object> bondParam = getBondParam(trade);
         String others = trade.getChannelInfoTable().getChannelParam();
         JSONObject json = JSON.parseObject(others);
@@ -47,14 +43,14 @@ public class AllinPayBalance {
         JSONObject result = (JSONObject) JSON.parse(content);
         String resultCode = result.getString("retcode");
         if("SUCCESS".equals(resultCode)){
-            bankResult.setStatus(StatusEnum._0.getStatus());
-            bankResult.setBankResult("余额查询成功");
-            bankResult.setBankData(result.getString("balance"));
-            bankResult.setParam(content);
+            bankResult.setCrossStatusCode(StatusEnum._0.getStatus());
+            bankResult.setCrossResponseMsg("余额查询成功");
+            bankResult.setChannelResponseMsg(content);
         }else {
-            bankResult.setStatus(StatusEnum._1.getStatus());
-            bankResult.setBankResult("余额查询失败");
-            bankResult.setParam(content);
+            bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+            bankResult.setCrossResponseMsg("余额查询失败");
+            bankResult.setChannelResponseMsg(content);
+
         }
         return bankResult;
     }
