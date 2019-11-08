@@ -2,11 +2,14 @@ package com.rxh.yacolpay;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.rxh.anew.dto.CrossResponseMsgDTO;
+import com.rxh.anew.dto.RequestCrossMsgDTO;
+import com.rxh.anew.table.business.TransOrderInfoTable;
+import com.rxh.anew.table.channel.ChannelInfoTable;
+import com.rxh.enums.ResponseCodeEnum;
+import com.rxh.enums.StatusEnum;
 import com.rxh.pojo.Result;
-import com.rxh.pojo.cross.BankResult;
-import com.rxh.pojo.merchant.MerchantBankCardBinding;
 import com.rxh.pojo.payment.SquareTrade;
-import com.rxh.pojo.payment.TradeObjectSquare;
 import com.rxh.square.pojo.ChannelInfo;
 import com.rxh.square.pojo.TransOrder;
 import com.rxh.utils.*;
@@ -21,9 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -54,12 +55,11 @@ public class YacolSinglePayToBank {
      */
     @RequestMapping("/payMoney")
     @ResponseBody
-    public BankResult payMoney(@RequestBody SquareTrade trade) throws UnsupportedEncodingException {
-        TradeObjectSquare tradeObjectSquare = trade.getTradeObjectSquare();
-        ChannelInfo channelInfo = trade.getChannelInfo();
-        BankResult bankResult = new BankResult();
-        TransOrder transOrder = trade.getTransOrder();
-        JSONObject others = JSONObject.parseObject(channelInfo.getOthers());
+    public CrossResponseMsgDTO payMoney(@RequestBody RequestCrossMsgDTO trade) throws UnsupportedEncodingException {
+        ChannelInfoTable channelInfo = trade.getChannelInfoTable();
+        CrossResponseMsgDTO bankResult = new CrossResponseMsgDTO();
+        TransOrderInfoTable transOrder = trade.getTransOrderInfoTable();
+        JSONObject others = JSONObject.parseObject(channelInfo.getChannelParam());
         String publicKey = others.getString("publicKey").trim();;
         String signKey = others.getString("privateKey").trim();
         String publicCheckKey =others.getString("publicCheckKey".trim());
@@ -74,26 +74,26 @@ public class YacolSinglePayToBank {
         String notify_url =others.getString("notify_url"); ;
 
         //请求参数
-        String out_trade_no = transOrder.getTransId();//商户订单号
+        String out_trade_no = transOrder.getPlatformOrderId();//商户订单号
         String identity_id = transOrder.getTerminalMerId();//收款方用户标识
-        String bank_account_num = tradeObjectSquare.getBankCardNum();//收款方银行账号
-        String phone_no = tradeObjectSquare.getBankCardPhone();//银行预留手机号
-        String bank_name = tradeObjectSquare.getBankName();//收款方开户银行
-        String bank_code = tradeObjectSquare.getBankCode();//银行代码
+        String bank_account_num = transOrder.getBankCardNum();//收款方银行账号
+        String phone_no = transOrder.getBankCardPhone();//银行预留手机号
+        String bank_name = transOrder.getBankName();//收款方开户银行
+        String bank_code = transOrder.getBankCode();//银行代码
 //        String province  = merchantBankCardBinding.getProvince();//省份
 //        String city =merchantBankCardBinding.getCity();//城市
 //        String bank_branch = tradeObjectSquare.getBankBranchName();//支行名称
         String amount = transOrder.getAmount().setScale(2).toString();
-        String backFee = tradeObjectSquare.getBackFee().setScale(2).toString();
+        String backFee = transOrder.getBackFee().setScale(2).toString();
 
         Map postData = new TreeMap();
         String split_type = "1";//分账类型1-按固定金额；2-按固定比率；
-        if (trade.getMerchantRegisterInfo().getMerchantType().equals("00")){
+        if (transOrder.getBankAccountProp() == 0){
             postData.put("card_attribute","B");//卡属性
         }else {
             postData.put("card_attribute","C");//卡属性
         }
-        if (tradeObjectSquare.getBankCardType()==1){
+        if (transOrder.getBankCardType()==1){
             postData.put("card_type","DEBIT");//卡类型 借记
         }else{
             postData.put("card_type","CREDIT");//卡类型 贷记
@@ -165,50 +165,65 @@ public class YacolSinglePayToBank {
                         String tradeStatus = content.get("withdraw_status");
                         switch (tradeStatus){
                             case "SUCCESS" :
-                                bankResult.setBankResult("成功");
-                                bankResult.setStatus(SystemConstant.BANK_STATUS_SUCCESS);
-                                bankResult.setParam(JSONObject.toJSONString(content));
+                                bankResult.setCrossResponseMsg("成功");
+                                bankResult.setCrossStatusCode(StatusEnum._0.getStatus());
+                                bankResult.setChannelResponseMsg(JSONObject.toJSONString(content));
                                 break;
                             case "FAILED" :
-                                bankResult.setBankResult("失败");
-                                bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-                                bankResult.setParam(JSONObject.toJSONString(content));
+                                bankResult.setCrossResponseMsg("失败");
+                                bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                                bankResult.setChannelResponseMsg(JSONObject.toJSONString(content));
+                                bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+                                bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
                                 break;
                             case "PROCESSING" :
-                                bankResult.setBankResult("处理中");
-                                bankResult.setStatus(SystemConstant.BANK_STATUS_PENDING_PAYMENT);
-                                bankResult.setParam(JSONObject.toJSONString(content));
+                                bankResult.setCrossResponseMsg("处理中");
+                                bankResult.setCrossStatusCode(StatusEnum._3.getStatus());
+                                bankResult.setChannelResponseMsg(JSONObject.toJSONString(content));
+                                bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+                                bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
                                 break;
                             case "RETURNT_TICKET" :
-                                bankResult.setBankResult("银行退票");
-                                bankResult.setParam(JSONObject.toJSONString(content));
+                                bankResult.setCrossResponseMsg("银行退票");
+                                bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                                bankResult.setChannelResponseMsg(JSONObject.toJSONString(content));
+                                bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+                                bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
                                 break;
                         }
 
-                        bankResult.setBankOrderId(content.get("out_trade_no"));
-                        bankResult.setParam(JSONObject.toJSONString(content));
+                        bankResult.setChannelOrderId(content.get("out_trade_no"));
+                        bankResult.setChannelResponseMsg(JSONObject.toJSONString(content));
                         break;
                     case "ADVANCE_FAILED" :
-                        bankResult.setStatus(SystemConstant.BANK_STATUS_SUCCESS);
-                        bankResult.setBankResult("短信发送失败");
-                        bankResult.setParam(JSONObject.toJSONString(content));
+                        bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                        bankResult.setCrossResponseMsg("短信发送失败");
+                        bankResult.setChannelResponseMsg(JSONObject.toJSONString(content));
+                        bankResult.setErrorCode(ResponseCodeEnum.RXH00005.getCode());
+                        bankResult.setErrorMsg(ResponseCodeEnum.RXH00005.getMsg());
                         break;
                     default:
-                        bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-                        bankResult.setBankResult("交易失败"+content.get("response_message"));
-                        bankResult.setParam(JSONObject.toJSONString(content));
+                        bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                        bankResult.setCrossResponseMsg("交易失败"+content.get("response_message"));
+                        bankResult.setChannelResponseMsg(JSONObject.toJSONString(content));
+                        bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+                        bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
                         break;
                 }
             } else {
-                bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-                bankResult.setBankResult("交易失败,验签不通过");
-                bankResult.setParam(JSONObject.toJSONString(content));
+                bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                bankResult.setCrossResponseMsg("交易失败,验签不通过");
+                bankResult.setChannelResponseMsg(JSONObject.toJSONString(content));
+                bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+                bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
             }
         } catch (Exception e) {
             e.printStackTrace();
-            bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-            bankResult.setBankResult("交易失败，系统错误");
-            bankResult.setParam(e.getMessage());
+            bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+            bankResult.setCrossResponseMsg("交易失败，系统错误");
+            bankResult.setChannelResponseMsg(e.getMessage());
+            bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+            bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
         }
         return bankResult;
 
@@ -246,26 +261,25 @@ public class YacolSinglePayToBank {
             /**
              支付结果处理
              */
-            BankResult bankResult = new BankResult();
-            bankResult.setOrderId(Long.valueOf(yaColPayToBankObject.getOuter_trade_no()));// 商户订单号
-            bankResult.setBankOrderId(yaColPayToBankObject.getInner_trade_no());// 第三方app交易号(商户交易流水号)
-            bankResult.setParam(JsonUtils.objectToJson(yaColPayToBankObject));
+            CrossResponseMsgDTO bankResult = new CrossResponseMsgDTO();
+            bankResult.setChannelOrderId(yaColPayToBankObject.getInner_trade_no());// 第三方app交易号(商户交易流水号)
+            bankResult.setChannelResponseMsg(JsonUtils.objectToJson(yaColPayToBankObject));
             Date date = DateUtils.dateFormat(dateFormat, yaColPayToBankObject.getNotify_time());
-            bankResult.setBankTime(date == null ? new Date() : date);
+            bankResult.setChannelResponseTime(date == null ? new Date() : date);
             if ("SUCCESS".equals(yaColPayToBankObject.getWithdraw_status())) {// 支付成功
-                bankResult.setStatus(SystemConstant.BANK_STATUS_SUCCESS);
-                bankResult.setBankResult("付款成功");
-                bankResult.setParam(JsonUtils.objectToJson(yaColPayToBankObject));
+                bankResult.setCrossStatusCode(StatusEnum._0.getStatus());
+                bankResult.setCrossResponseMsg("付款成功");
+                bankResult.setChannelResponseMsg(JsonUtils.objectToJson(yaColPayToBankObject));
             } else {
-                bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
+                bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
                 try {
-                    bankResult.setBankCode(BankResultInfoCode.CommunicateCodeTwo.valueOf("A" + yaColPayToBankObject.getWithdraw_status()).getStatusMsg());
                 } catch (Exception e) {
                     logger.info("YacolPay未定义的错误信息,错误编码为：" + yaColPayToBankObject.getWithdraw_status());
-                    bankResult.setBankCode("error.5000");
                 }
-                bankResult.setBankResult("付款失败：" + yaColPayToBankObject.getWithdraw_status());
-                bankResult.setParam(JsonUtils.objectToJson(yaColPayToBankObject));
+                bankResult.setCrossResponseMsg("付款失败：" + yaColPayToBankObject.getWithdraw_status());
+                bankResult.setChannelResponseMsg(JsonUtils.objectToJson(yaColPayToBankObject));
+                bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+                bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
             }
             String msg = CallServiceUtil.sendPost(paymentInfo.getBankNotifyUrl(), JsonUtils.objectToJson(bankResult));
             Result paymentResult = JsonUtils.jsonToPojo(msg, Result.class);
@@ -294,9 +308,9 @@ public class YacolSinglePayToBank {
      */
     @RequestMapping("/repayQuery")
     @ResponseBody
-    public BankResult repayQuery(@RequestBody SquareTrade trade)  {
+    public CrossResponseMsgDTO repayQuery(@RequestBody SquareTrade trade)  {
         ChannelInfo channelInfo = trade.getChannelInfo();
-        BankResult bankResult = new BankResult();
+        CrossResponseMsgDTO bankResult = new CrossResponseMsgDTO();
         TransOrder transOrder = trade.getTransOrder();
         JSONObject others = JSONObject.parseObject(channelInfo.getOthers());
         String signKey = others.getString("privateKey").trim();
@@ -354,50 +368,64 @@ public class YacolSinglePayToBank {
                     String withdrawStatus = content.get("withdraw_status");
                     switch (withdrawStatus){
                         case "SUCCESS" :
-                            bankResult.setStatus(SystemConstant.BANK_STATUS_SUCCESS);
-                            bankResult.setBankResult("代付成功");
-                            bankResult.setBankOrderId(content.get("out_trade_no"));
-                            bankResult.setParam(JSONObject.toJSONString(content));
+                            bankResult.setCrossStatusCode(StatusEnum._0.getStatus());
+                            bankResult.setCrossResponseMsg("代付成功");
+                            bankResult.setChannelOrderId(content.get("out_trade_no"));
+                            bankResult.setChannelResponseMsg(JSONObject.toJSONString(content));
                             break;
                         case "FAILED" :
-                            bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-                            bankResult.setBankResult("代付失败");
-                            bankResult.setBankOrderId(content.get("out_trade_no"));
-                            bankResult.setParam(JSONObject.toJSONString(content));
+                            bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                            bankResult.setCrossResponseMsg("代付失败");
+                            bankResult.setChannelOrderId(content.get("out_trade_no"));
+                            bankResult.setChannelResponseMsg(JSONObject.toJSONString(content));
+                            bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+                            bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
                             break;
                         case "PROCESSING" :
-                            bankResult.setStatus(SystemConstant.BANK_STATUS_PENDING_PAYMENT);
-                            bankResult.setBankResult("代付处理中");
-                            bankResult.setBankOrderId(content.get("out_trade_no"));
-                            bankResult.setParam(JSONObject.toJSONString(content));
+                            bankResult.setCrossStatusCode(StatusEnum._3.getStatus());
+                            bankResult.setCrossResponseMsg("代付处理中");
+                            bankResult.setChannelOrderId(content.get("out_trade_no"));
+                            bankResult.setChannelResponseMsg(JSONObject.toJSONString(content));
+                            bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+                            bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
                             break;
                         case "RETURNT_TICKET" :
-                            bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-                            bankResult.setBankResult("银行退票");
-                            bankResult.setBankOrderId(content.get("out_trade_no"));
-                            bankResult.setParam(JSONObject.toJSONString(content));
+                            bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                            bankResult.setCrossResponseMsg("银行退票");
+                            bankResult.setChannelOrderId(content.get("out_trade_no"));
+                            bankResult.setChannelResponseMsg(JSONObject.toJSONString(content));
+                            bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+                            bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
                             break;
                         default:
-                            bankResult.setStatus(SystemConstant.BANK_STATUS_PENDING_PAYMENT);
-                            bankResult.setBankResult("代付结果未知"+content.get("response_message"));
-                            bankResult.setParam(JSONObject.toJSONString(content));
+                            bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                            bankResult.setCrossResponseMsg("代付结果未知"+content.get("response_message"));
+                            bankResult.setChannelResponseMsg(JSONObject.toJSONString(content));
+                            bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+                            bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
                             break;
                     }
                 }else {
-                    bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-                    bankResult.setBankResult("代付失败:"+content.get("response_message"));
-                    bankResult.setParam(JSONObject.toJSONString(content));
+                    bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                    bankResult.setCrossResponseMsg("代付失败:"+content.get("response_message"));
+                    bankResult.setChannelResponseMsg(JSONObject.toJSONString(content));
+                    bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+                    bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
                 }
             } else {
-                bankResult.setStatus(SystemConstant.BANK_STATUS_PENDING_PAYMENT);
-                bankResult.setBankResult("代付查询失败,验签不通过");
-                bankResult.setParam(JSONObject.toJSONString(content));
+                bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                bankResult.setCrossResponseMsg("代付查询失败,验签不通过");
+                bankResult.setChannelResponseMsg(JSONObject.toJSONString(content));
+                bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+                bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
             }
         } catch (Exception e) {
             e.printStackTrace();
-            bankResult.setStatus(SystemConstant.BANK_STATUS_PENDING_PAYMENT);
-            bankResult.setBankResult("代付查询失败，系统错误");
-            bankResult.setParam(e.getMessage());
+            bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+            bankResult.setCrossResponseMsg("代付查询失败，系统错误");
+            bankResult.setChannelResponseMsg(e.getMessage());
+            bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+            bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
         }
         return bankResult;
     }

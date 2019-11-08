@@ -2,19 +2,15 @@ package com.rxh.allinpay;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.table.business.RegisterCollectTable;
 import com.rxh.anew.table.business.TransOrderInfoTable;
 import com.rxh.anew.table.channel.ChannelInfoTable;
+import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.enums.StatusEnum;
 import com.rxh.pojo.Result;
 import com.rxh.pojo.cross.AlinTradeObject;
-import com.rxh.pojo.cross.BankResult;
-import com.rxh.pojo.payment.SquareTrade;
-import com.rxh.pojo.payment.TradeObjectSquare;
-import com.rxh.square.pojo.ChannelInfo;
-import com.rxh.square.pojo.MerchantRegisterCollect;
-import com.rxh.square.pojo.TransOrder;
 import com.rxh.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +25,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-import java.util.Random;
 import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 付款 /payMoney
@@ -79,26 +73,23 @@ public class AllinPayPayMoney {
             /**
              支付结果处理
              */
-            BankResult bankResult = new BankResult();
-            bankResult.setOrderId((alinTradeObject.getCusorderid()));// 商户订单号
-            bankResult.setBankOrderId(alinTradeObject.getOuttrxid());// 第三方app交易号(商户交易流水号)
-            bankResult.setParam(JsonUtils.objectToJson(alinTradeObject));
+            CrossResponseMsgDTO bankResult = new CrossResponseMsgDTO();
+            bankResult.setChannelOrderId(alinTradeObject.getOuttrxid());// 第三方app交易号(商户交易流水号)
+            bankResult.setChannelResponseMsg(JsonUtils.objectToJson(alinTradeObject));
             Date date = DateUtils.dateFormat(dateFormat, alinTradeObject.getPaytime());
-            bankResult.setBankTime(date == null ? new Date() : date);
+            bankResult.setChannelResponseTime(date == null ? new Date() : date);
             if ("0000".equals(alinTradeObject.getTrxstatus())) {// 支付成功
-                bankResult.setStatus(StatusEnum._0.getStatus());
-                bankResult.setBankResult("付款成功");
-                bankResult.setParam(JsonUtils.objectToJson(alinTradeObject));
+                bankResult.setCrossStatusCode(StatusEnum._0.getStatus());
+                bankResult.setCrossResponseMsg("付款成功");
+                bankResult.setChannelResponseMsg(JsonUtils.objectToJson(alinTradeObject));
             } else {
-                bankResult.setStatus(StatusEnum._1.getStatus());
+                bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
                 try {
-                    bankResult.setBankCode(BankResultInfoCode.CommunicateCodeTwo.valueOf("A" + alinTradeObject.getTrxstatus()).getStatusMsg());
                 } catch (Exception e) {
                     logger.info("AllinPay未定义的错误信息,错误编码为：" + alinTradeObject.getTrxstatus());
-                    bankResult.setBankCode("error.5000");
                 }
-                bankResult.setBankResult("付款失败：" + alinTradeObject.getTrxstatus());
-                bankResult.setParam(JsonUtils.objectToJson(alinTradeObject));
+                bankResult.setCrossResponseMsg("付款失败：" + alinTradeObject.getTrxstatus());
+                bankResult.setChannelResponseMsg(JsonUtils.objectToJson(alinTradeObject));
             }
             String msg = HttpClientUtils.doPostJson(HttpClientUtils.getHttpClient(), paymentInfo.getBankNotifyUrl(), JsonUtils.objectToJson(bankResult));
             Result paymentResult = JsonUtils.jsonToPojo(msg, Result.class);
@@ -119,8 +110,8 @@ public class AllinPayPayMoney {
 
     @RequestMapping("/payMoney")
     @ResponseBody
-    public BankResult payMoney(@RequestBody RequestCrossMsgDTO trade) throws UnsupportedEncodingException, InterruptedException {
-        BankResult bankResult = new BankResult();
+    public CrossResponseMsgDTO payMoney(@RequestBody RequestCrossMsgDTO trade) throws UnsupportedEncodingException, InterruptedException {
+        CrossResponseMsgDTO bankResult = new CrossResponseMsgDTO();
 //        bankResult.setTrade(trade);
         Map<String, Object> bondParam = getBondParam(trade);
 
@@ -137,41 +128,47 @@ public class AllinPayPayMoney {
         if("SUCCESS".equals(resultCode)){
 
             String trxstatus = result.getString("trxstatus");
-            bankResult.setResult(result.getString("errmsg"));
-            bankResult.setBankTime(new Date());
+            bankResult.setChannelResponseTime(new Date());
             switch (trxstatus){
                 case "0000":
-                    bankResult.setStatus(StatusEnum._0.getStatus());
-                    bankResult.setBankResult("付款成功");
-                    bankResult.setBankOrderId(result.getString("trxid"));
-                    bankResult.setParam(content);
+                    bankResult.setCrossStatusCode(StatusEnum._0.getStatus());
+                    bankResult.setCrossResponseMsg("付款成功");
+                    bankResult.setChannelOrderId(result.getString("trxid"));
+                    bankResult.setChannelResponseMsg(content);
                     break;
                 case "2000":
-                    bankResult.setStatus(StatusEnum._3.getStatus());
-                    bankResult.setBankResult("交易已受理");
-                    bankResult.setParam(content);
+                    bankResult.setCrossStatusCode(StatusEnum._0.getStatus());
+                    bankResult.setCrossResponseMsg("交易已受理");
+                    bankResult.setChannelResponseMsg(content);
                     break;
                 case "0003":
-                    bankResult.setStatus(StatusEnum._3.getStatus());
-                    bankResult.setBankResult("交易异常,请查询交易");
-                    bankResult.setBankCode("305");
-                    bankResult.setParam(content);
+                    bankResult.setCrossStatusCode(StatusEnum._3.getStatus());
+                    bankResult.setCrossResponseMsg("交易异常,请查询交易");
+                    bankResult.setChannelResponseMsg(content);
+                    bankResult.setErrorCode(ResponseCodeEnum.RXH00007.getCode());
+                    bankResult.setErrorMsg(ResponseCodeEnum.RXH00007.getMsg());
                     break;
                 case "3999":
-                    bankResult.setStatus(StatusEnum._1.getStatus());
-                    bankResult.setBankResult("其他错误");
-                    bankResult.setParam(content);
+                    bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                    bankResult.setCrossResponseMsg("其他错误");
+                    bankResult.setChannelResponseMsg(content);
+                    bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+                    bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
                     break;
                 default:
-                    bankResult = new BankResult(StatusEnum._1.getStatus(), "error.5001");
-                    bankResult.setBankResult("付款失败");
-                    bankResult.setParam(content);
+                    bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                    bankResult.setCrossResponseMsg("付款失败"+result.getString("errmsg"));
+                    bankResult.setChannelResponseMsg(content);
+                    bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+                    bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
                     break;
             }
         }else {
-            bankResult = new BankResult(StatusEnum._1.getStatus(), "error.5001");
-            bankResult.setBankResult("付款失败:"+result.getString("errmsg"));
-            bankResult.setParam(content);
+            bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+            bankResult.setCrossResponseMsg("付款失败:"+result.getString("errmsg"));
+            bankResult.setChannelResponseMsg(content);
+            bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+            bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
         }
         logger.info("allinPay付款返回参数："+JSONObject.toJSONString(bankResult));
         return bankResult;

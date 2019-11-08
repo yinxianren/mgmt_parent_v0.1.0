@@ -2,14 +2,13 @@ package com.rxh.allinpay;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import com.rxh.anew.table.business.PayOrderInfoTable;
 import com.rxh.anew.table.business.RegisterCollectTable;
+import com.rxh.enums.ResponseCodeEnum;
 import com.rxh.enums.StatusEnum;
 import com.rxh.exception.PayException;
-import com.rxh.pojo.cross.BankResult;
-import com.rxh.pojo.payment.SquareTrade;
-import com.rxh.square.pojo.*;
 import com.rxh.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Map;
 import java.util.TreeMap;
 
 @Controller
@@ -30,7 +26,7 @@ public class AllinPaySMS {
     private final static Logger logger = LoggerFactory.getLogger(AllinPaySMS.class);
 
     @RequestMapping("/sendSMS")
-    public BankResult trade(@RequestBody RequestCrossMsgDTO trade) throws UnsupportedEncodingException, PayException {
+    public CrossResponseMsgDTO trade(@RequestBody RequestCrossMsgDTO trade) throws UnsupportedEncodingException, PayException {
     	TreeMap<String, Object> params = getTradeParam(trade);
 		String other = trade.getChannelInfoTable().getChannelParam();
 		logger.info("收单短信请求参数："+ JsonUtils.objectToJsonNonNull(params));
@@ -94,25 +90,29 @@ public class AllinPaySMS {
      * @throws PayException
      * @throws UnsupportedEncodingException
      */
-	private BankResult checkResult(String content) throws PayException, UnsupportedEncodingException {
-    	BankResult bankResult = new BankResult();
+	private CrossResponseMsgDTO checkResult(String content) throws PayException, UnsupportedEncodingException {
+    	CrossResponseMsgDTO bankResult = new CrossResponseMsgDTO();
     	if(StringUtils.isNotBlank(content)) {
     		JSONObject json = JSON.parseObject(content);
     		String retcode = json.getString("retcode");
     		if(retcode .equals("SUCCESS")) {
-    			bankResult.setStatus(StatusEnum._0.getStatus());
-                bankResult.setBankResult("短信发送成功");
-                bankResult.setParam(content);
+    			bankResult.setCrossStatusCode(StatusEnum._0.getStatus());
+                bankResult.setCrossResponseMsg("短信发送成功");
+                bankResult.setChannelResponseMsg(content);
     		}else {
-    			bankResult.setStatus(StatusEnum._1.getStatus());
-                bankResult.setBankResult("短信发送失败！"+json.get("retmsg"));
-                bankResult.setParam(content);
+    			bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                bankResult.setCrossResponseMsg("短信发送失败！"+json.get("retmsg"));
+                bankResult.setChannelResponseMsg(content);
+				bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+				bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
     		}
 
     	}else {
-    		bankResult.setStatus(StatusEnum._1.getStatus());
-            bankResult.setBankResult("短信发送请求失败：请求返回结果为空！");
-            bankResult.setParam(content);
+    		bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+            bankResult.setCrossResponseMsg("短信发送请求失败：请求返回结果为空！");
+            bankResult.setChannelResponseMsg(content);
+			bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+			bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
     	}
     	return bankResult;
     }

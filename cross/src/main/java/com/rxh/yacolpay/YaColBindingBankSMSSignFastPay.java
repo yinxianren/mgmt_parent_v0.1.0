@@ -2,7 +2,12 @@ package com.rxh.yacolpay;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.rxh.pojo.cross.BankResult;
+import com.rxh.anew.dto.CrossResponseMsgDTO;
+import com.rxh.anew.dto.RequestCrossMsgDTO;
+import com.rxh.anew.table.business.MerchantCardTable;
+import com.rxh.anew.table.channel.ChannelExtraInfoTable;
+import com.rxh.enums.ResponseCodeEnum;
+import com.rxh.enums.StatusEnum;
 import com.rxh.pojo.payment.SquareTrade;
 import com.rxh.square.pojo.ExtraChannelInfo;
 import com.rxh.square.pojo.MerchantCard;
@@ -13,10 +18,7 @@ import com.rxh.yacolpay.utils.YaColIPaySignUtil;
 import com.rxh.yacolpay.utils.YaColIPayTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URLDecoder;
@@ -39,17 +41,18 @@ public class YaColBindingBankSMSSignFastPay extends AbstractYaColIPay{
 
 
     @RequestMapping("/bindingBankSMSSign")
-    protected BankResult bindingBankSMSSign(SquareTrade squareTrade){
-        BankResult bankResult = new BankResult();
+    protected CrossResponseMsgDTO bindingBankSMSSign(RequestCrossMsgDTO squareTrade){
+        CrossResponseMsgDTO bankResult = new CrossResponseMsgDTO();
         try{
-            ExtraChannelInfo extraChannelInfo = squareTrade.getExtraChannelInfo();
-            JSONObject param = JSON.parseObject(extraChannelInfo.getData());
+            ChannelExtraInfoTable extraChannelInfo = squareTrade.getChannelExtraInfoTable();
+            JSONObject param = JSON.parseObject(extraChannelInfo.getChannelParam());
             Map<String, String> bondParam = getSendSMSParam(squareTrade);
             if(null == bondParam){
-                bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-                bankResult.setBankResult("cross 工程封装参数异常");
-                bankResult.setParam(null);
-                bankResult.setBankData(null);
+                bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                bankResult.setCrossResponseMsg("cross 工程封装参数异常");
+                bankResult.setChannelResponseMsg(null);
+                bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+                bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
                 logger.info("【酷宝支付-绑卡短信重发】响应给peayment工程信息：{}", JsonUtils.objectToJson(bankResult));
                 return bankResult;
             }
@@ -64,33 +67,38 @@ public class YaColBindingBankSMSSignFastPay extends AbstractYaColIPay{
                 if("APPLY_SUCCESS".equalsIgnoreCase(content.get("response_code").toString())){
 //                    String card_id= content.get("card_id").toString();
                     String ticket=content.get("ticket").toString();
-                    bankResult.setStatus(SystemConstant.BANK_STATUS_SUCCESS);
-                    bankResult.setBankResult(content.get("response_message").toString());
-                    bankResult.setParam(result);
+                    bankResult.setCrossStatusCode(StatusEnum._0.getStatus());
+                    bankResult.setCrossResponseMsg(content.get("response_message").toString());
+                    bankResult.setChannelResponseMsg(result);
 //                    String bankData="{\"card_id\":\""+card_id+"\"}";
-                    bankResult.setBankData(ticket);
                     logger.info("【酷宝支付-绑卡短信重发】响应给peayment工程信息：{}", JsonUtils.objectToJson(bankResult));
                     return bankResult;
                 }else {
-                    bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-                    bankResult.setBankResult(content.get("error_message")==null?content.get("errorMessage").toString():content.get("error_message").toString());
-                    bankResult.setParam(result);
+                    bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                    bankResult.setCrossResponseMsg(content.get("error_message")==null?content.get("errorMessage").toString():content.get("error_message").toString());
+                    bankResult.setChannelResponseMsg(result);
                     logger.info("【酷宝支付-绑卡短信重发】响应给peayment工程信息：{}",JsonUtils.objectToJson(bankResult));
+                    bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+                    bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
                     return bankResult;
                 }
             }else{
-                bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-                bankResult.setBankResult("验证酷宝返回参数不通过");
-                bankResult.setParam(result);
+                bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+                bankResult.setCrossResponseMsg("验证酷宝返回参数不通过");
+                bankResult.setChannelResponseMsg(result);
                 logger.info("【酷宝支付-绑卡短信重发】响应给peayment工程信息：{}",JsonUtils.objectToJson(bankResult));
+                bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+                bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
                 return bankResult;
             }
 
         }catch (Exception e){
             e.printStackTrace();
-            bankResult.setStatus(SystemConstant.BANK_STATUS_FAIL);
-            bankResult.setBankResult("cross 工程处理请求过程中发生异常");
-            bankResult.setParam(e.getMessage());
+            bankResult.setCrossStatusCode(StatusEnum._1.getStatus());
+            bankResult.setCrossResponseMsg("cross 工程处理请求过程中发生异常");
+            bankResult.setChannelResponseMsg(e.getMessage());
+            bankResult.setErrorCode(ResponseCodeEnum.RXH99999.getCode());
+            bankResult.setErrorMsg(ResponseCodeEnum.RXH99999.getMsg());
             logger.info("【酷宝支付-绑定银行卡短信重发】响应给peayment工程信息：{}", JsonUtils.objectToJson(bankResult));
             return bankResult;
         }
@@ -103,13 +111,13 @@ public class YaColBindingBankSMSSignFastPay extends AbstractYaColIPay{
      * @param trade
      * @return
      */
-    private Map<String, String> getSendSMSParam(SquareTrade trade){
+    private Map<String, String> getSendSMSParam(RequestCrossMsgDTO trade){
         try{
 
-            ExtraChannelInfo extraChannelInfo = trade.getExtraChannelInfo();
-            JSONObject extraChannelInfoData = JSON.parseObject(extraChannelInfo.getData());
-            MerchantCard merchantCard = trade.getMerchantCard();
-            JSONObject  banckData=JSON.parseObject(merchantCard.getBackData());
+            ChannelExtraInfoTable extraChannelInfo = trade.getChannelExtraInfoTable();
+            JSONObject extraChannelInfoData = JSON.parseObject(extraChannelInfo.getChannelParam());
+            MerchantCardTable merchantCard = trade.getMerchantCardTable();
+            JSONObject  banckData=JSON.parseObject(merchantCard.getChannelRespResult());
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
             String privateKeyRSA =extraChannelInfoData.getString("privateKey");
@@ -124,7 +132,7 @@ public class YaColBindingBankSMSSignFastPay extends AbstractYaColIPay{
 
             /*******************业务参数**********************************/
             String ticket=banckData.getString("ticket");//返回的ticket
-            String client_ip = trade.getIp();;//IP
+            String client_ip = trade.getIP();;//IP
 
             Map<String,String> params=new HashMap<String, String>();
             params.put("service",service);
