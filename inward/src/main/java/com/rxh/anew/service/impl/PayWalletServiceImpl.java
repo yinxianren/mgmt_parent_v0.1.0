@@ -400,7 +400,6 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         cwt.setId( null == cwt.getId() ? null : cwt.getId())
                 .setChannelId( null == cwt.getChannelId() ? poi.getChannelId() : cwt.getChannelId())
                 .setOrganizationId( null == cwt.getOrganizationId() ? cit.getOrganizationId() : cwt.getOrganizationId())
-                .setProductId( null == cwt.getProductId() ? poi.getProductId() : cwt.getProductId())
                 .setTotalAmount(totalAmount)
                 .setIncomeAmount(totalInAmount)
                 .setOutAmount(cwt.getOutAmount())
@@ -656,24 +655,21 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
 
     @Override
     public Tuple2<ChannelWalletTable, ChannelDetailsTable> updateChannelWalletByTransOrder(ChannelWalletTable cwt, ChannelInfoTable cit, TransOrderInfoTable toit, MerchantRateTable mrt) {
-//        ChannelWalletTable cwt = new ChannelWalletTable();
-//        cwt.setId();
-//        cwt.setChannelId();
-//        cwt.setOrganizationId();
-//        cwt.setProductId();
-//        cwt.setTotalAmount();
-//        cwt.setIncomeAmount();
-//        cwt.setOutAmount();
-//        cwt.setTotalFee();
-//        cwt.setFeeProfit();
-//        cwt.setTotalBalance();
-//        cwt.setTotalAvailableAmount();
-//        cwt.setTotalUnavailableAmount();
-//        cwt.setTotalMargin();
-//        cwt.setTotalFreezeAmount();
-//        cwt.setStatus();
-//        cwt.setCreateTime();
-//        cwt.setUpdateTime();
+
+
+//
+//        cwt
+//        .setTotalAmount()
+//        .setIncomeAmount()
+//        .setOutAmount()
+//        .setTotalFee()
+//        .setFeeProfit()
+//        .setTotalBalance()
+//        .setTotalAvailableAmount()
+//        .setTotalUnavailableAmount()
+//        .setTotalMargin()
+//        .setTotalFreezeAmount()
+//        .setUpdateTime();
 
 
 

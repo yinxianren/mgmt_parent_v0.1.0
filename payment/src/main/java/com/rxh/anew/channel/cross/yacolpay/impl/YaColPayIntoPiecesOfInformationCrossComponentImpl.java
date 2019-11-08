@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class IntoPiecesOfInformationCrossComponentImpl implements IntoPiecesOfInformationCrossComponent {
+public class YaColPayIntoPiecesOfInformationCrossComponentImpl implements IntoPiecesOfInformationCrossComponent {
     @Override
     public CrossResponseMsgDTO addCusInfo(RequestCrossMsgDTO requestCrossMsgDTO) {
         return null;

@@ -24,7 +24,6 @@ public class ChannelWalletTable  implements Serializable {
 	private Long id;//表主键
 	private String channelId;//通道id
 	private String organizationId;//机构ID
-	private String productId;//产品类型ID
 	private BigDecimal totalAmount;//订单总金额
 	private BigDecimal incomeAmount;//入账总金额
 	private BigDecimal outAmount;//出帐总金额
@@ -54,10 +53,6 @@ public class ChannelWalletTable  implements Serializable {
 		return this;
 	}
 
-	public ChannelWalletTable setProductId(String productId) {
-		this.productId = productId;
-		return this;
-	}
 
 	public ChannelWalletTable setTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;

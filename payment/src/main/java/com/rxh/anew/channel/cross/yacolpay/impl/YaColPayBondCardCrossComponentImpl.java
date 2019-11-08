@@ -1,4 +1,4 @@
-package com.rxh.anew.channel.cross.sicpay.impl;
+package com.rxh.anew.channel.cross.yacolpay.impl;
 
 import com.rxh.anew.channel.cross.BondCardCrossComponent;
 import com.rxh.anew.dto.CrossResponseMsgDTO;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class BondCardCrossComponentImpl implements BondCardCrossComponent {
+public class YaColPayBondCardCrossComponentImpl implements BondCardCrossComponent {
     @Override
     public CrossResponseMsgDTO bondCardApply(RequestCrossMsgDTO requestCrossMsgDTO) {
         return null;

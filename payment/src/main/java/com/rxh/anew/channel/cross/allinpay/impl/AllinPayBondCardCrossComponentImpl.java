@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class BondCardCrossComponentImpl implements BondCardCrossComponent {
+public class AllinPayBondCardCrossComponentImpl implements BondCardCrossComponent {
     @Override
     public CrossResponseMsgDTO bondCardApply(RequestCrossMsgDTO requestCrossMsgDTO) {
         return null;

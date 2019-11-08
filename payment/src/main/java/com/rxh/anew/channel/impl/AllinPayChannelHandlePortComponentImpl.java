@@ -25,62 +25,62 @@ import org.springframework.stereotype.Component;
 public class AllinPayChannelHandlePortComponentImpl implements AllinPayChannelHandlePortComponent{
 
     private  final PayMessageSend payMessageSend;
-    private  final IntoPiecesOfInformationCrossComponentImpl intoPiecesOfInformationCrossComponentImpl;
-    private  final BondCardCrossComponentImpl bondCardCrossComponentImpl;
-    private  final PayOrderCrossComponentImpl payOrderCrossComponentImpl;
-    private  final TransOrderCrossComponentImpl transOrderCrossComponentImpl;
-    private  final NoAuthenticationPayOrderCrossComponentImpl noAuthenticationPayOrderCrossComponentImpl;
+    private  final AllinPayIntoPiecesOfInformationCrossComponentImpl allinPayIntoPiecesOfInformationCrossComponentImpl;
+    private  final AllinPayBondCardCrossComponentImpl allinPayBondCardCrossComponentImpl;
+    private  final AllinPayPayOrderCrossComponentImpl allinPayPayOrderCrossComponentImpl;
+    private  final AllinPayTransOrderCrossComponentImpl allinPayTransOrderCrossComponentImpl;
+    private  final AllinPayNoAuthenticationPayOrderCrossComponentImpl allinPayNoAuthenticationPayOrderCrossComponentImpl;
     @Override
     public CrossResponseMsgDTO addCusInfo(RequestCrossMsgDTO requestCrossMsgDTO, InnerPrintLogObject ipo) {
-        return intoPiecesOfInformationCrossComponentImpl.addCusInfo(requestCrossMsgDTO);
+        return allinPayIntoPiecesOfInformationCrossComponentImpl.addCusInfo(requestCrossMsgDTO);
     }
     @Override
     public CrossResponseMsgDTO bankCardBind(RequestCrossMsgDTO requestCrossMsgDTO, InnerPrintLogObject ipo) {
-        return intoPiecesOfInformationCrossComponentImpl.bankCardBind(requestCrossMsgDTO);
+        return allinPayIntoPiecesOfInformationCrossComponentImpl.bankCardBind(requestCrossMsgDTO);
     }
     @Override
     public CrossResponseMsgDTO serviceFulfillment(RequestCrossMsgDTO requestCrossMsgDTO, InnerPrintLogObject ipo) {
-        return intoPiecesOfInformationCrossComponentImpl.serviceFulfillment(requestCrossMsgDTO);
+        return allinPayIntoPiecesOfInformationCrossComponentImpl.serviceFulfillment(requestCrossMsgDTO);
     }
 
     @Override
     public CrossResponseMsgDTO bondCardApply(RequestCrossMsgDTO requestCrossMsgDTO, InnerPrintLogObject ipo) {
-        return bondCardCrossComponentImpl.bondCardApply(requestCrossMsgDTO);
+        return allinPayBondCardCrossComponentImpl.bondCardApply(requestCrossMsgDTO);
     }
 
     @Override
     public CrossResponseMsgDTO reGetBondCode(RequestCrossMsgDTO requestCrossMsgDTO, InnerPrintLogObject ipo) {
-        return bondCardCrossComponentImpl.reGetBondCode(requestCrossMsgDTO);
+        return allinPayBondCardCrossComponentImpl.reGetBondCode(requestCrossMsgDTO);
     }
 
     @Override
     public CrossResponseMsgDTO confirmBondCard(RequestCrossMsgDTO requestCrossMsgDTO, InnerPrintLogObject ipo) {
-        return bondCardCrossComponentImpl.confirmBondCard(requestCrossMsgDTO);
+        return allinPayBondCardCrossComponentImpl.confirmBondCard(requestCrossMsgDTO);
     }
 
     @Override
     public CrossResponseMsgDTO payApply(RequestCrossMsgDTO requestCrossMsgDTO, InnerPrintLogObject ipo) {
-        return payOrderCrossComponentImpl.payApply(requestCrossMsgDTO);
+        return allinPayPayOrderCrossComponentImpl.payApply(requestCrossMsgDTO);
     }
 
     @Override
     public CrossResponseMsgDTO getPayCode(RequestCrossMsgDTO requestCrossMsgDTO, InnerPrintLogObject ipo) {
-        return payOrderCrossComponentImpl.getPayCode(requestCrossMsgDTO);
+        return allinPayPayOrderCrossComponentImpl.getPayCode(requestCrossMsgDTO);
     }
 
     @Override
     public CrossResponseMsgDTO confirmPay(RequestCrossMsgDTO requestCrossMsgDTO, InnerPrintLogObject ipo) {
-        return payOrderCrossComponentImpl.confirmPay(requestCrossMsgDTO);
+        return allinPayPayOrderCrossComponentImpl.confirmPay(requestCrossMsgDTO);
     }
 
     @Override
     public CrossResponseMsgDTO payment(RequestCrossMsgDTO requestCrossMsgDTO, InnerPrintLogObject ipo) {
-        return transOrderCrossComponentImpl.payment(requestCrossMsgDTO);
+        return allinPayTransOrderCrossComponentImpl.payment(requestCrossMsgDTO);
     }
 
     @Override
     public CrossResponseMsgDTO exemptCodePay(RequestCrossMsgDTO requestCrossMsgDTO, InnerPrintLogObject ipo) {
-        return noAuthenticationPayOrderCrossComponentImpl.exemptCodePay(requestCrossMsgDTO);
+        return allinPayNoAuthenticationPayOrderCrossComponentImpl.exemptCodePay(requestCrossMsgDTO);
     }
 
     public Tuple2 channelDifferBusinessHandleByPayOrder(RequestCrossMsgDTO requestCrossMsgDTO, CrossResponseMsgDTO crossResponseMsgDTO) {

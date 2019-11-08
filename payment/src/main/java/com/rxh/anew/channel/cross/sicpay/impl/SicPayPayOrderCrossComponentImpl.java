@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * Description:
  */
 @Component
-public class PayOrderCrossComponentImpl implements PayOrderCrossComponent {
+public class SicPayPayOrderCrossComponentImpl implements PayOrderCrossComponent {
     @Override
     public CrossResponseMsgDTO payApply(RequestCrossMsgDTO requestCrossMsgDTO) {
         return null;

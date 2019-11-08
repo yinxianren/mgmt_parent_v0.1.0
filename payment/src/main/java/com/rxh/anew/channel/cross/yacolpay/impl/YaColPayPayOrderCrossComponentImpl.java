@@ -1,4 +1,4 @@
-package com.rxh.anew.channel.cross.allinpay.impl;
+package com.rxh.anew.channel.cross.yacolpay.impl;
 
 import com.rxh.anew.channel.cross.PayOrderCrossComponent;
 import com.rxh.anew.dto.CrossResponseMsgDTO;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * Description:
  */
 @Component
-public class PayOrderCrossComponentImpl implements PayOrderCrossComponent {
+public class YaColPayPayOrderCrossComponentImpl implements PayOrderCrossComponent {
     @Override
     public CrossResponseMsgDTO payApply(RequestCrossMsgDTO requestCrossMsgDTO) {
         return null;

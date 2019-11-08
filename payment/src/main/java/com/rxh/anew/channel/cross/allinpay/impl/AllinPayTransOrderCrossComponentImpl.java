@@ -1,6 +1,6 @@
 package com.rxh.anew.channel.cross.allinpay.impl;
 
-import com.rxh.anew.channel.cross.allinpay.NoAuthenticationPayOrderCrossComponent;
+import com.rxh.anew.channel.cross.TransOrderCrossComponent;
 import com.rxh.anew.dto.CrossResponseMsgDTO;
 import com.rxh.anew.dto.RequestCrossMsgDTO;
 import org.springframework.stereotype.Component;
@@ -9,14 +9,13 @@ import org.springframework.stereotype.Component;
  * Created with IntelliJ IDEA.
  * User: panda
  * Date: 2019/11/7
- * Time: 上午11:40
+ * Time: 上午11:31
  * Description:
  */
 @Component
-public class NoAuthenticationPayOrderCrossComponentImpl implements NoAuthenticationPayOrderCrossComponent {
-
+public class AllinPayTransOrderCrossComponentImpl implements TransOrderCrossComponent {
     @Override
-    public CrossResponseMsgDTO exemptCodePay(RequestCrossMsgDTO requestCrossMsgDTO) {
+    public CrossResponseMsgDTO payment(RequestCrossMsgDTO requestCrossMsgDTO) {
         return null;
     }
 }
