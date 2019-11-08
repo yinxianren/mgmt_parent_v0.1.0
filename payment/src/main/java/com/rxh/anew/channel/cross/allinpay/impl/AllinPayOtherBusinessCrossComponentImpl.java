@@ -1,6 +1,7 @@
 package com.rxh.anew.channel.cross.allinpay.impl;
 
 import com.rxh.anew.channel.cross.allinpay.AllinPayOtherBusinessCrossComponent;
+import org.springframework.stereotype.Component;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,6 +10,7 @@ import com.rxh.anew.channel.cross.allinpay.AllinPayOtherBusinessCrossComponent;
  * Time: 上午11:35
  * Description:
  */
+@Component
 public class AllinPayOtherBusinessCrossComponentImpl implements AllinPayOtherBusinessCrossComponent {
 
 }
