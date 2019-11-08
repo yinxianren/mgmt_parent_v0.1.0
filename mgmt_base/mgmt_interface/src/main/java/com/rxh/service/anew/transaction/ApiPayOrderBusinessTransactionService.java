@@ -3,6 +3,7 @@ package com.rxh.service.anew.transaction;
 import com.rxh.anew.table.agent.AgentMerchantWalletTable;
 import com.rxh.anew.table.agent.AgentMerchantsDetailsTable;
 import com.rxh.anew.table.business.PayOrderInfoTable;
+import com.rxh.anew.table.business.TransOrderInfoTable;
 import com.rxh.anew.table.channel.ChannelDetailsTable;
 import com.rxh.anew.table.channel.ChannelHistoryTable;
 import com.rxh.anew.table.channel.ChannelWalletTable;
@@ -41,4 +42,13 @@ public interface ApiPayOrderBusinessTransactionService {
      * @param poi
      */
     void updateOrSavePayOrderBussInfo(Tuple2<MerchantWalletTable, MerchantsDetailsTable> merWalletTuple, Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> terMerWalletTuple, Tuple2<ChannelWalletTable, ChannelDetailsTable> chanWalletTuple, Tuple2<AgentMerchantWalletTable, AgentMerchantsDetailsTable> agentMerWalletTuple, PayOrderInfoTable poi);
+    /**
+     *
+     * @param merWalletTuple
+     * @param terMerWalletTuple
+     * @param chanWalletTuple
+     * @param agentMerWalletTuple
+     * @param toit
+     */
+    void updateOrSaveTransOrderBussInfo(Tuple2<MerchantWalletTable, MerchantsDetailsTable> merWalletTuple, Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> terMerWalletTuple, Tuple2<ChannelWalletTable, ChannelDetailsTable> chanWalletTuple, Tuple2<AgentMerchantWalletTable, AgentMerchantsDetailsTable> agentMerWalletTuple, TransOrderInfoTable toit);
 }

@@ -142,5 +142,14 @@ public interface PayWalletService {
      * @param mrt
      * @return
      */
-    Tuple2<ChannelWalletTable, ChannelDetailsTable> updateChannelWalletByTransOrder(ChannelWalletTable cwt, ChannelInfoTable cit, TransOrderInfoTable toit, MerchantRateTable mrt);
+    Tuple2<ChannelWalletTable, ChannelDetailsTable> updateChannelWalletByTransOrder(ChannelWalletTable cwt, ChannelInfoTable cit, TransOrderInfoTable toit, MerchantRateTable mrt) throws Exception;
+
+    /**
+     *
+     * @param amw
+     * @param ams
+     * @param toit
+     * @return
+     */
+    Tuple2<AgentMerchantWalletTable, AgentMerchantsDetailsTable> updateAgentMerWalletByTransOrder(AgentMerchantWalletTable amw, AgentMerchantSettingTable ams, TransOrderInfoTable toit);
 }

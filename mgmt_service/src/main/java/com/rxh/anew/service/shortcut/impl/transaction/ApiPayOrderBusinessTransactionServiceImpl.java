@@ -3,6 +3,7 @@ package com.rxh.anew.service.shortcut.impl.transaction;
 import com.rxh.anew.service.db.agent.AgentMerchantWalletDBService;
 import com.rxh.anew.service.db.agent.AgentMerchantsDetailsDBService;
 import com.rxh.anew.service.db.business.PayOrderInfoDBService;
+import com.rxh.anew.service.db.business.TransOrderInfoDBService;
 import com.rxh.anew.service.db.channel.ChannelDetailsDbService;
 import com.rxh.anew.service.db.channel.ChannelHistoryDbService;
 import com.rxh.anew.service.db.channel.ChannelWalletDbService;
@@ -14,6 +15,7 @@ import com.rxh.anew.service.db.terminal.TerminalMerchantsWalletDBservice;
 import com.rxh.anew.table.agent.AgentMerchantWalletTable;
 import com.rxh.anew.table.agent.AgentMerchantsDetailsTable;
 import com.rxh.anew.table.business.PayOrderInfoTable;
+import com.rxh.anew.table.business.TransOrderInfoTable;
 import com.rxh.anew.table.channel.ChannelDetailsTable;
 import com.rxh.anew.table.channel.ChannelHistoryTable;
 import com.rxh.anew.table.channel.ChannelWalletTable;
@@ -45,6 +47,7 @@ import java.util.Set;
 public class ApiPayOrderBusinessTransactionServiceImpl implements ApiPayOrderBusinessTransactionService {
 
     private final PayOrderInfoDBService payOrderInfoDBService;
+    private final TransOrderInfoDBService transOrderInfoDBService;
     private final ChannelHistoryDbService channelHistoryDbService;
     private final RiskQuotaDBService riskQuotaDBService;
 
@@ -88,6 +91,28 @@ public class ApiPayOrderBusinessTransactionServiceImpl implements ApiPayOrderBus
         agentMerchantsDetailsDBService.save(agentMerWalletTuple._2);
         //更新订单
         payOrderInfoDBService.updateById(poi);
+    }
+
+    @Override
+    public void updateOrSaveTransOrderBussInfo(Tuple2<MerchantWalletTable, MerchantsDetailsTable> merWalletTuple,
+                                               Tuple2<TerminalMerchantsWalletTable, TerminalMerchantsDetailsTable> terMerWalletTuple,
+                                               Tuple2<ChannelWalletTable, ChannelDetailsTable> chanWalletTuple,
+                                               Tuple2<AgentMerchantWalletTable, AgentMerchantsDetailsTable> agentMerWalletTuple,
+                                               TransOrderInfoTable toit) {
+        //商户
+        merchantWalletDBService.updateById(merWalletTuple._1);
+        merchantsDetailsDBService.save(merWalletTuple._2);
+        //终端商户
+        terminalMerchantsWalletDBservice.updateById(terMerWalletTuple._1);
+        terminalMerchantsDetailsDBService.save(terMerWalletTuple._2);
+        //通道
+        channelWalletDbService.updateById(chanWalletTuple._1);
+        channelDetailsDbService.save(chanWalletTuple._2);
+        //终端商户
+        agentMerchantWalletDBService.updateById(agentMerWalletTuple._1);
+        agentMerchantsDetailsDBService.save(agentMerWalletTuple._2);
+        //更新订单
+        transOrderInfoDBService.updateById(toit);
     }
 
 }

@@ -443,11 +443,12 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
         //订单金额
         BigDecimal amount = poi.getAmount();
         //总订单金额
-//        BigDecimal totalAmount = ( null == amw.getTotalAmount() ? amount : amw.getTotalAmount().add(amount) );
+        BigDecimal totalAmount = ( null == amw.getTotalAmount() ? amount : amw.getTotalAmount().add(amount) );
 //        BigDecimal payFee = poi.getPayFee().divide(new BigDecimal(100));
         //订单入账总金额
 //        BigDecimal inAmount = amount.multiply(payFee).setScale(2,BigDecimal.ROUND_UP);
 //        BigDecimal incomeAmount = ( null == amw.getIncomeAmount() ? inAmount : amw.getIncomeAmount().add(inAmount) );
+
         //代理费率
         BigDecimal rateFee = ( null == ams.getRateFee() ? new BigDecimal(0) :  ams.getRateFee().divide(new BigDecimal(100)) );
         BigDecimal singleFee = ams.getSingleFee();
@@ -473,8 +474,8 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
 
         amw.setId( null == amw.getId() ? null : amw.getId())
                 .setAgentMerchantId( null ==  amw.getAgentMerchantId() ?  ams.getAgentMerchantId() : amw.getAgentMerchantId() )
-                .setTotalAmount(amw.getTotalAmount())
-                .setIncomeAmount(amw.getIncomeAmount())//总入账金额,这里存放的是终端商户入账的金额
+                .setTotalAmount(totalAmount)
+                .setIncomeAmount(totalFee)
                 .setOutAmount(amw.getOutAmount())//手续费出帐金额
                 .setTotalBalance(totalBalance) //代理商总余额
                 .setTotalAvailableAmount(totalAvailableAmount)
@@ -491,8 +492,8 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
                 .setMerOrderId(poi.getMerOrderId())
                 .setPlatformOrderId(poi.getPlatformOrderId())
                 .setProductId(poi.getProductId())
-                .setAmount(new BigDecimal(0))
-                .setInAmount(new BigDecimal(0))
+                .setAmount(amount)
+                .setInAmount(agentMerFee)
                 .setOutAmount(new BigDecimal(0))
                 .setRateFee(ams.getRateFee())
                 .setFee(agentMerFee)
@@ -654,51 +655,152 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
 
 
     @Override
-    public Tuple2<ChannelWalletTable, ChannelDetailsTable> updateChannelWalletByTransOrder(ChannelWalletTable cwt, ChannelInfoTable cit, TransOrderInfoTable toit, MerchantRateTable mrt) {
-
+    public Tuple2<ChannelWalletTable, ChannelDetailsTable> updateChannelWalletByTransOrder(ChannelWalletTable cwt, ChannelInfoTable cit, TransOrderInfoTable toit, MerchantRateTable mrt) throws Exception {
         //订单金额
         BigDecimal amount = toit.getAmount();
         //总可用余额
-//        BigDecimal totalAmount = cwt
-//
-//
-//        cwt
-//        .setTotalAmount()
-//        .setIncomeAmount()
-//        .setOutAmount()
-//        .setTotalFee()
-//        .setFeeProfit()
-//        .setTotalBalance()
-//        .setTotalAvailableAmount()
-//        .setTotalUnavailableAmount()
-//        .setTotalMargin()
-//        .setTotalFreezeAmount()
-//        .setUpdateTime();
-//
-//        ChannelDetailsTable cdt = new ChannelDetailsTable()
-//        .setChRateFee()
-//        .setChFee()
-//        .setChFeeProfit()
-//        .setMerRateFee()
-//        .setMerFee()
-//        .setId(null)
-//        .setChannelId(toit.getChannelId())
-//        .setOrganizationId(cit.getOrganizationId())
-//        .setProductId(toit.getProductId())
-//        .setMerOrderId(toit.getMerOrderId())
-//        .setPlatformOrderId(toit.getPlatformOrderId())
-//        .setAmount(amount)
-//        .setInAmount(null)
-//        .setOutAmount()
-//        .setTotalBalance()
-//        .setTimestamp(System.currentTimeMillis())
-//        .setStatus(StatusEnum._0.getStatus())
-//        .setCreateTime(new Date())
-//        .setUpdateTime(new Date());
+        BigDecimal totalBalance = cwt.getTotalAmount();
+        if(amount.compareTo(totalBalance) == 1 )
+            throw new Exception(format("快捷MQ队列--->代付业务钱包更新: 订单金额(%s)>商户钱包总余额(%s)",amount,totalBalance));
+        //总可用余额
+        BigDecimal totalAvailableAmount = cwt.getTotalAvailableAmount();
+        if(amount.compareTo(totalAvailableAmount) == 1)
+            throw  new Exception(format("快捷MQ队列--->代付业务钱包更新: 订单金额(%s)>商户钱包总可用余额(%s)",amount,totalAvailableAmount));
+        //通道费用
+        BigDecimal chRateFee = cit.getChannelRateFee();
+        chRateFee = null == chRateFee ? new BigDecimal(0) : chRateFee;
+        chRateFee = chRateFee.divide(new BigDecimal(100));
+        BigDecimal chSingleFee = cit.getChannelSingleFee();
+        BigDecimal chFee = amount.multiply(chRateFee).setScale(2,BigDecimal.ROUND_UP);
+        BigDecimal totalSingleFee =chFee.add(chSingleFee);
+        //商户费率
+        BigDecimal merRateFee = mrt.getRateFee();
+        merRateFee = null == merRateFee ? new BigDecimal(0) : merRateFee;
+        merRateFee = merRateFee.divide(new BigDecimal(100));
+        BigDecimal merSingleFee = mrt.getSingleFee();
+        BigDecimal merFee = amount.multiply(merRateFee).setScale(2,BigDecimal.ROUND_UP);
+        BigDecimal merTotalSingleFee = merFee.add(merSingleFee);
+        //通道单笔利润
+        BigDecimal singleProfit = merTotalSingleFee.subtract(totalSingleFee);
+        //通道总利润
+        BigDecimal feeProfit = cwt.getFeeProfit();
+        feeProfit = null == feeProfit ? singleProfit : feeProfit.add(singleProfit);
+        //总费用
+        BigDecimal totalFee = cwt.getTotalFee();
+        totalFee = totalFee == null ? totalSingleFee : totalFee.add(totalSingleFee);
+        //单笔输出金额
+        BigDecimal singleOutAmount = amount.subtract(totalSingleFee);
+        //总输出金额
+        BigDecimal totalOutAmount = cwt.getOutAmount();
+        totalOutAmount = null == totalOutAmount ? singleOutAmount : totalOutAmount.add(singleOutAmount);
+        //总不可用余额
+        BigDecimal totalUnavailableAmount = cwt.getTotalUnavailableAmount();
+        //冻结资金
+        BigDecimal totalFreezeAmount = cwt.getTotalFreezeAmount();
+        totalFreezeAmount = null == totalFreezeAmount ? new BigDecimal(0) : totalFreezeAmount;
+        //判断结算周期
+        List<String>  settleCycleList= Arrays.asList("d0","D0","t0","T0");
+        String settleCycle = isBlank(cit.getSettleCycle()) ? "T7"  :  cit.getSettleCycle().trim() ;
+        if( !settleCycleList.contains(settleCycle) ){
+            totalFreezeAmount = totalFreezeAmount.add(amount);
+            totalAvailableAmount = totalAvailableAmount.subtract(amount);
+        }else{
+            totalAvailableAmount = totalAvailableAmount.subtract(amount);
+            totalBalance = totalBalance.subtract(amount);
+        }
+        cwt
+                .setTotalAmount(cwt.getTotalAmount())
+                .setOutAmount(totalOutAmount)
+                .setTotalFee(totalFee)
+                .setFeeProfit(feeProfit)
+                .setTotalBalance(totalBalance)
+                .setTotalAvailableAmount(totalAvailableAmount)
+                .setTotalUnavailableAmount(totalUnavailableAmount)
+                .setTotalFreezeAmount(totalFreezeAmount)
+                .setUpdateTime(new Date());
+        ChannelDetailsTable cdt = new ChannelDetailsTable()
+                .setChRateFee(cit.getChannelRateFee())
+                .setChFee(totalSingleFee)
+                .setChFeeProfit(singleProfit)
+                .setMerRateFee(mrt.getRateFee())
+                .setMerFee(merTotalSingleFee)
+                .setId(null)
+                .setChannelId(toit.getChannelId())
+                .setOrganizationId(cit.getOrganizationId())
+                .setProductId(toit.getProductId())
+                .setMerOrderId(toit.getMerOrderId())
+                .setPlatformOrderId(toit.getPlatformOrderId())
+                .setAmount(amount)
+                .setInAmount(null)
+                .setOutAmount(singleOutAmount)
+                .setTotalBalance(totalBalance)
+                .setTimestamp(System.currentTimeMillis())
+                .setStatus(StatusEnum._0.getStatus())
+                .setCreateTime(new Date())
+                .setUpdateTime(new Date());
+        return new Tuple2(cwt,cdt);
+    }
 
+    @Override
+    public Tuple2<AgentMerchantWalletTable, AgentMerchantsDetailsTable> updateAgentMerWalletByTransOrder(AgentMerchantWalletTable amw, AgentMerchantSettingTable ams, TransOrderInfoTable toit) {
 
+        //订单金额
+        BigDecimal amount = toit.getAmount();
+        //代理商费用
+        BigDecimal agentRateFee = ams.getRateFee();
+        agentRateFee = null == agentRateFee ? new BigDecimal(0) :  agentRateFee;
+        agentRateFee = agentRateFee.divide(new BigDecimal(100));
+        BigDecimal agentFee = amount.multiply(agentRateFee).setScale(2,BigDecimal.ROUND_UP);
+        BigDecimal agentSingleFee = ams.getSingleFee();
+        BigDecimal totalSingleFee = agentFee.add(agentSingleFee);
+        //总入账金额
+        BigDecimal totalInAmount = amw.getIncomeAmount();
+        totalInAmount = null == totalInAmount ? totalSingleFee : totalInAmount.add(totalSingleFee);
+        //总可用余额
+        BigDecimal totalBalance = amw.getTotalAmount();
+        totalBalance = totalBalance.add(totalSingleFee);
+        //总可用余额
+        BigDecimal totalAvailableAmount = amw.getTotalAvailableAmount();
+        //总不可用余额
+        BigDecimal totalUnavailableAmount = amw.getTotalUnavailableAmount();
 
-        return null;
+        //判断结算周期
+        List<String>  settleCycleList= Arrays.asList("d0","D0","t0","T0");
+        String settleCycle = isBlank(ams.getSettleCycle()) ? "T7"  :  ams.getSettleCycle().trim() ;
+        if( !settleCycleList.contains(settleCycle) ){
+            totalUnavailableAmount = totalUnavailableAmount.add(totalSingleFee);
+        }else{
+            totalAvailableAmount = totalAvailableAmount.add(totalSingleFee);
+        }
+        amw
+                .setTotalAmount(amw.getTotalAmount())
+                .setIncomeAmount(totalInAmount)
+                .setOutAmount(amw.getOutAmount())
+                .setTotalBalance(totalBalance)
+                .setTotalAvailableAmount(totalAvailableAmount)
+                .setTotalUnavailableAmount(totalUnavailableAmount)
+                .setTotalFee(amw.getTotalFee())
+                .setTotalFreezeAmount(amw.getTotalFreezeAmount())
+                .setUpdateTime(new Date());
+
+        AgentMerchantsDetailsTable amdt = new AgentMerchantsDetailsTable()
+                .setId(null)
+                .setAgentMerchantId(toit.getMerchantId())
+                .setMerOrderId(toit.getMerOrderId())
+                .setPlatformOrderId(toit.getPlatformOrderId())
+                .setProductId(toit.getProductId())
+                .setAmount(amount)
+                .setInAmount(totalSingleFee)
+                .setOutAmount(null)
+                .setRateFee( ams.getRateFee())
+                .setFee(totalSingleFee)
+                .setTotalBalance(totalBalance)
+                .setTimestamp(System.currentTimeMillis())
+                .setStatus(StatusEnum._0.getStatus())
+                .setCreateTime(new Date())
+                .setUpdateTime(new Date());
+
+        return new Tuple2(amw,amdt);
     }
 
 }

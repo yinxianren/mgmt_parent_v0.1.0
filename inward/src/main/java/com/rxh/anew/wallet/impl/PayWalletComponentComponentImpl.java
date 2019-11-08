@@ -134,10 +134,38 @@ public class PayWalletComponentComponentImpl implements PayWalletComponent, NewP
             ChannelWalletTable cwt = payWalletService.getChanWallet(toit.getChannelId(),ipo);
             //更新通道钱包 保存通道钱包明细
             Tuple2<ChannelWalletTable, ChannelDetailsTable> chanWalletTuple = payWalletService.updateChannelWalletByTransOrder(cwt,cit,toit,mrt);
-
-
+            //获取代理商设置
+            AgentMerchantSettingTable ams = payWalletService.getAgentMerSet(mit.getAgentMerchantId(),toit.getProductId(),ipo);
+            //获取代理商钱包
+            AgentMerchantWalletTable amw = payWalletService.getAgentMerWallet(mit.getAgentMerchantId(),ipo);
+            //更新代理商钱包 保存代理商钱包明细
+            Tuple2<AgentMerchantWalletTable, AgentMerchantsDetailsTable> agentMerWalletTuple = payWalletService.updateAgentMerWalletByTransOrder(amw,ams,toit);
+            //更新订单状态，从队列处理中该为成功
+            toit= toit.setStatus(StatusEnum._0.getStatus());
+            //执行事务处理
+            commonRPCComponent.apiPayOrderBusinessTransactionService.updateOrSaveTransOrderBussInfo(merWalletTuple,terMerWalletTuple,chanWalletTuple,agentMerWalletTuple,toit);
         }catch (Exception e){
             e.printStackTrace();
+            if( !isNull(toit) ){
+                toit = toit.setStatus(StatusEnum._8.getStatus());
+                commonRPCComponent.apiTransOrderInfoService.updateById(toit);
+                commonRPCComponent.apiSystemOrderTrackService.save( new SystemOrderTrackTable()
+                        .setRequestPath(bussType)
+                        .setPlatformPrintLog( e instanceof NewPayException ? ((NewPayException)e).getInnerPrintMsg() : e.getMessage())
+                        .setId(null)
+                        .setMerId(toit.getMerchantId())
+                        .setMerOrderId(toit.getMerOrderId())
+                        .setPlatformOrderId(toit.getPlatformOrderId())
+                        .setAmount(toit.getAmount())
+                        .setReturnUrl(null)
+                        .setNoticeUrl(null)
+                        .setTradeCode(StatusEnum._8.getStatus())
+                        .setRequestMsg(StatusEnum._8.getRemark())
+                        .setReferPath(" public void transOrderWallet( ActiveMQObjectMessage objectMessage) ")
+                        .setResponseResult(JSON.toJSONString(toit))
+                        .setTradeTime(new Date())
+                        .setCreateTime(new Date()));
+            }
         }
     }
 
