@@ -35,6 +35,9 @@ public class MerchantCardTable  implements Serializable,Cloneable{
 	private Integer identityType;//身份证类型，1身份证、2护照、3港澳回乡证、4台胞证、5军官证
 	private String identityNum;//证件号
 	private String bankCode;//银行简称	如：中国农业银行： ABC，中国工商银行： ICBC
+	private String bankName;//银行名称  bank_name
+	private Integer bankAccountProp;//账户属性	0：个人账户，1：对公账户  bank_account_prop
+	private String subBankName;//支行名称  sub_bank_name
 	private Integer bankCardType;//卡号类型，1借记卡  2信用卡
 	private String bankCardNum;//银行卡号
 	private String bankCardPhone;//银行卡手机号
@@ -54,6 +57,21 @@ public class MerchantCardTable  implements Serializable,Cloneable{
 
 	@TableField(exist = false)
 	private String smsCode;
+
+	public MerchantCardTable setBankName(String bankName) {
+		this.bankName = bankName;
+		return this;
+	}
+
+	public MerchantCardTable setBankAccountProp(Integer bankAccountProp) {
+		this.bankAccountProp = bankAccountProp;
+		return this;
+	}
+
+	public MerchantCardTable setSubBankName(String subBankName) {
+		this.subBankName = subBankName;
+		return this;
+	}
 
 	public MerchantCardTable setSmsCode(String smsCode) {
 		this.smsCode = smsCode;

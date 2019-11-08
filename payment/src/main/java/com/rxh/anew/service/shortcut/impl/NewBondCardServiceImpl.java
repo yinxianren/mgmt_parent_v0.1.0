@@ -142,6 +142,9 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
                 .setIdentityType(Integer.valueOf(mbcaDTO.getIdentityType()))
                 .setIdentityNum(mbcaDTO.getIdentityNum())
                 .setBankCode(mbcaDTO.getBankCode())
+                .setBankName(mbcaDTO.getBankName())
+                .setBankAccountProp(Integer.valueOf(mbcaDTO.getBankAccountProp()))
+                .setSubBankName(mbcaDTO.getSubBankName())
                 .setBankCardType(Integer.valueOf(mbcaDTO.getBankCardType()))
                 .setBankCardNum(mbcaDTO.getBankCardNum())
                 .setBankCardPhone(mbcaDTO.getBankCardPhone())
@@ -432,7 +435,6 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
                 .setRegisterCollectTable(tuple5._2);
     }
 
-
     @Override
     public Map<String, ParamRule> getParamMapByB4() {
         return new HashMap<String, ParamRule>() {
@@ -444,7 +446,10 @@ public class NewBondCardServiceImpl extends CommonServiceAbstract implements New
                 put("cardHolderName", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 32));// 持卡人姓名
                 put("identityType", new ParamRule(ParamTypeEnum.STRING.getType(), 1, 1));//证件类型	1身份证、2护照、3港澳回乡证、4台胞证、5军官证、	否	1
                 put("identityNum", new ParamRule(ParamTypeEnum.STRING.getType(), 12, 32));//证件号码		否	32
-                put("bankCode", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 16));//银行名称	如：中国农业银行： ABC，中国工商银行： ICBC	否	16
+                put("bankCode", new ParamRule(ParamTypeEnum.STRING.getType(), 2, 16));//银行简码	如：中国农业银行： ABC，中国工商银行： ICBC	否	16
+                put("bankName", new ParamRule(ParamTypeEnum.STRING.getType(), 4, 32));//银行名称
+                put("bankAccountProp", new ParamRule(ParamTypeEnum.STRING.getType(), 1, 1));//账户属性
+                put("subBankName", new ParamRule(ParamTypeEnum.STRING.getType(), 6, 64));//支行名称
                 put("bankCardType", new ParamRule(ParamTypeEnum.STRING.getType(), 1, 1));//卡号类型	1借记卡  2信用卡	否	1
                 put("bankCardNum", new ParamRule(ParamTypeEnum.STRING.getType(), 12, 32));//银行卡号		否	32
                 put("bankCardPhone", new ParamRule(ParamTypeEnum.PHONE.getType(), 11, 11));//银行卡手机号		否	11

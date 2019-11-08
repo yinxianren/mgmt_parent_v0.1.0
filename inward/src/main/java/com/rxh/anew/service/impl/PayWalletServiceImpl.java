@@ -656,7 +656,11 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
     @Override
     public Tuple2<ChannelWalletTable, ChannelDetailsTable> updateChannelWalletByTransOrder(ChannelWalletTable cwt, ChannelInfoTable cit, TransOrderInfoTable toit, MerchantRateTable mrt) {
 
-
+        //订单金额
+        BigDecimal amount = toit.getAmount();
+        //总可用余额
+//        BigDecimal totalAmount = cwt
+//
 //
 //        cwt
 //        .setTotalAmount()
@@ -670,6 +674,27 @@ public class PayWalletServiceImpl extends CommonServiceAbstract implements PayWa
 //        .setTotalMargin()
 //        .setTotalFreezeAmount()
 //        .setUpdateTime();
+//
+//        ChannelDetailsTable cdt = new ChannelDetailsTable()
+//        .setChRateFee()
+//        .setChFee()
+//        .setChFeeProfit()
+//        .setMerRateFee()
+//        .setMerFee()
+//        .setId(null)
+//        .setChannelId(toit.getChannelId())
+//        .setOrganizationId(cit.getOrganizationId())
+//        .setProductId(toit.getProductId())
+//        .setMerOrderId(toit.getMerOrderId())
+//        .setPlatformOrderId(toit.getPlatformOrderId())
+//        .setAmount(amount)
+//        .setInAmount(null)
+//        .setOutAmount()
+//        .setTotalBalance()
+//        .setTimestamp(System.currentTimeMillis())
+//        .setStatus(StatusEnum._0.getStatus())
+//        .setCreateTime(new Date())
+//        .setUpdateTime(new Date());
 
 
 

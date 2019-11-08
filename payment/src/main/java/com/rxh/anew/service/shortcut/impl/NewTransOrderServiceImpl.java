@@ -553,10 +553,10 @@ public class NewTransOrderServiceImpl extends CommonServiceAbstract implements N
                     .setChannelRate(channelInfoTable.getChannelRateFee())                         .setChannelFee(totalChannelFee)
                     .setAgentRate(agentMerchantSettingTable.getRateFee())                         .setAgentFee(agentTotalFee)
                     .setMerRate(merchantRateTable.getRateFee())                                   .setMerFee(totalMerFee)
-                    .setPlatformIncome(platformIncome)                                            .setBankAccountProp(Integer.valueOf(merTransOrderApplyDTO.getBankAccountProp()))
+                    .setPlatformIncome(platformIncome)
                     .setSettleCycle(merchantRateTable.getSettleCycle())                           .setSettleStatus(StatusEnum._2.getStatus())
                     .setChannelRespResult(null)                                                   .setCrossRespResult(null)
-                    .setStatus(StatusEnum._2.getStatus())                                         .setBankName(merTransOrderApplyDTO.getBankName())
+                    .setStatus(StatusEnum._2.getStatus())
                     .setCreateTime(new Date())                                                    .setUpdateTime(new Date());
 
             commonRPCComponent.apiTransOrderInfoService.save(transOrderInfoTable);
