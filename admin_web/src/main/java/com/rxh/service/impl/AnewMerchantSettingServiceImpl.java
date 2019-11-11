@@ -51,10 +51,10 @@ public class AnewMerchantSettingServiceImpl implements AnewMerchantSettingServic
         MerchantSettingTable merchantSettingTable = new MerchantSettingTable();
         merchantSettingTable.setMerchantId(merchantId);
         Boolean rb  = apiMerchantSettingService.remove(merchantSettingTable);
-        if (!rb){
-            responseVO.setCode(1);
-            return responseVO;
-        }
+//        if (!rb){
+//            responseVO.setCode(1);
+//            return responseVO;
+//        }
         for (Map map1 : channels){
             merchantSettingTable = new MerchantSettingTable();
             merchantSettingTable.setChannelId(map1.get("channelId").toString());
