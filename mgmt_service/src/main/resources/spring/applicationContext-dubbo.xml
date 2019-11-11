@@ -48,7 +48,7 @@
     <dubbo:service interface="com.rxh.service.AgentSystemService" ref="agentSystemServiceImpl" timeout="30000"/>
     <!-- 含有BaseMapper操作的Service -->
     <dubbo:service interface="com.rxh.service.merchant.MerchantLogService" ref="merchantLogServiceImpl" timeout="30000"/>
-
+    <dubbo:service interface="com.rxh.service.merchant.MerchantPrivilegesService" ref="merchantPrivilegesServiceImpl" timeout="30000" />
     <dubbo:service interface="com.rxh.service.trading.PayOrderService" ref="payOrderServiceImpl" timeout="30000"/>
     <dubbo:service interface="com.rxh.service.trading.TransBankInfoService" ref="transBankInfoServiceImpl" timeout="30000"/>
     <dubbo:service interface="com.rxh.service.trading.TransProductDetailService" ref="transProductDetailServiceImpl" timeout="30000"/>
@@ -72,4 +72,5 @@
     <dubbo:service interface= "com.rxh.service.sys.SysConstantService" ref="sysConstantServiceImpl" timeout="30000"/>
     <dubbo:service interface= "com.rxh.service.merchant.MerchantSettingService" ref="merchantSettingServiceImpl" timeout="30000"/>
     <dubbo:service interface= "com.rxh.service.square.BankCodeService" ref="bankCodeServiceImpl" timeout="30000"/>
+    <dubbo:service interface="com.rxh.service.merchant.MerchantRoleService" timeout="30000" ref="merchantRoleServiceImpl" />
 </beans>
