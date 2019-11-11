@@ -80,6 +80,10 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, IdlePro
             url: '/payment_passageway',
             templateUrl: 'views/passageway/payment_passageway'
         })
+        .state('base_view.passageway.bank', {
+            url: '/bank',
+            templateUrl: 'views/passageway/bank'
+        })
         .state('base_view.passageway.lower_passageway_mgmt', {
             url: '/channelInfo',
             templateUrl: 'views/passageway/channelInfo'

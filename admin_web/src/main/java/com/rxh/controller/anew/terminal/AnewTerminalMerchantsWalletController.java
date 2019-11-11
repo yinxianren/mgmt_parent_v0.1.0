@@ -30,8 +30,6 @@ public class AnewTerminalMerchantsWalletController {
 
     @Resource
     private ConstantService constantService;
-    @Resource
-    private MerchantInfoService merchantInfoService;
     @Autowired
     private AnewTerminalMerchantsWalletService anewTerminalMerchantsWalletService;
     @Autowired

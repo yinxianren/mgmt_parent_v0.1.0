@@ -123,6 +123,26 @@ function paymentPassagewayCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
         });
     };
 
+    $scope.bankEdit = function ( type,Organization) {
+        var modalInstance = $uibModal.open({
+            templateUrl: '/views/passageway/bank_add',
+            controller: 'bankAddModalCtrl',
+            resolve: {
+                type: function () {
+                    return type;
+                },
+                Organization: function () {
+                    return Organization;
+                }
+            }
+        });
+        modalInstance.result.then(function () {
+            tableReload()
+        }, function () {
+            tableReload()
+        });
+    };
+
 
     $scope.del = function () {
         var idList = [];
@@ -268,6 +288,69 @@ function OrganizationAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, t
 }
 
 function productAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, Organization) {
+    $scope.type = type;
+    $scope.firstValue =null;
+    if (type === 1) {
+        $scope.Product = angular.copy(Organization);
+    }
+    httpSvc.getData('post', '/product/getProductAll').then(function (value) {
+        $scope.products = value.data;
+    });
+    $scope.nameBlur = $scope.remarkBlur = $scope.elementBlur=function ($event, remark) {
+        verification(remark, $event.target);
+    };
+    // $scope.$watch('Organization.status', function (newVal) {
+    //     if (newVal !== undefined) {
+    //         angular.element('#bank-status').parent().removeClass('has-error');
+    //         angular.element('#bank-status').parent().addClass('has-success');
+    //     }
+    // });
+
+    $scope.addProduct = function () {
+        if (type === 0) {
+            httpSvc.getData('post', '/product/addProduct', $scope.Product).then(function (value) {
+                if (value) {
+                    $scope.bankInfo = null;
+                    toaster.pop({
+                        type: 'success',
+                        title: '支付产品管理',
+                        body: '支付机构添加成功！'
+                    });
+                    $uibModalInstance.close();
+                } else {
+                    toaster.pop({
+                        type: 'error',
+                        title: '支付产品管理',
+                        body: '支付产品添加失败！'
+                    });
+                }
+            });
+        } else {
+            httpSvc.getData('post', '/product/addProduct', $scope.Product).then(function (value) {
+                if (value) {
+                    $scope.bankInfo = null;
+                    toaster.pop({
+                        type: 'success',
+                        title: '支付产品管理',
+                        body: '支付产品修改成功！'
+                    });
+                    $uibModalInstance.close();
+                } else {
+                    toaster.pop({
+                        type: 'error',
+                        title: '支付产品管理',
+                        body: '支付机构修改失败！'
+                    });
+                }
+            });
+        }
+    };
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss();
+    };
+}
+
+function bankAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, Organization) {
     $scope.type = type;
     $scope.firstValue =null;
     if (type === 1) {
@@ -980,11 +1063,208 @@ function showJsonParseModalCtrl($scope, $uibModalInstance, info) {
         return false;
     }
 }
+// 支付通道管理
+function paymentPassageBankCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$filter,csvExp) {
+    var defaultSearch = {};
+    var searchInfo = angular.copy(defaultSearch);
+    $scope.searchInfo = angular.copy(defaultSearch);
+    var init;
+    $scope.selected = {};
+    var OrganizationInfo;
+
+    httpSvc.getData('post', '/organization/init').then(function (value) {
+
+        // $scope.organizations= value.organizations;
+        $scope.status= value.status;
+        httpSvc.getData('post', '/organization/getAll',searchInfo).then(function (value1) {
+            OrganizationInfo = value1.data;
+            $scope.OrganizationTable = new NgTableParams({}, {
+                dataset: value1.data
+            });
+            angular.element('.ibox-content').removeClass('sk-loading');
+        });
+    });
+    //更新状态
+    $scope.statusChange = function ($event, row) {
+        httpSvc.getData('post', '/organization/update', {
+            organizationId: row.organizationId,
+            id: row.id,
+            status: row.status ? 0 : 1
+        }).then(function (value) {
+            if (value) {
+                toaster.pop({
+                    type: 'success',
+                    title: '支付机构',
+                    body: '更新支付机构状态成功！'
+                });
+                angular.element($event.target).toggleClass('active');
+                angular.element($event.target).toggleClass('btn-primary');
+                angular.element($event.target).toggleClass('btn-disabled');
+                angular.element($event.target).hasClass('active') ?
+                    angular.element($event.target).text('启用') :
+                    angular.element($event.target).text('禁用');
+            } else {
+                toaster.pop({
+                    type: 'error',
+                    title: '支付机构',
+                    body: '更新支付机构状态失败！'
+                });
+            }
+        });
+    };
+
+
+
+    function tableReload() {
+        angular.element('.ibox-content').addClass('sk-loading');
+        httpSvc.getData('post', '/organization/getAll',defaultSearch).then(function (value) {
+            $scope.OrganizationTable.settings({
+                dataset: value.data
+            });
+            angular.element('.ibox-content').removeClass('sk-loading');
+        });
+    }
+
+    $scope.reset=function () {
+        $scope.searchInfo = angular.copy(defaultSearch);
+        tableReload();
+    }
+    $scope.search= function () {
+        searchInfo = angular.copy($scope.searchInfo);
+        if($scope.searchInfo!=defaultSearch){
+            console.log(searchInfo);
+            httpSvc.getData('post', '/organization/getAll',searchInfo).then(function (value1) {
+                OrganizationInfo = value1.data;
+                $scope.OrganizationTable = new NgTableParams({}, {
+                    dataset: value1.data
+                });
+                angular.element('.ibox-content').removeClass('sk-loading');
+            });
+        }else {
+            $scope.searchInfo = angular.copy(defaultSearch);
+            tableReload();
+        }
+
+    };
+
+    $scope.showModal = $scope.edit = function ( type,Organization) {
+        var modalInstance = $uibModal.open({
+            templateUrl: '/views/passageway/OrganizationAdd',
+            controller: 'OrganizationAddModalCtrl',
+            resolve: {
+                type: function () {
+                    return type;
+                },
+                Organization: function () {
+                    return Organization;
+                }
+            }
+        });
+        modalInstance.result.then(function () {
+            tableReload()
+        }, function () {
+            tableReload()
+        });
+    };
+
+    $scope.productEdit = function ( type,Organization) {
+        var modalInstance = $uibModal.open({
+            templateUrl: '/views/passageway/productAdd',
+            controller: 'productAddModalCtrl',
+            resolve: {
+                type: function () {
+                    return type;
+                },
+                Organization: function () {
+                    return Organization;
+                }
+            }
+        });
+        modalInstance.result.then(function () {
+            tableReload()
+        }, function () {
+            tableReload()
+        });
+    };
+
+    $scope.bankEdit = function ( type,Organization) {
+        var modalInstance = $uibModal.open({
+            templateUrl: '/views/passageway/bank_add',
+            controller: 'bankAddModalCtrl',
+            resolve: {
+                type: function () {
+                    return type;
+                },
+                Organization: function () {
+                    return Organization;
+                }
+            }
+        });
+        modalInstance.result.then(function () {
+            tableReload()
+        }, function () {
+            tableReload()
+        });
+    };
+
+
+    $scope.del = function () {
+        var idList = [];
+        for (var id in $scope.selected) {
+            if ($scope.selected[id]) {
+                idList.push(id);
+            }
+        }
+        var title = '删除确认';
+        var content =
+            '<div class="text-center">' +
+            '<strong>确定删除这' + idList.length + '条数据吗？</strong>' +
+            '</div>';
+        var modalInstance = $uibModal.open({
+            templateUrl: '/views/common/alert_modal',
+            controller: 'alertModalCtrl',
+            resolve: {
+                title: function () {
+                    return title;
+                },
+                content: function () {
+                    return content;
+                }
+            }
+        });
+        modalInstance.result.then(function () {
+            httpSvc.getData('post', '/organization/delete', idList).then(function (value) {
+                if (!value.code) {
+                    toaster.pop({
+                        type: 'success',
+                        title: '支付机构',
+                        body: '删除支付机构成功！'
+                    });
+                    tableReload();
+                } else {
+                    toaster.pop({
+                        type: 'warning',
+                        title: '支付机构',
+                        body: '支付机构无法删除！',
+                        timeout: 0
+                    });
+                }
+                $scope.selected = {};
+            });
+        }, function () {
+        });
+    };
+
+
+
+}
 angular
     .module('inspinia')
     .controller('paymentPassagewayCtrl', paymentPassagewayCtrl)
+    .controller('paymentPassageBankCtrl', paymentPassageBankCtrl)
     .controller('OrganizationAddModalCtrl', OrganizationAddModalCtrl)
     .controller('productAddModalCtrl', productAddModalCtrl)
+    .controller('bankAddModalCtrl', bankAddModalCtrl)
     .controller('channelInfoModalCtrl', channelInfoModalCtrl)
     .controller('channelInfoCtrl', channelInfoCtrl)
     .controller('attachPassagewayMgmtCtrl', attachPassagewayMgmtCtrl)
