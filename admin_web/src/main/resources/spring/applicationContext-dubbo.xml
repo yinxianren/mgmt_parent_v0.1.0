@@ -9,7 +9,7 @@
     <!-- 注册中心地址 -->
     <dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}"/>
 
-    <dubbo:reference interface="com.internal.playment.api.db.channel.ApiProductTypeSettingService" id="apiProductTypeSettingService"/>
+    <dubbo:reference interface="com.internal.playment.api.db.channel.ApiProductTypeSettingService" id="apiProductTypeSettingService" version="1.0.0" />
     <dubbo:reference interface="com.internal.playment.api.db.system.ApiOrganizationInfoService" id="apiOrganizationInfoService" version="1.0.0" />
     <dubbo:reference interface="com.internal.playment.api.db.channel.ApiChannelExtraInfoService" id="apiChannelExtraInfoService" version="1.0.0" />
     <dubbo:reference interface="com.internal.playment.api.db.channel.ApiChannelInfoService" id="apiChannelInfoService" version="1.0.0" />
@@ -28,6 +28,8 @@
     <dubbo:reference interface="com.internal.playment.api.db.channel.ApiChannelWalletService" id="apiChannelWalletService" version="1.0.0" />
     <dubbo:reference interface="com.internal.playment.api.db.terminal.ApiTerminalMerchantsDetailsService" id="apiTerminalMerchantsDetailsService" version="1.0.0" />
     <dubbo:reference interface="com.internal.playment.api.db.terminal.ApiTerminalMerchantsWalletService" id="apiTerminalMerchantsWalletService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.system.ApiBankRateService" id="apiBankRateService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.business.ApiTransOrderInfoService" id="apiTransOrderInfoService" version="1.0.0" />
 
     <!--四方支付调用接口-->
     <dubbo:reference interface="com.rxh.service.square.RiskQuotaDataService" id="riskQuotaDataService"/>

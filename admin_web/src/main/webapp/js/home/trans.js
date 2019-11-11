@@ -259,7 +259,7 @@ function repayCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$timeout) 
             getData: function (params) {
                 angular.element('.ibox-content').addClass('sk-loading');
                 return httpSvc.getData('post', '/transOrder/findPayOrderPage', {
-                    pageNum: params.page()-1,
+                    pageNum: params.page(),
                     pageSize: params.count(),
                     orderBy: params.sorting(),
                     searchInfo: $scope.searchInfo
@@ -379,7 +379,7 @@ function repayCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$timeout) 
             getData: function (params) {
                 angular.element('.ibox-content').addClass('sk-loading');
                 return httpSvc.getData('post', '/transOrder/findPayOrderPage', {
-                    pageNum: params.page()-1,
+                    pageNum: params.page(),
                     pageSize: params.count(),
                     orderBy: params.sorting(),
                     searchInfo: $scope.searchInfo

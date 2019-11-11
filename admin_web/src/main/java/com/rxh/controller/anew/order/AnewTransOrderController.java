@@ -1,10 +1,14 @@
 package com.rxh.controller.anew.order;
 
 
+import com.internal.playment.common.enums.StatusEnum;
 import com.rxh.pojo.Result;
 import com.rxh.pojo.base.Page;
 import com.rxh.pojo.base.PageResult;
+import com.rxh.service.AnewMerchantInfoService;
+import com.rxh.service.AnewTransOrderService;
 import com.rxh.service.ConstantService;
+import com.rxh.service.OrganizationInfoService;
 import com.rxh.service.square.AgentMerchantInfoService;
 import com.rxh.service.square.ChannelWalletService;
 import com.rxh.service.square.MerchantInfoService;
@@ -12,7 +16,9 @@ import com.rxh.service.square.OrganizationService;
 import com.rxh.service.trading.TransOrderService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.utils.SystemConstant;
+import com.rxh.vo.ResponseVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,21 +37,25 @@ public class AnewTransOrderController {
     private TransOrderService transOrderService;
     @Resource
     private ConstantService constantService;
-    @Resource
-    private ChannelWalletService channelWalletService;
-    @Resource
-    private OrganizationService organizationService;
-    @Resource
-    private AgentMerchantInfoService agentMerchantInfoService;
-    @Resource
-    private MerchantInfoService merchantInfoService;
+    @Autowired
+    private AnewTransOrderService anewTransOrderService;
+    @Autowired
+    private AnewMerchantInfoService anewMerchantInfoService;
+    @Autowired
+    private OrganizationInfoService organizationInfoService;
+
     @SystemLogInfo(description = "下发交易查询")
     @RequestMapping("/findPayOrderPage")
     @ResponseBody
-    public PageResult findPayOrderPage(@RequestBody Page page ) {
-        PageResult  pageResult = transOrderService.findTransOrder(page);
-        return pageResult;
+    public ResponseVO findPayOrderPage(@RequestBody Page page ) {
+       try {
+           return anewTransOrderService.page(page);
+       }catch (Exception e){
+           e.printStackTrace();
+           return new ResponseVO(StatusEnum._1.getStatus(),StatusEnum._1.getRemark());
+       }
     }
+
     @RequestMapping("/getTransBankInfo")
     @ResponseBody
     public Result getTransBankInfo(@RequestBody  String transId) {
@@ -63,18 +73,11 @@ public class AnewTransOrderController {
     public Map<String, Object> init() {
         Map<String, Object> init = new HashMap<>();
         init.put("payType", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
-        init.put("channels", channelWalletService.getIdsAndName());
-        init.put("organizations",organizationService .getIdsAndName());
         init.put("orderStatus", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.ORDERSTATUS));
-        init.put("identityType", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.IDENTITYTYPE));
-        init.put("bankcardType", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.BANKCARDTYPE));
         init.put("settleStatus", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.SETTLESTATUS));
-        init.put("agentMerchants", agentMerchantInfoService.getAllIdAndName());
-        init.put("merchants", merchantInfoService.getIdsAndName());
-//        init.put("merchantType", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.MERCHANTTYPE));
-//        init.put("identityType", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.IDENTITYTYPE));
-//        init.put("status", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.availableStatus));
-//        init.put("merchants", merchantInfoService.getIdsAndName());
+        init.put("organizations",organizationInfoService .getAll(null).getData());
+        init.put("merchants", anewMerchantInfoService.getMerchants(null));
+        init.put("productTypes",constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PRODUCTTYPE));
         return init;
     }
 }

@@ -1,9 +1,9 @@
 package com.rxh.service.impl;
 
+import com.internal.playment.api.db.system.ApiBankRateService;
 import com.internal.playment.common.enums.StatusEnum;
-import com.rxh.anew.table.system.BankRateTable;
+import com.internal.playment.common.table.system.BankRateTable;
 import com.rxh.service.AnewBankRateService;
-import com.rxh.service.anew.system.ApiBankRateService;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

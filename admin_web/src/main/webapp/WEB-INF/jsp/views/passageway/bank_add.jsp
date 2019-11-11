@@ -15,9 +15,9 @@
 			  <div class="form-group">
 			    <label   class="col-sm-2 control-label"><font color="red">*</font>机构名称:</label>
 			    <div class="col-sm-10" >
-					<select class="form-control b-r-sm" id="organizationName" name="organizationName" ng-model="Organization.status"
-							ng-blur="statusBlur($event, Organization.status)" placeholder="必填/唯一" required="required"
-							ng-options="+(x.firstValue) as x.name for x in status">
+					<select class="form-control b-r-sm" id="organizationName" name="organizationName" ng-model="Organization.organizationName"
+							ng-blur="statusBlur($event, Organization.organizationName)" placeholder="必填/唯一" required="required"
+							ng-options="+(x.organizationId) as x.organizationName for x in organizations">
 					</select>
 			    </div>
 			  </div>
@@ -42,8 +42,8 @@
 			 <div class="form-group">
 				 <label   class="col-sm-2 control-label" ><font color="red">*</font>费率:</label>
 				 <div class="col-sm-10" >
-					 <input type="number" id="" name="remark" ng-model="Organization.remark" tip="2" class="form-control" placeholder="必填/唯一"
-							ng-blur="remarkBlur($event,Organization.remark)"
+					 <input type="number" id="" name="bankRate" ng-model="Organization.bankRate" tip="2" class="form-control" placeholder="必填/唯一"
+							ng-blur="remarkBlur($event,Organization.bankRate)"
 							required="required" />
 				 </div>
 			 </div>

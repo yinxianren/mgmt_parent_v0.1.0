@@ -1,7 +1,7 @@
 package com.rxh.controller.anew.channel;
 
 import com.internal.playment.common.enums.StatusEnum;
-import com.rxh.anew.table.system.BankRateTable;
+import com.internal.playment.common.table.system.BankRateTable;
 import com.rxh.service.AnewBankRateService;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;

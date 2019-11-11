@@ -1072,11 +1072,11 @@ function paymentPassageBankCtrl($scope, $uibModal, toaster, NgTableParams, httpS
     $scope.selected = {};
     var OrganizationInfo;
 
-    httpSvc.getData('post', '/organization/init').then(function (value) {
+    httpSvc.getData('post', '/bankRate/init').then(function (value) {
 
         // $scope.organizations= value.organizations;
         $scope.status= value.status;
-        httpSvc.getData('post', '/organization/getAll',searchInfo).then(function (value1) {
+        httpSvc.getData('post', '/bankRate/search',searchInfo).then(function (value1) {
             OrganizationInfo = value1.data;
             $scope.OrganizationTable = new NgTableParams({}, {
                 dataset: value1.data
@@ -1086,7 +1086,7 @@ function paymentPassageBankCtrl($scope, $uibModal, toaster, NgTableParams, httpS
     });
     //更新状态
     $scope.statusChange = function ($event, row) {
-        httpSvc.getData('post', '/organization/update', {
+        httpSvc.getData('post', '/bankRate/update', {
             organizationId: row.organizationId,
             id: row.id,
             status: row.status ? 0 : 1
@@ -1117,7 +1117,7 @@ function paymentPassageBankCtrl($scope, $uibModal, toaster, NgTableParams, httpS
 
     function tableReload() {
         angular.element('.ibox-content').addClass('sk-loading');
-        httpSvc.getData('post', '/organization/getAll',defaultSearch).then(function (value) {
+        httpSvc.getData('post', '/bankRate/search',defaultSearch).then(function (value) {
             $scope.OrganizationTable.settings({
                 dataset: value.data
             });
@@ -1133,7 +1133,7 @@ function paymentPassageBankCtrl($scope, $uibModal, toaster, NgTableParams, httpS
         searchInfo = angular.copy($scope.searchInfo);
         if($scope.searchInfo!=defaultSearch){
             console.log(searchInfo);
-            httpSvc.getData('post', '/organization/getAll',searchInfo).then(function (value1) {
+            httpSvc.getData('post', '/bankRate/getAll',searchInfo).then(function (value1) {
                 OrganizationInfo = value1.data;
                 $scope.OrganizationTable = new NgTableParams({}, {
                     dataset: value1.data
