@@ -45,7 +45,7 @@ public class OrganizationInfoServiceImpl implements OrganizationInfoService, New
             List<ProductSettingTable> productSettingTables = apiProductTypeSettingService.list(productSettingTable);
             StringJoiner sj = new StringJoiner(",");
             for (ProductSettingTable productSettingTable1 : productSettingTables){{
-                if (productSettingTable1.getStatus() == 1)
+                if (productSettingTable1.getStatus() == 0)
                     sj.add(productSettingTable1.getProductId());
             }}
             organizationInfo1.setProductIds(sj.toString());
@@ -61,12 +61,31 @@ public class OrganizationInfoServiceImpl implements OrganizationInfoService, New
     @Override
     public ResponseVO savaOrUpdate(OrganizationInfoTable organizationInfo) {
         Boolean b = apiOrganizationInfoService.saveOrUpdate(organizationInfo);
-        apiProductTypeSettingService.delByOrganizationId(organizationInfo.getOrganizationId());
         Map<String, SysConstant> proMap = constantService.getConstantsMapByGroupName(SystemConstant.PRODUCTTYPE);
         ProductSettingTable table = new ProductSettingTable();
         table.setOrganizationId(organizationInfo.getOrganizationId());
+        List<ProductSettingTable> listed = apiProductTypeSettingService.list(table);
         List<ProductSettingTable> list = new ArrayList<>();
+        List<String> idsed = new ArrayList<>();//已存在的产品id
         List<String> ids = StringUtils.isNotEmpty(organizationInfo.getProductIds())?Arrays.asList(organizationInfo.getProductIds().split(",")):new ArrayList<>();
+        for (ProductSettingTable productSettingTable : listed){
+            if (ids.contains(productSettingTable.getProductId())){
+                productSettingTable.setStatus(StatusEnum._0.getStatus());
+            }else {
+                productSettingTable.setStatus(StatusEnum._1.getStatus());
+            }
+            productSettingTable.setUpdateTime(new Date());
+            list.add(productSettingTable);
+            idsed.add(productSettingTable.getProductId());
+        }
+        //删除已存在的产品id，剩余的做新增
+        ids = new ArrayList<>(ids);
+        if (idsed.containsAll(ids)){
+            ids = new ArrayList<>();
+        }else {
+            ids.removeAll(idsed);
+        }
+
         for (String productId : ids){
             ProductSettingTable productSettingTable = new ProductSettingTable();
             productSettingTable.setStatus(StatusEnum._0.getStatus());
@@ -77,7 +96,7 @@ public class OrganizationInfoServiceImpl implements OrganizationInfoService, New
             productSettingTable.setProductName(proMap.get(productId).getName());
             list.add(productSettingTable);
         }
-        if (isHasElement(list))apiProductTypeSettingService.batchUpdate(list);
+        if (isHasElement(list))apiProductTypeSettingService.saveOrUpdateBatch(list);
         ResponseVO responseVO = new ResponseVO();
         if (b){
             responseVO.setCode(0);
