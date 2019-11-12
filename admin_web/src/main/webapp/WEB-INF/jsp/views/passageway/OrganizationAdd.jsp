@@ -43,16 +43,15 @@
 					 </select>
 				 </div>
 			 </div>
-
 			 <div class="form-group">
 				 <label class="col-sm-2 control-label p-w-xs"><span class="text-danger">*</span>支付产品：</label>
 				 <div class="col-sm-10">
-					 <div class="col-sm-3 p-w-xs" ng-repeat="x in Organization.productTypes">
+					 <div class="col-sm-3 p-w-xs" ng-repeat="x in productTypes">
 						 <div class="checkbox no-margins">
-							 <input id="{{x.productId}}" type="checkbox" name="productIds"
-									ng-checked="exists(x.productId,Organization.productIds)"
-									value="{{x.productId}}" required>
-							 <label for="{{x.productId}}" class="no-padding">{{x.productName}}({{x.productFee}})</label>
+							 <input id="{{x.firstValue}}" type="checkbox" name="productIds"
+									ng-checked="exists(x.firstValue,Organization.productIds)"
+									value="{{x.firstValue}}" required>
+							 <label for="{{x.firstValue}}" class="no-padding">{{x.name}}</label>
 						 </div>
 					 </div>
 				 </div>

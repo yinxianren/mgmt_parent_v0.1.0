@@ -112,7 +112,9 @@ public class AnewChannelInfoController {
         init.put("paytype", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
         init.put("channelLevel", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.channelLevel));
         init.put("busiTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.BUSITYPE));
-        init.put("products", productTypeSettingService.selectByOrganizationId(new ProductSettingTable()).getData());
+        ProductSettingTable productSettingTable = new ProductSettingTable();
+        productSettingTable.setStatus(StatusEnum._0.getStatus());
+        init.put("products", productTypeSettingService.selectByOrganizationId(productSettingTable).getData());
         init.put("productTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PRODUCTTYPE));
         return init;
     }

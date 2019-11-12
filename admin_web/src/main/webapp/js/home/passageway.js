@@ -203,6 +203,7 @@ function OrganizationAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, t
     httpSvc.getData('post', '/organization/init', JSON.stringify('Status')).then(function (value) {
         $scope.status = value.status;
         $scope.Organizations = value.organizations;
+        $scope.productTypes = value.productTypes;
     });
     $scope.nameBlur = $scope.remarkBlur = $scope.elementBlur=function ($event, remark) {
         verification(remark, $event.target);

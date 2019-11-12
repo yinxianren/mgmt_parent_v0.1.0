@@ -2,30 +2,30 @@ package com.rxh.service.impl;
 
 import com.internal.playment.api.db.channel.ApiProductTypeSettingService;
 import com.internal.playment.api.db.system.ApiOrganizationInfoService;
+import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.inner.NewPayAssert;
 import com.internal.playment.common.table.system.OrganizationInfoTable;
 import com.internal.playment.common.table.system.ProductSettingTable;
-import com.rxh.cache.RedisCacheCommonCompoment;
-import com.rxh.payInterface.NewPayAssert;
+import com.rxh.pojo.sys.SysConstant;
+import com.rxh.service.ConstantService;
 import com.rxh.service.OrganizationInfoService;
+import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringJoiner;
+import java.util.*;
 
 @Service
 public class OrganizationInfoServiceImpl implements OrganizationInfoService, NewPayAssert {
 
     @Autowired
-    private RedisCacheCommonCompoment redisCacheCommonCompoment;
-    @Autowired
     private ApiOrganizationInfoService apiOrganizationInfoService;
     @Autowired
     private ApiProductTypeSettingService apiProductTypeSettingService;
+    @Autowired
+    private ConstantService constantService;
 
 
     public ResponseVO getAll(OrganizationInfoTable organizationInfo){
@@ -53,7 +53,7 @@ public class OrganizationInfoServiceImpl implements OrganizationInfoService, New
         }
         ResponseVO responseVO = new ResponseVO();
         responseVO.setData(organizationInfoTables);
-        responseVO.setCode(0);
+        responseVO.setCode(StatusEnum._0.getStatus());
         responseVO.setMessage("成功");
         return responseVO;
     }
@@ -61,18 +61,21 @@ public class OrganizationInfoServiceImpl implements OrganizationInfoService, New
     @Override
     public ResponseVO savaOrUpdate(OrganizationInfoTable organizationInfo) {
         Boolean b = apiOrganizationInfoService.saveOrUpdate(organizationInfo);
+        apiProductTypeSettingService.delByOrganizationId(organizationInfo.getOrganizationId());
+        Map<String, SysConstant> proMap = constantService.getConstantsMapByGroupName(SystemConstant.PRODUCTTYPE);
         ProductSettingTable table = new ProductSettingTable();
         table.setOrganizationId(organizationInfo.getOrganizationId());
-        List<ProductSettingTable> list = apiProductTypeSettingService.list(table);
+        List<ProductSettingTable> list = new ArrayList<>();
         List<String> ids = StringUtils.isNotEmpty(organizationInfo.getProductIds())?Arrays.asList(organizationInfo.getProductIds().split(",")):new ArrayList<>();
-        for (ProductSettingTable productSettingTable : list){
-            if (ids.contains(productSettingTable.getProductId())){
-                if (productSettingTable.getStatus() == 1)
-                    continue;
-                productSettingTable.setStatus(1);
-            }else {
-                productSettingTable.setStatus(0);
-            }
+        for (String productId : ids){
+            ProductSettingTable productSettingTable = new ProductSettingTable();
+            productSettingTable.setStatus(StatusEnum._0.getStatus());
+            productSettingTable.setCreateTime(new Date());
+            productSettingTable.setOrganizationId(organizationInfo.getOrganizationId());
+            productSettingTable.setProductId(productId);
+            productSettingTable.setUpdateTime(new Date());
+            productSettingTable.setProductName(proMap.get(productId).getName());
+            list.add(productSettingTable);
         }
         if (isHasElement(list))apiProductTypeSettingService.batchUpdate(list);
         ResponseVO responseVO = new ResponseVO();

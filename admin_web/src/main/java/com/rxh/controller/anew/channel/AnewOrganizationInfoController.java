@@ -91,6 +91,7 @@ public class AnewOrganizationInfoController {
     public Map<String, Object> init(){
         Map<String, Object> init = new HashMap<>();
         init.put("status", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.availableStatus));
+        init.put("productTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PRODUCTTYPE));
         return init;
     }
 
