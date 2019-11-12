@@ -62,7 +62,7 @@ public class AnewMerchantSettingController {
 //        init.put("payType", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
 //        init.put("agentMerchants", agentMerchantInfoService.getAllIdAndName());
         OrganizationInfoTable o = new OrganizationInfoTable();
-        o.setStatus(1);
+        o.setStatus(0);
         List<OrganizationInfoTable> infoTables = (List<OrganizationInfoTable>)organizationInfoService.getAll(o).getData();
         Map organMap = new HashMap();
         for (OrganizationInfoTable infoTable : infoTables){
