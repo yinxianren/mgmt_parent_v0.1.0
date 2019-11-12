@@ -15,9 +15,9 @@
 			  <div class="form-group">
 			    <label   class="col-sm-2 control-label"><font color="red">*</font>机构名称:</label>
 			    <div class="col-sm-10" >
-					<select class="form-control b-r-sm" id="organizationName" name="organizationName" ng-model="Organization.organizationName"
+					<select class="form-control b-r-sm" id="organizationName" name="organizationId" ng-model="Organization.organizationId"
 							ng-blur="statusBlur($event, Organization.organizationName)" placeholder="必填/唯一" required="required"
-							ng-options="+(x.organizationId) as x.organizationName for x in organizations">
+							ng-options="(x.organizationId) as x.organizationName for x in organizations">
 					</select>
 			    </div>
 			  </div>
@@ -49,6 +49,24 @@
 			 </div>
 
 			 <div class="form-group">
+				 <label   class="col-sm-2 control-label" ><font color="red">*</font>单笔限额:</label>
+				 <div class="col-sm-10" >
+					 <input type="number" id="" name="singleMoney" ng-model="Organization.singleMoney" tip="2" class="form-control" placeholder="必填"
+							ng-blur="remarkBlur($event,Organization.bankRate)"
+							required="required" />
+				 </div>
+			 </div>
+
+			 <div class="form-group">
+				 <label   class="col-sm-2 control-label" ><font color="red">*</font>单日限额:</label>
+				 <div class="col-sm-10" >
+					 <input type="number" id="" name="dayMoney" ng-model="Organization.dayMoney" tip="2" class="form-control" placeholder="必填"
+							ng-blur="remarkBlur($event,Organization.bankRate)"
+							required="required" />
+				 </div>
+			 </div>
+
+			 <div class="form-group">
 				 <label   class="col-sm-2 control-label" ><font color="red">*</font>状态:</label>
 				 <div class="col-sm-10" >
 					 <%--<input type="text" id="status" name="status" ng-model="Organization.status" tip="2" class="form-control" placeholder="必填/唯一"--%>
@@ -65,7 +83,7 @@
 <div class="row padding-set">
         <div class="col-sm-12">
             <div class="center">
-                <button class="btn btn-sm btn-primary general-btn" id="addOrganizationID" type="button" ng-click="addOrganization()"
+                <button class="btn btn-sm btn-primary general-btn" id="addOrganizationID" type="button" ng-click="addOrganizationBank()"
 						>
                  确定
                 </button>

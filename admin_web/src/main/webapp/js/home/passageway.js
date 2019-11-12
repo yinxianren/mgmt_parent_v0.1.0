@@ -123,25 +123,25 @@ function paymentPassagewayCtrl($scope, $uibModal, toaster, NgTableParams, httpSv
         });
     };
 
-    $scope.bankEdit = function ( type,Organization) {
-        var modalInstance = $uibModal.open({
-            templateUrl: '/views/passageway/bank_add',
-            controller: 'bankAddModalCtrl',
-            resolve: {
-                type: function () {
-                    return type;
-                },
-                Organization: function () {
-                    return Organization;
-                }
-            }
-        });
-        modalInstance.result.then(function () {
-            tableReload()
-        }, function () {
-            tableReload()
-        });
-    };
+    // $scope.bankEdit = function ( type,Organization) {
+    //     var modalInstance = $uibModal.open({
+    //         templateUrl: '/views/passageway/bank_add',
+    //         controller: 'bankAddModalCtrl',
+    //         resolve: {
+    //             type: function () {
+    //                 return type;
+    //             },
+    //             Organization: function () {
+    //                 return Organization;
+    //             }
+    //         }
+    //     });
+    //     modalInstance.result.then(function () {
+    //         tableReload()
+    //     }, function () {
+    //         tableReload()
+    //     });
+    // };
 
 
     $scope.del = function () {
@@ -288,69 +288,6 @@ function OrganizationAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, t
 }
 
 function productAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, Organization) {
-    $scope.type = type;
-    $scope.firstValue =null;
-    if (type === 1) {
-        $scope.Product = angular.copy(Organization);
-    }
-    httpSvc.getData('post', '/product/getProductAll').then(function (value) {
-        $scope.products = value.data;
-    });
-    $scope.nameBlur = $scope.remarkBlur = $scope.elementBlur=function ($event, remark) {
-        verification(remark, $event.target);
-    };
-    // $scope.$watch('Organization.status', function (newVal) {
-    //     if (newVal !== undefined) {
-    //         angular.element('#bank-status').parent().removeClass('has-error');
-    //         angular.element('#bank-status').parent().addClass('has-success');
-    //     }
-    // });
-
-    $scope.addProduct = function () {
-        if (type === 0) {
-            httpSvc.getData('post', '/product/addProduct', $scope.Product).then(function (value) {
-                if (value) {
-                    $scope.bankInfo = null;
-                    toaster.pop({
-                        type: 'success',
-                        title: '支付产品管理',
-                        body: '支付机构添加成功！'
-                    });
-                    $uibModalInstance.close();
-                } else {
-                    toaster.pop({
-                        type: 'error',
-                        title: '支付产品管理',
-                        body: '支付产品添加失败！'
-                    });
-                }
-            });
-        } else {
-            httpSvc.getData('post', '/product/addProduct', $scope.Product).then(function (value) {
-                if (value) {
-                    $scope.bankInfo = null;
-                    toaster.pop({
-                        type: 'success',
-                        title: '支付产品管理',
-                        body: '支付产品修改成功！'
-                    });
-                    $uibModalInstance.close();
-                } else {
-                    toaster.pop({
-                        type: 'error',
-                        title: '支付产品管理',
-                        body: '支付机构修改失败！'
-                    });
-                }
-            });
-        }
-    };
-    $scope.cancel = function () {
-        $uibModalInstance.dismiss();
-    };
-}
-
-function bankAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, Organization) {
     $scope.type = type;
     $scope.firstValue =null;
     if (type === 1) {
@@ -1063,7 +1000,7 @@ function showJsonParseModalCtrl($scope, $uibModalInstance, info) {
         return false;
     }
 }
-// 支付通道管理
+// 支付通道银行管理
 function paymentPassageBankCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$filter,csvExp) {
     var defaultSearch = {};
     var searchInfo = angular.copy(defaultSearch);
@@ -1073,8 +1010,7 @@ function paymentPassageBankCtrl($scope, $uibModal, toaster, NgTableParams, httpS
     var OrganizationInfo;
 
     httpSvc.getData('post', '/bankRate/init').then(function (value) {
-
-        // $scope.organizations= value.organizations;
+        $scope.organizations= value.organizations;
         $scope.status= value.status;
         httpSvc.getData('post', '/bankRate/search',searchInfo).then(function (value1) {
             OrganizationInfo = value1.data;
@@ -1133,7 +1069,7 @@ function paymentPassageBankCtrl($scope, $uibModal, toaster, NgTableParams, httpS
         searchInfo = angular.copy($scope.searchInfo);
         if($scope.searchInfo!=defaultSearch){
             console.log(searchInfo);
-            httpSvc.getData('post', '/bankRate/getAll',searchInfo).then(function (value1) {
+            httpSvc.getData('get', '/bankRate/search',searchInfo).then(function (value1) {
                 OrganizationInfo = value1.data;
                 $scope.OrganizationTable = new NgTableParams({}, {
                     dataset: value1.data
@@ -1151,26 +1087,6 @@ function paymentPassageBankCtrl($scope, $uibModal, toaster, NgTableParams, httpS
         var modalInstance = $uibModal.open({
             templateUrl: '/views/passageway/OrganizationAdd',
             controller: 'OrganizationAddModalCtrl',
-            resolve: {
-                type: function () {
-                    return type;
-                },
-                Organization: function () {
-                    return Organization;
-                }
-            }
-        });
-        modalInstance.result.then(function () {
-            tableReload()
-        }, function () {
-            tableReload()
-        });
-    };
-
-    $scope.productEdit = function ( type,Organization) {
-        var modalInstance = $uibModal.open({
-            templateUrl: '/views/passageway/productAdd',
-            controller: 'productAddModalCtrl',
             resolve: {
                 type: function () {
                     return type;
@@ -1233,19 +1149,19 @@ function paymentPassageBankCtrl($scope, $uibModal, toaster, NgTableParams, httpS
             }
         });
         modalInstance.result.then(function () {
-            httpSvc.getData('post', '/organization/delete', idList).then(function (value) {
-                if (!value.code) {
+            httpSvc.getData('post', '/bankRate/delete', idList).then(function (value) {
+                if (value.code == 0) {
                     toaster.pop({
                         type: 'success',
-                        title: '支付机构',
-                        body: '删除支付机构成功！'
+                        title: '机构银行',
+                        body: '删除机构银行成功！'
                     });
                     tableReload();
                 } else {
                     toaster.pop({
                         type: 'warning',
-                        title: '支付机构',
-                        body: '支付机构无法删除！',
+                        title: '机构银行',
+                        body: '机构银行无法删除！',
                         timeout: 0
                     });
                 }
@@ -1254,9 +1170,108 @@ function paymentPassageBankCtrl($scope, $uibModal, toaster, NgTableParams, httpS
         }, function () {
         });
     };
+}
+function bankAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, Organization) {
+    $scope.type = type;
+    $scope.firstValue =null;
+    if (type === 1) {
+        $scope.Organization = angular.copy(Organization);
+    }
+    httpSvc.getData('post', '/bankRate/init').then(function (value) {
+        $scope.organizations= value.organizations;
+        $scope.status= value.status;
+        // httpSvc.getData('post', '/bankRate/search',searchInfo).then(function (value1) {
+        //     OrganizationInfo = value1.data;
+        //     $scope.OrganizationTable = new NgTableParams({}, {
+        //         dataset: value1.data
+        //     });
+        //     angular.element('.ibox-content').removeClass('sk-loading');
+        // });
+    });
+    $scope.nameBlur = $scope.remarkBlur = $scope.elementBlur=function ($event, remark) {
+        verification(remark, $event.target);
+    };
+    // $scope.$watch('Organization.status', function (newVal) {
+    //     if (newVal !== undefined) {
+    //         angular.element('#bank-status').parent().removeClass('has-error');
+    //         angular.element('#bank-status').parent().addClass('has-success');
+    //     }
+    // });
+    $scope.statusChange = function (){
+        httpSvc.getData('post', '/bankRate/update', $scope.Organization).then(function (value) {
+            if (value.code == 0) {
+                toaster.pop({
+                    type: 'success',
+                    title: '机构银行管理',
+                    body: '机构银行修改成功！'
+                });
+                $uibModalInstance.close();
+            } else {
+                toaster.pop({
+                    type: 'error',
+                    title: '机构银行管理',
+                    body: '机构银行修改失败！'
+                });
+            }
+        });
+    }
+    $scope.editBnak = function ($event, row) {
+        httpSvc.getData('post', '/bankRate/init').then(function (value) {
+            $scope.organizations= value.organizations;
+            $scope.status= value.status;
+            httpSvc.getData('post', '/bankRate/search',row).then(function (value1) {
+                OrganizationInfo = value1.data;
+                $scope.OrganizationTable = new NgTableParams({}, {
+                    dataset: value1.data
+                });
+                angular.element('.ibox-content').removeClass('sk-loading');
+            });
+        });
 
+    }
 
-
+    $scope.addOrganizationBank = function () {
+        if (type === 0) {
+            httpSvc.getData('post', '/bankRate/save', $scope.Organization).then(function (value) {
+                if (value.code == 0) {
+                    $scope.bankInfo = null;
+                    toaster.pop({
+                        type: 'success',
+                        title: '机构银行管理',
+                        body: '机构银行添加成功！'
+                    });
+                    $uibModalInstance.close();
+                } else {
+                    toaster.pop({
+                        type: 'error',
+                        title: '机构银行管理',
+                        body: '机构银行添加失败！'
+                    });
+                }
+            });
+        } else {
+            httpSvc.getData('post', '/bankRate/update', $scope.Organization).then(function (value) {
+                if (value) {
+                    $scope.bankInfo = null;
+                    toaster.pop({
+                        type: 'success',
+                        title: '机构银行管理',
+                        body: '机构银行修改成功！'
+                    });
+                    $uibModalInstance.close();
+                } else {
+                    toaster.pop({
+                        type: 'error',
+                        title: '机构银行管理',
+                        body: '机构银行修改失败！'
+                    });
+                }
+            });
+        }
+    };
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss();
+    };
 }
 angular
     .module('inspinia')

@@ -37,10 +37,10 @@
                                         <div class="form-group form-group-sm">
                                             <div class="input-group">
                                                 <span class="input-group-addon">机构名称：</span>
-                                                <input type="text" class="form-control" ng-model="searchInfo.organizationName"
-                                                       uib-typeahead="x.organizationName  for x in organizations | filter: {organizationName : $viewValue}"
-                                                       typeahead-min-length="0"
-                                                >
+                                                <select class="form-control b-r-sm" ng-model="searchInfo.organizationId"
+                                                        ng-options="x.organizationId as x.organizationName for x in organizations">
+                                                    <option value=""></option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -68,30 +68,36 @@
                                                 <input type="checkbox" ng-model="selected[row.id]">
                                             </td>
                                             <td class="text-center" data-title="'机构ID'">
-                                                {{row.organizationId}}
+                                                {{row.organizationId}} ({{row.organizationId | getValueByList : organizations : 'organizationId' : 'organizationName'}})
                                             </td>
                                             <td class="text-center" data-title="'银行名称'">
-                                                {{row.organizationName}}
+                                                {{row.bankName}}
                                             </td>
 
                                             <td class="text-center" data-title="'银行号编码'">
-                                                {{row.creator }}
+                                                {{row.bankCode }}
+                                            </td>
+                                            <td class="text-center" data-title="'单笔限额'">
+                                                {{row.singleMoney }}
+                                            </td>
+                                            <td class="text-center" data-title="'单日限额'">
+                                                {{row.dayMoney }}
                                             </td>
                                             <td class="text-center" data-title="'费率'">
                                                 <%--{{row.createTime  | date : 'yyyy/MM/dd ' }}--%>
-                                                {{row.createTime  | date : 'yyyy/MM/dd HH:mm:ss' }}
+                                                {{row.bankRate}}
                                             </td>
                                            <%-- <td class="text-center" data-title="'备注'">
                                                 {{row.remark }}
                                             </td>--%>
                                             <td class="text-center ng-isolate-scope" data-title="'操作'" >
-                                                <div class="btn btn-xs no-margins btn-primary active" ng-click="statusChange($event, row)" ng-show="row.status == 0 ">
+                                                <div class="btn btn-xs no-margins btn-primary active" ng-click="statusChange($event, row)" ng-show="row.status == 1 ">
                                                     启用
                                                 </div>
-                                                <div  class="btn btn-xs no-margins btn-disabled" ng-click="statusChange($event, row)" ng-show=" row.status == 1 ">
+                                                <div  class="btn btn-xs no-margins btn-disabled" ng-click="statusChange($event, row)" ng-show=" row.status == 0 ">
                                                     禁用
                                                 </div>
-                                                <div class="btn btn-xs btn-success"  style="margin: 0 0 0 10px" ng-click="edit(1, row)">
+                                                <div class="btn btn-xs btn-success"  style="margin: 0 0 0 10px" ng-click="bankEdit(1, row)">
                                                     编辑
                                                 </div>
                                             </td>

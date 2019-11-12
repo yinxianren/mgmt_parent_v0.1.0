@@ -85,10 +85,10 @@
                                                 {{row.remark }}
                                             </td>--%>
                                             <td class="text-center ng-isolate-scope" data-title="'操作'" >
-                                                <div class="btn btn-xs no-margins btn-primary active" ng-click="statusChange($event, row)" ng-show="row.status == 0 ">
+                                                <div class="btn btn-xs no-margins btn-primary active" ng-click="statusChange($event, row)" ng-show="row.status == 1 ">
                                                     启用
                                                 </div>
-                                                <div  class="btn btn-xs no-margins btn-disabled" ng-click="statusChange($event, row)" ng-show=" row.status == 1 ">
+                                                <div  class="btn btn-xs no-margins btn-disabled" ng-click="statusChange($event, row)" ng-show=" row.status == 0 ">
                                                     禁用
                                                 </div>
                                                 <div class="btn btn-xs btn-success"  style="margin: 0 0 0 10px" ng-click="edit(1, row)">
