@@ -46,13 +46,13 @@ public class AnewTransOrderServiceImpl implements AnewTransOrderService {
             if (null != (searchInfo.getOrderStatus())) transOrderInfoTable.setStatus(searchInfo.getOrderStatus());
             if (null != (searchInfo.getSettleStatus())) transOrderInfoTable.setSettleStatus(searchInfo.getSettleStatus());
             if (StringUtils.isNotBlank(searchInfo.getProductId())) transOrderInfoTable.setProductId(searchInfo.getProductId());
-            if (null != (searchInfo.getStartDate())) transOrderInfoTable.setBeginTime(searchInfo.getStartDate());
+            if (null != (searchInfo.getStartDate())) transOrderInfoTable.setBeginTime(sdf2.format(searchInfo.getStartDate()));
             if (null != searchInfo.getEndDate()){
                 String date = sdf.format(searchInfo.getEndDate());
                 date = date + " 23:59:59";
-                transOrderInfoTable.setEndTime(sdf2.parse(date));
+                transOrderInfoTable.setEndTime(date);
             }
-            IPage<PayOrderInfoTable> ipage = apiTransOrderInfoService.page(transOrderInfoTable);
+            IPage<TransOrderInfoTable> ipage = apiTransOrderInfoService.page(transOrderInfoTable);
             List<ChannelInfoTable> channelInfoTables = (List<ChannelInfoTable>)anewChannelService.getAll(null).getData();
             Map<String,Object> organMap = new HashMap<>();
             for (ChannelInfoTable channelInfoTable : channelInfoTables ){
@@ -61,11 +61,11 @@ public class AnewTransOrderServiceImpl implements AnewTransOrderService {
             BigDecimal totalMoney = new BigDecimal(0);
             BigDecimal totalChannelFee = new BigDecimal(0);
             BigDecimal totalFee = new BigDecimal(0);
-            for (PayOrderInfoTable payOrder:ipage.getRecords()){
-                totalMoney = totalMoney.add(payOrder.getAmount());
-                totalFee = totalFee.add(payOrder.getAmount().subtract(payOrder.getInAmount()));
-                totalChannelFee = totalChannelFee.add(payOrder.getChannelFee());
-                payOrder.setOrganizationId(organMap.get(payOrder.getChannelId()) != null ? organMap.get(payOrder.getChannelId()).toString():null);
+            for (TransOrderInfoTable transOrderInfoTable1:ipage.getRecords()){
+                totalMoney = totalMoney.add(transOrderInfoTable1.getAmount());
+                totalFee = totalFee.add(transOrderInfoTable1.getAmount().subtract(transOrderInfoTable1.getOutAmount()));
+                totalChannelFee = totalChannelFee.add(transOrderInfoTable1.getChannelFee());
+                transOrderInfoTable1.setOrganizationId(organMap.get(transOrderInfoTable1.getChannelId()) != null ? organMap.get(transOrderInfoTable1.getChannelId()).toString():null);
             }
             Map map = new HashMap();
             map.put("totalMoney",totalMoney.toString());

@@ -1286,14 +1286,14 @@ function merchantBankRateCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc
                 toaster.pop({
                     type: 'success',
                     title: '商户银行配置',
-                    body: '修改商户配置成功！'
+                    body: '修改商户银行配置成功！'
                 });
                 $uibModalInstance.close();
             } else {
                 toaster.pop({
                     type: 'error',
                     title: '商户银行配置',
-                    body: '修改商户配置失败！'
+                    body: '修改商户银行配置失败！'
                 });
             }
         });
@@ -1304,44 +1304,44 @@ function merchantBankRateCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc
         $uibModalInstance.dismiss();
     };
     // 验证输入框的输入数据
-    $scope.singleFeeBlur =$scope.rateFeeBlur= $scope.marginRatioBlur =$scope.settleCycleBlur =$scope.marginCycleBlur =  function ($event, name) {
+    /*$scope.singleFeeBlur =$scope.rateFeeBlur= $scope.marginRatioBlur =$scope.settleCycleBlur =$scope.marginCycleBlur =  function ($event, name) {
         verification(name,$event.target);
-    };
+    };*/
     $timeout(function () {
         $scope.checkRateDisabled = function (myForm,merchantRates) {
             if(merchantRates.length == 0){
                 return;
             }
             // for (var i=0;i<merchantRates.length;i++){
-            if(merchantRates[0].status == 0 && merchantRates[1].status == 0 && merchantRates[2].status == 0) {// 启用
-                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.marginRatio0.$error.required ||myForm.settleCycle0.$error.required ||myForm.marginCycle0.$error.required
-                    || myForm.singleFee1.$error.required || myForm.rateFee1.$error.required ||myForm.marginRatio1.$error.required ||myForm.settleCycle1.$error.required ||myForm.marginCycle1.$error.required
-                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.marginRatio2.$error.required ||myForm.settleCycle2.$error.required ||myForm.marginCycle2.$error.required;
+           /* if(merchantRates[0].status == 0 && merchantRates[1].status == 0 && merchantRates[2].status == 0) {// 启用
+                return myForm.rateFee0.$error.required ||myForm.marginRatio0.$error.required ||myForm.settleCycle0.$error.required ||myForm.marginCycle0.$error.required
+                     || myForm.rateFee1.$error.required ||myForm.marginRatio1.$error.required ||myForm.settleCycle1.$error.required ||myForm.marginCycle1.$error.required
+                     ||myForm.rateFee2.$error.required ||myForm.marginRatio2.$error.required ||myForm.settleCycle2.$error.required ||myForm.marginCycle2.$error.required;
             }
             if(merchantRates[0].status == 0 && merchantRates[1].status == 0) {// 启用
-                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.marginRatio0.$error.required ||myForm.settleCycle0.$error.required ||myForm.marginCycle0.$error.required
-                    || myForm.singleFee1.$error.required || myForm.rateFee1.$error.required ||myForm.marginRatio1.$error.required ||myForm.settleCycle1.$error.required ||myForm.marginCycle1.$error.required;
+                return myForm.rateFee0.$error.required ||myForm.marginRatio0.$error.required ||myForm.settleCycle0.$error.required ||myForm.marginCycle0.$error.required
+                     || myForm.rateFee1.$error.required ||myForm.marginRatio1.$error.required ||myForm.settleCycle1.$error.required ||myForm.marginCycle1.$error.required;
             }
             if(merchantRates[0].status == 0 && merchantRates[2].status == 0) {// 启用
-                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.marginRatio0.$error.required ||myForm.settleCycle0.$error.required ||myForm.marginCycle0.$error.required
-                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.marginRatio2.$error.required ||myForm.settleCycle2.$error.required ||myForm.marginCycle2.$error.required;
+                return myForm.rateFee0.$error.required ||myForm.marginRatio0.$error.required ||myForm.settleCycle0.$error.required ||myForm.marginCycle0.$error.required
+                    ||myForm.rateFee2.$error.required ||myForm.marginRatio2.$error.required ||myForm.settleCycle2.$error.required ||myForm.marginCycle2.$error.required;
             }
             if(merchantRates[1].status == 0 && merchantRates[2].status == 0) {// 启用
-                return myForm.singleFee1.$error.required || myForm.rateFee1.$error.required ||myForm.marginRatio1.$error.required ||myForm.settleCycle1.$error.required ||myForm.marginCycle1.$error.required
-                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.marginRatio2.$error.required ||myForm.settleCycle2.$error.required ||myForm.marginCycle2.$error.required;
+                return  myForm.rateFee1.$error.required ||myForm.marginRatio1.$error.required ||myForm.settleCycle1.$error.required ||myForm.marginCycle1.$error.required
+                    ||myForm.rateFee2.$error.required ||myForm.marginRatio2.$error.required ||myForm.settleCycle2.$error.required ||myForm.marginCycle2.$error.required;
             }
             if(merchantRates[0].status == 0){// 启用
-                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.marginRatio0.$error.required
+                return myForm.rateFee0.$error.required ||myForm.marginRatio0.$error.required
                     ||myForm.settleCycle0.$error.required ||myForm.marginCycle0.$error.required;
             }
             if(merchantRates[1].status == 0){// 启用
-                return myForm.singleFee1.$error.required ||myForm.rateFee1.$error.required ||myForm.marginRatio1.$error.required
+                return myForm.rateFee1.$error.required ||myForm.marginRatio1.$error.required
                     ||myForm.settleCycle1.$error.required ||myForm.marginCycle1.$error.required;
             }
             if(merchantRates[2].status == 0){// 启用
-                return myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.marginRatio2.$error.required
+                returnmyForm.rateFee2.$error.required ||myForm.marginRatio2.$error.required
                     ||myForm.settleCycle2.$error.required ||myForm.marginCycle2.$error.required;
-            }
+            }*/
             // }
             return null;
         };

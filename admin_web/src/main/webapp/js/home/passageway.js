@@ -604,7 +604,8 @@ function channelInfoModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type,
     }
     $scope.checkChannelCode = function (value) {
         httpSvc.getData('get', '/product/getProductList',{
-            organizationId: value
+            organizationId: value,
+            status:0
         }).then(function (value) {
             $scope.products = value.data;
         });

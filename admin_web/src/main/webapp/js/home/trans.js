@@ -248,7 +248,7 @@ function repayCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$timeout) 
     $timeout(function () {
         httpSvc.getData('post', '/transOrder/init').then(function (value1) {
             $scope.organizations=value1.organizations;
-            $scope.payTypes=value1.payType;
+            $scope.productTypes=value1.productTypes;
             $scope.orderStatus=value1.orderStatus;
             $scope.settleStatus=value1.settleStatus;
             $scope.channels=value1.channels;
@@ -264,12 +264,11 @@ function repayCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$timeout) 
                     orderBy: params.sorting(),
                     searchInfo: $scope.searchInfo
                 }).then(function (value) {
-                    console.log(params);
-                    $scope.totalOrdert = value.total;
-                    $scope.customizet = value.customize;
-                    params.total(value.total);
+                    $scope.totalOrdert = value.data.total;
+                    $scope.customizet = value.customData;
+                    params.total(value.data.total);
                     angular.element('.ibox-content').removeClass('sk-loading');
-                    return value.rows;
+                    return value.data.records;
                 });
             }
         });});
@@ -384,11 +383,11 @@ function repayCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$timeout) 
                     orderBy: params.sorting(),
                     searchInfo: $scope.searchInfo
                 }).then(function (value) {
-                    $scope.totalOrdert = value.total;
-                    $scope.customizet = value.customize;
-                    params.total(value.total);
+                    $scope.totalOrdert = value.data.total;
+                    $scope.customizet = value.customData;
+                    params.total(value.data.total);
                     angular.element('.ibox-content').removeClass('sk-loading');
-                    return value.rows;
+                    return value.data.records;
                 });
             }
         });

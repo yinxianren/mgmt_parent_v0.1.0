@@ -27,7 +27,7 @@
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
                                         <span class="input-group-addon">平台订单号：</span>
-                                        <input type="text" class="form-control" ng-model="searchInfo.transId">
+                                        <input type="text" class="form-control" ng-model="searchInfo.platformOrderId">
                                     </div>
                                 </div>
                             </div>
@@ -41,29 +41,29 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-6 col-lg-1-5">
+                            <%--<div class="col-sm-6 col-md-6 col-lg-1-5">
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
                                         <span class="input-group-addon">机构名称：</span>
                                         <input class="form-control b-r-sm" type="text" ng-model="searchInfo.organizationId"
-                                               <%--uib-typeahead="x organizationId x.organizationName for x in organizations | filter: {organizationId : $viewValue}"--%>
+                                               &lt;%&ndash;uib-typeahead="x organizationId x.organizationName for x in organizations | filter: {organizationId : $viewValue}"&ndash;%&gt;
                                                uib-typeahead="x.organizationId as x.organizationId + '(' + x.organizationName + ')' for x in organizations | filter: {organizationId : $viewValue}"
                                                typeahead-min-length="0">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-6 col-md-6 col-lg-1-5">
+                            </div>--%>
+                            <%--<div class="col-sm-6 col-md-6 col-lg-1-5">
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
                                         <span class="input-group-addon">通道名称：</span>
                                         <input class="form-control b-r-sm" type="text" ng-model="searchInfo.channelId"
-                                               <%--uib-typeahead="x channelId x.channelName for x in channels | filter: {channelId : $viewValue}"--%>
+                                               &lt;%&ndash;uib-typeahead="x channelId x.channelName for x in channels | filter: {channelId : $viewValue}"&ndash;%&gt;
                                                uib-typeahead="x.channelId as x.channelId + '(' + x.channelName + ')' for x in channels | filter: {channelId : $viewValue}"
                                                typeahead-min-length="0">
 
                                     </div>
                                 </div>
-                            </div>
+                            </div>--%>
                             <div class="col-sm-6 col-md-6 col-lg-1-5">
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
@@ -97,9 +97,9 @@
                             <div class="col-sm-6 col-md-6 col-lg-1-5">
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
-                                        <span class="input-group-addon">支付方式：</span>
-                                        <select class="form-control b-r-sm" ng-model="searchInfo.payType"
-                                                ng-options="x.firstValue as x.name for x in payTypes">
+                                        <span class="input-group-addon">支付产品：</span>
+                                        <select class="form-control b-r-sm" ng-model="searchInfo.productId"
+                                                ng-options="x.firstValue as x.name for x in productTypes">
                                         </select>
                                     </div>
                                 </div>
@@ -180,7 +180,7 @@
                                    class="table table-condensed table-striped table-hover table-bordered">
                                 <tr ng-repeat="row in $data">
                                     <td class="text-center" data-title="'商户'">
-                                        {{row.merId}}({{row.merId  | getValueByList : merchants : 'merId':'merchantName'}})
+                                        {{row.merchantId}}({{row.merchantId  | getValueByList : merchants : 'merchantId':'merchantName'}})
                                         <%-- {{row.merId}}--%>
                                     </td>
                                     <td class="text-center" data-title="'商户订单号'">
@@ -189,7 +189,7 @@
                                     <td class="text-center" data-title="'平台订单号'"
                                         style="text-decoration: underline;color: #1ab394;cursor: pointer;"
                                         ng-click="showModel(1,row)">
-                                        {{row.transId}}
+                                        {{row.platformOrderId}}
                                     </td>
                                     <%--<td class="text-center" data-title="'代理商名称'">
                                         {{row.agmentId | getValueByList : agentMerchants : 'agentMerchantId':'agentMerchantName' }}
@@ -203,8 +203,8 @@
                                     <%--<td class="text-center" data-title="'通道名称'">
                                         {{row.channelId  | getValueByList : channels : 'channelId' : 'channelName'}}
                                     </td>--%>
-                                    <td class="text-center" data-title="'支付方式'">
-                                        {{row.payType | getValueByList : payTypes : 'firstValue' : 'name'  }}
+                                    <td class="text-center" data-title="'支付产品'">
+                                        {{row.productId | getValueByList : productTypes : 'firstValue' : 'name'  }}
                                     </td>
                                     <%--<td class="text-center" data-title="'支付商户号'">
                                         {{row.channelTransCode}}
@@ -219,28 +219,28 @@
                                         {{row.amount | number:2}}
                                     </td>
                                     <td class="text-center" data-title="'实际支付金额'">
-                                        {{row.realAmount | number:2}}
+                                        {{row.outAmount | number:2}}
                                     </td>
                                     <%--<td class="text-center" data-title="'商户手续费收入'">
                                         {{row.terminalFee | number:2}}
                                     </td>--%>
                                     <td class="text-center" data-title="'平台手续费收入'">
-                                        {{row.fee | number:2}}
+                                        {{row.merFee | number:2}}
                                     </td>
                                     <td class="text-center" data-title="'平台毛利润'">
-                                        {{row.income | number:2}}
+                                        {{row.platformIncome | number:2}}
                                     </td>
                                     <td class="text-center" data-title="'通道成本'">
                                         {{row.channelFee | number:2}}
                                     </td>
                                     <td class="text-center" data-title="'订单状态'">
-                                        {{row.orderStatus | getValueByList : orderStatus : 'firstValue' : 'name' }}
+                                        {{row.status | getValueByList : orderStatus : 'firstValue' : 'name' }}
                                     </td>
                                     <td class="text-center" data-title="'结算状态'">
                                         {{row.settleStatus | getValueByList : settleStatus : 'firstValue' : 'name'}}
                                     </td>
                                     <td class="text-center" data-title="'交易时间'">
-                                        {{row.tradeTime | date:'yyyy-MM-dd HH:mm:ss' }}
+                                        {{row.updateTime | date:'yyyy-MM-dd HH:mm:ss' }}
                                     </td>
                                     <%--<td class="text-center" data-title="'通道交易时间'">
                                         {{row.bankTime | date:'yyyy-MM-dd HH:mm:ss'}}

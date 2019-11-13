@@ -36,7 +36,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-6 col-lg-1-5">
+                            <%--<div class="col-sm-6 col-md-6 col-lg-1-5">
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
                                         <span class="input-group-addon">机构名称：</span>
@@ -45,7 +45,7 @@
                                                typeahead-min-length="0">
                                     </div>
                                 </div>
-                            </div>
+                            </div>--%>
                            <%-- <div class="col-sm-6 col-md-6 col-lg-1-5">
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
