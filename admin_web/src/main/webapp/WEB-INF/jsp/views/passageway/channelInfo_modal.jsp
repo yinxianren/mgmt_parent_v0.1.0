@@ -104,6 +104,15 @@
                         </select>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label p-w-xs label-name-left"><span class="text-danger">*</span>大额银行启用状态：</label>
+                    <div class="col-sm-9">
+                        <select class="form-control b-r-sm" name="status" ng-model="ChannelInfo.bankStatus"
+                                ng-blur="statusBlur($event, ChannelInfo.bankStatus)" required
+                                ng-options="+(x.firstValue) as x.name for x in status">
+                        </select>
+                    </div>
+                </div>
             </uib-tab>
             <uib-tab index="1" disable="nextDisabled(myForm, 0)">
                 <uib-tab-heading><i class="fa fa-address-card"></i>&nbsp;通道配置</uib-tab-heading>

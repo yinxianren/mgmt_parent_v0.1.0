@@ -93,9 +93,9 @@
                                     <td class="text-center" data-title="'商户名称'">
                                         {{row.merchantName}}
                                     </td>
-                                    <td class="text-center" data-title="'商户简称'">
+                                   <%-- <td class="text-center" data-title="'商户简称'">
                                         {{row.merchantShortName}}
-                                    </td>
+                                    </td>--%>
                                     <td class="text-center" data-title="'商户类型'" >
                                         <div ng-show="row.type == 00 ">
                                             公司商户
@@ -135,9 +135,9 @@
                                     <td class="text-center" data-title="'合同终止时间'">
                                         {{row.agreementEndTime | date:'yyyy-MM-dd'}}
                                     </td>
-                                    <td class="text-center" data-title="'创建时间'">
+                                   <%-- <td class="text-center" data-title="'创建时间'">
                                         {{row.createTime | date:'yyyy-MM-dd HH:mm:ss'}}
-                                    </td>
+                                    </td>--%>
                                     <td class="text-center" data-title="'结算账号'">
                                         <button class="btn btn-xs btn-primary no-margins" ng-click="showModal(3, row)">
                                             查看/修改
@@ -148,8 +148,13 @@
                                             查看/修改
                                         </button>
                                     </td>
-                                    <td class="text-center" data-title="'商户费率'">
+                                    <td class="text-center" data-title="'商户产品费率'">
                                         <button class="btn btn-xs btn-primary no-margins" ng-click="showModal(5, row)">
+                                            查看/修改
+                                        </button>
+                                    </td>
+                                    <td class="text-center" data-title="'商户银行费率'">
+                                        <button class="btn btn-xs btn-primary no-margins" ng-click="showModal(8, row)">
                                             查看/修改
                                         </button>
                                     </td>
@@ -165,10 +170,10 @@
                                     </td>
                                     <td class="text-center p-6" style="max-width: 170px;" data-title="'操作'">
                                         <div style="min-width: 80px">
-                                            <button class="btn btn-xs btn-primary no-margins" ng-click="showModal(1, row)">
+                                            <button class="btn btn-xs btn-success no-margins" ng-click="showModal(1, row)">
                                                 编辑
                                             </button>
-                                            <button class="btn btn-xs btn-primary no-margins" ng-click="showModal(2, row)">
+                                            <button class="btn btn-xs btn-success no-margins" ng-click="showModal(2, row)">
                                                 审核
                                             </button>
                                         </div>

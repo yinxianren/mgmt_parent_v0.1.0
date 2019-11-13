@@ -1,6 +1,7 @@
 package com.rxh.service.impl;
 
 import com.internal.playment.api.db.channel.ApiProductTypeSettingService;
+import com.internal.playment.api.db.system.ApiBankRateService;
 import com.internal.playment.api.db.system.ApiOrganizationInfoService;
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.inner.NewPayAssert;
@@ -26,6 +27,8 @@ public class OrganizationInfoServiceImpl implements OrganizationInfoService, New
     private ApiProductTypeSettingService apiProductTypeSettingService;
     @Autowired
     private ConstantService constantService;
+    @Autowired
+    private ApiBankRateService apiBankRateService;
 
 
     public ResponseVO getAll(OrganizationInfoTable organizationInfo){
@@ -109,25 +112,30 @@ public class OrganizationInfoServiceImpl implements OrganizationInfoService, New
     @Override
     public ResponseVO removeByIds(List<String> idList) {
         List<Long> productIds = new ArrayList<>();
+        List<String> orgIds = new ArrayList<>();
         for (String id : idList){
             ProductSettingTable productSettingTable = new ProductSettingTable();
             OrganizationInfoTable organizationInfoTable = new OrganizationInfoTable();
             organizationInfoTable.setId(Long.valueOf(id));
             List<OrganizationInfoTable> list = apiOrganizationInfoService.getAll(organizationInfoTable);
             organizationInfoTable = list.get(0);
+            orgIds.add(organizationInfoTable.getOrganizationId());
             productSettingTable.setOrganizationId(organizationInfoTable.getOrganizationId());
             List<ProductSettingTable> productSettingTables = apiProductTypeSettingService.list(productSettingTable);
             for (ProductSettingTable productSettingTable1 : productSettingTables){
                 productIds.add(productSettingTable1.getId());
             }
         }
+        //删除关联产品
         apiProductTypeSettingService.removeById(productIds);
+        //删除关联银行配置
+        apiBankRateService.batchDelByOrganIds(orgIds);
         Boolean b = apiOrganizationInfoService.remove(idList);
         ResponseVO responseVO = new ResponseVO();
         if (b){
-            responseVO.setCode(0);
+            responseVO.setCode(StatusEnum._0.getStatus());
         }else {
-            responseVO.setCode(1);
+            responseVO.setCode(StatusEnum._1.getStatus());
         }
         return responseVO;
     }

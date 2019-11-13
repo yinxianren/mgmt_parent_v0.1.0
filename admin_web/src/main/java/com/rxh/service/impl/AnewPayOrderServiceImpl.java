@@ -55,11 +55,11 @@ public class AnewPayOrderServiceImpl implements AnewPayOrderService {
             if (null != (searchInfo.getOrderStatus())) payOrderInfoTable.setStatus(searchInfo.getOrderStatus());
             if (null != (searchInfo.getSettleStatus())) payOrderInfoTable.setSettleStatus(searchInfo.getSettleStatus());
             if (StringUtils.isNotBlank(searchInfo.getProductId())) payOrderInfoTable.setProductId(searchInfo.getProductId());
-            if (null != (searchInfo.getStartDate())) payOrderInfoTable.setBeginTime(searchInfo.getStartDate());
+            if (null != (searchInfo.getStartDate())) payOrderInfoTable.setBeginTime(sdf2.format(searchInfo.getStartDate()));
             if (null != searchInfo.getEndDate()){
                 String date = sdf.format(searchInfo.getEndDate());
                 date = date + " 23:59:59";
-                payOrderInfoTable.setEndTime(sdf2.parse(date));
+                payOrderInfoTable.setEndTime(date);
             }
             IPage<PayOrderInfoTable> ipage = apiPayOrderInfoService.page(payOrderInfoTable);
             List<ChannelInfoTable> channelInfoTables = (List<ChannelInfoTable>)anewChannelService.getAll(null).getData();

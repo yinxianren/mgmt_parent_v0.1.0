@@ -162,6 +162,36 @@ function merchantListCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$st
                 merchantInfo: merchantInfo
             });
         }
+        if(goType == 8){ // 商户银行费率
+            var modalInstance = $uibModal.open({
+                templateUrl: 'views/merchant/merchant_bank_rate',
+                controller: 'merchantBankRateCtrl',
+                resolve: {
+                    goType: function () {
+                        return goType;
+                    },
+                    merchantInfo: function () {
+                        return merchantInfo;
+                    },
+                    loadPlugin: function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            {
+                                name: 'angularFileUpload',
+                                files: ['js/plugins/angular-file-upload/angular-file-upload.min.js']
+                            },
+                            {
+                                files: [
+                                    'css/plugins/Gallery-master/blueimp-gallery.min.css',
+                                    'js/plugins/Gallery-master/jquery.blueimp-gallery.min.js']
+                            }
+                        ]);
+                    }
+                }
+            });
+            modalInstance.result.then(function () {
+            }, function () {
+            });
+        }
     };
 
     // 初始化数据
@@ -1194,6 +1224,130 @@ function merchantUserModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type
     }
 }
 
+//商户银行费率
+function merchantBankRateCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$filter, goType, merchantInfo,FileUploader,$timeout,$uibModalInstance) {
+    $scope.goType = parseInt(goType);
+    $scope.merchantSetting = {};
+    $scope.selected=[];
+    $scope.merchantRates = [];
+
+    $scope.merchantSetting = getMerchantSetting(merchantInfo);
+    function getMerchantSetting(merchantInfo) {
+        var merchantSetting = {
+            id: '',
+            merchantId: merchantInfo.merchantId,
+            organizationId: '',
+            channelId: '',
+            channelLevel: '',
+            payType: ''
+        };
+        return merchantSetting;
+    }
+
+    httpSvc.getData('get', '/merchantBankRate/init').then(function (value) {
+        value = value.data;
+        $scope.status = value.status;
+        angular.element('.ibox-content').removeClass('sk-loading');
+
+        // 初始化对象信息
+        httpSvc.getData('get', '/merchantBankRate/search',{"merchantId":$scope.merchantSetting.merchantId}).then(function (value1) {
+
+            $scope.merchantRates = value1.data;
+            angular.element('.ibox-content').removeClass('sk-loading');
+        });
+    });
+
+    statusChange=function(status){
+
+        var temp=status;
+        if (temp==1){
+            return status =0;
+        } else {
+            return status =1;
+        }
+
+    }
+    /**
+     * 确定
+     */
+    $scope.confirm = function (merchantRates) {
+        var codes = [];
+
+        for (var code in $scope.selected) {
+            if ($scope.selected[code]) {
+                codes.push(code);
+            }
+        }
+        httpSvc.getData('post', '/merchantBankRate/update',
+            merchantRates
+        ).then(function (value) {
+
+            if (value.code == 0) {
+                toaster.pop({
+                    type: 'success',
+                    title: '商户银行配置',
+                    body: '修改商户配置成功！'
+                });
+                $uibModalInstance.close();
+            } else {
+                toaster.pop({
+                    type: 'error',
+                    title: '商户银行配置',
+                    body: '修改商户配置失败！'
+                });
+            }
+        });
+
+    }
+    //取消
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss();
+    };
+    // 验证输入框的输入数据
+    $scope.singleFeeBlur =$scope.rateFeeBlur= $scope.marginRatioBlur =$scope.settleCycleBlur =$scope.marginCycleBlur =  function ($event, name) {
+        verification(name,$event.target);
+    };
+    $timeout(function () {
+        $scope.checkRateDisabled = function (myForm,merchantRates) {
+            if(merchantRates.length == 0){
+                return;
+            }
+            // for (var i=0;i<merchantRates.length;i++){
+            if(merchantRates[0].status == 0 && merchantRates[1].status == 0 && merchantRates[2].status == 0) {// 启用
+                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.marginRatio0.$error.required ||myForm.settleCycle0.$error.required ||myForm.marginCycle0.$error.required
+                    || myForm.singleFee1.$error.required || myForm.rateFee1.$error.required ||myForm.marginRatio1.$error.required ||myForm.settleCycle1.$error.required ||myForm.marginCycle1.$error.required
+                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.marginRatio2.$error.required ||myForm.settleCycle2.$error.required ||myForm.marginCycle2.$error.required;
+            }
+            if(merchantRates[0].status == 0 && merchantRates[1].status == 0) {// 启用
+                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.marginRatio0.$error.required ||myForm.settleCycle0.$error.required ||myForm.marginCycle0.$error.required
+                    || myForm.singleFee1.$error.required || myForm.rateFee1.$error.required ||myForm.marginRatio1.$error.required ||myForm.settleCycle1.$error.required ||myForm.marginCycle1.$error.required;
+            }
+            if(merchantRates[0].status == 0 && merchantRates[2].status == 0) {// 启用
+                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.marginRatio0.$error.required ||myForm.settleCycle0.$error.required ||myForm.marginCycle0.$error.required
+                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.marginRatio2.$error.required ||myForm.settleCycle2.$error.required ||myForm.marginCycle2.$error.required;
+            }
+            if(merchantRates[1].status == 0 && merchantRates[2].status == 0) {// 启用
+                return myForm.singleFee1.$error.required || myForm.rateFee1.$error.required ||myForm.marginRatio1.$error.required ||myForm.settleCycle1.$error.required ||myForm.marginCycle1.$error.required
+                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.marginRatio2.$error.required ||myForm.settleCycle2.$error.required ||myForm.marginCycle2.$error.required;
+            }
+            if(merchantRates[0].status == 0){// 启用
+                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.marginRatio0.$error.required
+                    ||myForm.settleCycle0.$error.required ||myForm.marginCycle0.$error.required;
+            }
+            if(merchantRates[1].status == 0){// 启用
+                return myForm.singleFee1.$error.required ||myForm.rateFee1.$error.required ||myForm.marginRatio1.$error.required
+                    ||myForm.settleCycle1.$error.required ||myForm.marginCycle1.$error.required;
+            }
+            if(merchantRates[2].status == 0){// 启用
+                return myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.marginRatio2.$error.required
+                    ||myForm.settleCycle2.$error.required ||myForm.marginCycle2.$error.required;
+            }
+            // }
+            return null;
+        };
+    });
+}
+
 
 angular
     .module('inspinia')
@@ -1206,6 +1360,7 @@ angular
     .controller('merchantUserMgmtCtrl',merchantUserMgmtCtrl)
     .controller('merchantUserModalCtrl',merchantUserModalCtrl)
     .controller('merchantSettingCtrl',merchantSettingCtrl)
+    .controller('merchantBankRateCtrl',merchantBankRateCtrl)
 ;
 
 
