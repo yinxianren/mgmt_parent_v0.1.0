@@ -109,7 +109,7 @@ public class AnewChannelInfoController {
     @ResponseBody
     public Map<String, Object> getChannelInfoInit() {
         Map<String, Object> init = new HashMap<>();
-        init.put("organizations",organizationInfoService.getAll(new OrganizationInfoTable()));
+        init.put("organizations",organizationInfoService.getAll(new OrganizationInfoTable()).getData());
         init.put("status", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.availableStatus));
         init.put("paytype", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
         init.put("channelLevel", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.channelLevel));
