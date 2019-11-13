@@ -2,9 +2,11 @@ package com.rxh.controller.anew.channel;
 
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.channel.ChannelInfoTable;
+import com.internal.playment.common.table.system.OrganizationInfoTable;
 import com.internal.playment.common.table.system.ProductSettingTable;
 import com.rxh.service.AnewChannelService;
 import com.rxh.service.ConstantService;
+import com.rxh.service.OrganizationInfoService;
 import com.rxh.service.ProductTypeSettingService;
 import com.rxh.service.square.OrganizationService;
 import com.rxh.spring.annotation.SystemLogInfo;
@@ -29,7 +31,7 @@ import java.util.Map;
 public class AnewChannelInfoController {
 
     @Autowired
-    private OrganizationService organizationService;
+    private OrganizationInfoService organizationInfoService;
     @Autowired
     private ConstantService constantService;
     @Autowired
@@ -107,7 +109,7 @@ public class AnewChannelInfoController {
     @ResponseBody
     public Map<String, Object> getChannelInfoInit() {
         Map<String, Object> init = new HashMap<>();
-        init.put("organizations",organizationService.getAll(new OrganizationInfo()));
+        init.put("organizations",organizationInfoService.getAll(new OrganizationInfoTable()));
         init.put("status", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.availableStatus));
         init.put("paytype", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
         init.put("channelLevel", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.channelLevel));
