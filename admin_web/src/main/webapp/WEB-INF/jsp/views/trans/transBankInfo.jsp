@@ -20,11 +20,11 @@
             <table class="table table-condensed table-striped table-hover table-bordered table-th">
                 <tr>
                     <th style="width: 50%;">订单号</th>
-                    <td>{{TransBankInfo.transId}}</td>
+                    <td>{{transOrder.platformOrderId}}</td>
                 </tr>
                 <tr>
                     <th style="width: 50%;">收款主体名称</th>
-                    <td>{{TransBankInfo.cardholderName}}</td>
+                    <td>{{transOrder.cardholderName}}</td>
                 </tr>
                 <tr>
                     <th style="width: 50%;">银行名称</th>
@@ -32,37 +32,37 @@
                 </tr>
                 <tr>
                     <th style="width: 50%;">银行卡号</th>
-                    <td>{{TransBankInfo.bankcardNum}}</td>
+                    <td>{{transOrder.bankCardNum}}</td>
                 </tr>
                 <tr>
                     <th style="width: 50%;">银行卡类型</th>
-                    <td>{{TransBankInfo.bankcardType | getValueByList : bankcardType : 'firstValue' : 'name'  }}</td>
+                    <td>{{TransBankInfo.bankcardNum | getValueByList : bankCardType : 'firstValue' : 'name'  }}</td>
                 </tr>
                 <tr>
                     <th style="width: 50%;">通道交易流水号</th>
-                    <td>{{TransBankInfo.orgOrderId  }}</td>
+                    <td>{{transOrder.channelOrderId  }}</td>
                 </tr>
                 <tr>
                     <th style="width: 50%;">通道交易时间</th>
-                    <td>{{TransBankInfo.channelBankTime | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+                    <td>{{transOrder.updateTime | date:'yyyy-MM-dd HH:mm:ss' }}</td>
                 </tr>
                 <tr>
                     <th style="width: 50%;">交易币种</th>
-                    <td>{{TransBankInfo.currency  }}</td>
+                    <td>{{transOrder.currency  }}</td>
                 </tr>
                 <tr>
                     <th style="width: 50%;">订单状态</th>
                     <td>
-                        <div ng-if="TransBankInfo.orderStatus == 0 ">
+                        <div ng-if="transOrder.status == 0 ">
                             成功
                         </div>
-                        <div ng-if="TransBankInfo.orderStatus == 1 ">
+                        <div ng-if="transOrder.status == 1 ">
                             失败
                         </div>
-                        <div ng-if="TransBankInfo.orderStatus == 2 ">
+                        <div ng-if="transOrder.status == 2 ">
                             未支付
                         </div>
-                        <div ng-if="TransBankInfo.orderStatus == 3 ">
+                        <div ng-if="transOrder.status == 3 ">
                             支付中
                         </div></td>
                 </tr>
@@ -72,11 +72,11 @@
                 </tr>
                 <tr>
                     <th style="width: 50%;">交易费率</th>
-                    <td>{{TransBankInfo.payFee  }}</td>
+                    <td>{{transOrder.backFee  }}</td>
                 </tr>
                 <tr>
                     <th style="width: 50%;">终端商户号</th>
-                    <td>{{TransBankInfo.terminalMerId  }}</td>
+                    <td>{{transOrder.terminalMerId  }}</td>
                 </tr>
                 <tr>
                     <th style="width: 50%;">代理商名称</th>
@@ -86,11 +86,11 @@
                     <%-- <th class="text-center">姓名</th>
                      <th class="text-center">手机号</th>--%>
                     <th style="width: 50%;">证件类型</th>
-                    <td>{{TransBankInfo.identityType | getValueByList : identityType : 'firstValue' : 'name'   }}</td>
+                    <td>{{TransBankInfo.identityNum | getValueByList : identityType : 'firstValue' : 'name'   }}</td>
                 </tr>
                 <tr>
                     <th style="width: 50%;">证件号码</th>
-                    <td>{{TransBankInfo.identityNum}}</td>
+                    <td>{{transOrder.identityNum}}</td>
                 </tr>
                 <tr>
                     <th style="width: 50%;">产品类型</th>
@@ -98,7 +98,7 @@
                 </tr>
                 <tr>
                     <th style="width: 50%;">通道返回结果</th>
-                    <td>{{TransBankInfo.channelBankResult  }}</td>
+                    <td>{{transOrder.channelRespResult  }}</td>
                 </tr>
             </table>
             <%-- <table class="table table-condensed table-striped table-hover table-bordered">

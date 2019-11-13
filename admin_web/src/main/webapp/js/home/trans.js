@@ -507,8 +507,9 @@ function transBankInfoCtrl($scope, $uibModal, $uibModalInstance,toaster, NgTable
     httpSvc.getData('post', '/transOrder/init').then(function (value1) {
         $scope.bankcardType=value1.bankcardType;
         $scope.identityType=value1.identityType;
-        httpSvc.getData('post', '/transOrder/getTransBankInfo', transOrder.transId).then(function (value) {
-            if(value.code == 1 ){
+        $scope.transOrder = transOrder;
+        httpSvc.getData('post', '/transOrder/getTransBankInfo', transOrder.platformOrderId).then(function (value) {
+            if(value.code == 0 ){
                 $scope.TransBankInfo=value.data;
             }
             angular.element('.ibox-content').removeClass('sk-loading');

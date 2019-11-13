@@ -95,7 +95,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         String creator = record.getCreator();
         String organizationId = record.getOrganizationId();
         if(remark==null&&organizationName==null&&createTime==null&&creator==null&&organizationId==null){
-
             return organizationInfoMapper.getAll();
         }
         else {

@@ -8,12 +8,17 @@ import com.internal.playment.common.table.business.TransOrderInfoTable;
 import com.internal.playment.common.table.channel.ChannelInfoTable;
 import com.rxh.pojo.base.Page;
 import com.rxh.pojo.base.SearchInfo;
+import com.rxh.pojo.sys.SysConstant;
 import com.rxh.service.AnewChannelService;
 import com.rxh.service.AnewTransOrderService;
+import com.rxh.service.ConstantService;
+import com.rxh.square.pojo.PayCardholderInfo;
+import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -31,6 +36,8 @@ public class AnewTransOrderServiceImpl implements AnewTransOrderService {
     private ApiTransOrderInfoService apiTransOrderInfoService;
     @Autowired
     private AnewChannelService anewChannelService;
+    @Autowired
+    private ConstantService constantService;
 
     @Override
     public ResponseVO page(Page page) {
@@ -80,5 +87,51 @@ public class AnewTransOrderServiceImpl implements AnewTransOrderService {
             responseVO.setCode(StatusEnum._1.getStatus());
             return responseVO;
         }
+    }
+
+    @Override
+    public ResponseVO getTransBankInfo(String transId) {
+        ResponseVO responseVO = new ResponseVO();
+        TransOrderInfoTable transOrderInfoTable = new TransOrderInfoTable();
+        transOrderInfoTable.setPlatformOrderId(transId);
+        TransOrderInfoTable transOrder = apiTransOrderInfoService.getOne(transOrderInfoTable);
+        if(transOrder!=null){
+            ChannelInfoTable channelInfo = new ChannelInfoTable();
+            channelInfo.setChannelId(transOrder.getChannelId());
+            List<ChannelInfoTable> channelInfos = (List<ChannelInfoTable>)anewChannelService.getAll(channelInfo).getData();
+            if (!CollectionUtils.isEmpty(channelInfos)){
+                channelInfo = channelInfos.get(0);
+            }
+            PayCardholderInfo cardholderInfo = new PayCardholderInfo();
+            Map idMap = constantService.getConstantsMapByGroupName(SystemConstant.IDENTITYTYPE);
+            Map bankMap = constantService.getConstantsMapByGroupName(SystemConstant.BANKCARDTYPE);
+            Map productMap = constantService.getConstantsMapByGroupName(SystemConstant.PRODUCTTYPE);
+            SysConstant idtype = null;
+            SysConstant banktype = null;
+            SysConstant productType = null;
+            if (idMap.get(transOrder.getIdentityType().toString())!=null){
+                idtype = (SysConstant)idMap.get(transOrder.getIdentityType().toString());
+            }
+            if (bankMap.get(transOrder.getBankCardType().toString())!=null){
+                banktype = (SysConstant)bankMap.get(transOrder.getBankCardType().toString());
+            }
+            if (productMap.get(transOrder.getProductId())!=null){
+                productType = (SysConstant)productMap.get(transOrder.getProductId());
+            }
+            //证件类型
+            cardholderInfo.setIdentityNum(idtype!=null?idtype.getName():"");
+            //卡类型
+            cardholderInfo.setBankcardNum(banktype!=null?banktype.getName():"");
+            //产品名称
+            cardholderInfo.setProductName(productType!=null?productType.getName():"");
+            cardholderInfo.setChannelName(channelInfo == null ? "" : channelInfo.getChannelName());
+            responseVO.setCode(StatusEnum._0.getStatus());
+            responseVO.setMessage("获取持卡人详情成功");
+            responseVO.setData(cardholderInfo);
+        }else {
+            responseVO.setCode(StatusEnum._1.getStatus());
+            responseVO.setMessage("获取持卡人详情失败");
+        }
+        return responseVO;
     }
 }

@@ -58,9 +58,8 @@ public class AnewTransOrderController {
 
     @RequestMapping("/getTransBankInfo")
     @ResponseBody
-    public Result getTransBankInfo(@RequestBody  String transId) {
-        Result result = transOrderService.getTransBankInfo(transId);
-        return result;
+    public ResponseVO getTransBankInfo(String platformOrderId) {
+        return anewTransOrderService.getTransBankInfo(platformOrderId);
     }
     @RequestMapping("/getProductInfo")
     @ResponseBody

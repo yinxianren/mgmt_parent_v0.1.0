@@ -7,4 +7,5 @@ public interface AnewTransOrderService {
 
     ResponseVO page(Page page);
 
+    ResponseVO getTransBankInfo(String transId);
 }
