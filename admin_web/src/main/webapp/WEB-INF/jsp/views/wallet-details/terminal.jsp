@@ -144,7 +144,9 @@
                                     <td class="text-center" data-title="'入账金额'" >
                                         {{row.inAmount==null?'--':(row.inAmount | number: 2)}}
                                     </td>
-                                    <td class="text-center" data-title="'出账金额'" >
+                                    <td class="text-center" data-title="'到
+
+                                    账金额'" >
                                         {{row.outAmount==null?'--':(row.outAmount | number: 2)}}
                                     </td>
                                     <td class="text-center" data-title="'手续费成本'" >

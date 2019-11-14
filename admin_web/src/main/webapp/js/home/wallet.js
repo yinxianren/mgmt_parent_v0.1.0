@@ -99,7 +99,7 @@ function merchantWalletCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$
 function agentWalletCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$filter,csvExp) {
     $scope.searchInfo = {};
     $scope.selected={};
-    httpSvc.getData('post', '/merchantWallet/idsInit').then(function (value) {
+    httpSvc.getData('post', '/agentWallet/init').then(function (value) {
         $scope.agents = value.agents;
         httpSvc.getData('post', '/agentWallet/search',$scope.searchInfo
         ).then(function (value) {
@@ -400,8 +400,7 @@ function agentWalletDetailsCtrl($scope, $uibModal, toaster, NgTableParams, httpS
     // 初始化数据
     $timeout(function () {
         httpSvc.getData('post', '/agentWallet/init').then(function (value) {
-            $scope.payTypes = value.payTypes;
-            $scope.detailsTypes = value.detailsTypes;
+            $scope.productTypes = value.productTypes;
             $scope.agents = value.agents;
             $scope.agentWalletDetailsTable = new NgTableParams({}, {
                 getData: function (params) {

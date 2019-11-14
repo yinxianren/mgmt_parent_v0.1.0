@@ -64,8 +64,7 @@ public class AnewAgentWalletController {
     @RequestMapping("/init")
     public Map<String, Object> init() {
         Map<String, Object> init = new HashMap<>();
-        init.put("payTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
-        init.put("detailsTypes",constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.DETAILSTYPE));
+        init.put("productTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PRODUCTTYPE));
         init.put("agents", anewAgentMerchantService.list(null).getData());
         return init;
     }

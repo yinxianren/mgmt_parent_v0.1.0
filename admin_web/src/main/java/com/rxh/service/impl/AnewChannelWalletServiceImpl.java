@@ -1,9 +1,11 @@
 package com.rxh.service.impl;
 
 import com.internal.playment.api.db.channel.ApiChannelDetailsService;
+import com.internal.playment.api.db.channel.ApiChannelInfoService;
 import com.internal.playment.api.db.channel.ApiChannelWalletService;
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.channel.ChannelDetailsTable;
+import com.internal.playment.common.table.channel.ChannelInfoTable;
 import com.internal.playment.common.table.channel.ChannelWalletTable;
 import com.rxh.pojo.base.Page;
 import com.rxh.pojo.base.SearchInfo;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 @Service
 public class AnewChannelWalletServiceImpl implements AnewChannelWalletService {
@@ -23,6 +26,8 @@ public class AnewChannelWalletServiceImpl implements AnewChannelWalletService {
     private ApiChannelWalletService apiChannelWalletService;
     @Autowired
     private ApiChannelDetailsService apiChannelDetailsService;
+    @Autowired
+    private ApiChannelInfoService apiChannelInfoService;
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     private final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -30,8 +35,16 @@ public class AnewChannelWalletServiceImpl implements AnewChannelWalletService {
     @Override
     public ResponseVO search(ChannelWalletTable channelWalletTable) {
         ResponseVO responseVO = new ResponseVO();
-        responseVO.setData(apiChannelWalletService.getList(channelWalletTable));
+        List<ChannelWalletTable> list = apiChannelWalletService.getList(channelWalletTable);
+        for (ChannelWalletTable channelWalletTable1 : list){
+            ChannelInfoTable channelInfoTable = new ChannelInfoTable();
+            channelInfoTable.setChannelId(channelWalletTable1.getChannelId());
+            channelInfoTable = apiChannelInfoService.getOne(channelInfoTable);
+            channelWalletTable1.setProductId(channelInfoTable.getProductId());
+        }
+        responseVO.setData(list);
         responseVO.setCode(StatusEnum._0.getStatus());
+        responseVO.setMessage(StatusEnum._0.getRemark());
         return responseVO;
     }
 

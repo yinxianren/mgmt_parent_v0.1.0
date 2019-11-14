@@ -9,14 +9,15 @@ function systemOrderTrackCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc
                 getData: function (params) {
                     angular.element('.ibox-content').addClass('sk-loading');
                     return httpSvc.getData('post', '/systemOrderTrack/findSystemOrder', {
-                        pageNum: params.page()-1,
+                        pageNum: params.page(),
                         pageSize: params.count(),
                         orderBy: params.sorting(),
                         searchInfo: $scope.searchInfo
                     }).then(function (value) {
+                        value = value.data;
                         params.total(value.total);
                         angular.element('.ibox-content').removeClass('sk-loading');
-                        return value.rows;
+                        return value.records;
                     });
                 }
             });
@@ -87,14 +88,15 @@ function systemOrderTrackCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc
             getData: function (params) {
                 angular.element('.ibox-content').addClass('sk-loading');
                 return httpSvc.getData('post', '/systemOrderTrack/findSystemOrder', {
-                    pageNum: params.page()-1,
+                    pageNum: params.page(),
                     pageSize: params.count(),
                     orderBy: params.sorting(),
                     searchInfo: $scope.searchInfo
                 }).then(function (value) {
+                    value =value.data;
                     params.total(value.total);
                     angular.element('.ibox-content').removeClass('sk-loading');
-                    return value.rows;
+                    return value.records;
                 });
             }
         });

@@ -31,6 +31,7 @@
     <dubbo:reference interface="com.internal.playment.api.db.system.ApiBankRateService" id="apiBankRateService" version="1.0.0" />
     <dubbo:reference interface="com.internal.playment.api.db.business.ApiTransOrderInfoService" id="apiTransOrderInfoService" version="1.0.0" />
     <dubbo:reference interface="com.internal.playment.api.db.merchant.ApiMerchantBankRateSerrvice" id="apiMerchantBankRateSerrvice" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.system.ApiSystemOrderTrackService" id="apiSystemOrderTrackService" version="1.0.0" />
 
     <!--四方支付调用接口-->
     <dubbo:reference interface="com.rxh.service.square.RiskQuotaDataService" id="riskQuotaDataService"/>

@@ -66,10 +66,10 @@
                                     <td class="text-center" data-title="'出账金额'">
                                         {{row.outAmount == null?"--":(row.outAmount | number: 2)  }}
                                     </td>
-                                    <td class="text-center" data-title="'手续费成本'">
+                                    <td class="text-center" data-title="'手续费'">
                                         {{row.totalFee == null?"--":(row.totalFee | number: 2)  }}
                                     </td>
-                                    <td class="text-center" data-title="'手续费利润'">
+                                    <td class="text-center" data-title="'利润'">
                                         {{row.feeProfit == null?"--":(row.feeProfit | number: 2)  }}
                                     </td>
                                     <td class="text-center" data-title="'总余额'">

@@ -104,52 +104,59 @@
                                    class="table table-condensed table-striped table-hover table-bordered">
                                 <tr ng-repeat="row in $data">
                                     <td class="text-center" data-title="'商户'">
-                                        {{row.merId}}({{row.merId  | getValueByList : merchants : 'merId':'merchantName'}})
+                                        {{row.merId}}({{row.merId  | getValueByList : merchants : 'merchantId':'merchantName'}})
                                     </td>
                                     <td class="text-center" data-title="'商户订单号'">
                                         {{row.merOrderId}}
                                     </td>
                                     <td class="text-center" data-title="'订单号'">
-                                        {{row.orderId}}
+                                        {{row.platformOrderId == null ? "--" :row.platformOrderId}}
                                     </td>
-                                    <td class="text-center" data-title="'追踪状态'">
+                                   <%-- <td class="text-center" data-title="'追踪状态'">
                                         {{row.orderTrackStatus }}
-                                    </td>
+                                    </td>--%>
                                     <td class="text-center" data-title="'订单金额'" >
-                                        {{row.amount | number: 2}}
+                                        {{row.amount == null ? "--":row.amount | number: 2}}
                                     </td>
                                     <td class="text-center" style="max-width: 100px" data-title="'页面返回地址'">
                                         <div class="hidden-text">
                                             <a ng-click="showInfo(row.returnUrl)">
-                                                {{row.returnUrl}}
+                                                {{row.returnUrl == null ?"--":row.returnUrl}}
                                             </a>
                                         </div>
                                     </td>
                                     <td class="text-center" style="max-width: 100px" data-title="'异步回调地址'">
                                         <div class="hidden-text">
                                             <a ng-click="showInfo(row.noticeUrl)">
-                                                {{row.noticeUrl}}
+                                                {{row.noticeUrl == null?"--":row.noticeUrl}}
                                             </a>
                                         </div>
                                     </td>
                                     <td class="text-center" style="max-width: 100px" data-title="'请求报文'">
                                         <div class="hidden-text">
-                                            <a ng-click="showInfo(row.tradeInfo)">
-                                                {{row.tradeInfo}}
+                                            <a ng-click="showInfo(row.requestMsg)">
+                                                {{row.requestMsg}}
                                             </a>
                                         </div>
                                     </td>
                                     <td class="text-center" style="max-width: 100px" data-title="'请求网址'">
                                         <div class="hidden-text">
-                                            <a ng-click="showInfo(row.refer)">
-                                                {{row.refer}}
+                                            <a ng-click="showInfo(row.requestPath)">
+                                                {{row.requestPath}}
                                             </a>
                                         </div>
                                     </td>
                                     <td class="text-center" style="max-width: 100px" data-title="'返回结果'">
                                         <div class="hidden-text">
-                                            <a ng-click="showInfo(row.tradeResult)">
-                                                {{row.tradeResult}}
+                                            <a ng-click="showInfo(row.responseResult)">
+                                                {{row.responseResult}}
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td class="text-center" style="max-width: 100px" data-title="'日志信息'">
+                                        <div class="hidden-text">
+                                            <a ng-click="showInfo(row.platformPrintLog)">
+                                                {{row.platformPrintLog}}
                                             </a>
                                         </div>
                                     </td>

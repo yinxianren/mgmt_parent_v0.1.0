@@ -52,8 +52,8 @@
                                     <td class="text-center" data-title="'通道名称'">
                                         {{row.channelId | getValueByList : channels : 'channelId' : 'channelName' }}  ({{row.channelId}})
                                     </td>
-                                    <td class="text-center" data-title="'支付方式'">
-                                        {{row.payType | getValueByList : paytype : 'firstValue' : 'name' }}
+                                    <td class="text-center" data-title="'支付产品'">
+                                        {{row.productId | getValueByList : productTypes : 'firstValue' : 'name' }}
                                     </td>
                                     <td class="text-center" data-title="'订单金额'">
                                         {{row.totalAmount == null?"--":(row.totalAmount | number: 2) }}
