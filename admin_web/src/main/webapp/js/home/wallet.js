@@ -192,10 +192,9 @@ function channelWalletCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$f
     $scope.searchInfo = {};
     $scope. ChannelWallet=null;
 
-    httpSvc.getData('post', '/channelWallet/idsInit').then(function (value) {
-        $scope.paytype = value.paytype;
+    httpSvc.getData('post', '/channelWallet/init').then(function (value) {
         $scope.channels = value.channels;
-        $scope.organizations = value.organizations;
+        $scope.productTypes = value.productTypes;
         httpSvc.getData('post', '/channelWallet/search',$scope.searchInfo).then(function (result) {
             $scope.ChannelWalletTable = new NgTableParams({}, {
                 dataset: result.data
