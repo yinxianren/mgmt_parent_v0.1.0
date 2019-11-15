@@ -221,9 +221,9 @@
                                     <td class="text-center" data-title="'实际支付金额'">
                                         {{row.outAmount | number:2}}
                                     </td>
-                                    <%--<td class="text-center" data-title="'商户手续费收入'">
-                                        {{row.terminalFee | number:2}}
-                                    </td>--%>
+                                    <td class="text-center" data-title="'手续费率(%)'">
+                                        {{row.backFee | number:2}}
+                                    </td>
                                     <td class="text-center" data-title="'平台手续费收入'">
                                         {{row.merFee | number:2}}
                                     </td>

@@ -215,9 +215,9 @@
                                     <td class="text-center" data-title="'平台手续费收入'">
                                         {{row.merFee | number: 2}}
                                     </td>
-                                  <%--  <td class="text-center" data-title="'平台毛利润'">
-                                        {{row.income | number: 2}}
-                                    </td>--%>
+                                    <td class="text-center" data-title="'手续费率(%)'">
+                                        {{row.payFee | number: 2}}
+                                    </td>
                                     <td class="text-center" data-title="'通道成本'">
                                         {{row.channelFee | number: 2}}
                                     </td>

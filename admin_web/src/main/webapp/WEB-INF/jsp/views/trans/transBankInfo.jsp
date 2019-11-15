@@ -23,34 +23,6 @@
                     <td>{{transOrder.platformOrderId}}</td>
                 </tr>
                 <tr>
-                    <th style="width: 50%;">收款主体名称</th>
-                    <td>{{transOrder.cardholderName}}</td>
-                </tr>
-                <tr>
-                    <th style="width: 50%;">银行名称</th>
-                    <td>{{TransBankInfo.bankName}}</td>
-                </tr>
-                <tr>
-                    <th style="width: 50%;">银行卡号</th>
-                    <td>{{transOrder.bankCardNum}}</td>
-                </tr>
-                <tr>
-                    <th style="width: 50%;">银行卡类型</th>
-                    <td>{{TransBankInfo.bankcardNum | getValueByList : bankCardType : 'firstValue' : 'name'  }}</td>
-                </tr>
-                <tr>
-                    <th style="width: 50%;">通道交易流水号</th>
-                    <td>{{transOrder.channelOrderId  }}</td>
-                </tr>
-                <tr>
-                    <th style="width: 50%;">通道交易时间</th>
-                    <td>{{transOrder.updateTime | date:'yyyy-MM-dd HH:mm:ss' }}</td>
-                </tr>
-                <tr>
-                    <th style="width: 50%;">交易币种</th>
-                    <td>{{transOrder.currency  }}</td>
-                </tr>
-                <tr>
                     <th style="width: 50%;">订单状态</th>
                     <td>
                         <div ng-if="transOrder.status == 0 ">
@@ -67,24 +39,30 @@
                         </div></td>
                 </tr>
                 <tr>
-                    <th style="width: 50%;">通道名称</th>
-                    <td>{{TransBankInfo.channelName  }}</td>
-                </tr>
-                <tr>
                     <th style="width: 50%;">交易费率</th>
                     <td>{{transOrder.backFee  }}</td>
                 </tr>
+               <%-- <tr>
+                    <th style="width: 50%;">收款主体名称</th>
+                    <td>{{transOrder.cardholderName}}</td>
+                </tr>--%>
                 <tr>
-                    <th style="width: 50%;">终端商户号</th>
-                    <td>{{transOrder.terminalMerId  }}</td>
+                    <th style="width: 50%;">交易币种</th>
+                    <td>{{transOrder.currency  }}</td>
                 </tr>
                 <tr>
-                    <th style="width: 50%;">代理商名称</th>
-                    <td>{{TransBankInfo.agentMerchantName  }}</td>
+                    <th style="width: 50%;">银行名称</th>
+                    <td>{{TransBankInfo.bankName}}</td>
                 </tr>
                 <tr>
-                    <%-- <th class="text-center">姓名</th>
-                     <th class="text-center">手机号</th>--%>
+                    <th style="width: 50%;">银行卡号</th>
+                    <td>{{transOrder.bankCardNum}}</td>
+                </tr>
+                <tr>
+                    <th style="width: 50%;">银行卡类型</th>
+                    <td>{{TransBankInfo.bankcardNum | getValueByList : bankCardType : 'firstValue' : 'name'  }}</td>
+                </tr>
+                <tr>
                     <th style="width: 50%;">证件类型</th>
                     <td>{{TransBankInfo.identityNum | getValueByList : identityType : 'firstValue' : 'name'   }}</td>
                 </tr>
@@ -93,8 +71,28 @@
                     <td>{{transOrder.identityNum}}</td>
                 </tr>
                 <tr>
+                    <th style="width: 50%;">终端商户号</th>
+                    <td>{{transOrder.terminalMerId  }}</td>
+                </tr>
+               <%-- <tr>
+                    <th style="width: 50%;">代理商名称</th>
+                    <td>{{TransBankInfo.agentMerchantName  }}</td>
+                </tr>--%>
+                <tr>
+                    <th style="width: 50%;">通道名称</th>
+                    <td>{{TransBankInfo.channelName  }}</td>
+                </tr>
+                <tr>
                     <th style="width: 50%;">产品类型</th>
                     <td>{{TransBankInfo.productName}}</td>
+                </tr>
+                <tr>
+                    <th style="width: 50%;">通道交易流水号</th>
+                    <td>{{transOrder.channelOrderId  }}</td>
+                </tr>
+                <tr>
+                    <th style="width: 50%;">通道交易时间</th>
+                    <td>{{transOrder.updateTime | date:'yyyy-MM-dd HH:mm:ss' }}</td>
                 </tr>
                 <tr>
                     <th style="width: 50%;">通道返回结果</th>
