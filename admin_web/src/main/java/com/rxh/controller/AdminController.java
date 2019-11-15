@@ -27,7 +27,7 @@ import java.util.Map;
  * Project: Management
  */
 @Configuration
-@RequestMapping(value = "/admin")
+//@RequestMapping(value = "/admin")
 public class AdminController {
     @Resource
     private UserService userService;

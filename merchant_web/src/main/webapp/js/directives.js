@@ -163,7 +163,7 @@ function userTbBtn() {
         '<div style="min-width: 84px">' +
         '<button class="btn btn-xs no-margins" ' +
         'ng-class="{\'btn-primary active\': thisRow.available, \'btn-disabled\': !thisRow.available}" ' +
-        'ng-click="statusChange({row: thisRow})">{{thisRow.available == 1 ? \'启用\' : \'禁用\'}}</button>' +
+        'ng-click="statusChange({row: thisRow})">{{thisRow.status == 1 ? \'启用\' : \'禁用\'}}</button>' +
         '<button class="btn btn-xs btn-success" style="margin: 0 0 0 10px" ng-click="edit({row: thisRow, type: 1})">编辑</button>' +
         '<button class="btn btn-xs btn-warning" style="margin: 0 0 0 10px" ng-click="edit({row: thisRow, type: 2})">密码重置</button>' +
         '</div>',
@@ -181,7 +181,7 @@ function roleTbBtn() {
         '<div style="min-width: 44px">' +
         '<button class="btn btn-xs no-margins" ' +
         'ng-class="{\'btn-primary active\': thisRow.available, \'btn-disabled\': !thisRow.available}" ' +
-        'ng-click="statusChange({row: thisRow})">{{thisRow.available == 1 ? \'启用\' : \'禁用\'}}</button>' +
+        'ng-click="statusChange({row: thisRow})">{{thisRow.status == 1 ? \'启用\' : \'禁用\'}}</button>' +
         '<button class="btn btn-xs btn-success" style="margin: 0 0 0 10px" ng-click="edit({type: 1, row: thisRow})">编辑</button>' +
         '</div>',
         link: function ($scope) {

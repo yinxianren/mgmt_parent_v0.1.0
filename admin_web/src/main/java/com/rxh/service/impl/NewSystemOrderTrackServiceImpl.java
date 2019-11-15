@@ -5,7 +5,7 @@ import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.system.SystemOrderTrackTable;
 import com.rxh.pojo.base.Page;
 import com.rxh.pojo.base.SearchInfo;
-import com.rxh.service.newSystemOrderTrackService;
+import com.rxh.service.NewSystemOrderTrackService;
 import com.rxh.vo.ResponseVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 
 @Service
-public class newSystemOrderTrackServiceImpl implements newSystemOrderTrackService {
+public class NewSystemOrderTrackServiceImpl implements NewSystemOrderTrackService {
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     private final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

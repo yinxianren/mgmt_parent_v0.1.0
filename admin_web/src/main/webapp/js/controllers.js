@@ -42,7 +42,7 @@ function userMgmtCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc) {
             userName: row.userName,
             available: !row.available
         }).then(function (value) {
-            if (value) {
+            if (value.code == 0) {
                 toaster.pop({
                     type: 'success',
                     title: '用户管理',
@@ -60,10 +60,10 @@ function userMgmtCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc) {
     };
 
     httpSvc.getData('post', '/admin/role/getAll').then(function (value) {
-        $scope.allRole = value;
+        $scope.allRole = value.data;
         httpSvc.getData('post', '/admin/user/getAll').then(function (value1) {
             $scope.userTable = new NgTableParams({}, {
-                dataset: value1
+                dataset: value1.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
@@ -144,7 +144,7 @@ function userMgmtCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc) {
         });
         modalInstance.result.then(function () {
             httpSvc.getData('post', '/admin/user/delete', idList).then(function (value) {
-                if (value) {
+                if (value.code == 0) {
                     $scope.selected = {};
                     toaster.pop({
                         type: 'success',
@@ -178,6 +178,7 @@ function userMgmtCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc) {
     function tableReload() {
         angular.element('.ibox-content').addClass('sk-loading');
         httpSvc.getData('post', '/admin/user/getAll').then(function (value) {
+            value = value.data;
             for (var i = 0; i < value.length; i++) {
                 for (var j = 0; j < $scope.allRole.length; j++) {
                     if (value[i].roleId === $scope.allRole[j].id) {
@@ -255,7 +256,7 @@ function userRegisterModalCtrl($scope, $uibModalInstance, httpSvc, toaster, allR
                 $scope.register.roleId = 0;
             }
             httpSvc.getData('post', '/admin/user/register', $scope.register).then(function (value) {
-                if (value.id !== undefined) {
+                if (value.code == 0) {
                     $scope.register = null;
                     toaster.pop({
                         type: 'success',
@@ -335,7 +336,7 @@ function userChangeModalCtrl($scope, $uibModalInstance, httpSvc, toaster, userIn
         }
         $scope.changeInfo.id = userInfo.id;
         httpSvc.getData('post', '/admin/user/update', $scope.changeInfo).then(function (value) {
-            if (value) {
+            if (value.code == 0) {
                 toaster.pop({
                     type: 'success',
                     title: '用户变更',
@@ -381,8 +382,11 @@ function roleMgmtCtrl($scope, $uibModal, toaster, httpSvc, NgTableParams) {
         return true;
     };
     $scope.statusChange = function (row) {
-        httpSvc.getData('post', '/admin/role/update', {id: row.id, available: !row.available}).then(function (value) {
-            if (value) {
+        httpSvc.getData('post', '/admin/role/update',{
+            id: row.id,
+            available: !row.available
+        }).then(function (value) {
+            if (value.code == 0) {
                 toaster.pop({
                     type: 'success',
                     title: '角色管理',
@@ -399,10 +403,10 @@ function roleMgmtCtrl($scope, $uibModal, toaster, httpSvc, NgTableParams) {
         });
     };
     httpSvc.getData('post', '/admin/role/getAllPrivileges').then(function (value) {
-        $scope.menus = value;
+        $scope.menus = value.data;
         httpSvc.getData('post', '/admin/role/getAll').then(function (value1) {
             $scope.roleTable = new NgTableParams({}, {
-                dataset: value1
+                dataset: value1.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
@@ -434,7 +438,7 @@ function roleMgmtCtrl($scope, $uibModal, toaster, httpSvc, NgTableParams) {
         angular.element('.ibox-content').addClass('sk-loading');
         httpSvc.getData('post', '/admin/role/getAll').then(function (value) {
             $scope.roleTable.settings({
-                dataset: value
+                dataset: value.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
@@ -498,7 +502,7 @@ function roleMgmtCtrl($scope, $uibModal, toaster, httpSvc, NgTableParams) {
         modalInstance.result.then(function () {
             httpSvc.getData('post', '/admin/role/delete', {ids: ids}).then(function (value) {
 
-                if (value.result == 1) {
+                if (value.code == 0) {
 
                     toaster.pop({
                         type: 'success',
@@ -595,7 +599,7 @@ function roleModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, roleIn
         $scope.roleInfo.privilegesId = $scope.roleInfo.privilegesList.toString();
         if (type === 0) {
             httpSvc.getData('post', '/admin/role/add', $scope.roleInfo).then(function (value) {
-                if (value) {
+                if (value.code == 0) {
                     toaster.pop({
                         type: 'success',
                         title: '角色管理',
@@ -612,7 +616,7 @@ function roleModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, roleIn
             });
         } else {
             httpSvc.getData('post', '/admin/role/update', $scope.roleInfo).then(function (value) {
-                if (value) {
+                if (value.code == 0) {
                     toaster.pop({
                         type: 'success',
                         title: '角色管理',

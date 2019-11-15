@@ -1,0 +1,15 @@
+package com.rxh.service;
+
+import com.internal.playment.common.table.system.SysRoleTable;
+import com.rxh.vo.ResponseVO;
+
+import java.util.List;
+
+public interface NewSysRoleService {
+
+    ResponseVO saveOrUpdate(SysRoleTable sysRoleTable);
+
+    ResponseVO delByids(List<String> ids);
+
+    ResponseVO getList(SysRoleTable sysRoleTable);
+}

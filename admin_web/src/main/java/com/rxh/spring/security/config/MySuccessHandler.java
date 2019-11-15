@@ -1,5 +1,7 @@
 package com.rxh.spring.security.config;
 
+import com.internal.playment.api.db.system.ApiSysUserServie;
+import com.internal.playment.common.table.system.SysUserTable;
 import com.rxh.pojo.sys.SysLog;
 import com.rxh.pojo.sys.SysUser;
 import com.rxh.service.SystemService;
@@ -28,7 +30,7 @@ import java.util.Date;
 public class MySuccessHandler extends SimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
 
-    private UserService userService;
+    private ApiSysUserServie userService;
 
     private SystemService systemService;
 
@@ -38,10 +40,10 @@ public class MySuccessHandler extends SimpleUrlAuthenticationSuccessHandler impl
         super.onAuthenticationSuccess(request, response, authentication);
         // setUseReferer(true);
         String remoteAddr = IpUtils.getReallyIpForRequest(request);
-        SysUser user = new SysUser();
+        SysUserTable user = new SysUserTable();
         user.setUserName(authentication.getName());
         user.setLastLogonIp(remoteAddr);
-        userService.updateUserByUserName(user);
+        userService.savaOrUpdate(user);
         SysLog log = new SysLog();
         log.setType((short) 0);
         log.setOperator(authentication.getName());
@@ -52,11 +54,11 @@ public class MySuccessHandler extends SimpleUrlAuthenticationSuccessHandler impl
         systemService.saveSystemLog(log);
     }
 
-    public UserService getUserService() {
+    public ApiSysUserServie getUserService() {
         return userService;
     }
 
-    public void setUserService(UserService userService) {
+    public void setUserService(ApiSysUserServie userService) {
         this.userService = userService;
     }
 

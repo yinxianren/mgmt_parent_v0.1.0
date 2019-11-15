@@ -40,12 +40,14 @@
     <!-- 重写获取用户信息方法 -->
     <beans:bean id="userDetailsService" class="com.rxh.spring.security.details.service.MyUserDetailsService">
         <beans:property name="userService" ref="userService"/>
+        <beans:property name="apiUserService" ref="apiSysUserServie"/>
+        <beans:property name="roleService" ref="apiSysRoleService"/>
+        <beans:property name="privilegesService" ref="apiSysPrivilegesService"/>
     </beans:bean>
     <beans:bean id="bCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
-
     <!-- 重写登录成功后执行方法 -->
     <beans:bean id="successHandler" class="com.rxh.spring.security.config.MySuccessHandler">
-        <beans:property name="userService" ref="userService"/>
+        <beans:property name="userService" ref="apiSysUserServie"/>
         <beans:property name="systemService" ref="systemService"/>
     </beans:bean>
     <!-- 重写登录失败后执行方法 -->
