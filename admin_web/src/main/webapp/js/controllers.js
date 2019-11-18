@@ -1209,12 +1209,12 @@ function sysGroupInfoCtrl($scope, $uibModal, $state, NgTableParams, httpSvc, toa
             angular.element('.ibox-content').addClass('sk-loading');
             return httpSvc.getData('post', '/sysgroup/findSysGroup', {
 
-                pageFirst: params.page() - 1,
+                pageNum: params.page() ,
                 pageSize: params.count(),
                 searchInfo: params.filter()
 
             }).then(function (value) {
-
+                value = value.data;
                 $scope.totalItems = value.resultTotal;
                 params.total(value.resultTotal);
                 angular.element('.ibox-content').removeClass('sk-loading');
@@ -1231,12 +1231,12 @@ function sysGroupInfoCtrl($scope, $uibModal, $state, NgTableParams, httpSvc, toa
                 angular.element('.ibox-content').addClass('sk-loading');
                 return httpSvc.getData('post', '/sysgroup/findSysGroup', {
 
-                    pageFirst: params.page() - 1,
+                    pageNum: params.page(),
                     pageSize: params.count(),
                     searchInfo: params.filter()
 
                 }).then(function (value) {
-
+                    value = value.data;
                     $scope.totalItems = value.resultTotal;
                     params.total(value.resultTotal);
                     angular.element('.ibox-content').removeClass('sk-loading');

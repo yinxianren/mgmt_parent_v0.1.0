@@ -35,6 +35,8 @@
     <dubbo:reference interface="com.internal.playment.api.db.system.ApiSysPrivilegesService" id="apiSysPrivilegesService" version="1.0.0" />
     <dubbo:reference interface="com.internal.playment.api.db.system.ApiSysRoleService" id="apiSysRoleService" version="1.0.0" />
     <dubbo:reference interface="com.internal.playment.api.db.system.ApiSysUserServie" id="apiSysUserServie" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.system.ApiSysGroupService" id="apiSysGroupService" validation="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.system.ApiSysConstantService" id="apiSysConstantService" validation="1.0.0" />
 
     <!--四方支付调用接口-->
     <dubbo:reference interface="com.rxh.service.square.RiskQuotaDataService" id="riskQuotaDataService"/>

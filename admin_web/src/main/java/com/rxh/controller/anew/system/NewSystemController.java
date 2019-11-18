@@ -26,7 +26,7 @@ import java.util.List;
  * Package: com.rxh.controller
  */
 @Controller
-@RequestMapping(value = "/system")
+//@RequestMapping(value = "/system")
 public class NewSystemController {
 
     @Resource

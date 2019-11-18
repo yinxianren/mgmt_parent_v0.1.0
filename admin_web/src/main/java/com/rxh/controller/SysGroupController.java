@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/sysgroup")
+//@RequestMapping("/sysgroup")
 public class SysGroupController {
 
     @Autowired

@@ -2,9 +2,11 @@ package com.rxh.service.impl;
 
 import com.internal.playment.api.db.system.ApiSysConstantService;
 import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.table.system.SysConstantTable;
 import com.rxh.service.NewSystemService;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Time: 上午9:30
  * Description:
  */
+
+@Service
 public class NewSystemServiceImpl implements NewSystemService {
 
     @Autowired
@@ -23,7 +27,9 @@ public class NewSystemServiceImpl implements NewSystemService {
         ResponseVO responseVO = new ResponseVO();
         responseVO.setCode(StatusEnum._0.hashCode());
         responseVO.setMessage(StatusEnum._0.getRemark());
-        responseVO.setData(apiSysConstantService.);
-        return null;
+        SysConstantTable sysConstantTable = new SysConstantTable();
+        sysConstantTable.setGroupCode(GroupName);
+        responseVO.setData(apiSysConstantService.getList(sysConstantTable));
+        return responseVO;
     }
 }
