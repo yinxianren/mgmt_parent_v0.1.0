@@ -1,14 +1,17 @@
 package com.rxh.controller.anew.system;
 
+import com.internal.playment.common.enums.StatusEnum;
 import com.rxh.pojo.base.Page;
-import com.rxh.pojo.base.PageResult;
 import com.rxh.pojo.sys.SysArea;
 import com.rxh.pojo.sys.SysConstant;
-import com.rxh.service.AgentSystemService;
-import com.rxh.service.ConstantService;
-import com.rxh.service.MerchantSystemService;
-import com.rxh.service.SystemService;
+import com.rxh.service.*;
+import com.rxh.service.system.NewAgentSysLogService;
+import com.rxh.service.system.NewMerchantSysLogService;
+import com.rxh.service.system.NewSystemConstantService;
+import com.rxh.service.system.NewSystemLogService;
 import com.rxh.spring.annotation.SystemLogInfo;
+import com.rxh.vo.ResponseVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,47 +29,71 @@ import java.util.List;
  * Package: com.rxh.controller
  */
 @Controller
-//@RequestMapping(value = "/system")
+@RequestMapping(value = "/system")
 public class NewSystemController {
 
     @Resource
-    private ConstantService constantService;
-    @Resource
     private SystemService systemService;
-    @Resource
-    private MerchantSystemService merchantSystemService;
-    @Resource
-    private AgentSystemService agentSystemService;
+    @Autowired
+    private NewMerchantSysLogService newMerchantSysLogService;
+    @Autowired
+    private NewAgentSysLogService newAgentSysLogService;
+    @Autowired
+    private NewSystemConstantService newSystemConstantService;
+    @Autowired
+    private NewSystemLogService newSystemLogService;
 
     @RequestMapping(value = "/getConstantByGroupName")
     @ResponseBody
-    public List<SysConstant> getConstantByGroupName(@RequestBody String groupName) {
-        return constantService.getConstantByGroupName(groupName);
+    public ResponseVO getConstantByGroupName(@RequestBody String groupName) {
+        try {
+            return newSystemConstantService.getConstantByGroupName(groupName);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseVO(StatusEnum._1.getStatus(),StatusEnum._1.getRemark());
+        }
     }
 
     @RequestMapping(value = "/getConstantByGroupNameAndSortValueIsNotNULL")
     @ResponseBody
     public List<SysConstant> getConstantByGroupNameAndSortValueIsNotNULL(@RequestBody String groupName) {
-        return constantService.getConstantByGroupNameAndSortValueIsNotNULL(groupName);
+        return (List)newSystemConstantService.getConstantByGroupName(groupName).getData();
     }
 
     @SystemLogInfo(description = "系统日志查询")
     @RequestMapping(value = "/getSystemLog")
     @ResponseBody
-    public PageResult getSystemLog(@RequestBody Page page) {
-        return systemService.getSystemLog(page);
+    public ResponseVO getSystemLog(@RequestBody Page page) {
+        try {
+            return newSystemLogService.page(page);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseVO(StatusEnum._1.getStatus(),StatusEnum._1.getRemark());
+        }
     }
+
     @SystemLogInfo(description = "商户系统日志查询")
     @RequestMapping(value = "/getMerchantSystemLog")
     @ResponseBody
-    public PageResult getMerchantSystemLog(@RequestBody Page page) {
-        return merchantSystemService.getSystemLog(page);
+    public ResponseVO getMerchantSystemLog(@RequestBody Page page) {
+        try {
+            return newMerchantSysLogService.page(page);
+        }catch (Exception e){
+            e.printStackTrace();
+            return  new ResponseVO(StatusEnum._1.getStatus(),StatusEnum._1.getRemark());
+        }
     }
+
     @SystemLogInfo(description = "代理商系统日志查询")
     @RequestMapping(value = "/getAgentSystemLog")
     @ResponseBody
-    public PageResult getAgentSystemLog(@RequestBody Page page) {
-        return agentSystemService.getSystemLog(page);
+    public ResponseVO getAgentSystemLog(@RequestBody Page page) {
+        try {
+            return newAgentSysLogService.page(page);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseVO(StatusEnum._1.getStatus(),StatusEnum._1.getRemark());
+        }
     }
 
 

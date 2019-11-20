@@ -2,7 +2,7 @@ package com.rxh.controller.anew.agent;
 
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.agent.AgentMerchantInfoTable;
-import com.rxh.service.AnewAgentMerchantService;
+import com.rxh.service.agent.AnewAgentMerchantService;
 import com.rxh.service.ConstantService;
 import com.rxh.service.square.AgentMerchantInfoService;
 import com.rxh.spring.annotation.SystemLogInfo;

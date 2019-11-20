@@ -3,9 +3,7 @@ package com.rxh.controller.anew.system;
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.system.SysGroupTable;
 import com.rxh.pojo.base.Page;
-import com.rxh.pojo.sys.SysGroup;
-import com.rxh.service.GroupService;
-import com.rxh.service.NewSysGroupService;
+import com.rxh.service.system.NewSysGroupService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.vo.ResponseVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -37,6 +35,7 @@ public class NewSysGroupController {
             return new ResponseVO(StatusEnum._1.getStatus(),StatusEnum._1.getRemark());
         }
     }
+
     @SystemLogInfo(description = "常量组别新增")
     @RequestMapping("/addSysGroup")
     @ResponseBody
@@ -49,6 +48,7 @@ public class NewSysGroupController {
             return new ResponseVO(StatusEnum._1.getStatus(),StatusEnum._1.getRemark());
         }
     }
+
     @SystemLogInfo(description = "常量组别更新")
     @RequestMapping("/update")
     @ResponseBody
@@ -61,13 +61,14 @@ public class NewSysGroupController {
             return new ResponseVO(StatusEnum._1.getStatus(),StatusEnum._1.getRemark());
         }
     }
+
     @SystemLogInfo(description = "常量组别删除")
     @RequestMapping("/batchDel")
     @ResponseBody
     public ResponseVO batchDel(@RequestBody Map<String, Object> paramMap) {
         try {
             String codes = paramMap.get("codes").toString();
-            return newSysGroupService.delByCodes(codes);
+            return newSysGroupService.batchByIds(codes);
         }catch (Exception e){
             e.printStackTrace();
             return  new ResponseVO(StatusEnum._1.getStatus(),StatusEnum._1.getRemark());
@@ -81,8 +82,8 @@ public class NewSysGroupController {
             SysGroupTable sysGroupTable = new SysGroupTable();
             sysGroupTable.setName(groupName);
             ResponseVO responseVO = newSysGroupService.getList(sysGroupTable);
-            if (CollectionUtils.isEmpty((List)responseVO.getData())) responseVO.setCode(StatusEnum._1.getStatus());
-            else responseVO.setCode(StatusEnum._0.getStatus());
+            if (CollectionUtils.isEmpty((List)responseVO.getData())) responseVO.setCode(StatusEnum._0.getStatus());
+            else responseVO.setCode(StatusEnum._1.getStatus());
             return responseVO;
         }catch (Exception e){
             e.printStackTrace();
@@ -97,14 +98,12 @@ public class NewSysGroupController {
             SysGroupTable sysGroupTable = new SysGroupTable();
             sysGroupTable.setCode(groupCode);
             ResponseVO responseVO = newSysGroupService.getList(sysGroupTable);
-            if (CollectionUtils.isEmpty((List)responseVO.getData())) responseVO.setCode(StatusEnum._1.getStatus());
-            else responseVO.setCode(StatusEnum._0.getStatus());
+            if (CollectionUtils.isEmpty((List)responseVO.getData())) responseVO.setCode(StatusEnum._0.getStatus());
+            else responseVO.setCode(StatusEnum._1.getStatus());
             return responseVO;
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseVO(StatusEnum._1.getStatus(),StatusEnum._1.getRemark());
         }
     }
-
-
 }

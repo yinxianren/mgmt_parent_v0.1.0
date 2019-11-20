@@ -22,11 +22,6 @@
             <artifactId>pagehelper</artifactId>
         </dependency>
         <dependency>
-            <artifactId>internal_playment</artifactId>
-            <groupId>com.internal.playment</groupId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>com.rxh</groupId>
             <artifactId>mgmt_interface</artifactId>
             <version>1.0-SNAPSHOT</version>

@@ -68,7 +68,7 @@
                                         {{row.id}}
                                     </td>
                                     <td class="text-center" data-title="'用户编号'">
-                                        {{row.customerid}}
+                                        {{row.customerId}}
                                     </td>
                                     <td class="text-center" data-title="'IP地址'">
                                         {{row.loginIp}}

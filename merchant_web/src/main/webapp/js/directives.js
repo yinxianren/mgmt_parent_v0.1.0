@@ -162,7 +162,7 @@ function userTbBtn() {
         template:
         '<div style="min-width: 84px">' +
         '<button class="btn btn-xs no-margins" ' +
-        'ng-class="{\'btn-primary active\': thisRow.available, \'btn-disabled\': !thisRow.available}" ' +
+        'ng-class="{\'btn-primary active\': thisRow.status, \'btn-disabled\': !thisRow.status}" ' +
         'ng-click="statusChange({row: thisRow})">{{thisRow.status == 1 ? \'启用\' : \'禁用\'}}</button>' +
         '<button class="btn btn-xs btn-success" style="margin: 0 0 0 10px" ng-click="edit({row: thisRow, type: 1})">编辑</button>' +
         '<button class="btn btn-xs btn-warning" style="margin: 0 0 0 10px" ng-click="edit({row: thisRow, type: 2})">密码重置</button>' +

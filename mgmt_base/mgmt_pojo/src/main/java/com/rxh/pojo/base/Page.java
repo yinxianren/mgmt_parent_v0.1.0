@@ -19,6 +19,7 @@ public class Page implements Serializable {
     private Map<String, String> orderBy;
     private SearchInfo searchInfo;
     private VoSysLog logSearch;
+    private Object object;
 
     public int getPageNum() {
         return pageNum;
@@ -58,5 +59,13 @@ public class Page implements Serializable {
 
     public void setLogSearch(VoSysLog logSearch) {
         this.logSearch = logSearch;
+    }
+
+    public Object getObject() {
+        return object;
+    }
+
+    public void setObject(Object object) {
+        this.object = object;
     }
 }

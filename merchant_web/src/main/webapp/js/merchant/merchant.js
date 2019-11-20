@@ -974,12 +974,12 @@ function merchantUserMgmtCtrl($scope, $state, $stateParams, $uibModal, toaster, 
         };
         httpSvc.getData('post', '/merchant/getMerchantUserByMerchantId',id).then(function (value) {
             $scope.merchantUserTable = new NgTableParams({}, {
-                dataset: value
+                dataset: value.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
         httpSvc.getData('post', '/merchant/getMerchantRoleByMerchantId', id).then(function (value) {
-            $scope.merchantRole = value;
+            $scope.merchantRole = value.data;
         });
         $scope.showModal = function (user, type) {
             var modalInstance = $uibModal.open({
@@ -1044,7 +1044,7 @@ function merchantUserMgmtCtrl($scope, $state, $stateParams, $uibModal, toaster, 
             angular.element('.ibox-content').addClass('sk-loading');
             httpSvc.getData('post', '/merchant/getMerchantUserByMerchantId', id).then(function (value) {
                 $scope.merchantUserTable.settings({
-                    dataset: value
+                    dataset: value.data
                 });
                 angular.element('.ibox-content').removeClass('sk-loading');
             });
@@ -1071,7 +1071,7 @@ function merchantUserModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type
                 userName: userName,
                 belongto: merchantId
             }).then(function (value) {
-                if (value) {
+                if (value.code == 0) {
                     verification(null, $event.target);
                 } else {
                     $scope.nameValid = true;

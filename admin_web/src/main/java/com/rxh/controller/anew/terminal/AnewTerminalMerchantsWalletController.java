@@ -3,15 +3,10 @@ package com.rxh.controller.anew.terminal;
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.terminal.TerminalMerchantsWalletTable;
 import com.rxh.pojo.base.Page;
-import com.rxh.pojo.base.PageResult;
-import com.rxh.service.AnewMerchantInfoService;
+import com.rxh.service.merchant.AnewMerchantInfoService;
 import com.rxh.service.AnewTerminalMerchantsWalletService;
 import com.rxh.service.ConstantService;
-import com.rxh.service.square.MerchantInfoService;
-import com.rxh.service.square.OrganizationService;
-import com.rxh.service.square.TerminalMerchantsWalletService;
 import com.rxh.spring.annotation.SystemLogInfo;
-import com.rxh.square.pojo.TerminalMerchantsWallet;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController

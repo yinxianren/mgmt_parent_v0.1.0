@@ -64,6 +64,10 @@
                                required>
                     </div>
                 </div>
+                <input class="form-control b-r-sm"
+                       name="id"
+                       type="hidden"
+                       ng-model="merchantAccount.id">
                 <div class="form-group  m-t">
                     <label class="col-sm-4 control-label p-w-xs"><span class="text-danger">*</span>收款主体名称：</label>
                     <div class="col-sm-8">

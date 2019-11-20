@@ -24,6 +24,7 @@
 
 			    </div>
 			  </div>
+			 <input type="hidden" id="id" name="id" value="{{sysgroup.id}}" />
 			  <div class="form-group">
 			    <label for="name" class="col-sm-3 control-label" ><font color="red">*</font>常量组编码</label>
 			    <div class="col-sm-8" >

@@ -2,7 +2,7 @@ package com.rxh.controller.anew.agent;
 
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.agent.AgentMerchantSettingTable;
-import com.rxh.service.AnewAgentMerchantSettingService;
+import com.rxh.service.agent.AnewAgentMerchantSettingService;
 import com.rxh.service.ConstantService;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;

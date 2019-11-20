@@ -3,6 +3,8 @@ package com.rxh.controller.anew.merchant;
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.merchant.MerchantInfoTable;
 import com.rxh.service.*;
+import com.rxh.service.agent.AnewAgentMerchantService;
+import com.rxh.service.merchant.AnewMerchantInfoService;
 import com.rxh.service.square.*;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.utils.SystemConstant;

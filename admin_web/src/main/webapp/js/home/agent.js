@@ -518,9 +518,9 @@ function agentUserMgmtCtrl($scope, $state, $stateParams, $uibModal, toaster, NgT
         $scope.statusChange = function (row) {
             httpSvc.getData('post', '/agent/updateMerchantUser', {
                 id: row.id,
-                available: !row.available
+                status: row.status == 0 ? 1 :0
             }).then(function (value) {
-                if (value) {
+                if (value.code ==0) {
                     toaster.pop({
                         type: 'success',
                         title: '商户用户管理',
@@ -538,12 +538,12 @@ function agentUserMgmtCtrl($scope, $state, $stateParams, $uibModal, toaster, NgT
         };
         httpSvc.getData('post', '/agent/getMerchantUserByMerchantId', {"belongto": id}).then(function (value) {
             $scope.merchantUserTable = new NgTableParams({}, {
-                dataset: value
+                dataset: value.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
         httpSvc.getData('post', '/agent/getMerchantRoleByMerchantId', {"belongto": id}).then(function (value) {
-            $scope.merchantRole = value;
+            $scope.merchantRole = value.data;
         });
         $scope.showModal = function (user, type) {
             var modalInstance = $uibModal.open({
@@ -608,7 +608,7 @@ function agentUserMgmtCtrl($scope, $state, $stateParams, $uibModal, toaster, NgT
             angular.element('.ibox-content').addClass('sk-loading');
             httpSvc.getData('post', '/agent/getMerchantUserByMerchantId', {"belongto": id}).then(function (value) {
                 $scope.merchantUserTable.settings({
-                    dataset: value
+                    dataset: value.data
                 });
                 angular.element('.ibox-content').removeClass('sk-loading');
             });
@@ -634,7 +634,7 @@ function agentUserModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, u
                 userName: userName,
                 belongto: merchantId
             }).then(function (value) {
-                if (value) {
+                if (value.code == 0) {
                     verification(null, $event.target);
                 } else {
                     $scope.nameValid = true;
@@ -692,7 +692,7 @@ function agentUserModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type, u
             });
         } else {
             httpSvc.getData('post', '/agent/updateMerchantUser', $scope.userInfo).then(function (value) {
-                if (value) {
+                if (value.code == 0) {
                     toaster.pop({
                         type: 'success',
                         title: '商户用户管理',

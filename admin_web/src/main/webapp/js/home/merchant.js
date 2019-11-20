@@ -541,7 +541,7 @@ function merchantAccountCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
     $scope.merchantAccount = getMerchantAccount(merchantInfo);
     // var params = {"merId":$scope.merchantAccount.merId};
     httpSvc.getData('post', '/merchantAcount/search',{"merId":$scope.merchantAccount.merId}).then(function (value) {
-        if(value.code == 1 ){
+        if(value.code == 0 ){
             if (value.data != null) {
                 $scope.merchantAccount = value.data;
             }
@@ -574,7 +574,7 @@ function merchantAccountCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,
     $scope.confirm = function (merchantAccount) {
         merchantAccount.identityPath = $scope.certificateImgUrl.toString();
         httpSvc.getData('post', '/merchantAcount/update', merchantAccount).then(function (value) {
-            if (value.code == 1) {
+            if (value.code == 0) {
                 toaster.pop({
                     type: 'success',
                     title: '结算账户',
@@ -1028,7 +1028,7 @@ function merchantUserMgmtCtrl($scope, $state, $stateParams, $uibModal, toaster, 
         $scope.statusChange = function (row) {
             httpSvc.getData('post', '/merchant/updateMerchantUser', {
                 id: row.id,
-                available: !row.available
+                status: row.status == 0 ? 1:0
             }).then(function (value) {
                 if (value) {
                     toaster.pop({
@@ -1046,14 +1046,14 @@ function merchantUserMgmtCtrl($scope, $state, $stateParams, $uibModal, toaster, 
                 }
             })
         };
-        httpSvc.getData('post', '/merchant/getMerchantUserByMerchantId',{"merId":id}).then(function (value) {
+        httpSvc.getData('post', '/merchant/getMerchantUserByMerchantId',{"belongto":id}).then(function (value) {
             $scope.merchantUserTable = new NgTableParams({}, {
-                dataset: value
+                dataset: value.data
             });
             angular.element('.ibox-content').removeClass('sk-loading');
         });
-        httpSvc.getData('post', '/merchant/getMerchantRoleByMerchantId', {"merId":id}).then(function (value) {
-            $scope.merchantRole = value;
+        httpSvc.getData('post', '/merchant/getMerchantRoleByMerchantId', {"belongto":id}).then(function (value) {
+            $scope.merchantRole = value.data;
         });
         $scope.showModal = function (user, type) {
             var modalInstance = $uibModal.open({
@@ -1116,9 +1116,9 @@ function merchantUserMgmtCtrl($scope, $state, $stateParams, $uibModal, toaster, 
 
         function tableReload() {
             angular.element('.ibox-content').addClass('sk-loading');
-            httpSvc.getData('post', '/merchant/getMerchantUserByMerchantId', {"merchantId":id}).then(function (value) {
+            httpSvc.getData('post', '/merchant/getMerchantUserByMerchantId', {"belongto":id}).then(function (value) {
                 $scope.merchantUserTable.settings({
-                    dataset: value
+                    dataset: value.data
                 });
                 angular.element('.ibox-content').removeClass('sk-loading');
             });
@@ -1144,7 +1144,7 @@ function merchantUserModalCtrl($scope, $uibModalInstance, httpSvc, toaster, type
                 userName: userName,
                 belongto: merchantId
             }).then(function (value) {
-                if (value) {
+                if (value.code == 0) {
                     verification(null, $event.target);
                 } else {
                     $scope.nameValid = true;

@@ -3,7 +3,7 @@ package com.rxh.controller.anew.order;
 import com.internal.playment.common.enums.StatusEnum;
 import com.rxh.pojo.Result;
 import com.rxh.pojo.base.Page;
-import com.rxh.service.AnewMerchantInfoService;
+import com.rxh.service.merchant.AnewMerchantInfoService;
 import com.rxh.service.AnewPayOrderService;
 import com.rxh.service.ConstantService;
 import com.rxh.service.OrganizationInfoService;

@@ -709,18 +709,19 @@ function systemLogCtrl($scope, $uibModal, NgTableParams, httpSvc) {
                     orderBy: params.sorting(),
                     logSearch: $scope.searchInfo
                 }).then(function (value) {
+                    value = value.data;
                     var i, j;
                     params.total(value.total);
-                    for (i = 0; i < value.rows.length; i++) {
-                        value.rows[i].type += '';
+                    for (i = 0; i < value.records.length; i++) {
+                        value.records[i].type += '';
                         for (j = 0; j < $scope.logType.length; j++) {
-                            if (value.rows[i].type === $scope.logType[j].firstValue) {
-                                value.rows[i]['typeCN'] = $scope.logType[j].name;
+                            if (value.records[i].type === $scope.logType[j].firstValue) {
+                                value.records[i]['typeCN'] = $scope.logType[j].name;
                             }
                         }
                     }
                     angular.element('.ibox-content').removeClass('sk-loading');
-                    return value.rows;
+                    return value.records;
                 });
             }
         });
@@ -821,18 +822,19 @@ function merchantSystemLogCtrl($scope, $uibModal, NgTableParams, httpSvc) {
                     orderBy: params.sorting(),
                     logSearch: $scope.searchInfo
                 }).then(function (value) {
+                    value = value.data;
                     var i, j;
                     params.total(value.total);
-                    for (i = 0; i < value.rows.length; i++) {
-                        value.rows[i].type += '';
+                    for (i = 0; i < value.records.length; i++) {
+                        value.records[i].type += '';
                         for (j = 0; j < $scope.logType.length; j++) {
-                            if (value.rows[i].type === $scope.logType[j].firstValue) {
-                                value.rows[i]['typeCN'] = $scope.logType[j].name;
+                            if (value.records[i].type === $scope.logType[j].firstValue) {
+                                value.records[i]['typeCN'] = $scope.logType[j].name;
                             }
                         }
                     }
                     angular.element('.ibox-content').removeClass('sk-loading');
-                    return value.rows;
+                    return value.records;
                 });
             }
         });
@@ -933,18 +935,19 @@ function agentSystemLogCtrl($scope, $uibModal, NgTableParams, httpSvc) {
                     orderBy: params.sorting(),
                     logSearch: $scope.searchInfo
                 }).then(function (value) {
+                    value = value.data;
                     var i, j;
                     params.total(value.total);
-                    for (i = 0; i < value.rows.length; i++) {
-                        value.rows[i].type += '';
+                    for (i = 0; i < value.records.length; i++) {
+                        value.records[i].type += '';
                         for (j = 0; j < $scope.logType.length; j++) {
-                            if (value.rows[i].type === $scope.logType[j].firstValue) {
-                                value.rows[i]['typeCN'] = $scope.logType[j].name;
+                            if (value.records[i].type === $scope.logType[j].firstValue) {
+                                value.records[i]['typeCN'] = $scope.logType[j].name;
                             }
                         }
                     }
                     angular.element('.ibox-content').removeClass('sk-loading');
-                    return value.rows;
+                    return value.records;
                 });
             }
         });
@@ -1026,20 +1029,22 @@ function constantInfoCtrl($scope, $uibModal, NgTableParams, httpSvc, toaster) {
         getData: function (params) {
             angular.element('.ibox-content').addClass('sk-loading');
             return httpSvc.getData('post', '/constant/getConstantInfo', {
-                pageFirst: params.page() - 1,
+                pageNum: params.page() ,
                 pageSize: params.count(),
                 sortFieldName: "id",
                 sortType: "desc",
-                searchInfo: params.filter()
+                object: params.filter()
             }).then(function (value) {
-                $scope.totalItems = value.resultTotal;
-                params.total(value.resultTotal);
+                value = value.data;
+                $scope.totalItems = value.total;
+                params.total(value.total);
                 angular.element('.ibox-content').removeClass('sk-loading');
-                return value.constantList;
+                return value.records;
             });
         }
     });
     httpSvc.getData('post', '/constant/getGroupAll').then(function (value) {
+        value = value.data;
         for (var i = 0; i < value.length; i++) {
             $scope.groupList.push({
                 id: value[i].code,
@@ -1211,15 +1216,15 @@ function sysGroupInfoCtrl($scope, $uibModal, $state, NgTableParams, httpSvc, toa
 
                 pageNum: params.page() ,
                 pageSize: params.count(),
-                searchInfo: params.filter()
+                object: params.filter()
 
             }).then(function (value) {
                 value = value.data;
-                $scope.totalItems = value.resultTotal;
-                params.total(value.resultTotal);
+                $scope.totalItems = value.total;
+                params.total(value.total);
                 angular.element('.ibox-content').removeClass('sk-loading');
 
-                return value.sysGroupList;
+                return value.records;
 
             });
         }
@@ -1233,15 +1238,15 @@ function sysGroupInfoCtrl($scope, $uibModal, $state, NgTableParams, httpSvc, toa
 
                     pageNum: params.page(),
                     pageSize: params.count(),
-                    searchInfo: params.filter()
+                    object: params.filter()
 
                 }).then(function (value) {
                     value = value.data;
-                    $scope.totalItems = value.resultTotal;
-                    params.total(value.resultTotal);
+                    $scope.totalItems = value.total;
+                    params.total(value.total);
                     angular.element('.ibox-content').removeClass('sk-loading');
 
-                    return value.sysGroupList;
+                    return value.records;
 
                 });
             }
@@ -1391,7 +1396,7 @@ function sysGroupInfoCtrl($scope, $uibModal, $state, NgTableParams, httpSvc, toa
         modalInstance.result.then(function () {
             httpSvc.getData('post', '/sysgroup/batchDel', {codes: codes}).then(function (value) {
 
-                if (value.result == 1) {
+                if (value.code == 0) {
 
                     toaster.pop({
                         type: 'success',
@@ -1481,7 +1486,7 @@ function sysGroupInfoAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, s
     $scope.groupNameBlur = function ($event, groupName) {
         if (!verification(groupName, $event.target)) {
             httpSvc.getData('post', '/sysgroup/groupName/isExist', JSON.stringify(groupName)).then(function (value) {
-                if (value) {
+                if (value.code == 1) {
                     verification(undefined, $event.target);
                     $scope.groupNameValid = false;
                 } else {
@@ -1494,7 +1499,7 @@ function sysGroupInfoAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, s
     $scope.groupCodeBlur = function ($event, groupCode) {
         if (!verification(groupCode, $event.target)) {
             httpSvc.getData('post', '/sysgroup/groupCode/isExist', JSON.stringify(groupCode)).then(function (value) {
-                if (value) {
+                if (value.code == 1) {
                     verification(undefined, $event.target);
                     $scope.groupCodeValid = false;
                 } else {
@@ -1515,7 +1520,7 @@ function sysGroupInfoAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, s
 
         httpSvc.getData('post', '/sysgroup/addSysGroup', obj).then(function (value) {
 
-            if (value.success == 1) {
+            if (value.code == 0) {
 
                 toaster.pop({
                     type: 'success',
@@ -1573,17 +1578,17 @@ function sysGroupInfoEditModalCtrl($scope, $uibModalInstance, httpSvc, toaster, 
                 angular.element('.ibox-content').addClass('sk-loading');
                 return httpSvc.getData('post', '/sysgroup/findSysGroup', {
 
-                    pageFirst: params.page() - 1,
+                    pageNum: params.page(),
                     pageSize: params.count(),
-                    searchInfo: params.filter()
+                    object: params.filter()
 
                 }).then(function (value) {
-
-                    $scope.totalItems = value.resultTotal;
-                    params.total(value.resultTotal);
+                    value = value.data;
+                    $scope.totalItems = value.total;
+                    params.total(value.total);
                     angular.element('.ibox-content').removeClass('sk-loading');
 
-                    return value.sysGroupList;
+                    return value.records;
 
                 });
             }
@@ -1601,7 +1606,7 @@ function sysGroupInfoEditModalCtrl($scope, $uibModalInstance, httpSvc, toaster, 
     $scope.groupNameBlur = function ($event, groupName) {
         if (!verification(groupName, $event.target)) {
             httpSvc.getData('post', '/sysgroup/groupName/isExist', JSON.stringify(groupName)).then(function (value) {
-                if (value) {
+                if (value.code == 1) {
                     verification(undefined, $event.target);
                     $scope.groupNameValid = true;
                 } else {
@@ -1621,7 +1626,7 @@ function sysGroupInfoEditModalCtrl($scope, $uibModalInstance, httpSvc, toaster, 
 
         httpSvc.getData('post', '/sysgroup/update', obj).then(function (value) {
 
-            if (value.success == 1) {
+            if (value.code == 0) {
 
                 toaster.pop({
                     type: 'success',
@@ -1655,7 +1660,7 @@ function constantInfoAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, c
     $scope.constant = constant;
     httpSvc.getData('post', '/constant/getGroupAll').then(function (value) {
 
-        $scope.groupList = value;
+        $scope.groupList = value.data;
 
     });
 
@@ -1902,7 +1907,7 @@ function constantInfoEditModalCtrl($scope, $uibModalInstance, httpSvc, toaster, 
     $scope.constant = constant;
     httpSvc.getData('post', '/constant/getGroupAll').then(function (value) {
 
-        $scope.groupList = value;
+        $scope.groupList = value.data;
 
     });
 
@@ -2121,7 +2126,7 @@ function constantInfoEditModalCtrl($scope, $uibModalInstance, httpSvc, toaster, 
 
         httpSvc.getData('post', '/constant/update', obj).then(function (value) {
 
-            if (value.success == 1) {
+            if (value.code == 0) {
 
                 toaster.pop({
                     type: 'success',
@@ -2695,15 +2700,14 @@ function merchantIpCtrl($scope, $uibModal, $state, NgTableParams, httpSvc, toast
                 // angular.element('.ibox-content').addClass('sk-loading');
                 searchInfo = angular.copy($scope.searchInfo);
                 return httpSvc.getData('post', '/customer/searchIp', {
-                    pageFirst: (params.page() - 1) * 10,
+                    pageNum: params.page(),
                     pageSize: params.count(),
-                    searchInfo: searchInfo
+                    object: searchInfo
                 }).then(function (value) {
                     // $scope.totalItems = value.total;
-                    params.total(value.total);
-                    console.log(params);
+                    params.total(value.data.total);
                     angular.element('.ibox-content').removeClass('sk-loading');
-                    return value.rows;
+                    return value.data.records;
                 });
             }
         });
@@ -2809,14 +2813,14 @@ function merchantIpCtrl($scope, $uibModal, $state, NgTableParams, httpSvc, toast
                 // angular.element('.ibox-content').addClass('sk-loading');
                 searchInfo = angular.copy($scope.searchInfo);
                 return httpSvc.getData('post', '/customer/searchIp', {
-                    pageFirst: (params.page() - 1) * 10,
+                    pageNum: params.page(),
                     pageSize: params.count(),
-                    searchInfo: searchInfo
+                    object: searchInfo
                 }).then(function (value) {
                     // $scope.totalItems = value.total;
-                    params.total(value.total);
+                    params.total(value.data.total);
                     angular.element('.ibox-content').removeClass('sk-loading');
-                    return value.rows;
+                    return value.data.records;
                 });
             }
         });
@@ -2827,14 +2831,14 @@ function merchantIpCtrl($scope, $uibModal, $state, NgTableParams, httpSvc, toast
                 angular.element('.ibox-content').addClass('sk-loading');
                 searchInfo = angular.copy($scope.searchInfo);
                 return httpSvc.getData('post', '/customer/searchIp', {
-                    pageFirst: (params.page() - 1) * 10,
+                    pageNum: params.page(),
                     pageSize: params.count(),
-                    searchInfo: searchInfo
+                    object: searchInfo
                 }).then(function (value) {
                     // $scope.totalItems = value.total;
-                    params.total(value.total);
+                    params.total(value.data.total);
                     angular.element('.ibox-content').removeClass('sk-loading');
-                    return value.rows;
+                    return value.data.records;
                 });
             }
         });

@@ -9,17 +9,12 @@ import com.internal.playment.common.table.system.SysRoleTable;
 import com.internal.playment.common.table.system.SysUserTable;
 import com.rxh.pojo.sys.SysPrivileges;
 import com.rxh.pojo.sys.SysRole;
-import com.rxh.pojo.sys.SysUser;
-import com.rxh.service.NewSystemUserService;
 import com.rxh.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;

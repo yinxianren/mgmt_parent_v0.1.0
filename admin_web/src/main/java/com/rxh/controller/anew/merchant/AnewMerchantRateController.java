@@ -2,7 +2,7 @@ package com.rxh.controller.anew.merchant;
 
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.merchant.MerchantRateTable;
-import com.rxh.service.AnewMerchantRateService;
+import com.rxh.service.merchant.AnewMerchantRateService;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

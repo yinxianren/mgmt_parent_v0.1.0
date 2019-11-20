@@ -35,8 +35,20 @@
     <dubbo:reference interface="com.internal.playment.api.db.system.ApiSysPrivilegesService" id="apiSysPrivilegesService" version="1.0.0" />
     <dubbo:reference interface="com.internal.playment.api.db.system.ApiSysRoleService" id="apiSysRoleService" version="1.0.0" />
     <dubbo:reference interface="com.internal.playment.api.db.system.ApiSysUserServie" id="apiSysUserServie" version="1.0.0" />
-    <dubbo:reference interface="com.internal.playment.api.db.system.ApiSysGroupService" id="apiSysGroupService" validation="1.0.0" />
-    <dubbo:reference interface="com.internal.playment.api.db.system.ApiSysConstantService" id="apiSysConstantService" validation="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.system.ApiSysGroupService" id="apiSysGroupService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.system.ApiSysConstantService" id="apiSysConstantService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.system.ApiSysLogService" version="1.0.0" id="apiSysLogService" />
+    <dubbo:reference interface="com.internal.playment.api.db.system.ApiMerchantSysLogService" id="apiMerchantSysLogService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.system.ApiAgentSysLogService" id="apiAgentSysLogService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.merchant.ApiMerchantAcountService" id="apiMerchantAcountService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.merchant.ApiMerchantRoleService" id="apiMerchantRoleService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.merchant.ApiMerchantPrivilegesService" version="1.0.0" id="apiMerchantPrivilegesService" />
+    <dubbo:reference interface="com.internal.playment.api.db.merchant.ApiMerchantUserService" id="apiMerchantUserService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.agent.ApiAgentRoleService" id="apiAgentRoleService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.agent.ApiAgentUserService" id="apiAgentUserService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.agent.ApiAgentPrivielgesService" id="apiAgentPrivielgesService" version="1.0.0" />
+    <dubbo:reference interface="com.internal.playment.api.db.system.ApiUserLoginIpService" id="apiUserLoginIpService" version="1.0.0" />
+
 
     <!--四方支付调用接口-->
     <dubbo:reference interface="com.rxh.service.square.RiskQuotaDataService" id="riskQuotaDataService"/>

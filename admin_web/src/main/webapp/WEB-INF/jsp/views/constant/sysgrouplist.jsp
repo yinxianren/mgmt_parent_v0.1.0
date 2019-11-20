@@ -35,11 +35,11 @@
                                 <tr ng-repeat="row in $data">
                                     <td class="text-center" style="line-height: 2"
                                         data-title="''">
-                                        <input type="checkbox" id="sysGroupCheckBoxID" ng-model="selected[row.code]"  />
+                                        <input type="checkbox" id="sysGroupCheckBoxID" ng-model="selected[row.id]"  />
                                     </td>
                                     <td class="text-center" filter="{name: 'text'}" style="line-height: 2"
                                         data-title="'常量组名称'">
-                                        {{row.name}}  {{row.id}}
+                                        {{row.name}}  <%--{{row.id}}--%>
                                     </td>
                                     <td class="text-center" filter="{code: 'text'}" style="line-height: 2"
                                         data-title="'常量组编码'">

@@ -2,7 +2,7 @@ package com.rxh.controller.anew.merchant;
 
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.merchant.MerchantBankRateTable;
-import com.rxh.service.AnewMerchantBankRateService;
+import com.rxh.service.merchant.AnewMerchantBankRateService;
 import com.rxh.service.ConstantService;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
