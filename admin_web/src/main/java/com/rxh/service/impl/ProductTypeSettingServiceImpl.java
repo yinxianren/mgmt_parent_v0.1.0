@@ -2,11 +2,14 @@ package com.rxh.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.internal.playment.api.db.channel.ApiProductTypeSettingService;
+import com.internal.playment.api.db.system.ApiSysConstantService;
 import com.internal.playment.common.table.system.ProductSettingTable;
+import com.internal.playment.common.table.system.SysConstantTable;
 import com.rxh.pojo.sys.SysConstant;
 import com.rxh.service.ConstantService;
 import com.rxh.service.ProductTypeSettingService;
 import com.rxh.service.sys.SysConstantService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,7 @@ public class ProductTypeSettingServiceImpl implements ProductTypeSettingService 
     @Autowired
     private ApiProductTypeSettingService apiProductTypeSettingService;
     @Autowired
-    private SysConstantService sysConstantService;
+    private ApiSysConstantService apiSysConstantService;
 
     @Override
     public ResponseVO selectByOrganizationId(ProductSettingTable productSettingTable) {
@@ -43,8 +46,11 @@ public class ProductTypeSettingServiceImpl implements ProductTypeSettingService 
         }else {
             productSettingTable.setId(list.get(0).getId());
         }
-        SysConstant sysConstant = sysConstantService.getOneByFirstValueAndCode(productSettingTable.getProductId(), SystemConstant.PRODUCTTYPE);
-        productSettingTable.setProductName(sysConstant == null?"":sysConstant.getName());
+        SysConstantTable sysConstantTable = new SysConstantTable();
+        sysConstantTable.setFirstValue(productSettingTable.getProductId());
+        sysConstantTable.setGroupCode(SystemConstant.PRODUCTTYPE);
+        List<SysConstantTable> sysConstants = apiSysConstantService.getList(sysConstantTable);
+        productSettingTable.setProductName(CollectionUtils.isEmpty(sysConstants)?"":sysConstants.get(0).getName());
         productSettingTable.setUpdateTime(date);
         Boolean b = apiProductTypeSettingService.SaveOrUpdate(productSettingTable);
         if (b){

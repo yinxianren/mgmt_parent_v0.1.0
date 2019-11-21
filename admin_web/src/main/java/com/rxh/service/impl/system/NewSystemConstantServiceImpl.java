@@ -8,6 +8,10 @@ import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created with IntelliJ IDEA.
  * User: panda
@@ -31,5 +35,17 @@ public class NewSystemConstantServiceImpl implements NewSystemConstantService {
         sysConstantTable.setGroupCode(GroupName);
         responseVO.setData(apiSysConstantService.getList(sysConstantTable));
         return responseVO;
+    }
+
+    @Override
+    public Map getConstantsMapByGroupName(String GroupName) {
+        SysConstantTable sysConstantTable = new SysConstantTable();
+        sysConstantTable.setGroupCode(GroupName);
+        List<SysConstantTable> list = (apiSysConstantService.getList(sysConstantTable));
+        Map map = new HashMap();
+        for (SysConstantTable sysConstantTable1 : list){
+            map.put(sysConstantTable1.getFirstValue(),sysConstantTable1);
+        }
+        return map;
     }
 }

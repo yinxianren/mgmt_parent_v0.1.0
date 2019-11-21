@@ -3,11 +3,12 @@ package com.rxh.controller.anew.order;
 
 import com.internal.playment.common.enums.StatusEnum;
 import com.rxh.pojo.Result;
-import com.rxh.pojo.base.Page;
+import com.internal.playment.common.page.Page;
 import com.rxh.service.merchant.AnewMerchantInfoService;
 import com.rxh.service.AnewTransOrderService;
 import com.rxh.service.ConstantService;
 import com.rxh.service.OrganizationInfoService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.service.trading.TransOrderService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.utils.SystemConstant;
@@ -26,9 +27,7 @@ import java.util.Map;
 public class AnewTransOrderController {
 
     @Resource
-    private TransOrderService transOrderService;
-    @Resource
-    private ConstantService constantService;
+    private NewSystemConstantService constantService;
     @Autowired
     private AnewTransOrderService anewTransOrderService;
     @Autowired
@@ -53,22 +52,16 @@ public class AnewTransOrderController {
     public ResponseVO getTransBankInfo(@RequestParam("platformOrderId") String platformOrderId) {
         return anewTransOrderService.getTransBankInfo(platformOrderId);
     }
-    @RequestMapping("/getProductInfo")
-    @ResponseBody
-    public Result getProductInfo(@RequestBody String transId) {
-        Result  result = transOrderService.getProductInfo(transId);
-        return result;
-    }
 
     @RequestMapping("/init")
     public Map<String, Object> init() {
         Map<String, Object> init = new HashMap<>();
-        init.put("payType", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
-        init.put("orderStatus", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.ORDERSTATUS));
-        init.put("settleStatus", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.SETTLESTATUS));
+        init.put("payType", constantService.getConstantByGroupName(SystemConstant.PAYTYPE).getData());
+        init.put("orderStatus", constantService.getConstantByGroupName(SystemConstant.ORDERSTATUS).getData());
+        init.put("settleStatus", constantService.getConstantByGroupName(SystemConstant.SETTLESTATUS).getData());
         init.put("organizations",organizationInfoService .getAll(null).getData());
         init.put("merchants", anewMerchantInfoService.getMerchants(null));
-        init.put("productTypes",constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PRODUCTTYPE));
+        init.put("productTypes",constantService.getConstantByGroupName(SystemConstant.PRODUCTTYPE).getData());
         return init;
     }
 }

@@ -39,7 +39,6 @@
 
     <!-- 重写获取用户信息方法 -->
     <beans:bean id="userDetailsService" class="com.rxh.spring.security.details.service.MyUserDetailsService">
-        <beans:property name="userService" ref="userService"/>
         <beans:property name="apiUserService" ref="apiSysUserServie"/>
         <beans:property name="roleService" ref="apiSysRoleService"/>
         <beans:property name="privilegesService" ref="apiSysPrivilegesService"/>
@@ -48,12 +47,12 @@
     <!-- 重写登录成功后执行方法 -->
     <beans:bean id="successHandler" class="com.rxh.spring.security.config.MySuccessHandler">
         <beans:property name="userService" ref="apiSysUserServie"/>
-        <beans:property name="systemService" ref="systemService"/>
+        <beans:property name="systemService" ref="apiSysLogService"/>
     </beans:bean>
     <!-- 重写登录失败后执行方法 -->
     <beans:bean id="failureHandler" class="com.rxh.spring.security.config.MyFailureHandler">
         <beans:property name="defaultFailureUrl" value="/user/login?error=1"/>
-        <beans:property name="systemService" ref="systemService"/>
+        <beans:property name="systemService" ref="apiSysLogService"/>
     </beans:bean>
 
     <!-- 角色层次 -->

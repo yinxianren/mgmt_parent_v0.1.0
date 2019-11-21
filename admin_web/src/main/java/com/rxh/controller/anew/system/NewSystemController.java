@@ -1,7 +1,7 @@
 package com.rxh.controller.anew.system;
 
 import com.internal.playment.common.enums.StatusEnum;
-import com.rxh.pojo.base.Page;
+import com.internal.playment.common.page.Page;
 import com.rxh.pojo.sys.SysArea;
 import com.rxh.pojo.sys.SysConstant;
 import com.rxh.service.*;
@@ -32,8 +32,6 @@ import java.util.List;
 @RequestMapping(value = "/system")
 public class NewSystemController {
 
-    @Resource
-    private SystemService systemService;
     @Autowired
     private NewMerchantSysLogService newMerchantSysLogService;
     @Autowired
@@ -97,11 +95,11 @@ public class NewSystemController {
     }
 
 
-    @RequestMapping(value = "/getAreaInfoByCountryCode")
+   /* @RequestMapping(value = "/getAreaInfoByCountryCode")
     @ResponseBody
     public List<SysArea> getAreaInfoByCountryCode(@RequestBody String countryCode) {
         return systemService.getAreaInfoByCountryCode(countryCode);
-    }
+    }*/
 
 
 

@@ -3,13 +3,14 @@ package com.rxh.controller.anew.channel;
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.channel.ChannelWalletTable;
 import com.rxh.pojo.Result;
-import com.rxh.pojo.base.Page;
+import com.internal.playment.common.page.Page;
 import com.rxh.pojo.base.PageResult;
 import com.rxh.service.AnewChannelService;
 import com.rxh.service.AnewChannelWalletService;
 import com.rxh.service.ConstantService;
 import com.rxh.service.square.ChannelWalletService;
 import com.rxh.service.square.OrganizationService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.square.pojo.ChannelWallet;
 import com.rxh.utils.SystemConstant;
@@ -29,7 +30,7 @@ import java.util.Map;
 public class AnewChannelWalletController {
 
     @Resource
-    private ConstantService constantService;
+    private NewSystemConstantService constantService;
     @Autowired
     private AnewChannelWalletService anewChannelWalletService;
     @Autowired
@@ -53,7 +54,7 @@ public class AnewChannelWalletController {
     @RequestMapping("/idsInit")
     public Map<String, Object> init() {
         Map<String, Object> init = new HashMap<>();
-        init.put("paytype", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
+        init.put("paytype", constantService.getConstantByGroupName(SystemConstant.PAYTYPE).getData());
         init.put("channels", anewChannelService.getAll(null).getData());
 //        init.put("organizations", organizationService.getIdsAndName());
         return init;
@@ -67,7 +68,7 @@ public class AnewChannelWalletController {
     @RequestMapping("/init")
     public Map<String, Object> init1() {
         Map<String, Object> init = new HashMap<>();
-        init.put("productTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PRODUCTTYPE));
+        init.put("productTypes", constantService.getConstantByGroupName(SystemConstant.PRODUCTTYPE).getData());
 //        init.put("detailsTypes",constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.DETAILSTYPE));
         init.put("channels", anewChannelService.getAll(null).getData());
         return init;

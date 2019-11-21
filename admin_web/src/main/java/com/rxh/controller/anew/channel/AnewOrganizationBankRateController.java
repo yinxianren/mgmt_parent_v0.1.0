@@ -6,6 +6,7 @@ import com.internal.playment.common.table.system.OrganizationInfoTable;
 import com.rxh.service.AnewBankRateService;
 import com.rxh.service.ConstantService;
 import com.rxh.service.OrganizationInfoService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class AnewOrganizationBankRateController {
     @Autowired
     private OrganizationInfoService organizationService;
     @Autowired
-    private ConstantService constantService;
+    private NewSystemConstantService constantService;
 
     @RequestMapping("/search")
     public ResponseVO search(BankRateTable rateTable){
@@ -77,7 +78,7 @@ public class AnewOrganizationBankRateController {
     public Map<String, Object> getChannelInfoInit() {
         Map<String, Object> init = new HashMap<>();
         init.put("organizations",organizationService.getAll(new OrganizationInfoTable()).getData());
-        init.put("status", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.availableStatus));
+        init.put("status", constantService.getConstantByGroupName(SystemConstant.availableStatus).getData());
         return init;
     }
 

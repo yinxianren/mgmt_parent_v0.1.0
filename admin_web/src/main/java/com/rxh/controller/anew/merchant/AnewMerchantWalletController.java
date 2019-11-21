@@ -3,13 +3,15 @@ package com.rxh.controller.anew.merchant;
 
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.merchant.MerchantWalletTable;
-import com.rxh.pojo.base.Page;
+import com.internal.playment.common.page.Page;
 import com.rxh.service.*;
 import com.rxh.service.agent.AnewAgentMerchantService;
 import com.rxh.service.merchant.AnewMerchantInfoService;
 import com.rxh.service.merchant.AnewMerchantWalletService;
 import com.rxh.service.square.MerchantInfoService;
 import com.rxh.service.square.MerchantWalletService;
+import com.rxh.service.sys.SysConstantService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.square.pojo.MerchantInfo;
 import com.rxh.util.UserInfoUtils;
@@ -28,16 +30,8 @@ import java.util.*;
 @RequestMapping("/merchantWallet")
 public class AnewMerchantWalletController {
 
-    @Resource
-    private MerchantWalletService merchantWalletService;
-    @Resource
-    private MerchantInfoService merchantInfoService;
-    @Resource
-    private BCryptPasswordEncoder passwordEncoder;
-    @Resource
-    private UserService userService;
     @Autowired
-    private ConstantService constantService;
+    private NewSystemConstantService constantService;
     @Autowired
     private AnewMerchantWalletService anewMerchantWalletService;
     @Autowired
@@ -73,7 +67,7 @@ public class AnewMerchantWalletController {
 //        return merchantWalletService.deleteByPrimaryKey(ids);
 //    }
 
-    @RequestMapping("/invest")
+ /*   @RequestMapping("/invest")
     public int invest(@RequestBody Object investInfo) {
         LinkedHashMap map = (LinkedHashMap) investInfo;
         String password=map.get("password")+"";
@@ -95,7 +89,7 @@ public class AnewMerchantWalletController {
             return 2;
         }
 
-    }
+    }*/
 
     @RequestMapping(value="/findMerchantsDetails")
     public ResponseVO findMerchantsDetails(@RequestBody Page page ) {
@@ -114,8 +108,8 @@ public class AnewMerchantWalletController {
     public Map<String, Object> inits() {
         Map<String, Object> init = new HashMap<>();
         init.put("merchants", anewMerchantInfoService.getMerchants(null).getData());
-        init.put("productTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PRODUCTTYPE));
-        init.put("detailsTypes",constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.DETAILSTYPE));
+        init.put("productTypes", constantService.getConstantByGroupName(SystemConstant.PRODUCTTYPE).getData());
+        init.put("detailsTypes",constantService.getConstantByGroupName(SystemConstant.DETAILSTYPE).getData());
         return init;
     }
 

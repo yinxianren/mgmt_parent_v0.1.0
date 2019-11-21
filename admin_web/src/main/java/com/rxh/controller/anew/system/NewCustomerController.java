@@ -2,9 +2,11 @@ package com.rxh.controller.anew.system;
 
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.system.UserLoginIpTable;
-import com.rxh.pojo.base.Page;
+import com.internal.playment.common.page.Page;
 import com.rxh.pojo.base.PageResult;
 import com.rxh.service.AnewUserLoginIpService;
+import com.rxh.service.agent.AnewAgentMerchantService;
+import com.rxh.service.merchant.AnewMerchantInfoService;
 import com.rxh.service.square.CustomerService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.square.pojo.UserLoginIp;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,14 +31,19 @@ jones
 public class NewCustomerController {
 
     @Autowired
-    private CustomerService customerService;
-    @Autowired
     private AnewUserLoginIpService anewUserLoginIpService;
+    @Autowired
+    private AnewMerchantInfoService anewMerchantInfoService;
+    @Autowired
+    private AnewAgentMerchantService anewAgentMerchantService;
 
     @RequestMapping(value = "/getInit")
     @ResponseBody
     public Map<String, Object> getInit() {
-        return customerService.getInitCustomers();
+        Map<String, Object> map = new HashMap<>();
+        map.put("merChants",anewMerchantInfoService.getMerchants(null).getData());
+        map.put("agents",anewAgentMerchantService.list(null).getData());
+        return map;
     }
 
 

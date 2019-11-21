@@ -3,15 +3,14 @@ package com.rxh.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.internal.playment.api.db.business.ApiTransOrderInfoService;
 import com.internal.playment.common.enums.StatusEnum;
-import com.internal.playment.common.table.business.PayOrderInfoTable;
+import com.internal.playment.common.page.SearchInfo;
 import com.internal.playment.common.table.business.TransOrderInfoTable;
 import com.internal.playment.common.table.channel.ChannelInfoTable;
-import com.rxh.pojo.base.Page;
-import com.rxh.pojo.base.SearchInfo;
+import com.internal.playment.common.page.Page;
 import com.rxh.pojo.sys.SysConstant;
 import com.rxh.service.AnewChannelService;
 import com.rxh.service.AnewTransOrderService;
-import com.rxh.service.ConstantService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.square.pojo.PayCardholderInfo;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
@@ -37,7 +36,7 @@ public class AnewTransOrderServiceImpl implements AnewTransOrderService {
     @Autowired
     private AnewChannelService anewChannelService;
     @Autowired
-    private ConstantService constantService;
+    private NewSystemConstantService constantService;
 
     @Override
     public ResponseVO page(Page page) {

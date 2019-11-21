@@ -4,7 +4,7 @@ package com.rxh.controller.anew.system;
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.system.SysConstantTable;
 import com.internal.playment.common.table.system.SysGroupTable;
-import com.rxh.pojo.base.Page;
+import com.internal.playment.common.page.Page;
 import com.rxh.service.system.NewConstantService;
 import com.rxh.service.system.NewSysGroupService;
 import com.rxh.spring.annotation.SystemLogInfo;

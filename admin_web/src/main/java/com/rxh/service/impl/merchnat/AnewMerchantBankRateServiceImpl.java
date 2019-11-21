@@ -6,6 +6,7 @@ import com.internal.playment.common.table.merchant.MerchantBankRateTable;
 import com.rxh.pojo.sys.SysConstant;
 import com.rxh.service.merchant.AnewMerchantBankRateService;
 import com.rxh.service.ConstantService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class AnewMerchantBankRateServiceImpl implements AnewMerchantBankRateServ
     @Autowired
     private ApiMerchantBankRateSerrvice apiMerchantBankRateSerrvice;
     @Autowired
-    private ConstantService constantService;
+    private NewSystemConstantService constantService;
 
     @Override
     public ResponseVO search(MerchantBankRateTable merchantBankRateTable) {
@@ -31,7 +32,7 @@ public class AnewMerchantBankRateServiceImpl implements AnewMerchantBankRateServ
         for (MerchantBankRateTable merchantBankRateTable1 : list){
             bankNames.add(merchantBankRateTable1.getBankName());
         }
-        List<SysConstant> constantList = constantService.getConstantByGroupName("bankName");
+        List<SysConstant> constantList = (List)constantService.getConstantByGroupName("bankName").getData();
         for(SysConstant sysConstant : constantList){
             if (!bankNames.contains(sysConstant.getName())){
                 MerchantBankRateTable merchantBankRateTable1 = new MerchantBankRateTable();

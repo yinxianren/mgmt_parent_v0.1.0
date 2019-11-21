@@ -12,12 +12,15 @@ import com.rxh.util.UserInfoUtils;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class NewSystemUserServiceImpl implements NewSystemUserService {
@@ -105,11 +108,45 @@ public class NewSystemUserServiceImpl implements NewSystemUserService {
             }
             SysPrivilegesTable sysPrivilegesTable = new SysPrivilegesTable();
             sysPrivilegesTable.setIds(roleIdList);
-            List<SysPrivilegesTable> sysPrivileges = apiSysPrivilegesService.getList(sysPrivilegesTable);
-
-            role.setPrivileges(sysPrivileges);
+            List<SysPrivilegesTable> subsysPrivileges = apiSysPrivilegesService.getList(sysPrivilegesTable);
+            List<Long> muRoleids = new ArrayList<>();
+            for (SysPrivilegesTable sysPrivileget : subsysPrivileges){
+                if (sysPrivileget.getParentId() != null) muRoleids.add(sysPrivileget.getParentId());
+            }
+            if (!CollectionUtils.isEmpty(muRoleids)){
+                sysPrivilegesTable.setIds(muRoleids);
+                List<SysPrivilegesTable> musysPrivileges = apiSysPrivilegesService.getList(sysPrivilegesTable);
+                subsysPrivileges.addAll(musysPrivileges);
+            }
+            role.setPrivileges(subsysPrivileges);
         }
         user.setRole(role);
         return user;
+    }
+
+    @Override
+    public List<SysPrivilegesTable> getMenu(String userName) {
+        SysUserTable user = getUserAndRoleAndPrivilege(userName);
+        List<SysPrivilegesTable> privilegesList = user.getRole().getPrivileges();
+        if (privilegesList != null) {
+            List<SysPrivilegesTable> menuList = privilegesList
+                    .stream()
+                    .filter(sysPrivileges -> sysPrivileges.getParentId() == null)
+                    .collect(Collectors.toList());
+            List<SysPrivilegesTable> submenuList = privilegesList
+                    .stream()
+                    .filter(sysPrivileges -> sysPrivileges.getParentId() != null)
+                    .collect(Collectors.toList());
+            Map<Long, List<SysPrivilegesTable>> submenuMap = submenuList
+                    .stream()
+                    .collect(Collectors.groupingBy(SysPrivilegesTable::getParentId));
+            menuList.forEach(sysPrivileges -> sysPrivileges.setSubmenu(submenuMap.get(sysPrivileges.getId())));
+            menuList = menuList
+                    .stream()
+                    .filter(sysPrivileges -> sysPrivileges.getSubmenu() != null)
+                    .collect(Collectors.toList());
+            return menuList;
+        }
+        return null;
     }
 }

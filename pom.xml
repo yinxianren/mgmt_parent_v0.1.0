@@ -10,12 +10,8 @@
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-        <module>mgmt_base</module>
-        <module>mgmt_service</module>
-        <module>mgmt_common</module>
         <module>admin_web</module>
         <module>merchant_web</module>
-
 		<module>agment_web</module>
     </modules>
 

@@ -4,7 +4,7 @@ import com.internal.playment.api.db.system.ApiAgentSysLogService;
 import com.internal.playment.common.dto.PageDTO;
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.system.AgentSysLogTable;
-import com.rxh.pojo.base.Page;
+import com.internal.playment.common.page.Page;
 import com.rxh.service.system.NewAgentSysLogService;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -7,13 +7,15 @@ import com.internal.playment.api.db.business.ApiPayOrderInfoService;
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.business.PayOrderInfoTable;
 import com.internal.playment.common.table.channel.ChannelInfoTable;
+import com.internal.playment.common.table.system.SysConstantTable;
 import com.rxh.pojo.Result;
-import com.rxh.pojo.base.Page;
-import com.rxh.pojo.base.SearchInfo;
+import com.internal.playment.common.page.Page;
+import com.internal.playment.common.page.SearchInfo;
 import com.rxh.pojo.sys.SysConstant;
 import com.rxh.service.AnewChannelService;
 import com.rxh.service.AnewPayOrderService;
 import com.rxh.service.ConstantService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.square.pojo.PayCardholderInfo;
 import com.rxh.utils.JsonUtils;
 import com.rxh.utils.SystemConstant;
@@ -37,7 +39,7 @@ public class AnewPayOrderServiceImpl implements AnewPayOrderService {
     @Autowired
     private AnewChannelService anewChannelService;
     @Autowired
-    private ConstantService constantService;
+    private NewSystemConstantService constantService;
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     private final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -108,17 +110,17 @@ public class AnewPayOrderServiceImpl implements AnewPayOrderService {
             Map idMap = constantService.getConstantsMapByGroupName(SystemConstant.IDENTITYTYPE);
             Map bankMap = constantService.getConstantsMapByGroupName(SystemConstant.BANKCARDTYPE);
             Map productMap = constantService.getConstantsMapByGroupName(SystemConstant.PRODUCTTYPE);
-            SysConstant idtype = null;
-            SysConstant banktype = null;
-            SysConstant productType = null;
+            SysConstantTable idtype = null;
+            SysConstantTable banktype = null;
+            SysConstantTable productType = null;
             if (idMap.get(payOrder.getIdentityType().toString())!=null){
-                idtype = (SysConstant)idMap.get(payOrder.getIdentityType().toString());
+                idtype = (SysConstantTable)idMap.get(payOrder.getIdentityType().toString());
             }
             if (bankMap.get(payOrder.getBankCardType().toString())!=null){
-                banktype = (SysConstant)bankMap.get(payOrder.getBankCardType().toString());
+                banktype = (SysConstantTable)bankMap.get(payOrder.getBankCardType().toString());
             }
             if (productMap.get(payOrder.getProductId())!=null){
-                productType = (SysConstant)productMap.get(payOrder.getProductId());
+                productType = (SysConstantTable)productMap.get(payOrder.getProductId());
             }
             //证件类型
             cardholderInfo.setIdentityNum(idtype!=null?idtype.getName():"");

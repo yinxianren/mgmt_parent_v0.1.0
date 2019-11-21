@@ -2691,13 +2691,11 @@ function financeChangeCtrl($scope, $uibModal, $state, $uibModalInstance, NgTable
 function merchantIpCtrl($scope, $uibModal, $state, NgTableParams, httpSvc, toaster) {
     $scope.selected = {};
     httpSvc.getData('post', '/customer/getInit').then(function (value) {
-        $scope.customers = value.customers;
         $scope.agents = value.agents;
         $scope.merChants = value.merChants;
         $scope.webSiteTable = new NgTableParams({}, {
 
             getData: function (params) {
-                // angular.element('.ibox-content').addClass('sk-loading');
                 searchInfo = angular.copy($scope.searchInfo);
                 return httpSvc.getData('post', '/customer/searchIp', {
                     pageNum: params.page(),
@@ -2723,6 +2721,9 @@ function merchantIpCtrl($scope, $uibModal, $state, NgTableParams, httpSvc, toast
                 resolve: {
                     customers: function () {
                         return   $scope.merChants;
+                    },
+                    types: function () {
+                        return   type;
                     }
                 }
             });
@@ -2740,6 +2741,9 @@ function merchantIpCtrl($scope, $uibModal, $state, NgTableParams, httpSvc, toast
                 resolve: {
                     customers: function () {
                         return   $scope.agents;
+                    },
+                    types: function () {
+                        return   type;
                     }
                 }
             });
@@ -2850,15 +2854,16 @@ function merchantIpCtrl($scope, $uibModal, $state, NgTableParams, httpSvc, toast
     };
 }
 
-function merchantIpEditCtrl($scope, $uibModal, $state,$uibModalInstance, NgTableParams, httpSvc, toaster,customers) {
+function merchantIpEditCtrl($scope, $uibModal, $state,$uibModalInstance, NgTableParams, httpSvc, toaster,customers,types) {
     $scope.customers=customers;
+    $scope.types = types;
 // 关闭
     $scope.cancel = function () {
         $uibModalInstance.dismiss();
     };
     $scope.confirm = function (webSiteInfo) {
             httpSvc.getData('post', '/customer/insertIp', webSiteInfo).then(function (value) {
-                if (value==true) {
+                if (value.code == 0) {
                     toaster.pop({
                         type: 'success',
                         title: 'IP管理',

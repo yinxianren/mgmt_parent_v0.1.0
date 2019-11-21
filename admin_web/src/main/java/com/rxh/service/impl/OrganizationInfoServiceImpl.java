@@ -7,9 +7,11 @@ import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.inner.NewPayAssert;
 import com.internal.playment.common.table.system.OrganizationInfoTable;
 import com.internal.playment.common.table.system.ProductSettingTable;
+import com.internal.playment.common.table.system.SysConstantTable;
 import com.rxh.pojo.sys.SysConstant;
 import com.rxh.service.ConstantService;
 import com.rxh.service.OrganizationInfoService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +28,7 @@ public class OrganizationInfoServiceImpl implements OrganizationInfoService, New
     @Autowired
     private ApiProductTypeSettingService apiProductTypeSettingService;
     @Autowired
-    private ConstantService constantService;
+    private NewSystemConstantService constantService;
     @Autowired
     private ApiBankRateService apiBankRateService;
 
@@ -64,7 +66,11 @@ public class OrganizationInfoServiceImpl implements OrganizationInfoService, New
     @Override
     public ResponseVO savaOrUpdate(OrganizationInfoTable organizationInfo) {
         Boolean b = apiOrganizationInfoService.saveOrUpdate(organizationInfo);
-        Map<String, SysConstant> proMap = constantService.getConstantsMapByGroupName(SystemConstant.PRODUCTTYPE);
+        List<SysConstantTable> constantTables = (List)constantService.getConstantByGroupName(SystemConstant.PRODUCTTYPE).getData();
+        Map<String, SysConstantTable> proMap = new HashMap<>();
+        for (SysConstantTable sysConstantTable : constantTables){
+            proMap.put(sysConstantTable.getFirstValue(),sysConstantTable);
+        }
         ProductSettingTable table = new ProductSettingTable();
         table.setOrganizationId(organizationInfo.getOrganizationId());
         List<ProductSettingTable> listed = apiProductTypeSettingService.list(table);

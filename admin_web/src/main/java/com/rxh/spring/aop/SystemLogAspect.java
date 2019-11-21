@@ -1,7 +1,10 @@
 package com.rxh.spring.aop;
 
+import com.internal.playment.api.db.system.ApiSysLogService;
+import com.internal.playment.common.table.system.SysLogTable;
 import com.rxh.pojo.sys.SysLog;
 import com.rxh.service.SystemService;
+import com.rxh.service.system.NewSystemLogService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.util.UserInfoUtils;
 import com.rxh.utils.IpUtils;
@@ -24,7 +27,7 @@ import java.util.Date;
 public class SystemLogAspect {
 
     @Autowired
-    private SystemService systemService;
+    private ApiSysLogService systemService;
 
     // 插入方法名开头字符串数组
     private String[] addMethodList;
@@ -48,21 +51,21 @@ public class SystemLogAspect {
 
     @After("controllerAspect() && @annotation(systemLogInfo)")
     public void doAfter(JoinPoint joinPoint, SystemLogInfo systemLogInfo) {
-        SysLog log = new SysLog();
+        SysLogTable log = new SysLogTable();
         setSysLogInfo(log, joinPoint, systemLogInfo);
         String[][] AllMethodList = {addMethodList, delMethodList, updateMethodList, readMethodList};
         for (int i = 0; i < AllMethodList.length; i++) {
             if (PatternMatchUtils.simpleMatch(AllMethodList[i], joinPoint.getSignature().getName())) {
-                log.setType((short) (i + 1));
+                log.setType((i + 1));
                 break;
             }
         }
         if (log.getType() == null) {
-            log.setType(SystemConstant.LOG_UNKNOWN_METHOD);
+            log.setType((int)SystemConstant.LOG_UNKNOWN_METHOD);
         }
         Object[] objects = joinPoint.getArgs();
         log.setMessage(objects.length > 0 ? JsonUtils.objectToJsonNonNull(objects) : null);
-        systemService.saveSystemLog(log);
+        systemService.saveOrUpdate(log);
     }
 
     @AfterThrowing(pointcut = "controllerAspect() && @annotation(systemLogInfo)", throwing = "e")
@@ -75,14 +78,14 @@ public class SystemLogAspect {
             stringBuilder.append(stackTraceElements[i]);
             stringBuilder.append("\r\n");
         }
-        SysLog log = new SysLog();
+        SysLogTable log = new SysLogTable();
         setSysLogInfo(log, joinPoint, systemLogInfo);
-        log.setType(SystemConstant.LOG_ERROR);
+        log.setType((int)SystemConstant.LOG_ERROR);
         log.setMessage(stringBuilder.toString());
-        systemService.saveSystemLog(log);
+        systemService.saveOrUpdate(log);
     }
 
-    private void setSysLogInfo(SysLog log, JoinPoint joinPoint, SystemLogInfo systemLogInfo) {
+    private void setSysLogInfo(SysLogTable log, JoinPoint joinPoint, SystemLogInfo systemLogInfo) {
         String ip = null;
         String uri = null;
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

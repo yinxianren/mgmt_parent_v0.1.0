@@ -4,7 +4,7 @@ import com.internal.playment.api.db.system.ApiMerchantSysLogService;
 import com.internal.playment.common.dto.PageDTO;
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.system.MerchantSysLogTable;
-import com.rxh.pojo.base.Page;
+import com.internal.playment.common.page.Page;
 import com.rxh.service.system.NewMerchantSysLogService;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;

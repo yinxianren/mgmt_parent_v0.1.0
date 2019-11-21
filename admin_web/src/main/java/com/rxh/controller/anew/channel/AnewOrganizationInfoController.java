@@ -5,6 +5,7 @@ import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.system.OrganizationInfoTable;
 import com.rxh.service.ConstantService;
 import com.rxh.service.OrganizationInfoService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
@@ -21,7 +22,7 @@ import java.util.*;
 public class AnewOrganizationInfoController {
 
     @Autowired
-    private ConstantService constantService;
+    private NewSystemConstantService constantService;
     @Autowired
     private OrganizationInfoService organizationInfoService;
 
@@ -90,8 +91,8 @@ public class AnewOrganizationInfoController {
     @RequestMapping("/init")
     public Map<String, Object> init(){
         Map<String, Object> init = new HashMap<>();
-        init.put("status", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.availableStatus));
-        init.put("productTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PRODUCTTYPE));
+        init.put("status", constantService.getConstantByGroupName(SystemConstant.availableStatus).getData());
+        init.put("productTypes", constantService.getConstantByGroupName(SystemConstant.PRODUCTTYPE).getData());
         return init;
     }
 

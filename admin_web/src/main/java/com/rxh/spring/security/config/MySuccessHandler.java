@@ -1,11 +1,14 @@
 package com.rxh.spring.security.config;
 
+import com.internal.playment.api.db.system.ApiSysLogService;
 import com.internal.playment.api.db.system.ApiSysUserServie;
+import com.internal.playment.common.table.system.SysLogTable;
 import com.internal.playment.common.table.system.SysUserTable;
 import com.rxh.pojo.sys.SysLog;
 import com.rxh.pojo.sys.SysUser;
 import com.rxh.service.SystemService;
 import com.rxh.service.UserService;
+import com.rxh.service.system.NewSystemLogService;
 import com.rxh.utils.IpUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -32,7 +35,7 @@ public class MySuccessHandler extends SimpleUrlAuthenticationSuccessHandler impl
 
     private ApiSysUserServie userService;
 
-    private SystemService systemService;
+    private ApiSysLogService systemService;
 
 
     @Override
@@ -44,14 +47,14 @@ public class MySuccessHandler extends SimpleUrlAuthenticationSuccessHandler impl
         user.setUserName(authentication.getName());
         user.setLastLogonIp(remoteAddr);
         userService.savaOrUpdate(user);
-        SysLog log = new SysLog();
-        log.setType((short) 0);
+        SysLogTable log = new SysLogTable();
+        log.setType(0);
         log.setOperator(authentication.getName());
         log.setStartTime(new Date());
         log.setRequestIp(remoteAddr);
         log.setRequestUri(request.getRequestURI());
         log.setMessage("登录成功！");
-        systemService.saveSystemLog(log);
+        systemService.saveOrUpdate(log);
     }
 
     public ApiSysUserServie getUserService() {
@@ -62,11 +65,11 @@ public class MySuccessHandler extends SimpleUrlAuthenticationSuccessHandler impl
         this.userService = userService;
     }
 
-    public SystemService getSystemService() {
+    public ApiSysLogService getSystemService() {
         return systemService;
     }
 
-    public void setSystemService(SystemService systemService) {
+    public void setSystemService(ApiSysLogService systemService) {
         this.systemService = systemService;
     }
 }

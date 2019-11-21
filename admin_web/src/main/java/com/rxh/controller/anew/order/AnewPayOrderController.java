@@ -2,12 +2,13 @@ package com.rxh.controller.anew.order;
 
 import com.internal.playment.common.enums.StatusEnum;
 import com.rxh.pojo.Result;
-import com.rxh.pojo.base.Page;
+import com.internal.playment.common.page.Page;
 import com.rxh.service.merchant.AnewMerchantInfoService;
 import com.rxh.service.AnewPayOrderService;
 import com.rxh.service.ConstantService;
 import com.rxh.service.OrganizationInfoService;
 import com.rxh.service.square.*;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.service.trading.PayOrderService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.square.pojo.ChannelInfo;
@@ -28,11 +29,7 @@ import java.util.Map;
 public class AnewPayOrderController {
 
     @Resource
-    private PayOrderService payOrderService;
-    @Resource
-    private ConstantService constantService;
-    @Resource
-    private ChannelInfoService channelInfoService;
+    private NewSystemConstantService constantService;
     @Autowired
     private AnewPayOrderService anewPayOrderService;
     @Autowired
@@ -59,16 +56,16 @@ public class AnewPayOrderController {
     @RequestMapping("/init")
     public Map<String, Object> init() {
         Map<String, Object> init = new HashMap<>();
-        init.put("payType", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
-        init.put("orderStatus", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.ORDERSTATUS));
-        init.put("settleStatus", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.SETTLESTATUS));
+        init.put("payType", constantService.getConstantByGroupName(SystemConstant.PAYTYPE).getData());
+        init.put("orderStatus", constantService.getConstantByGroupName(SystemConstant.ORDERSTATUS).getData());
+        init.put("settleStatus", constantService.getConstantByGroupName(SystemConstant.SETTLESTATUS).getData());
 //        init.put("channels", channelWalletService.getIdsAndName());
         init.put("organizations",organizationInfoService .getAll(null).getData());
         init.put("merchants", anewMerchantInfoService.getMerchants(null));
 //        init.put("identityTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.IDENTITYTYPE));
 //        init.put("bankcardTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.BANKCARDTYPE));
 //        init.put("agents",agentMerchantInfoService.getAllIdAndName());
-        init.put("productTypes",constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PRODUCTTYPE));
+        init.put("productTypes",constantService.getConstantByGroupName(SystemConstant.PRODUCTTYPE).getData());
 
         return init;
     }
@@ -85,18 +82,5 @@ public class AnewPayOrderController {
             return responseVO;
         }
 
-    }
-    @RequestMapping(value = "/getProductInfo",method = RequestMethod.POST)
-    public Result getProductInfo(@RequestBody String payId) {
-        Result  result = payOrderService.getProductInfo(payId);
-        return result;
-    }
-
-    @RequestMapping(value = "/getChannels")
-    public Result getChannels(@RequestBody MerchantInfo merId) {
-        List<ChannelInfo> channelInfos = channelInfoService.selectByMerId(merId.getMerId());
-        Result result = new Result();
-        result.setData(channelInfos);
-        return result;
     }
 }

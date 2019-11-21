@@ -315,12 +315,12 @@ function agentMerchantAddCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc
     if($scope.goType == 0){
         $scope.merchantInfo = getMerchantInfo();
 
-        httpSvc.getData('get', '/merchantInfo/getMerchantIdIncre').then(function (value) {
-            $scope.merchantInfo.merId = value;
+        // httpSvc.getData('get', '/merchantInfo/getMerchantIdIncre').then(function (value) {
+        //     $scope.merchantInfo.merId = value;
             httpSvc.getData('get', '/merchantInfo/parentId').then(function (value1) {
                 $scope.merchantInfo.parentId=value1;
             });
-        });
+        // });
         $scope.certificateImgUrl = [];
     }else{
 

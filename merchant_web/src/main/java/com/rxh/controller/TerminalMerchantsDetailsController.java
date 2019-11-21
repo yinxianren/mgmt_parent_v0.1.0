@@ -1,7 +1,7 @@
 package com.rxh.controller;
 
 
-import com.rxh.pojo.base.Page;
+import com.internal.playment.common.page.Page;
 import com.rxh.pojo.base.PageResult;
 import com.rxh.service.square.MerchantInfoService;
 import com.rxh.service.square.TerminalMerchantsDetailsService;

@@ -1,8 +1,8 @@
 /*
 package com.rxh.controller;
 
-import com.rxh.pojo.base.Page;
-import com.rxh.pojo.base.SearchInfo;
+import com.internal.playment.common.page.Page;
+import com.internal.playment.common.page.SearchInfo;
 import com.rxh.util.UserInfoUtils;
 import com.rxh.utils.SystemConstant;
 import org.omg.IOP.TransactionService;

@@ -5,7 +5,7 @@ import com.internal.playment.api.db.system.ApiSysGroupService;
 import com.internal.playment.common.dto.PageDTO;
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.system.SysGroupTable;
-import com.rxh.pojo.base.Page;
+import com.internal.playment.common.page.Page;
 import com.rxh.service.system.NewSysGroupService;
 import com.rxh.vo.ResponseVO;
 import org.apache.commons.lang3.StringUtils;

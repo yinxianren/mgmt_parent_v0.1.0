@@ -27,14 +27,6 @@ public class MyUserDetailsService implements UserDetailsService {
     private ApiSysUserServie apiUserService;
     private ApiSysRoleService roleService;
     private ApiSysPrivilegesService privilegesService;
-    private UserService userService;
-
-    public UserService getUserService() {
-        return userService;
-    }
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
     public ApiSysUserServie getApiUserService() {
         return apiUserService;
     }

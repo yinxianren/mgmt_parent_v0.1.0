@@ -13,7 +13,6 @@ import java.util.*;
 
 public class MyFilterSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
-    private UserService userService;
 
     private final Map<RequestMatcher, Collection<ConfigAttribute>> requestMap;
 

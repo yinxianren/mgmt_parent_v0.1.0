@@ -1,7 +1,7 @@
 package com.rxh.service;
 
 import com.internal.playment.common.table.system.UserLoginIpTable;
-import com.rxh.pojo.base.Page;
+import com.internal.playment.common.page.Page;
 import com.rxh.vo.ResponseVO;
 
 import java.util.List;

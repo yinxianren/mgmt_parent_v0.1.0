@@ -1,8 +1,9 @@
 package com.rxh.controller.anew.system;
 
-import com.rxh.cache.RedisCackeKeys;
+import com.internal.playment.common.table.system.SysPrivilegesTable;
 import com.rxh.pojo.sys.SysPrivileges;
 import com.rxh.service.UserService;
+import com.rxh.service.system.NewSystemUserService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.util.UserInfoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,8 @@ import java.util.stream.Collectors;
 public class AnewUserController {
 
     @Resource
-    private UserService userService;
+    private NewSystemUserService userService;
 
-    @Autowired
-    private RedisTemplate<String,Object> redisTemplate;
     /**
      * 获取用户菜单
      *
@@ -40,7 +39,7 @@ public class AnewUserController {
      */
     @RequestMapping(value = "/getMenuList")
     @ResponseBody
-    public List<SysPrivileges> getMenuList() {
+    public List<SysPrivilegesTable> getMenuList() {
         return userService.getMenu(UserInfoUtils.getName());
     }
 
@@ -49,11 +48,6 @@ public class AnewUserController {
     @ResponseBody
     public  String refreshCache(){
         try{
-            List<String>  list = Arrays.stream(RedisCackeKeys.values())
-                    .map(RedisCackeKeys::getKey)
-                    .distinct()
-                    .collect(Collectors.toList());
-            redisTemplate.delete(list);
             return "SUCCESS";
         }catch (Exception e){
             e.printStackTrace();

@@ -2,10 +2,15 @@ package com.rxh.controller.anew.channel;
 
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.channel.ChannelExtraInfoTable;
+import com.internal.playment.common.table.channel.ChannelInfoTable;
+import com.internal.playment.common.table.system.OrganizationInfoTable;
+import com.rxh.service.AnewChannelService;
 import com.rxh.service.AnewExtraChannelInfoService;
 import com.rxh.service.ConstantService;
+import com.rxh.service.OrganizationInfoService;
 import com.rxh.service.square.ChannelWalletService;
 import com.rxh.service.square.OrganizationService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.square.pojo.OrganizationInfo;
 import com.rxh.util.UserInfoUtils;
@@ -27,13 +32,13 @@ import java.util.Map;
 public class AnewExtraChannelInfoController {
 
     @Autowired
-    private OrganizationService organizationService;
-    @Autowired
-    private ConstantService constantService;
-    @Autowired
-    private ChannelWalletService channelWalletService;
+    private NewSystemConstantService constantService;
     @Autowired
     private AnewExtraChannelInfoService anewExtraChannelInfoService;
+    @Autowired
+    private AnewChannelService anewChannelService;
+    @Autowired
+    private OrganizationInfoService organizationInfoService;
 
     @SystemLogInfo(description = "支付通道查询")
     @RequestMapping("/getAll")
@@ -117,12 +122,12 @@ public class AnewExtraChannelInfoController {
     @ResponseBody
     public Map<String, Object> getChannelInfoInit() {
         Map<String, Object> init = new HashMap<>();
-        init.put("organizations",organizationService.getAll(new OrganizationInfo()));
-        init.put("status", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.availableStatus));
-        init.put("paytype", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
-        init.put("extraTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.BUSSTYPE));
-        init.put("channelLevel", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.channelLevel));
-        init.put("channelInfoList", channelWalletService.getIdsAndName());
+        init.put("organizations",organizationInfoService.getAll(new OrganizationInfoTable()).getData());
+        init.put("status", constantService.getConstantByGroupName(SystemConstant.availableStatus).getData());
+        init.put("paytype", constantService.getConstantByGroupName(SystemConstant.PAYTYPE).getData());
+        init.put("extraTypes", constantService.getConstantByGroupName(SystemConstant.BUSSTYPE).getData());
+        init.put("channelLevel", constantService.getConstantByGroupName(SystemConstant.channelLevel).getData());
+        init.put("channelInfoList", anewChannelService.getAll(new ChannelInfoTable()).getData());
         return init;
     }
 

@@ -1,6 +1,6 @@
 package com.rxh.controller.anew.system;
 
-import com.rxh.pojo.base.Page;
+import com.internal.playment.common.page.Page;
 import com.rxh.service.merchant.AnewMerchantInfoService;
 import com.rxh.service.system.NewSystemOrderTrackService;
 import com.rxh.spring.annotation.SystemLogInfo;

@@ -5,6 +5,7 @@ import com.internal.playment.common.table.agent.AgentMerchantInfoTable;
 import com.rxh.service.agent.AnewAgentMerchantService;
 import com.rxh.service.ConstantService;
 import com.rxh.service.square.AgentMerchantInfoService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.utils.GlobalConfiguration;
 import com.rxh.utils.SystemConstant;
@@ -33,14 +34,12 @@ import java.util.Map;
 @RequestMapping(value = "/agentMerchantInfo")
 public class AnewAgentMerchantInfoController {
 
-    @Resource
-    private AgentMerchantInfoService agentMerchantInfoService;
 
     @Resource
     private GlobalConfiguration globalConfiguration;
 
     @Autowired
-    private  ConstantService constantService;
+    private NewSystemConstantService constantService;
     @Autowired
     private AnewAgentMerchantService anewAgentMerchantService;
 
@@ -63,7 +62,7 @@ public class AnewAgentMerchantInfoController {
     @RequestMapping(value = "/isAgentMerchantIdExist")
     @ResponseBody
     public Boolean isAgentMerchantIdExist(@RequestBody String agentMerchantId) {
-        return agentMerchantInfoService.isAgentMerchantIdExist(agentMerchantId);
+        return false;
     }
 
     @SystemLogInfo(description = "代理商列表查询")
@@ -85,7 +84,7 @@ public class AnewAgentMerchantInfoController {
     @RequestMapping(value = "/delete")
     @ResponseBody
     public String delete(@RequestBody String id){
-        int num = agentMerchantInfoService.deleteAgentMerchantInfo(id);
+        int num = 1;
         if(num>0){
             return SystemConstant.SUCCESS;
         }else {
@@ -161,21 +160,11 @@ public class AnewAgentMerchantInfoController {
             return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
         }
     }
-    /**
-     * 获取id
-     */
-    @ResponseBody
-    @RequestMapping(value = "/getAgentMerchantIdIncre", method = RequestMethod.GET)
-    public String getAgentMerchantIdIncre(){
-        String agentMerchantId = agentMerchantInfoService.getMaxAgentMerchantId();
-        return agentMerchantId;
-    }
 
     @RequestMapping("/init")
     public Map<String, Object> init() {
         Map<String, Object> init = new HashMap<>();
-        init.put("identityType", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.IDENTITYTYPE));
-        init.put("agentMerchants", agentMerchantInfoService.getAllIdAndName());
+        init.put("identityType", constantService.getConstantByGroupName(SystemConstant.IDENTITYTYPE).getData());
         return init;
     }
 

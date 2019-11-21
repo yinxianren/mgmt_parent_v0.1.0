@@ -287,10 +287,10 @@ function merchantAddCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
     // 新增
     if($scope.goType == 0){
         $scope.merchantInfo = getMerchantInfo();
-        httpSvc.getData('get', '/merchantInfo/getMerchantIdIncre').then(function (value) {
+       /* httpSvc.getData('get', '/merchantInfo/getMerchantIdIncre').then(function (value) {
             $scope.merchantInfo.merId = value;
             angular.element('.ibox-content').removeClass('sk-loading');
-        });
+        });*/
         $scope.certificateImgUrl = [];
     }else{
 

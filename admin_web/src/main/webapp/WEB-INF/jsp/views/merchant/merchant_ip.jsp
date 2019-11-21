@@ -23,7 +23,7 @@
                                     <div class="input-group">
                                         <span class="input-group-addon">商户号：</span>
                                         <input class="form-control b-r-sm" type="text" ng-model="searchInfo.customerId"
-                                               uib-typeahead="x.customerId as x.customerId + '(' + x.customerName + ')' for x in customers | filter: {id : $viewValue}"
+                                               uib-typeahead="x.merchantId as x.merchantId + '(' + x.merchantName + ')' for x in merChants | filter: {id : $viewValue}"
                                                typeahead-min-length="0">
                                     </div>
                                 </div>

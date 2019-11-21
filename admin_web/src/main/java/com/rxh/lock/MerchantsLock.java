@@ -1,6 +1,8 @@
 package com.rxh.lock;
 
+import com.internal.playment.common.table.merchant.MerchantInfoTable;
 import com.rxh.exception.PayException;
+import com.rxh.service.merchant.AnewMerchantInfoService;
 import com.rxh.service.square.MerchantInfoService;
 import com.rxh.square.pojo.MerchantInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -25,7 +28,7 @@ public class MerchantsLock extends AbstractPayLock {
     private static Map<String, Lock>  merchantsLock= Collections.synchronizedMap(new HashMap<>());
 
     @Autowired
-    MerchantInfoService merchantInfoService;
+    private AnewMerchantInfoService merchantInfoService;
 
     /**
      *   根据商户id，获取商户特定的一把锁
@@ -39,9 +42,11 @@ public class MerchantsLock extends AbstractPayLock {
             Lock lock= merchantsLock.get(merchantId);
             if(null == lock){
                 // 查询商户信息
-                MerchantInfo merchantInfo = merchantInfoService.getMerchantById(merchantId);
+                MerchantInfoTable merchantInfo = new MerchantInfoTable();
+                merchantInfo.setMerchantId(merchantId);
+                List<MerchantInfoTable> list = (List)merchantInfoService.getMerchants(merchantInfo);
                 //如果没该用户，则抛出异常
-                isNull(merchantInfo,format("获取商户对象锁时，查询到平台未有该商户:%s)",merchantId));
+                isNotElement(list,format("获取商户对象锁时，查询到平台未有该商户:%s)",merchantId));
                 //如果没用锁，则手动创建一把锁，然后放到集合
                 lock=new ReentrantLock();
                 merchantsLock.put(merchantId,lock);

@@ -1,6 +1,6 @@
 package com.rxh.controller;
 
-import com.rxh.pojo.base.Page;
+import com.internal.playment.common.page.Page;
 import com.rxh.pojo.base.PageResult;
 import com.rxh.service.ConstantService;
 import com.rxh.service.square.ChannelWalletService;
@@ -26,35 +26,23 @@ import java.util.Map;
 @RequestMapping("/merchantChannelHistory")
 public class MerchantChannelHistoryController {
 
-    @Resource
-    private MerchantChannelHistoryService merchantChannelHistoryService;
-
-    @Resource
-    private ConstantService constantService;
-
-    @Resource
-    private ChannelWalletService channelWalletService;
-    @Resource
-    private OrganizationService organizationService;
-    @Resource
-    private MerchantInfoService merchantInfoService;
     @SystemLogInfo(description = "通道运行监控查询")
     @RequestMapping(value="/findMerchantChannel")
     public PageResult findMerchantChannel(@RequestBody Page page ) {
-        PageResult pageResult = merchantChannelHistoryService.merchantChannel(page);
+        PageResult pageResult = new PageResult();
         return pageResult;
     }
 
     @RequestMapping("/init")
     public Map<String, Object> init() {
         Map<String, Object> init = new HashMap<>();
-        init.put("id", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.sysId));
+        /*init.put("id", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.sysId));
         init.put("merchants", merchantInfoService.getIdsAndName());
         init.put("channels", channelWalletService.getIdsAndName());
         init.put("organizations",organizationService .getIdsAndName());
         // init.put("channelTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.EXTRATYPE));
         init.put("payTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
-        init.put("statusList", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.availableStatus));
+        init.put("statusList", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.availableStatus));*/
 
         return init;
     }

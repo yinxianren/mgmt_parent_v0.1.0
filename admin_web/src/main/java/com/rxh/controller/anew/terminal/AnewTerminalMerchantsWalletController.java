@@ -2,10 +2,11 @@ package com.rxh.controller.anew.terminal;
 
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.terminal.TerminalMerchantsWalletTable;
-import com.rxh.pojo.base.Page;
+import com.internal.playment.common.page.Page;
 import com.rxh.service.merchant.AnewMerchantInfoService;
 import com.rxh.service.AnewTerminalMerchantsWalletService;
 import com.rxh.service.ConstantService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
@@ -23,7 +24,7 @@ import java.util.Map;
 public class AnewTerminalMerchantsWalletController {
 
     @Resource
-    private ConstantService constantService;
+    private NewSystemConstantService constantService;
     @Autowired
     private AnewTerminalMerchantsWalletService anewTerminalMerchantsWalletService;
     @Autowired
@@ -47,7 +48,7 @@ public class AnewTerminalMerchantsWalletController {
     @RequestMapping("/idsInit")
     public Map<String, Object> idsInit() {
         Map<String, Object> init = new HashMap<>();
-        init.put("paytype", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
+        init.put("paytype", constantService.getConstantByGroupName(SystemConstant.PAYTYPE).getData());
         // init.put("channels", terminalMerchantsWalletService.getIdsAndName());
 //        init.put("organizations", organizationService.getIdsAndName());
         init.put("merchants", anewMerchantInfoService.getMerchants(null).getData());
@@ -72,7 +73,7 @@ public class AnewTerminalMerchantsWalletController {
         Map<String, Object> init = new HashMap<>();
         init.put("merchants", anewMerchantInfoService.getMerchants(null).getData());
         init.put("terminalMerIds", anewTerminalMerchantsWalletService.listByTerminalId());
-        init.put("productTypes",constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PRODUCTTYPE));
+        init.put("productTypes",constantService.getConstantByGroupName(SystemConstant.PRODUCTTYPE).getData());
         return init;
     }
 }

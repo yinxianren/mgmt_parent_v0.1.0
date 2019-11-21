@@ -1,5 +1,6 @@
 package com.rxh.service.system;
 
+import com.internal.playment.common.table.system.SysPrivilegesTable;
 import com.internal.playment.common.table.system.SysUserTable;
 import com.rxh.vo.ResponseVO;
 
@@ -11,4 +12,6 @@ public interface NewSystemUserService {
     ResponseVO getList(SysUserTable sysUserTable);
     ResponseVO delByIds(List<Long> ids);
     SysUserTable getUserAndRoleAndPrivilege(String userName);
+    List<SysPrivilegesTable> getMenu(String userName);
+
 }

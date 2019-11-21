@@ -35,8 +35,6 @@ import java.util.Map;
 @Configuration
 @RequestMapping(value = "/admin")
 public class NewSystemUserController {
-    @Resource
-    private UserService userService;
 
     @Resource
     private BCryptPasswordEncoder passwordEncoder;

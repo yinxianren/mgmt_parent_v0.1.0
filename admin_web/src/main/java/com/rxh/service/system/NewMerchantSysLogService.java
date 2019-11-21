@@ -1,6 +1,6 @@
 package com.rxh.service.system;
 
-import com.rxh.pojo.base.Page;
+import com.internal.playment.common.page.Page;
 import com.rxh.vo.ResponseVO;
 
 public interface NewMerchantSysLogService {

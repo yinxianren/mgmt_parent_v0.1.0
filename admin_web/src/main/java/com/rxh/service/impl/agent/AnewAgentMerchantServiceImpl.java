@@ -11,6 +11,7 @@ import com.rxh.pojo.sys.SysConstant;
 import com.rxh.service.*;
 import com.rxh.service.agent.AnewAgentMerchantService;
 import com.rxh.service.agent.AnewAgentMerchantSettingService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class AnewAgentMerchantServiceImpl implements AnewAgentMerchantService {
     @Autowired
     private AnewAgentMerchantSettingService anewAgentMerchantSettingService;
     @Autowired
-    private ConstantService constantService;
+    private NewSystemConstantService constantService;
     @Autowired
     private ApiAgentPrivielgesService apiAgentPrivielgesService;
     @Autowired
@@ -48,7 +49,7 @@ public class AnewAgentMerchantServiceImpl implements AnewAgentMerchantService {
         ResponseVO responseVO = new ResponseVO();
         Boolean b  = apiAgentMerchantInfoService.saveOrUpdate(agentMerchantInfoTable);
         if (b){
-            List<SysConstant> constantList = constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PRODUCTTYPE);
+            List<SysConstant> constantList = (List)constantService.getConstantByGroupName(SystemConstant.PRODUCTTYPE).getData();
             List<AgentMerchantSettingTable> settingTables = new ArrayList<>();
             Date date = new Date();
             //初始化代理商费率

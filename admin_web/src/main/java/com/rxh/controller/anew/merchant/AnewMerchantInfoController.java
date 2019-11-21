@@ -6,6 +6,7 @@ import com.rxh.service.*;
 import com.rxh.service.agent.AnewAgentMerchantService;
 import com.rxh.service.merchant.AnewMerchantInfoService;
 import com.rxh.service.square.*;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
@@ -21,13 +22,7 @@ public class AnewMerchantInfoController {
 
 
     @Autowired
-    MerchantInfoService merchantInfoService;
-    @Autowired
-    ConstantService constantService;
-    @Autowired
-    AgentMerchantInfoService agentMerchantInfoService;
-    @Resource
-    private MerchantWalletService merchantWalletService;
+    private NewSystemConstantService constantService;
     @Autowired
     private AnewMerchantInfoService anewMerchantInfoService;
     @Autowired
@@ -155,25 +150,15 @@ public class AnewMerchantInfoController {
     @RequestMapping("/init")
     public Map<String, Object> init() {
         Map<String, Object> init = new HashMap<>();
-        init.put("merchantType", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.MERCHANTTYPE));
-        init.put("identityType", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.IDENTITYTYPE));
-        init.put("payType", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
-        init.put("status", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.availableStatus));
+        init.put("merchantType", constantService.getConstantByGroupName(SystemConstant.MERCHANTTYPE).getData());
+        init.put("identityType", constantService.getConstantByGroupName(SystemConstant.IDENTITYTYPE).getData());
+        init.put("payType", constantService.getConstantByGroupName(SystemConstant.PAYTYPE).getData());
+        init.put("status", constantService.getConstantByGroupName(SystemConstant.availableStatus).getData());
         init.put("merchants", anewMerchantInfoService.getMerchants(null).getData());
         init.put("agentMerchants", anewAgentMerchantService.list(null).getData());
         init.put("organizations",organizationInfoService.getAll(null).getData());
         init.put("channels", anewChannelService.getAll(null).getData());
         return init;
     }
-    /**
-     * 获取id
-     */
-    @ResponseBody
-    @RequestMapping(value = "/getMerchantIdIncre", method = RequestMethod.GET)
-    public String getAgentMerchantIdIncre(){
-        String merchantId = merchantWalletService.getMaxMerId();
-        return merchantId;
-    }
-
 
 }

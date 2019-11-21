@@ -3,12 +3,13 @@ package com.rxh.controller.anew.agent;
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.agent.AgentMerchantWalletTable;
 import com.rxh.pojo.Result;
-import com.rxh.pojo.base.Page;
+import com.internal.playment.common.page.Page;
 import com.rxh.service.agent.AnewAgentMerchantService;
 import com.rxh.service.agent.AnewAgentWalletService;
 import com.rxh.service.ConstantService;
 import com.rxh.service.square.AgentMerchantInfoService;
 import com.rxh.service.square.AgentWalletService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
@@ -29,11 +30,7 @@ import java.util.Map;
 public class AnewAgentWalletController {
 
     @Resource
-   private AgentWalletService agentWalletService;
-    @Resource
-    private ConstantService constantService;
-    @Resource
-    private AgentMerchantInfoService agentMerchantInfoService;
+    private NewSystemConstantService constantService;
     @Autowired
     private AnewAgentWalletService anewAgentWalletService;
     @Autowired
@@ -54,15 +51,10 @@ public class AnewAgentWalletController {
         }
     }
 
-    @RequestMapping("/batchDel")
-    public Result delete(@RequestBody List<String> ids){
-        return agentWalletService.deleteByPrimaryKey(ids);
-    }
-
     @RequestMapping("/init")
     public Map<String, Object> init() {
         Map<String, Object> init = new HashMap<>();
-        init.put("productTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PRODUCTTYPE));
+        init.put("productTypes", constantService.getConstantByGroupName(SystemConstant.PRODUCTTYPE).getData());
         init.put("agents", anewAgentMerchantService.list(null).getData());
         return init;
     }

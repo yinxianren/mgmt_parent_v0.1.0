@@ -9,6 +9,8 @@ import com.rxh.service.ConstantService;
 import com.rxh.service.OrganizationInfoService;
 import com.rxh.service.ProductTypeSettingService;
 import com.rxh.service.square.OrganizationService;
+import com.rxh.service.sys.SysConstantService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.square.pojo.OrganizationInfo;
 import com.rxh.utils.SystemConstant;
@@ -33,7 +35,7 @@ public class AnewChannelInfoController {
     @Autowired
     private OrganizationInfoService organizationInfoService;
     @Autowired
-    private ConstantService constantService;
+    private NewSystemConstantService constantService;
     @Autowired
     private AnewChannelService anewChannelService;
     @Autowired
@@ -110,14 +112,14 @@ public class AnewChannelInfoController {
     public Map<String, Object> getChannelInfoInit() {
         Map<String, Object> init = new HashMap<>();
         init.put("organizations",organizationInfoService.getAll(new OrganizationInfoTable()).getData());
-        init.put("status", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.availableStatus));
-        init.put("paytype", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PAYTYPE));
-        init.put("channelLevel", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.channelLevel));
-        init.put("busiTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.BUSITYPE));
+        init.put("status", constantService.getConstantByGroupName(SystemConstant.availableStatus).getData());
+        init.put("paytype", constantService.getConstantByGroupName(SystemConstant.PAYTYPE).getData());
+        init.put("channelLevel", constantService.getConstantByGroupName(SystemConstant.channelLevel).getData());
+        init.put("busiTypes", constantService.getConstantByGroupName(SystemConstant.BUSITYPE).getData());
         ProductSettingTable productSettingTable = new ProductSettingTable();
         productSettingTable.setStatus(StatusEnum._0.getStatus());
         init.put("products", productTypeSettingService.selectByOrganizationId(productSettingTable).getData());
-        init.put("productTypes", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PRODUCTTYPE));
+        init.put("productTypes", constantService.getConstantByGroupName(SystemConstant.PRODUCTTYPE).getData());
         return init;
     }
 

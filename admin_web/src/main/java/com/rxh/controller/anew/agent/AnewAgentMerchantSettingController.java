@@ -4,6 +4,7 @@ import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.agent.AgentMerchantSettingTable;
 import com.rxh.service.agent.AnewAgentMerchantSettingService;
 import com.rxh.service.ConstantService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class AnewAgentMerchantSettingController {
     @Resource
     private AnewAgentMerchantSettingService anewAgentMerchantSettingService;
     @Autowired
-    private ConstantService constantService;
+    private NewSystemConstantService constantService;
 
     @RequestMapping("/search")
     public ResponseVO search(@RequestBody AgentMerchantSettingTable agentMerchantSetting){
@@ -55,8 +56,8 @@ public class AnewAgentMerchantSettingController {
     @RequestMapping("/init")
     public Map<String, Object> init(){
         Map<String, Object> init = new HashMap<>();
-        init.put("status", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.availableStatus));
-        init.put("agentRate",constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.PRODUCTTYPE));
+        init.put("status", constantService.getConstantByGroupName(SystemConstant.availableStatus).getData());
+        init.put("agentRate",constantService.getConstantByGroupName(SystemConstant.PRODUCTTYPE).getData());
         return init;
     }
 }

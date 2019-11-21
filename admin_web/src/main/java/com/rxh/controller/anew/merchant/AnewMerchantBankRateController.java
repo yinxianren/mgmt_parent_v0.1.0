@@ -4,6 +4,7 @@ import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.merchant.MerchantBankRateTable;
 import com.rxh.service.merchant.AnewMerchantBankRateService;
 import com.rxh.service.ConstantService;
+import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.utils.SystemConstant;
 import com.rxh.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class AnewMerchantBankRateController {
     @Autowired
     private AnewMerchantBankRateService anewMerchantBankRateService;
     @Autowired
-    private ConstantService constantService;
+    private NewSystemConstantService constantService;
 
     @RequestMapping("/search")
     public ResponseVO search(MerchantBankRateTable merchantBankRateTable){
@@ -50,7 +51,7 @@ public class AnewMerchantBankRateController {
         try {
             Map map = new HashMap();
 //            map.put("bankNames",constantService.getConstantByGroupName("bankName"));
-            map.put("status", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.availableStatus));
+            map.put("status", constantService.getConstantByGroupName(SystemConstant.availableStatus).getData());
             ResponseVO responseVO = new ResponseVO();
             responseVO.setCode(StatusEnum._0.getStatus());
             responseVO.setMessage(StatusEnum._0.getRemark());
