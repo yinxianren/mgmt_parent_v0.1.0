@@ -4,7 +4,7 @@ import com.internal.playment.api.db.agent.ApiAgentRoleService;
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.agent.AgentRoleTable;
 import com.rxh.service.agent.AnewAgentRoleService;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

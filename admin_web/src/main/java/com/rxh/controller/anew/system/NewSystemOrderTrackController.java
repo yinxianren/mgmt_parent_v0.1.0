@@ -4,7 +4,7 @@ import com.internal.playment.common.page.Page;
 import com.rxh.service.merchant.AnewMerchantInfoService;
 import com.rxh.service.system.NewSystemOrderTrackService;
 import com.rxh.spring.annotation.SystemLogInfo;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

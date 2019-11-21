@@ -6,7 +6,7 @@ import com.internal.playment.common.table.system.MerchantSettingTable;
 import com.internal.playment.common.table.system.OrganizationInfoTable;
 import com.rxh.service.*;
 import com.rxh.service.merchant.AnewMerchantSettingService;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

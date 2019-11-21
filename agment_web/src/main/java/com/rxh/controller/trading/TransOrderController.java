@@ -13,7 +13,7 @@ import com.rxh.service.square.OrganizationService;
 import com.rxh.service.trading.TransOrderService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.util.UserInfoUtils;
-import com.rxh.utils.SystemConstant;
+import com.internal.playment.common.enums.SystemConstant;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;

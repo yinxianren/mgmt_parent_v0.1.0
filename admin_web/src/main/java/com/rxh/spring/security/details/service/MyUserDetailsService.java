@@ -7,9 +7,6 @@ import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.system.SysPrivilegesTable;
 import com.internal.playment.common.table.system.SysRoleTable;
 import com.internal.playment.common.table.system.SysUserTable;
-import com.rxh.pojo.sys.SysPrivileges;
-import com.rxh.pojo.sys.SysRole;
-import com.rxh.service.UserService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -98,15 +95,15 @@ public class MyUserDetailsService implements UserDetailsService {
         return authorities;
     }
 
-    private Collection<? extends GrantedAuthority> getAuthorities(SysRole role){
+   /* private Collection<? extends GrantedAuthority> getAuthorities(SysRoleTable role){
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(role.getRole()));
         if (role.getPrivileges() != null) {
-            for (SysPrivileges p :
+            for (SysPrivilegesTable p :
                     role.getPrivileges()) {
                 authorities.add(new SimpleGrantedAuthority(p.getName()));
             }
         }
         return authorities;
-    }
+    }*/
 }

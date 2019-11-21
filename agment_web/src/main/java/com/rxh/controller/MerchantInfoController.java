@@ -6,7 +6,7 @@ import com.rxh.service.square.*;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.square.pojo.MerchantInfo;
 import com.rxh.util.UserInfoUtils;
-import com.rxh.utils.SystemConstant;
+import com.internal.playment.common.enums.SystemConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;

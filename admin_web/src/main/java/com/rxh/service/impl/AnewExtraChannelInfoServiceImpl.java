@@ -3,7 +3,7 @@ package com.rxh.service.impl;
 import com.internal.playment.api.db.channel.ApiChannelExtraInfoService;
 import com.internal.playment.common.table.channel.ChannelExtraInfoTable;
 import com.rxh.service.AnewExtraChannelInfoService;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

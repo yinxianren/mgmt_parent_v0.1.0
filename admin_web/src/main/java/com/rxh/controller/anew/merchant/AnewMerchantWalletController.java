@@ -4,26 +4,18 @@ package com.rxh.controller.anew.merchant;
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.merchant.MerchantWalletTable;
 import com.internal.playment.common.page.Page;
-import com.rxh.service.*;
 import com.rxh.service.agent.AnewAgentMerchantService;
 import com.rxh.service.merchant.AnewMerchantInfoService;
 import com.rxh.service.merchant.AnewMerchantWalletService;
-import com.rxh.service.square.MerchantInfoService;
-import com.rxh.service.square.MerchantWalletService;
-import com.rxh.service.sys.SysConstantService;
 import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.spring.annotation.SystemLogInfo;
-import com.rxh.square.pojo.MerchantInfo;
-import com.rxh.util.UserInfoUtils;
-import com.rxh.utils.SystemConstant;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.enums.SystemConstant;
+import com.internal.playment.common.page.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.util.*;
 
 @RestController

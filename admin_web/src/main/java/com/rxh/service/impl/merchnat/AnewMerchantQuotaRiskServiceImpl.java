@@ -2,10 +2,10 @@ package com.rxh.service.impl.merchnat;
 
 import com.internal.playment.api.db.merchant.ApiMerchantQuotaRiskService;
 import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.inner.NewPayAssert;
 import com.internal.playment.common.table.merchant.MerchantQuotaRiskTable;
-import com.rxh.payInterface.NewPayAssert;
 import com.rxh.service.merchant.AnewMerchantQuotaRiskService;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

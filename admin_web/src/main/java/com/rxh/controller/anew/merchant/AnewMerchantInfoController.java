@@ -5,15 +5,12 @@ import com.internal.playment.common.table.merchant.MerchantInfoTable;
 import com.rxh.service.*;
 import com.rxh.service.agent.AnewAgentMerchantService;
 import com.rxh.service.merchant.AnewMerchantInfoService;
-import com.rxh.service.square.*;
 import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.spring.annotation.SystemLogInfo;
-import com.rxh.utils.SystemConstant;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.enums.SystemConstant;
+import com.internal.playment.common.page.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
 import java.util.*;
 
 @RestController

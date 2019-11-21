@@ -1,7 +1,7 @@
 package com.rxh.service;
 
 import com.internal.playment.common.table.system.OrganizationInfoTable;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 
 import java.util.List;
 

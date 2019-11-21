@@ -12,7 +12,7 @@ import com.rxh.service.square.OrganizationService;
 import com.rxh.service.trading.PayOrderService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.util.UserInfoUtils;
-import com.rxh.utils.SystemConstant;
+import com.internal.playment.common.enums.SystemConstant;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

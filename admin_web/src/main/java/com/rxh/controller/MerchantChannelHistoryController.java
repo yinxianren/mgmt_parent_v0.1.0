@@ -1,14 +1,8 @@
 package com.rxh.controller;
 
 import com.internal.playment.common.page.Page;
-import com.rxh.pojo.base.PageResult;
-import com.rxh.service.ConstantService;
-import com.rxh.service.square.ChannelWalletService;
-import com.rxh.service.square.MerchantChannelHistoryService;
-import com.rxh.service.square.MerchantInfoService;
-import com.rxh.service.square.OrganizationService;
+import com.internal.playment.common.page.ResponseVO;
 import com.rxh.spring.annotation.SystemLogInfo;
-import com.rxh.utils.SystemConstant;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,8 +22,8 @@ public class MerchantChannelHistoryController {
 
     @SystemLogInfo(description = "通道运行监控查询")
     @RequestMapping(value="/findMerchantChannel")
-    public PageResult findMerchantChannel(@RequestBody Page page ) {
-        PageResult pageResult = new PageResult();
+    public ResponseVO findMerchantChannel(@RequestBody Page page ) {
+        ResponseVO pageResult = new ResponseVO();
         return pageResult;
     }
 

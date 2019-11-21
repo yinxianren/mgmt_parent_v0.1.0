@@ -8,7 +8,7 @@ import com.internal.playment.common.page.Page;
 import com.rxh.service.system.NewConstantService;
 import com.rxh.service.system.NewSysGroupService;
 import com.rxh.spring.annotation.SystemLogInfo;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

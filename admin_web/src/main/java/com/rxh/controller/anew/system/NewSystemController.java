@@ -2,22 +2,19 @@ package com.rxh.controller.anew.system;
 
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.page.Page;
-import com.rxh.pojo.sys.SysArea;
-import com.rxh.pojo.sys.SysConstant;
-import com.rxh.service.*;
+import com.internal.playment.common.table.system.SysConstantTable;
 import com.rxh.service.system.NewAgentSysLogService;
 import com.rxh.service.system.NewMerchantSysLogService;
 import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.service.system.NewSystemLogService;
 import com.rxh.spring.annotation.SystemLogInfo;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -54,7 +51,7 @@ public class NewSystemController {
 
     @RequestMapping(value = "/getConstantByGroupNameAndSortValueIsNotNULL")
     @ResponseBody
-    public List<SysConstant> getConstantByGroupNameAndSortValueIsNotNULL(@RequestBody String groupName) {
+    public List<SysConstantTable> getConstantByGroupNameAndSortValueIsNotNULL(@RequestBody String groupName) {
         return (List)newSystemConstantService.getConstantByGroupName(groupName).getData();
     }
 

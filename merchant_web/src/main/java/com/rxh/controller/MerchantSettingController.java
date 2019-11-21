@@ -7,7 +7,7 @@ import com.rxh.service.square.ChannelWalletService;
 import com.rxh.service.square.MerchantSquareSettingService;
 import com.rxh.service.square.OrganizationService;
 import com.rxh.square.pojo.MerchantSetting;
-import com.rxh.utils.SystemConstant;
+import com.internal.playment.common.enums.SystemConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

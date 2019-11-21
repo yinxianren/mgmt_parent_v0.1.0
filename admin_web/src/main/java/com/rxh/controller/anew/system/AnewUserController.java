@@ -1,21 +1,15 @@
 package com.rxh.controller.anew.system;
 
 import com.internal.playment.common.table.system.SysPrivilegesTable;
-import com.rxh.pojo.sys.SysPrivileges;
-import com.rxh.service.UserService;
 import com.rxh.service.system.NewSystemUserService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.util.UserInfoUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created with IntelliJ IDEA.

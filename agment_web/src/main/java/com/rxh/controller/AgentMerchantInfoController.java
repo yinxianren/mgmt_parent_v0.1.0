@@ -11,7 +11,7 @@ import com.rxh.square.pojo.MerchantInfo;
 import com.rxh.square.vo.VoAgentMerchantInfo;
 import com.rxh.util.UserInfoUtils;
 import com.rxh.utils.GlobalConfiguration;
-import com.rxh.utils.SystemConstant;
+import com.internal.playment.common.enums.SystemConstant;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;

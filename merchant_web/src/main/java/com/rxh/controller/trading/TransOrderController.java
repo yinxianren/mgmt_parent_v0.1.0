@@ -16,7 +16,7 @@ import com.rxh.square.pojo.BatchData;
 import com.rxh.util.ExcelUtils;
 import com.rxh.util.UserInfoUtils;
 import com.rxh.utils.BatchOperationUtils;
-import com.rxh.utils.SystemConstant;
+import com.internal.playment.common.enums.SystemConstant;
 import org.apache.http.HttpRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;

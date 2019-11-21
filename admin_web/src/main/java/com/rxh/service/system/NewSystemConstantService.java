@@ -1,6 +1,6 @@
 package com.rxh.service.system;
 
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 
 import java.util.Map;
 

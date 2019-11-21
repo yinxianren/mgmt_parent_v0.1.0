@@ -7,7 +7,7 @@ import com.rxh.service.square.MerchantInfoService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.square.pojo.FinanceDrawing;
 import com.rxh.util.UserInfoUtils;
-import com.rxh.utils.SystemConstant;
+import com.internal.playment.common.enums.SystemConstant;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

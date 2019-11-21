@@ -5,7 +5,7 @@ import com.internal.playment.common.table.system.SysGroupTable;
 import com.internal.playment.common.page.Page;
 import com.rxh.service.system.NewSysGroupService;
 import com.rxh.spring.annotation.SystemLogInfo;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -1,7 +1,7 @@
 package com.rxh.service.merchant;
 
 import com.internal.playment.common.table.merchant.MerchantQuotaRiskTable;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 
 public interface AnewMerchantQuotaRiskService {
 

@@ -1,7 +1,6 @@
 package com.rxh.spring.security.filter;
 
-import com.rxh.pojo.sys.SysPrivileges;
-import com.rxh.service.UserService;
+import com.internal.playment.common.table.system.SysPrivilegesTable;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -14,14 +13,14 @@ import java.util.*;
 public class MyFilterSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
 
-    private final Map<RequestMatcher, Collection<ConfigAttribute>> requestMap;
+    /*private final Map<RequestMatcher, Collection<ConfigAttribute>> requestMap;
 
     public MyFilterSecurityMetadataSource(UserService userService) {
-        List<SysPrivileges> privilegesList = userService.selectAllPrivileges();
+        List<SysPrivilegesTable> privilegesList = userService.selectAllPrivileges();
         Map<RequestMatcher, Collection<ConfigAttribute>> map = new HashMap<>();
 
         requestMap = map;
-    }
+    }*/
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {

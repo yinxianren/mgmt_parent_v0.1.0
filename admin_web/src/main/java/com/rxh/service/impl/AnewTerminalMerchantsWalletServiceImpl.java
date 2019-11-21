@@ -8,7 +8,7 @@ import com.internal.playment.common.table.terminal.TerminalMerchantsWalletTable;
 import com.internal.playment.common.page.Page;
 import com.internal.playment.common.page.SearchInfo;
 import com.rxh.service.AnewTerminalMerchantsWalletService;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

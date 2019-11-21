@@ -6,7 +6,7 @@ import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.util.UserInfoUtils;
 import com.rxh.utils.IpUtils;
 import com.rxh.utils.JsonUtils;
-import com.rxh.utils.SystemConstant;
+import com.internal.playment.common.enums.SystemConstant;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;

@@ -1,7 +1,7 @@
 package com.rxh.service.merchant;
 
 import com.internal.playment.common.table.system.MerchantSettingTable;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 
 import java.util.List;
 import java.util.Map;

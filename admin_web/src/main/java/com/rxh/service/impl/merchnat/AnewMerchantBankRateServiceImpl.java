@@ -3,11 +3,10 @@ package com.rxh.service.impl.merchnat;
 import com.internal.playment.api.db.merchant.ApiMerchantBankRateSerrvice;
 import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.table.merchant.MerchantBankRateTable;
-import com.rxh.pojo.sys.SysConstant;
+import com.internal.playment.common.table.system.SysConstantTable;
 import com.rxh.service.merchant.AnewMerchantBankRateService;
-import com.rxh.service.ConstantService;
 import com.rxh.service.system.NewSystemConstantService;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +31,8 @@ public class AnewMerchantBankRateServiceImpl implements AnewMerchantBankRateServ
         for (MerchantBankRateTable merchantBankRateTable1 : list){
             bankNames.add(merchantBankRateTable1.getBankName());
         }
-        List<SysConstant> constantList = (List)constantService.getConstantByGroupName("bankName").getData();
-        for(SysConstant sysConstant : constantList){
+        List<SysConstantTable> constantList = (List)constantService.getConstantByGroupName("bankName").getData();
+        for(SysConstantTable sysConstant : constantList){
             if (!bankNames.contains(sysConstant.getName())){
                 MerchantBankRateTable merchantBankRateTable1 = new MerchantBankRateTable();
                 merchantBankRateTable1.setBankName(sysConstant.getName());

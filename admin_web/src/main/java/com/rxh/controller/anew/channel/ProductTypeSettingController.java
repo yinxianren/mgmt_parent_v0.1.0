@@ -1,12 +1,11 @@
 package com.rxh.controller.anew.channel;
 
 import com.internal.playment.common.table.system.ProductSettingTable;
-import com.rxh.pojo.sys.SysConstant;
-import com.rxh.service.ConstantService;
+import com.internal.playment.common.table.system.SysConstantTable;
 import com.rxh.service.ProductTypeSettingService;
 import com.rxh.service.system.NewSystemConstantService;
-import com.rxh.utils.SystemConstant;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.enums.SystemConstant;
+import com.internal.playment.common.page.ResponseVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,7 +57,7 @@ public class ProductTypeSettingController {
     public ResponseVO getProductTypeAll(String id){
         log.info("请求获取所有支付产品接口");
         try {
-            List<SysConstant> list = (List)constantService.getConstantByGroupName(SystemConstant.PRODUCTTYPE).getData();
+            List<SysConstantTable> list = (List)constantService.getConstantByGroupName(SystemConstant.PRODUCTTYPE).getData();
             ResponseVO responseVO = new ResponseVO();
             responseVO.setCode(0);
             responseVO.setData(list);

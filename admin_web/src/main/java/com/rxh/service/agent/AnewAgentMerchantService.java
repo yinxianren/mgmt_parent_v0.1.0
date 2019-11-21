@@ -1,8 +1,7 @@
 package com.rxh.service.agent;
 
 import com.internal.playment.common.table.agent.AgentMerchantInfoTable;
-import com.rxh.square.pojo.AgentMerchantInfo;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 
 import java.util.List;
 

@@ -1,15 +1,13 @@
 package com.rxh.spring.aop;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONPObject;
 import com.internal.playment.api.db.system.ApiSysLogService;
+import com.internal.playment.common.inner.IpUtils;
 import com.internal.playment.common.table.system.SysLogTable;
-import com.rxh.pojo.sys.SysLog;
-import com.rxh.service.SystemService;
-import com.rxh.service.system.NewSystemLogService;
 import com.rxh.spring.annotation.SystemLogInfo;
 import com.rxh.util.UserInfoUtils;
-import com.rxh.utils.IpUtils;
-import com.rxh.utils.JsonUtils;
-import com.rxh.utils.SystemConstant;
+import com.internal.playment.common.enums.SystemConstant;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +62,7 @@ public class SystemLogAspect {
             log.setType((int)SystemConstant.LOG_UNKNOWN_METHOD);
         }
         Object[] objects = joinPoint.getArgs();
-        log.setMessage(objects.length > 0 ? JsonUtils.objectToJsonNonNull(objects) : null);
+        log.setMessage(objects.length > 0 ? JSON.toJSONString(objects) : null);
         systemService.saveOrUpdate(log);
     }
 

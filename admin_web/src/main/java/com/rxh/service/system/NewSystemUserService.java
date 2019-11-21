@@ -2,7 +2,7 @@ package com.rxh.service.system;
 
 import com.internal.playment.common.table.system.SysPrivilegesTable;
 import com.internal.playment.common.table.system.SysUserTable;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 
 import java.util.List;
 

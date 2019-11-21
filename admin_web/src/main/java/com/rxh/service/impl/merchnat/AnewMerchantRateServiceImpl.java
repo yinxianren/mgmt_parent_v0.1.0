@@ -2,13 +2,12 @@ package com.rxh.service.impl.merchnat;
 
 import com.internal.playment.api.db.merchant.ApiMerchantRateService;
 import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.enums.SystemConstant;
 import com.internal.playment.common.table.merchant.MerchantRateTable;
-import com.rxh.pojo.sys.SysConstant;
+import com.internal.playment.common.table.system.SysConstantTable;
 import com.rxh.service.merchant.AnewMerchantRateService;
-import com.rxh.service.ConstantService;
 import com.rxh.service.system.NewSystemConstantService;
-import com.rxh.utils.SystemConstant;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -45,8 +44,8 @@ public class AnewMerchantRateServiceImpl implements AnewMerchantRateService {
         for (MerchantRateTable merchantRateTable : list){
             productIds.add(merchantRateTable.getProductId());
         }
-        List<SysConstant> constantList = (List)constantService.getConstantByGroupName(SystemConstant.PRODUCTTYPE).getData();
-        for (SysConstant sysConstant :constantList){
+        List<SysConstantTable> constantList = (List)constantService.getConstantByGroupName(SystemConstant.PRODUCTTYPE).getData();
+        for (SysConstantTable sysConstant :constantList){
             MerchantRateTable merchantRateTable = new MerchantRateTable();
             if (CollectionUtils.isEmpty(list)){
                 merchantRateTable.setProductId(sysConstant.getFirstValue());

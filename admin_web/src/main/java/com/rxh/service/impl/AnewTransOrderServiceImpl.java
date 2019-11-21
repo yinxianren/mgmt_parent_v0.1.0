@@ -3,17 +3,17 @@ package com.rxh.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.internal.playment.api.db.business.ApiTransOrderInfoService;
 import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.page.PayCardholderInfo;
 import com.internal.playment.common.page.SearchInfo;
 import com.internal.playment.common.table.business.TransOrderInfoTable;
 import com.internal.playment.common.table.channel.ChannelInfoTable;
 import com.internal.playment.common.page.Page;
-import com.rxh.pojo.sys.SysConstant;
+import com.internal.playment.common.table.system.SysConstantTable;
 import com.rxh.service.AnewChannelService;
 import com.rxh.service.AnewTransOrderService;
 import com.rxh.service.system.NewSystemConstantService;
-import com.rxh.square.pojo.PayCardholderInfo;
-import com.rxh.utils.SystemConstant;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.enums.SystemConstant;
+import com.internal.playment.common.page.ResponseVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -105,17 +105,17 @@ public class AnewTransOrderServiceImpl implements AnewTransOrderService {
             Map idMap = constantService.getConstantsMapByGroupName(SystemConstant.IDENTITYTYPE);
             Map bankMap = constantService.getConstantsMapByGroupName(SystemConstant.BANKCARDTYPE);
             Map productMap = constantService.getConstantsMapByGroupName(SystemConstant.PRODUCTTYPE);
-            SysConstant idtype = null;
-            SysConstant banktype = null;
-            SysConstant productType = null;
+            SysConstantTable idtype = null;
+            SysConstantTable banktype = null;
+            SysConstantTable productType = null;
             if (idMap.get(transOrder.getIdentityType().toString())!=null){
-                idtype = (SysConstant)idMap.get(transOrder.getIdentityType().toString());
+                idtype = (SysConstantTable) idMap.get(transOrder.getIdentityType().toString());
             }
             if (bankMap.get(transOrder.getBankCardType().toString())!=null){
-                banktype = (SysConstant)bankMap.get(transOrder.getBankCardType().toString());
+                banktype = (SysConstantTable) bankMap.get(transOrder.getBankCardType().toString());
             }
             if (productMap.get(transOrder.getProductId())!=null){
-                productType = (SysConstant)productMap.get(transOrder.getProductId());
+                productType = (SysConstantTable) productMap.get(transOrder.getProductId());
             }
             //证件类型
             cardholderInfo.setIdentityNum(idtype!=null?idtype.getName():"");

@@ -1,15 +1,13 @@
 package com.rxh.controller.anew.agent;
 
 import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.page.GlobalConfiguration;
 import com.internal.playment.common.table.agent.AgentMerchantInfoTable;
 import com.rxh.service.agent.AnewAgentMerchantService;
-import com.rxh.service.ConstantService;
-import com.rxh.service.square.AgentMerchantInfoService;
 import com.rxh.service.system.NewSystemConstantService;
 import com.rxh.spring.annotation.SystemLogInfo;
-import com.rxh.utils.GlobalConfiguration;
-import com.rxh.utils.SystemConstant;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.enums.SystemConstant;
+import com.internal.playment.common.page.ResponseVO;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;

@@ -2,7 +2,7 @@ package com.rxh.service;
 
 import com.internal.playment.common.table.system.UserLoginIpTable;
 import com.internal.playment.common.page.Page;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 
 import java.util.List;
 

@@ -40,7 +40,7 @@
 
     </aop:config>
 
-    <bean id="globalConfiguration" class="com.rxh.utils.GlobalConfiguration">
+    <bean id="globalConfiguration" class="com.internal.playment.common.page.GlobalConfiguration">
         <property name="fileUploadPath" value="${file.upload.path}"/>
         <property name="production" value="${production.flag}"/>
         <property name="paymentUrl" value="${payment.url}"/>

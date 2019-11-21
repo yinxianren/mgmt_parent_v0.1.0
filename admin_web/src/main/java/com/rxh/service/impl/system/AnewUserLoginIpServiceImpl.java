@@ -7,7 +7,7 @@ import com.internal.playment.common.enums.StatusEnum;
 import com.internal.playment.common.page.Page;
 import com.internal.playment.common.table.system.UserLoginIpTable;
 import com.rxh.service.AnewUserLoginIpService;
-import com.rxh.vo.ResponseVO;
+import com.internal.playment.common.page.ResponseVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
