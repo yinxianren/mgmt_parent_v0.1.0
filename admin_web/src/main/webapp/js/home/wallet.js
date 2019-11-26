@@ -521,7 +521,7 @@ function channelWalletDetailsCtrl($scope, $uibModal, toaster, NgTableParams, htt
                 getData: function (params) {
                     angular.element('.ibox-content').addClass('sk-loading');
                     return httpSvc.getData('post', '/channelWallet/findChannelWallteDetailsPage', {
-                        pageNum: params.page()-1,
+                        pageNum: params.page(),
                         pageSize: params.count(),
                         orderBy: params.sorting(),
                         searchInfo: $scope.searchInfo
@@ -599,7 +599,7 @@ function channelWalletDetailsCtrl($scope, $uibModal, toaster, NgTableParams, htt
             getData: function (params) {
                 angular.element('.ibox-content').addClass('sk-loading');
                 return httpSvc.getData('post', '/channelWallet/findChannelWallteDetailsPage', {
-                    pageNum: params.page()-1,
+                    pageNum: params.page(),
                     pageSize: params.count(),
                     orderBy: params.sorting(),
                     searchInfo: $scope.searchInfo
@@ -622,7 +622,7 @@ function investCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc) {
         $scope.payTypes = value.payType;
         $scope.orderStatus = value.orderStatus;
         $scope.settleStatus = value.settleStatus;
-        $scope.merchant = value.merchants;
+        $scope.merchant = value.merchants.data;
         $scope.identityTypes = value.identityTypes;
         $scope.bankcardTypes = value.bankcardTypes;
         $scope.agents = value.agents;

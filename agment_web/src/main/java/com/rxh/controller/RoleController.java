@@ -1,8 +1,12 @@
 package com.rxh.controller;
 
+import com.internal.playment.common.table.agent.AgentPrivielgesTable;
+import com.internal.playment.common.table.agent.AgentRoleTable;
+import com.internal.playment.common.table.merchant.MerchantRoleTable;
 import com.rxh.pojo.merchant.MerchantPrivileges;
 import com.rxh.pojo.merchant.MerchantRole;
 import com.rxh.service.AgmentUserService;
+import com.rxh.service.agent.AnewAgentRoleService;
 import com.rxh.util.UserInfoUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
@@ -26,32 +30,34 @@ import java.util.List;
 @ResponseBody
 public class RoleController {
     @Resource
-    private AgmentUserService agmentUserService;
+    private AnewAgentRoleService anewAgentRoleService;
 
     @RequestMapping(value = "/getRoleList")
-    public List<MerchantRole> getRoleList() {
-        return agmentUserService.getRoleByMerchantId(UserInfoUtils.getMerchantId());
+    public List<AgentRoleTable> getRoleList() {
+        AgentRoleTable agentRoleTable = new AgentRoleTable();
+        agentRoleTable.setBelongto(UserInfoUtils.getMerchantId());
+        return (List)anewAgentRoleService.getList(agentRoleTable).getData();
     }
 
     @RequestMapping(value = "/getPrivilegeList")
-    public List<MerchantPrivileges> getPrivilegeList() {
+    public List<AgentPrivielgesTable> getPrivilegeList() {
         return agmentUserService.selectAllPrivileges();
     }
 
     @RequestMapping(value = "/isExist")
-    public Boolean isExist(@RequestBody MerchantRole merchantRole) {
+    public Boolean isExist(@RequestBody AgentRoleTable merchantRole) {
         merchantRole.setBelongto(UserInfoUtils.getMerchantId());
         return agmentUserService.isRoleExist(merchantRole);
     }
 
     @RequestMapping(value = "/add")
-    public Boolean addRole(@RequestBody MerchantRole merchantRole) {
+    public Boolean addRole(@RequestBody MerchantRoleTable merchantRole) {
         merchantRole.setBelongto(UserInfoUtils.getMerchantId());
         return agmentUserService.addRole(merchantRole, UserInfoUtils.getUserName(),null);
     }
 
     @RequestMapping(value = "/update")
-    public Boolean updateRole(@RequestBody MerchantRole merchantRole) {
+    public Boolean updateRole(@RequestBody MerchantRoleTable merchantRole) {
         merchantRole.setBelongto(UserInfoUtils.getMerchantId());
         return agmentUserService.updateRoleByRoleNameAndBelongTo(merchantRole, UserInfoUtils.getUserName());
     }

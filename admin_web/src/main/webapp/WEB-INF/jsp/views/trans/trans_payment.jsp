@@ -152,7 +152,7 @@
                             </div>
                         </div>
 
-                        <div class="row" style="margin-top: 25px;margin-bottom: 10px;">
+                        <div class="row" style="margin-top: 25px;margin-bottom: 10px;line-height: 33px;">
                             <div class="col-sm-1 col-md-2" style="width: 12.66666665%">
                                 <strong>订单数：</strong><strong style="color: red">{{totalOrder}}</strong>&nbsp;<strong>单</strong>
                             </div>
@@ -167,6 +167,11 @@
                             </div>
                            <%-- <div class="col-sm-2 col-md-2" style="width: 12.66666665%">
                             </div>--%>
+                            <div style="float: right;margin-right: 20px;">
+                                <button class="btn btn-sm btn-w-m btn-info" ng-click="excel(searchInfo)">
+                                    <strong>excel导出</strong>
+                                </button>
+                            </div>
                         </div>
 
                         <div class="table-responsive">

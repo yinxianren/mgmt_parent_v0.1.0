@@ -127,6 +127,20 @@ function transPaymentCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$ti
             }
         });
     }
+    $scope.excel = function (searchInfo){
+        angular.element('.ibox-content').addClass('sk-loading');
+        // location.href ="/payOrder/findPayOrderExcel"
+        httpSvc.getData('post', '/payOrder/findPayOrderExcel', {
+            searchInfo: searchInfo
+        })
+        angular.element('.ibox-content').removeClass('sk-loading');
+       /* return httpSvc.getData('post', '/payOrder/findPayOrderExcel', {
+            searchInfo: searchInfo
+        }).then(function (value) {
+            angular.element('.ibox-content').removeClass('sk-loading');
+        })*/
+
+    }
     // 弹框(1:查看付款人信息，2：查看产品信息)
     $scope.showTransPayment = function (type,transOrder) {
         if(type == 1){

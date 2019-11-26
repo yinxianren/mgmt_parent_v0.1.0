@@ -282,33 +282,33 @@ function agentRateCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$filte
                 return;
             }
             if(merchantSquareRates[0].status == 0 && merchantSquareRates[1].status == 0 && merchantSquareRates[2].status == 0) {// 启用
-                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.bondRate0.$error.required ||myForm.settlecycle0.$error.required ||myForm.bondCycle0.$error.required
-                    || myForm.singleFee1.$error.required || myForm.rateFee1.$error.required ||myForm.bondRate1.$error.required ||myForm.settlecycle1.$error.required ||myForm.bondCycle1.$error.required
-                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.bondRate2.$error.required ||myForm.settlecycle2.$error.required ||myForm.bondCycle2.$error.required;
+                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.settleCycle0.$error.required
+                    || myForm.singleFee1.$error.required || myForm.rateFee1.$error.required ||myForm.settleCycle1.$error.required
+                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.settleCycle2.$error.required ;
             }
             if(merchantSquareRates[0].status == 0 && merchantSquareRates[1].status == 0) {// 启用
-                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.bondRate0.$error.required ||myForm.settlecycle0.$error.required ||myForm.bondCycle0.$error.required
-                    || myForm.singleFee1.$error.required || myForm.rateFee1.$error.required ||myForm.bondRate1.$error.required ||myForm.settlecycle1.$error.required ||myForm.bondCycle1.$error.required;
+                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required  ||myForm.settleCycle0.$error.required
+                    || myForm.singleFee1.$error.required || myForm.rateFee1.$error.required  ||myForm.settleCycle1.$error.required ;
             }
             if(merchantSquareRates[0].status == 0 && merchantSquareRates[2].status == 0) {// 启用
-                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.bondRate0.$error.required ||myForm.settlecycle0.$error.required ||myForm.bondCycle0.$error.required
-                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.bondRate2.$error.required ||myForm.settlecycle2.$error.required ||myForm.bondCycle2.$error.required;
+                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required  ||myForm.settlecycle0.$error.required
+                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required  ||myForm.settlecycle2.$error.required ;
             }
             if(merchantSquareRates[1].status == 0 && merchantSquareRates[2].status == 0) {// 启用
-                return myForm.singleFee1.$error.required || myForm.rateFee1.$error.required ||myForm.bondRate1.$error.required ||myForm.settlecycle1.$error.required ||myForm.bondCycle1.$error.required
-                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.bondRate2.$error.required ||myForm.settlecycle2.$error.required ||myForm.bondCycle2.$error.required;
+                return myForm.singleFee1.$error.required || myForm.rateFee1.$error.required ||myForm.settlecycle1.$error.required
+                    ||myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required  ||myForm.settlecycle2.$error.required ;
             }
             if(merchantSquareRates[0].status == 0){// 启用
-                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required ||myForm.bondRate0.$error.required
-                    ||myForm.settlecycle0.$error.required ||myForm.bondCycle0.$error.required;
+                return myForm.singleFee0.$error.required ||myForm.rateFee0.$error.required
+                    ||myForm.settlecycle0.$error.required ;
             }
             if(merchantSquareRates[1].status == 0){// 启用
-                return myForm.singleFee1.$error.required ||myForm.rateFee1.$error.required ||myForm.bondRate1.$error.required
-                    ||myForm.settlecycle1.$error.required ||myForm.bondCycle1.$error.required;
+                return myForm.singleFee1.$error.required ||myForm.rateFee1.$error.required
+                    ||myForm.settlecycle1.$error.required ;
             }
             if(merchantSquareRates[2].status == 0){// 启用
-                return myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required ||myForm.bondRate2.$error.required
-                    ||myForm.settlecycle2.$error.required ||myForm.bondCycle2.$error.required;
+                return myForm.singleFee2.$error.required ||myForm.rateFee2.$error.required
+                    ||myForm.settlecycle2.$error.required ;
             }
             return null;
         };

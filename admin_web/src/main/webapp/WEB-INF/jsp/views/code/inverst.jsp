@@ -24,7 +24,7 @@
                                             name="merId"
                                             ng-change="changeed()"
                                             ng-model="investInfo.merId"
-                                            ng-options="x.merId as x.merId for x in merchant"
+                                            ng-options="x.merchantId as x.merchantId for x in merchant"
                                             required>
                                     </select>
                                 </div>

@@ -515,7 +515,7 @@ function merchantAddCtrl($scope, $uibModal, toaster, NgTableParams, httpSvc,$fil
     // 表单校验
     $timeout(function () {
         $scope.checkDisabled = function (myForm) {
-            return myForm.merchantId.$error.required || myForm.merchantName.$error.required || myForm.type.$error.required
+            return  myForm.merchantName.$error.required || myForm.type.$error.required
                 ||myForm.identityType.$error.required || myForm.phone.$error.required || myForm.email.$error.required
                 || myForm.qq.$error.required || myForm.identityNum.$error.required || myForm.agreementStartTime.$error.required
                 || myForm.agreementEndTime.$error.required || myForm.secretKey.$error.required;

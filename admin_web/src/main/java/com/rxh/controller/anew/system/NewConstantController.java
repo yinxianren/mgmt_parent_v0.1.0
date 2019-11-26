@@ -124,6 +124,7 @@ public class NewConstantController {
     	    constant.setCreateTime(new Date());
     	    return newConstantService.saveOrUpdate(constant);
         }catch (Exception e){
+    	    e.printStackTrace();
     	    return new ResponseVO(StatusEnum._1.getStatus(),StatusEnum._1.getRemark());
         }
 

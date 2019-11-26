@@ -666,24 +666,24 @@ function systemLogCtrl($scope, $uibModal, NgTableParams, httpSvc) {
     $scope.openDatepicker2 = function () {
         $scope.popup2.opend = !$scope.popup2.opend;
     };
-    $scope.$watch('searchInfo.startTime', function (newVal) {
+    $scope.$watch('searchInfo.startDate', function (newVal) {
         if (newVal !== undefined && newVal !== null) {
-            $scope.dateOptions2.minDate = $scope.searchInfo.startTime;
+            $scope.dateOptions2.minDate = $scope.searchInfo.startDate;
             $scope.endTimeDisable = false;
             if (oldEndTime !== undefined) {
-                $scope.searchInfo.endTime = oldEndTime;
+                $scope.searchInfo.endDate = oldEndTime;
             }
         } else {
             $scope.endTimeDisable = true;
             if ($scope.searchInfo !== undefined) {
-                oldEndTime = $scope.searchInfo.endTime;
-                $scope.searchInfo.endTime = undefined;
+                oldEndTime = $scope.searchInfo.endDate;
+                $scope.searchInfo.endDate = undefined;
             }
         }
     });
-    $scope.$watch('searchInfo.endTime', function (newVal) {
+    $scope.$watch('searchInfo.endDate', function (newVal) {
         if (newVal !== undefined && newVal !== null) {
-            $scope.dateOptions1.maxDate = $scope.searchInfo.endTime;
+            $scope.dateOptions1.maxDate = $scope.searchInfo.endDate;
         } else {
             $scope.dateOptions1.maxDate = new Date();
         }
@@ -707,7 +707,7 @@ function systemLogCtrl($scope, $uibModal, NgTableParams, httpSvc) {
                     pageNum: params.page(),
                     pageSize: params.count(),
                     orderBy: params.sorting(),
-                    logSearch: $scope.searchInfo
+                    searchInfo: $scope.searchInfo
                 }).then(function (value) {
                     value = value.data;
                     var i, j;
@@ -779,24 +779,24 @@ function merchantSystemLogCtrl($scope, $uibModal, NgTableParams, httpSvc) {
     $scope.openDatepicker2 = function () {
         $scope.popup2.opend = !$scope.popup2.opend;
     };
-    $scope.$watch('searchInfo.startTime', function (newVal) {
+    $scope.$watch('searchInfo.startDate', function (newVal) {
         if (newVal !== undefined && newVal !== null) {
-            $scope.dateOptions2.minDate = $scope.searchInfo.startTime;
+            $scope.dateOptions2.minDate = $scope.searchInfo.startDate;
             $scope.endTimeDisable = false;
             if (oldEndTime !== undefined) {
-                $scope.searchInfo.endTime = oldEndTime;
+                $scope.searchInfo.endDate = oldEndTime;
             }
         } else {
             $scope.endTimeDisable = true;
             if ($scope.searchInfo !== undefined) {
-                oldEndTime = $scope.searchInfo.endTime;
-                $scope.searchInfo.endTime = undefined;
+                oldEndTime = $scope.searchInfo.endDate;
+                $scope.searchInfo.endDate = undefined;
             }
         }
     });
-    $scope.$watch('searchInfo.endTime', function (newVal) {
+    $scope.$watch('searchInfo.endDate', function (newVal) {
         if (newVal !== undefined && newVal !== null) {
-            $scope.dateOptions1.maxDate = $scope.searchInfo.endTime;
+            $scope.dateOptions1.maxDate = $scope.searchInfo.endDate;
         } else {
             $scope.dateOptions1.maxDate = new Date();
         }
@@ -820,7 +820,7 @@ function merchantSystemLogCtrl($scope, $uibModal, NgTableParams, httpSvc) {
                     pageNum: params.page(),
                     pageSize: params.count(),
                     orderBy: params.sorting(),
-                    logSearch: $scope.searchInfo
+                    searchInfo: $scope.searchInfo
                 }).then(function (value) {
                     value = value.data;
                     var i, j;
@@ -892,24 +892,24 @@ function agentSystemLogCtrl($scope, $uibModal, NgTableParams, httpSvc) {
     $scope.openDatepicker2 = function () {
         $scope.popup2.opend = !$scope.popup2.opend;
     };
-    $scope.$watch('searchInfo.startTime', function (newVal) {
+    $scope.$watch('searchInfo.startDate', function (newVal) {
         if (newVal !== undefined && newVal !== null) {
-            $scope.dateOptions2.minDate = $scope.searchInfo.startTime;
+            $scope.dateOptions2.minDate = $scope.searchInfo.startDate;
             $scope.endTimeDisable = false;
             if (oldEndTime !== undefined) {
-                $scope.searchInfo.endTime = oldEndTime;
+                $scope.searchInfo.endDate = oldEndTime;
             }
         } else {
             $scope.endTimeDisable = true;
             if ($scope.searchInfo !== undefined) {
-                oldEndTime = $scope.searchInfo.endTime;
-                $scope.searchInfo.endTime = undefined;
+                oldEndTime = $scope.searchInfo.endDate;
+                $scope.searchInfo.endDate = undefined;
             }
         }
     });
-    $scope.$watch('searchInfo.endTime', function (newVal) {
+    $scope.$watch('searchInfo.endDate', function (newVal) {
         if (newVal !== undefined && newVal !== null) {
-            $scope.dateOptions1.maxDate = $scope.searchInfo.endTime;
+            $scope.dateOptions1.maxDate = $scope.searchInfo.endDate;
         } else {
             $scope.dateOptions1.maxDate = new Date();
         }
@@ -933,7 +933,7 @@ function agentSystemLogCtrl($scope, $uibModal, NgTableParams, httpSvc) {
                     pageNum: params.page(),
                     pageSize: params.count(),
                     orderBy: params.sorting(),
-                    logSearch: $scope.searchInfo
+                    searchInfo: $scope.searchInfo
                 }).then(function (value) {
                     value = value.data;
                     var i, j;
@@ -1156,7 +1156,7 @@ function constantInfoCtrl($scope, $uibModal, NgTableParams, httpSvc, toaster) {
 
             httpSvc.getData('post', '/constant/batchDel', {ids: ids}).then(function (value) {
 
-                if (value.result == 1) {
+                if (value.code == 0) {
 
                     toaster.pop({
                         type: 'success',
@@ -1869,7 +1869,7 @@ function constantInfoAddModalCtrl($scope, $uibModalInstance, httpSvc, toaster, c
 
         httpSvc.getData('post', '/constant/save', obj).then(function (value) {
 
-            if (value.success == 1) {
+            if (value.code == 0) {
 
                 toaster.pop({
                     type: 'success',

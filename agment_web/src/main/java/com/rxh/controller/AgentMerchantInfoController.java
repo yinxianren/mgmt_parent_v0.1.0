@@ -1,17 +1,15 @@
 package com.rxh.controller;
 
-import com.rxh.pojo.Result;
-import com.rxh.service.ConstantService;
-import com.rxh.service.square.AgentMerchantInfoService;
-import com.rxh.service.square.AgentMerchantSettingService;
-import com.rxh.spring.annotation.SystemLogInfo;
-import com.rxh.square.pojo.AgentMerchantInfo;
-import com.rxh.square.pojo.AgentMerchantSetting;
-import com.rxh.square.pojo.MerchantInfo;
-import com.rxh.square.vo.VoAgentMerchantInfo;
-import com.rxh.util.UserInfoUtils;
-import com.rxh.utils.GlobalConfiguration;
 import com.internal.playment.common.enums.SystemConstant;
+import com.internal.playment.common.page.GlobalConfiguration;
+import com.internal.playment.common.page.ResponseVO;
+import com.internal.playment.common.table.agent.AgentMerchantInfoTable;
+import com.internal.playment.common.table.agent.AgentMerchantSettingTable;
+import com.rxh.service.agent.AnewAgentMerchantService;
+import com.rxh.service.agent.AnewAgentMerchantSettingService;
+import com.rxh.service.system.NewSystemConstantService;
+import com.rxh.spring.annotation.SystemLogInfo;
+import com.rxh.util.UserInfoUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
@@ -35,26 +33,28 @@ import java.util.*;
 public class AgentMerchantInfoController {
 
     @Resource
-    private AgentMerchantInfoService agentMerchantInfoService;
+    private AnewAgentMerchantService agentMerchantInfoService;
 
     @Resource
     private GlobalConfiguration globalConfiguration;
 
     @Autowired
-    private  ConstantService constantService;
+    private NewSystemConstantService constantService;
     @Resource
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    private AgentMerchantSettingService agentMerchantSettingService;
+    private AnewAgentMerchantSettingService agentMerchantSettingService;
 
     @SystemLogInfo(description = "代理商信息获取")
     @ResponseBody
     @RequestMapping("/getAgentInfo")
-    public List<AgentMerchantInfo> getAgentInfo(){
+    public List<AgentMerchantInfoTable> getAgentInfo(){
         String merchantId = UserInfoUtils.getMerchantId();
-       List<AgentMerchantInfo> agentMerchantInfos = new ArrayList<>();
-       agentMerchantInfos.add(agentMerchantInfoService.getMerchantInfo(merchantId));
+       List<AgentMerchantInfoTable> agentMerchantInfos = new ArrayList<>();
+       AgentMerchantInfoTable agentMerchantInfoTable = new AgentMerchantInfoTable();
+       agentMerchantInfoTable.setAgentMerchantId(merchantId);
+       agentMerchantInfos.addAll((List)agentMerchantInfoService.list(agentMerchantInfoTable).getData());
 
         return agentMerchantInfos;
     }
@@ -78,21 +78,21 @@ public class AgentMerchantInfoController {
     @RequestMapping(value = "/isAgentMerchantIdExist")
     @ResponseBody
     public Boolean isAgentMerchantIdExist(@RequestBody String agentMerchantId) {
-        return agentMerchantInfoService.isAgentMerchantIdExist(agentMerchantId);
+        return false;
     }
 
     @RequestMapping(value = "/getAllByVoAgentMerchantInfo")
     @ResponseBody
-    public List<AgentMerchantInfo> getAllByVoAgentMerchantInfo(@RequestBody VoAgentMerchantInfo voAgentMerchantInfo) {
-        List<AgentMerchantInfo> agentMerchantInfos = agentMerchantInfoService.getAllByVoAgentMerchantInfo(voAgentMerchantInfo);
+    public List<AgentMerchantInfoTable> getAllByVoAgentMerchantInfo(@RequestBody VoAgentMerchantInfo voAgentMerchantInfo) {
+        List<AgentMerchantInfoTable> agentMerchantInfos = agentMerchantInfoService.getAllByVoAgentMerchantInfo(voAgentMerchantInfo);
         return agentMerchantInfos;
     }
 
     @RequestMapping(value = "/delete")
     @ResponseBody
     public String delete(@RequestBody String id){
-        int num = agentMerchantInfoService.deleteAgentMerchantInfo(id);
-        if(num>0){
+        ResponseVO responseVO = agentMerchantInfoService.delByIds(new ArrayList<>());
+        if(responseVO.getCode() == 0){
             return SystemConstant.SUCCESS;
         }else {
             return SystemConstant.FAIL;
@@ -102,9 +102,10 @@ public class AgentMerchantInfoController {
 
     @RequestMapping(value = "/updateAgentMerchantInfo")
     @ResponseBody
-    public String updateAgentMerchantInfo(@RequestBody AgentMerchantInfo agentMerchantInfo){
-        int num = agentMerchantInfoService.update(agentMerchantInfo);
-        if(num>0){
+    public String updateAgentMerchantInfo(@RequestBody AgentMerchantInfoTable agentMerchantInfo){
+        agentMerchantInfo.setUpdateTime(new Date());
+        ResponseVO responseVO = agentMerchantInfoService.update(agentMerchantInfo);
+        if(responseVO.getCode()== 0){
             return SystemConstant.SUCCESS;
         }else {
             return SystemConstant.FAIL;
@@ -113,27 +114,17 @@ public class AgentMerchantInfoController {
 
     @RequestMapping(value = "/addAgentMerchantInfo")
     @ResponseBody
-    public String addAgentMerchantInfo(@RequestBody AgentMerchantInfo agentMerchantInfo){
-        String encode = passwordEncoder.encode(agentMerchantInfo.getPassword());
-        agentMerchantInfo.setPassword(encode);
-        int num = agentMerchantInfoService.insertAgentMerchantInfo(agentMerchantInfo, UserInfoUtils.getUserName());
-        if(num>0){
+    public String addAgentMerchantInfo(@RequestBody AgentMerchantInfoTable agentMerchantInfo){
+        agentMerchantInfo.setCreateTime(new Date());
+        agentMerchantInfo.setUpdateTime(new Date());
+        ResponseVO num = agentMerchantInfoService.save(agentMerchantInfo);
+        if(num.getCode() == 0){
             return SystemConstant.SUCCESS;
         }else {
             return SystemConstant.FAIL;
         }
     }
 
-    /**
-     * 批量删除
-     * @param idArray
-     * @return
-     */
-    @RequestMapping("/batchDel")
-    @ResponseBody
-    public Result batchDel(@RequestBody List<String> idArray) {
-        return agentMerchantInfoService.deleteByIdArray(idArray);
-    }
 
     @ResponseBody
     @RequestMapping(value = "/certificateImg", method = RequestMethod.GET)
@@ -149,28 +140,19 @@ public class AgentMerchantInfoController {
             return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
         }
     }
-    /**
-     * 获取id
-     */
-    @ResponseBody
-    @RequestMapping(value = "/getAgentMerchantIdIncre", method = RequestMethod.GET)
-    public String getAgentMerchantIdIncre(){
-        String agentMerchantId = agentMerchantInfoService.getMaxAgentMerchantId();
-        return agentMerchantId;
-    }
 
     @RequestMapping("/init")
     public Map<String, Object> init() {
         Map<String, Object> init = new HashMap<>();
-        init.put("identityType", constantService.getConstantByGroupNameAndSortValueIsNotNULL(SystemConstant.IDENTITYTYPE));
-        init.put("agentMerchants", agentMerchantInfoService.getAllIdAndName());
+        init.put("identityType", constantService.getConstantByGroupName(SystemConstant.IDENTITYTYPE).getData());
+        init.put("agentMerchants", agentMerchantInfoService.list(null).getData());
         return init;
     }
 
     @RequestMapping("/searchAgentMerchantSetting")
     @ResponseBody
-    public List<AgentMerchantSetting> search(@RequestBody AgentMerchantSetting agentMerchantSetting){
-        List<AgentMerchantSetting> result = agentMerchantSettingService.search(agentMerchantSetting.getAgentMerchantId());
+    public List<AgentMerchantSettingTable> search(@RequestBody AgentMerchantSettingTable agentMerchantSetting){
+        List<AgentMerchantSettingTable> result = (List)agentMerchantSettingService.getList(agentMerchantSetting).getData();
         return result;
     }
 

@@ -1,9 +1,11 @@
 package com.rxh.controller;
 
+import com.internal.playment.common.table.agent.AgentUserTable;
 import com.rxh.pojo.merchant.MerchantPrivileges;
 import com.rxh.pojo.merchant.MerchantRole;
 import com.rxh.pojo.merchant.MerchantUser;
 import com.rxh.service.AgmentUserService;
+import com.rxh.service.agent.AnewAgentUserService;
 import com.rxh.util.UserInfoUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -27,7 +29,7 @@ import java.util.List;
 @ResponseBody
 public class UserController {
     @Resource
-    private AgmentUserService agmentUserService;
+    private AnewAgentUserService agmentUserService;
 
     @Resource
     private BCryptPasswordEncoder passwordEncoder;
@@ -43,7 +45,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/getUserList")
-    public List<MerchantUser> getUserList() {
+    public List<AgentUserTable> getUserList() {
         return agmentUserService.getUserByMerchantId(UserInfoUtils.getMerchantId());
     }
 

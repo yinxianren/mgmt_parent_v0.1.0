@@ -1,12 +1,17 @@
 package com.rxh.controller;
 
+import com.internal.playment.common.enums.SystemConstant;
 import com.internal.playment.common.page.Page;
+import com.internal.playment.common.page.ResponseVO;
+import com.internal.playment.common.table.system.SysConstantTable;
 import com.rxh.pojo.base.PageResult;
 import com.rxh.pojo.merchant.MerchantQuestionWithBLOBs;
 import com.rxh.pojo.sys.SysArea;
 import com.rxh.pojo.sys.SysConstant;
 import com.rxh.service.ConstantService;
 import com.rxh.service.SystemService;
+import com.rxh.service.system.NewSystemConstantService;
+import com.rxh.service.system.NewSystemLogService;
 import com.rxh.util.UserInfoUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,23 +36,23 @@ import java.util.Map;
 public class SystemController {
 
     @Resource
-    private ConstantService constantService;
+    private NewSystemConstantService constantService;
     @Resource
-    private SystemService systemService;
+    private NewSystemLogService systemService;
 
     @RequestMapping(value = "/getConstantByGroupName")
-    public List<SysConstant> getConstantByGroupName(@RequestBody String groupName) {
-        return constantService.getConstantByGroupName(groupName);
+    public List<SysConstantTable> getConstantByGroupName(@RequestBody String groupName) {
+        return (List)constantService.getConstantByGroupName(groupName).getData();
     }
 
     @RequestMapping(value = "/getConstantByGroupNameAndSortValueIsNotNULL")
-    public List<SysConstant> getConstantByGroupNameAndSortValueIsNotNULL(@RequestBody String groupName) {
-        return constantService.getConstantByGroupNameAndSortValueIsNotNULL(groupName);
+    public List<SysConstantTable> getConstantByGroupNameAndSortValueIsNotNULL(@RequestBody String groupName) {
+        return (List)constantService.getConstantByGroupName(groupName).getData();
     }
 
     @RequestMapping(value = "/getSystemLog")
-    public PageResult getSystemLog(@RequestBody Page page) {
-        return systemService.getSystemLog(page);
+    public ResponseVO getSystemLog(@RequestBody Page page) {
+        return systemService.page(page);
     }
 
     @RequestMapping(value = "/getAreaInfoByCountryCode")

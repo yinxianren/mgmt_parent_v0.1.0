@@ -18,7 +18,7 @@
                             <div class="sk-rect5"></div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-6 col-md-6 col-lg-1-5">
+                            <%--<div class="col-sm-6 col-md-6 col-lg-1-5">
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
                                         <span class="input-group-addon">日志类型：</span>
@@ -45,7 +45,7 @@
                                         <input type="text" class="form-control" ng-model="searchInfo.methodDescription">
                                     </div>
                                 </div>
-                            </div>
+                            </div>--%>
                             <div class="col-sm-6 col-md-6 col-lg-1-5">
                                 <div class="form-group form-group-sm">
                                     <div class="input-group">
@@ -55,7 +55,7 @@
                                                ng-readonly="true"
                                                ng-click="openDatepicker1()"
                                                uib-datepicker-popup="{{format}}"
-                                               ng-model="searchInfo.startTime"
+                                               ng-model="searchInfo.startDate"
                                                is-open="popup1.opend"
                                                datepicker-options="dateOptions1"
                                                alt-input-formats="altInputFormats"
@@ -78,7 +78,7 @@
                                                ng-readonly="true"
                                                ng-click="openDatepicker2()"
                                                uib-datepicker-popup="{{format}}"
-                                               ng-model="searchInfo.endTime"
+                                               ng-model="searchInfo.endDate"
                                                is-open="popup2.opend"
                                                datepicker-options="dateOptions2"
                                                alt-input-formats="altInputFormats"

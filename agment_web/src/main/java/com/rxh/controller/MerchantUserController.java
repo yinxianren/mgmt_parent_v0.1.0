@@ -1,19 +1,23 @@
 package com.rxh.controller;
 
-import com.rxh.pojo.merchant.MerchantRole;
-import com.rxh.pojo.merchant.MerchantUser;
-import com.rxh.service.MerchantUserService;
+import com.internal.playment.common.enums.StatusEnum;
+import com.internal.playment.common.page.ResponseVO;
+import com.internal.playment.common.table.merchant.MerchantRoleTable;
+import com.internal.playment.common.table.merchant.MerchantUserTable;
+import com.rxh.service.merchant.AnewMerchantRoleService;
+import com.rxh.service.merchant.AnewMerchantUserService;
 import com.rxh.spring.annotation.SystemLogInfo;
-import com.rxh.square.pojo.MerchantInfo;
 import com.rxh.util.UserInfoUtils;
-import com.rxh.utils.GlobalConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,14 +33,11 @@ import java.util.List;
 public class MerchantUserController {
 
     @Resource
-    private MerchantUserService merchantUserService;
-
+    private AnewMerchantUserService merchantUserService;
     @Resource
     private BCryptPasswordEncoder passwordEncoder;
-
-    @Resource
-    private GlobalConfiguration globalConfiguration;
-
+    @Autowired
+    private AnewMerchantRoleService anewMerchantRoleService;
 
 
 
@@ -44,47 +45,60 @@ public class MerchantUserController {
     @SystemLogInfo(description = "新增商户用户")
     @RequestMapping(value = "/addMerchantUser")
     @ResponseBody
-    public Boolean addMerchantUser(@RequestBody MerchantUser merchantUser) {
+    public Boolean addMerchantUser(@RequestBody MerchantUserTable merchantUser) {
         merchantUser.setPassword(passwordEncoder.encode(merchantUser.getPassword()));
-        return merchantUserService.addUser(merchantUser, UserInfoUtils.getName());
+        merchantUser.setCreator( UserInfoUtils.getName());
+        merchantUser.setCreateTime(new Date());
+        merchantUser.setModifyTime(new Date());
+        ResponseVO responseVO = merchantUserService.saveOrUpdate(merchantUser);
+        if (responseVO.getCode() == StatusEnum._0.getStatus()){
+            return true;
+        }
+        return false;
     }
 
     @SystemLogInfo(description = "删除商户用户")
     @RequestMapping(value = "/deleteMerchantUser")
     @ResponseBody
     public Boolean deleteMerchantUser(@RequestBody List<Long> idList) {
-        return merchantUserService.deleteUserByIdList(idList);
+        ResponseVO responseVO = merchantUserService.delByIds(idList);
+        if (responseVO.getCode() == StatusEnum._0.getStatus()) return true;
+        return false;
     }
 
     @SystemLogInfo(description = "更新商户用户")
     @RequestMapping(value = "/updateMerchantUser")
     @ResponseBody
-    public Boolean updateMerchantUser(@RequestBody MerchantUser merchantUser) {
+    public Boolean updateMerchantUser(@RequestBody MerchantUserTable merchantUser) {
         if (merchantUser.getPassword() != null) {
             merchantUser.setPassword(passwordEncoder.encode(merchantUser.getPassword()));
         }
-        return merchantUserService.updateUserById(merchantUser, UserInfoUtils.getName());
+        merchantUser.setModifyTime(new Date());
+        merchantUser.setModifier(UserInfoUtils.getName());
+        ResponseVO responseVO = merchantUserService.saveOrUpdate(merchantUser);
+        if (responseVO.getCode() == StatusEnum._0.getStatus()) return true;
+        return false;
     }
 
     @SystemLogInfo(description = "获取商户用户")
     @RequestMapping(value = "/getMerchantUserByMerchantId")
     @ResponseBody
-    public List<MerchantUser> getMerchantUserByMerchantId(@RequestBody MerchantInfo merchantInfo) {
-        List<MerchantUser> merchantUsers = merchantUserService.getUserByMerchantId(merchantInfo.getMerId());
-        System.out.println("=>>>>>"+1111111);
-        System.out.println("=============="+merchantUsers);
+    public List<MerchantUserTable> getMerchantUserByMerchantId(@RequestBody MerchantUserTable merchantInfo) {
+        List<MerchantUserTable> merchantUsers =(List) merchantUserService.getList(merchantInfo).getData();
         return merchantUsers;
     }
 
     @RequestMapping(value = "/getMerchantRoleByMerchantId")
     @ResponseBody
-    public List<MerchantRole> getMerchantRoleByMerchantId(@RequestBody MerchantInfo merchantInfo) {
-        return merchantUserService.getRoleByMerchantId(merchantInfo.getMerId());
+    public List<MerchantRoleTable> getMerchantRoleByMerchantId(@RequestBody MerchantRoleTable merchantInfo) {
+        return (List)anewMerchantRoleService.getList(merchantInfo).getData();
     }
 
     @RequestMapping(value = "/isMerchantUserExist")
     @ResponseBody
-    public Boolean isMerchantUserExist(@RequestBody MerchantUser merchantUser) {
-        return merchantUserService.isUserExist(merchantUser);
+    public Boolean isMerchantUserExist(@RequestBody MerchantUserTable merchantUser) {
+        List list = (List)merchantUserService.getList(merchantUser).getData();
+        if (CollectionUtils.isEmpty(list)) return false;
+        return true;
     }
 }
